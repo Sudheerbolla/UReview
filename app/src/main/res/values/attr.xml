@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTextView">
+        <attr name="txt_font_type" format="integer">
+            <enum name="light" value="0" />
+            <enum name="regular" value="1" />
+            <enum name="bold" value="2" />
+            <enum name="italic" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="customswipeview">
+        <attr name="dragEdge">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+
+        <attr name="swipemode">
+            <enum name="normal" value="0" />
+            <enum name="same_level" value="1" />
+        </attr>
+
+        <attr name="flingVelocity" format="integer" />
+
+        <attr name="minDistRequestDisallowParent" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="SyncViewPager">
+        <attr name="velocity" format="integer" />
+    </declare-styleable>
+    <!--<declare-styleable name="Theme">-->
+    <!--<attr name="circularImageViewStyle" format="reference" />-->
+    <!--</declare-styleable>-->
+
+    <declare-styleable name="StickyScrollView">
+        <attr name="stuckShadowHeight" format="dimension" />
+        <attr name="stuckShadowDrawable" format="reference" />
+    </declare-styleable>
+
+</resources>

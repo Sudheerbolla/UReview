@@ -1,0 +1,41 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="AppButtonStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/txt_size_17sp</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/pad_7</item>
+        <item name="android:textColorHint">@color/color_white</item>
+        <item name="android:padding">@dimen/pad_10</item>
+    </style>
+
+    <style name="CustomRatingBarL" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/star_l_blank_copy</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+
+    <style name="CustomRatingBarM" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/star_m_blank_copy</item>
+        <item name="android:minHeight">@dimen/pad_15</item>
+        <item name="android:maxHeight">@dimen/pad_20</item>
+    </style>
+
+</resources>

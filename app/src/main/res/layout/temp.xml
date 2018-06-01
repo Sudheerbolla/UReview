@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:background="@color/btn_color"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/llCategory"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center">-->
+
+            <!--<FrameLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="0dp">-->
+
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivCategory"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:scaleType="fitCenter"-->
+                    <!--android:src="@drawable/loading" />-->
+
+                <!--<ProgressBar-->
+                    <!--android:id="@+id/progressbar"-->
+                    <!--style="?android:attr/progressBarStyleSmall"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center" />-->
+
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivCancel"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:src="@mipmap/canclled_order"-->
+                    <!--android:visibility="visible" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/tvPrice"-->
+                    <!--android:layout_width="60dp"-->
+                    <!--android:layout_height="60dp"-->
+                    <!--android:layout_gravity="top|right"-->
+                    <!--android:background="@mipmap/red_badge"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="10dp"-->
+                    <!--android:text="$20"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:visibility="gone" />-->
+
+            <!--</FrameLayout>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/llCategoryText"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="#2d3d4a">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvCategory"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center"-->
+                <!--android:padding="@dimen/space_8"-->
+                <!--android:text="My Orders My Orders My Orders My Orders My Orders My Orders My Orders My Orders"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="@dimen/txt_29" />-->
+        <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+</layout>
