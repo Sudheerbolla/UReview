@@ -102,7 +102,7 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
 
     private void launchHomeScreen() {
         LocalStorage.getInstance(splashActivity).putBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, false);
-        splashActivity.replaceFragment(MainFragment.newInstance(), false, R.id.splashContainer);
+        splashActivity.replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
     }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {

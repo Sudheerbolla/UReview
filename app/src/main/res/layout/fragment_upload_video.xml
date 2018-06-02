@@ -146,7 +146,7 @@
                 android:textSize="@dimen/txt_size_15sp" />
 
             <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowStatus"
+                android:id="@+id/txtCompleteVideo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/pad_15"

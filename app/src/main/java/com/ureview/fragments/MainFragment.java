@@ -82,7 +82,7 @@ public class MainFragment extends BaseFragment {
         splashActivity.replaceFragment(SettingsFragment.newInstance(), R.id.mainContainer);
     }
 
-    private void setFollowersFragment() {
+    public void setFollowersFragment() {
         setToolBar("Followers", "", "", false, true,
                 true, false, false);
         splashActivity.replaceFragment(FollowersFragment.newInstance(), R.id.mainContainer);
@@ -103,7 +103,8 @@ public class MainFragment extends BaseFragment {
     private void setVideoReviewFragment() {
         setToolBar("Video Review", "", "", false, true,
                 true, false, false);
-        splashActivity.replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
+//        splashActivity.replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
+        splashActivity.replaceFragment(UploadVideoFragment.newInstance(), R.id.mainContainer);
     }
 
     private void setReviewMapFragment() {

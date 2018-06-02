@@ -93,6 +93,8 @@
             android:name=".fragments.MapsActivity"
             android:label="@string/title_activity_maps" />
 
+        <activity android:name=".activities.MainActivity" />
+
     </application>
 
 </manifest>

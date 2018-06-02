@@ -8,15 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ureview.R;
-import com.ureview.utils.views.CustomDialog;
+import com.ureview.activities.SplashActivity;
 import com.ureview.utils.views.CustomTextView;
 
-public class Signup2Fragment extends BaseFragment {
+public class Signup2Fragment extends BaseFragmentNew implements View.OnClickListener {
     private View rootView;
     private CustomTextView txtSignup;
+    private SplashActivity splashActivity;
 
     public static Signup2Fragment newInstance() {
         return new Signup2Fragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        splashActivity = (SplashActivity) getActivity();
     }
 
     @Nullable
@@ -32,8 +39,9 @@ public class Signup2Fragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtSignup:
-                CustomDialog dialog = new CustomDialog(getActivity());
-                dialog.show();
+//                CustomDialog dialog = new CustomDialog(getActivity());
+//                dialog.show();
+                splashActivity.replaceFragment(Signup3Fragment.newInstance(), true, R.id.splashContainer);
                 break;
         }
     }

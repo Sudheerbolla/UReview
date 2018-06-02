@@ -14,35 +14,53 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
+import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragmentNew implements View.OnClickListener {
     private View rootView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private CustomTextView txtFollowersCount, txtFollowers, txtFollowingCount, txtFollowing;
+    private MainActivity mainActivity;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_myprofile, container, false);
-        initTopBar(rootView);
-        initBottomBar(rootView);
-        setToolBar("My Profile", "", "", false, true,
-                false, false, true);
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+
+        viewPager = rootView.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) rootView.findViewById(R.id.profileTabs);
+        tabLayout = rootView.findViewById(R.id.profileTabs);
+
+        txtFollowersCount = rootView.findViewById(R.id.txtFollowersCount);
+        txtFollowers = rootView.findViewById(R.id.txtFollowers);
+        txtFollowingCount = rootView.findViewById(R.id.txtFollowingCount);
+        txtFollowing = rootView.findViewById(R.id.txtFollowing);
+
         tabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.colorDarkGrey),
                 ContextCompat.getColor(getActivity(), R.color.app_text_color));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getActivity(), R.color.app_text_color));
         tabLayout.setupWithViewPager(viewPager);
+
+        txtFollowing.setOnClickListener(this);
+        txtFollowers.setOnClickListener(this);
+        txtFollowersCount.setOnClickListener(this);
+        txtFollowingCount.setOnClickListener(this);
         return rootView;
     }
 
@@ -52,6 +70,12 @@ public class ProfileFragment extends BaseFragment {
         adapter.addFragment(new VideosFragment(), "Videos");
         adapter.addFragment(new AboutFragment(), "About");
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View view) {
+        mainActivity.setFollowersFragment();
+//        mainActivity.replaceFragment(FollowersFragment.newInstance(), true, R.id.mainContainer);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

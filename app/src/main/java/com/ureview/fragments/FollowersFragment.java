@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.ureview.R;
 import com.ureview.adapters.FollowersAdapter;
 
-public class FollowersFragment extends BaseFragment {
+public class FollowersFragment extends BaseFragmentNew {
     private View rootView;
     private RecyclerView rvFollowers;
     private FollowersAdapter followersAdapter;
