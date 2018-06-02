@@ -46,12 +46,22 @@ public class MainFragment extends BaseFragment {
         rootView.findViewById(R.id.llSettings).setOnClickListener(this);
 
         setReviewMapFragment();
+//        setHomeFragment();
+//        setLocationRadiusFragment();
+//        setProfileFragment();
+//        rootView.findViewById(R.id.llHome).callOnClick();
     }
 
     private void setHomeFragment() {
         setToolBar("", "Mirpur 10, Dhaka", "", true, false,
                 true, false, false);
         splashActivity.replaceFragment(HomeFragment.newInstance(), R.id.mainContainer);
+    }
+
+    private void setLocationRadiusFragment() {
+        setToolBar("", "Mirpur 10, Dhaka", "", true, false,
+                true, false, false);
+        splashActivity.replaceFragment(LocationRadiusFragment.newInstance(), R.id.mainContainer);
     }
 
     private void setSearchFragment() {
@@ -143,18 +153,23 @@ public class MainFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.llHome:
                 setSelectedTab(imgHome, imgHomeView);
+                setHomeFragment();
                 break;
             case R.id.llSearch:
                 setSelectedTab(imgSearchB, imgSearchView);
+                setSearchFragment();
                 break;
             case R.id.llVideo:
                 setSelectedTab(imgVideo, null);
+                setVideoReviewFragment();
                 break;
             case R.id.llProfile:
                 setSelectedTab(imgProfile, imgProfileView);
+                setProfileFragment();
                 break;
             case R.id.llSettings:
                 setSelectedTab(imgSettings, imgSettingsView);
+                setSettingsFragment();
                 break;
         }
     }

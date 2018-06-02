@@ -6,7 +6,9 @@ import android.view.View;
 
 import com.ureview.R;
 import com.ureview.fragments.IntroFragment;
+import com.ureview.fragments.MainFragment;
 import com.ureview.utils.DialogUtils;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 
 public class SplashActivity extends BaseActivity {
@@ -41,7 +43,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void proceedWithFlow() {
-            replaceFragment(IntroFragment.newInstance(), false, R.id.splashContainer);
+        replaceFragment(LocalStorage.getInstance(this).getBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, false) ? IntroFragment.newInstance() : MainFragment.newInstance(), false, R.id.splashContainer);
     }
 
 }
