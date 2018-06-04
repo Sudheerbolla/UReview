@@ -9,4 +9,11 @@ public class Constants {
     public final static int REQUEST_BARCODE_CAPTURE = 006;
     public final static int READ_SMS_CODE = 007;
 
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_TYPE_JSON = "application/json";
+    public static final String CONTENT_TYPE_TEXT_PLAIN = "text/plain";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
+
+    public static final String COUNTRY_CODE = "countryCode";
 }

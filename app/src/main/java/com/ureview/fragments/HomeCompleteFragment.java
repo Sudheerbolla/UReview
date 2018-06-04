@@ -15,7 +15,7 @@ import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.utils.views.CustomTextView;
 
-public class HomeCompleteFragment extends BaseFragmentNew implements View.OnClickListener {
+public class HomeCompleteFragment extends BaseFragment implements View.OnClickListener {
     private View rootView;
     private RecyclerView rvCategories, rvNewsFeed, rvTopRated;
     private HomeCategoryAdapter homeCategoryAdapter;

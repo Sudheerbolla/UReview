@@ -30,6 +30,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void changeStatusBarColorToAppColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.app_color_dark));
+        }
+    }
+
     public void replaceFragment(Fragment fragment, boolean needToAddToBackStack) {
         StaticUtils.hideSoftKeyboard(this);
         String tag = fragment.getClass().getSimpleName();
@@ -76,6 +84,16 @@ public class BaseActivity extends AppCompatActivity {
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         setCustomAnimation(fragmentTransaction, false);
         fragmentTransaction.replace(containerId, fragment, tag).addToBackStack(tag).commitAllowingStateLoss();
+    }
+    public void replaceFragmentWithoutAnimation(Fragment fragment, int containerId,boolean needToAdd) {
+        StaticUtils.hideSoftKeyboard(this);
+        String tag = fragment.getClass().getSimpleName();
+        final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        setCustomAnimation(fragmentTransaction, false);
+        if (needToAdd)
+            fragmentTransaction.replace(containerId, fragment, tag).addToBackStack(tag).commitAllowingStateLoss();
+        else
+            fragmentTransaction.replace(containerId, fragment, tag).commitAllowingStateLoss();
     }
 
     public void clearBackStack() {

@@ -1,8 +1,6 @@
 package com.ureview.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,15 +10,13 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ureview.R;
 import com.ureview.activities.SplashActivity;
 import com.ureview.utils.LocalStorage;
+import com.ureview.utils.views.CustomTextView;
 
 public class IntroFragment extends BaseFragment implements View.OnClickListener {
 
@@ -31,7 +27,7 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
     private LinearLayout dotsLayout;
     private TextView[] dots;
     private int[] layouts;
-    private ImageView btnNext;
+    private CustomTextView txtDesc, btnNext, txtTitle;
 
     public IntroFragment() {
     }
@@ -59,7 +55,6 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
         setReferences();
         setViewPager();
         addBottomDots(0);
-        changeStatusBarColor();
         setListeners();
     }
 
@@ -73,8 +68,9 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
         viewPager = rootView.findViewById(R.id.view_pager);
         dotsLayout = rootView.findViewById(R.id.layoutDots);
         btnNext = rootView.findViewById(R.id.btn_next);
-
-        layouts = new int[]{R.layout.layout_browse_reviews_slide, R.layout.layout_upload_reviews_slide, R.layout.layout_social_network_slide};
+        txtDesc = rootView.findViewById(R.id.txt_desc);
+        txtTitle = rootView.findViewById(R.id.txt_title);
+        layouts = new int[]{R.layout.layout_upload_reviews_slide, R.layout.layout_browse_reviews_slide, R.layout.layout_social_network_slide};
     }
 
     private void setListeners() {
@@ -110,6 +106,23 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
         @Override
         public void onPageSelected(int position) {
             addBottomDots(position);
+            switch (position) {
+                case 0:
+                    txtTitle.setText("What you say, matters!");
+                    txtDesc.setText("Record your moment, #caption it and upload");
+                    btnNext.setText("Skip");
+                    break;
+                case 1:
+                    txtTitle.setText("Browse Reviews");
+                    txtDesc.setText("View unique visual experience. Search videos. Use #tags to find match");
+                    btnNext.setText("Skip");
+                    break;
+                case 2:
+                    txtTitle.setText("Share on Social Network");
+                    txtDesc.setText("Share your reviews with your friends or on other social sites");
+                    btnNext.setText("Next");
+                    break;
+            }
         }
 
         @Override
@@ -122,14 +135,6 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
 
         }
     };
-
-    private void changeStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = splashActivity.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
-    }
 
     private class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;

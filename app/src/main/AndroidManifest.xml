@@ -16,11 +16,16 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
 
     <application
+        android:name=".BaseApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -85,16 +90,17 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-       <!-- <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyATv_DutfcfOuTNe2EvtIh1-bmubw8BjJ4" />-->
+        <!--
+             <meta-data
+             android:name="com.google.android.geo.API_KEY"
+             android:value="AIzaSyATv_DutfcfOuTNe2EvtIh1-bmubw8BjJ4" />
+        -->
 
         <activity
             android:name=".fragments.MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity android:name=".activities.MainActivity" />
-
+        <activity android:name=".activities.VideoRecorder"/>
     </application>
 
 </manifest>

@@ -28,5 +28,7 @@
             android:paddingTop="@dimen/pad_8"
             android:text="Clear all"
             android:textColor="@color/color_white" />
+
     </RelativeLayout>
+
 </android.support.v4.widget.NestedScrollView>

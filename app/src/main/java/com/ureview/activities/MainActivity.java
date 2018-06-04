@@ -1,6 +1,6 @@
 package com.ureview.activities;
 
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -20,7 +20,6 @@ import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
 import com.ureview.fragments.Signup1Fragment;
-import com.ureview.fragments.Signup2Fragment;
 import com.ureview.fragments.SignupVerificationFragment;
 import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
@@ -39,9 +38,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-        }
         setContentView(R.layout.activity_main);
         initBottomBar();
         initTopBar();
@@ -49,9 +45,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void proceedWithFlow() {
-        setHomeFragmentComplete();
-//        setReviewMapFragment();
-//        replaceFragment(LocalStorage.getInstance(this).getBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, false) ? IntroFragment.newInstance() : MainFragment.newInstance(), false, R.id.splashContainer);
+        setToolBar("", "Mirpur 10, Dhaka", "", true, false, true, false, false);
+        replaceFragmentWithoutAnimation(HomeCompleteFragment.newInstance(), R.id.mainContainer, false);
     }
 
     public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {
@@ -125,7 +120,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.llVideo:
                 setSelectedTab(imgVideo, null);
-                setUploadVideoFragment();
+//                setUploadVideoFragment();
+                openVideoIntent();
                 break;
             case R.id.llProfile:
                 setSelectedTab(imgProfile, imgProfileView);
@@ -139,6 +135,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 onBackPressed();
                 break;
         }
+    }
+
+    private void openVideoIntent() {
+//        Intent captureVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+//        startActivityForResult(captureVideoIntent,VIDEO_CAPTURED);
+        startActivity(new Intent(this, VideoRecorder.class));
     }
 
     private void setSelectedTab(ImageView selectedView, ImageView imgH) {
@@ -249,7 +251,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 false, false, false);
 //        tabLayout.setVisibility(View.GONE);
         findViewById(R.id.bottomBar).setVisibility(View.GONE);
-        replaceFragment(Signup2Fragment.newInstance(), R.id.mainContainer);
+//        replaceFragment(Signup2Fragment.newInstance(), R.id.mainContainer);
     }
 
     private void setSignupVerificationFragment() {

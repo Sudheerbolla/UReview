@@ -16,6 +16,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
@@ -25,6 +27,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.ureview.BuildConfig;
+import com.ureview.R;
+import com.ureview.models.CountriesModel;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +41,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class StaticUtils {
 
@@ -291,4 +300,68 @@ public class StaticUtils {
         }
         return "";
     }
+
+    public static RequestBody getRequestBody(JSONObject jsonObject) {
+        MediaType MEDIA_TYPE_TEXT = MediaType.parse(Constants.CONTENT_TYPE_TEXT_PLAIN);
+        return RequestBody.create(MEDIA_TYPE_TEXT, jsonObject.toString());
+    }
+
+    public static CountriesModel getCurrentCountryModel(Context context) {
+        String countryCode = getCountryCodeNew(context);
+        CountriesModel currentCountriesModel = null;
+        String[] arrContryCode = context.getResources().getStringArray(R.array.DialingCountryCode);
+        for (String anArrContryCode : arrContryCode) {
+            String[] arrDial = anArrContryCode.split(",");
+            if (arrDial[1].trim().equals(countryCode)) {
+                currentCountriesModel = new CountriesModel(anArrContryCode);
+                break;
+            }
+        }
+        return currentCountriesModel;
+    }
+
+    public static String getCountryCodeNew(Context context) {
+        return Build.VERSION.SDK_INT >= 22 ? getCountryISO2New(context) : getCountryDisplayNameNew(context);
+    }
+
+    public static String getCountryISO2New(Context context) {
+        String countryCode;
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        int simState = tm.getSimState();
+        if (tm.getSimCountryIso() != null && simState != TelephonyManager.SIM_STATE_ABSENT) {
+            countryCode = tm.getSimCountryIso().toUpperCase();
+            if (TextUtils.isEmpty(countryCode)) {
+                countryCode = tm.getNetworkCountryIso().toUpperCase();
+            }
+            if (TextUtils.isEmpty(countryCode)) {
+                countryCode = context.getResources().getConfiguration().locale.getCountry();
+            }
+        } else {
+            countryCode = context.getResources().getConfiguration().locale.getCountry();
+        }
+        return countryCode;
+    }
+
+    public static String getCountryDisplayNameNew(Context context) {
+        String countryName;
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        int simState = tm.getSimState();
+        if (tm.getSimCountryIso() != null && simState != TelephonyManager.SIM_STATE_ABSENT) {
+            countryName = telephonyManager.getSimCountryIso().toUpperCase();
+            if (TextUtils.isEmpty(countryName)) {
+                countryName = tm.getNetworkCountryIso().toUpperCase();
+            }
+            if (TextUtils.isEmpty(countryName)) {
+                countryName = tm.getNetworkCountryIso().toUpperCase();
+            }
+        } else {
+            countryName = context.getResources().getConfiguration().locale.getCountry();
+        }
+        return countryName;
+    }
+
 }
+
+
+

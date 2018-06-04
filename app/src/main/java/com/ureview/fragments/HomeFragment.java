@@ -15,7 +15,7 @@ import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
 import com.ureview.listeners.IClickListener;
 
-public class HomeFragment extends BaseFragmentNew implements IClickListener {
+public class HomeFragment extends BaseFragment implements IClickListener {
     private View rootView;
     private RecyclerView rvCategories, rvNewsFeed;
     private NewsFeedAdapter newsFeedAdapter;

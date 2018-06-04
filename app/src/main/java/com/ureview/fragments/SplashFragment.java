@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -7,18 +8,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
-import com.ureview.utils.views.CustomTextView;
+import com.ureview.utils.LocalStorage;
 
 public class SplashFragment extends BaseFragment {
 
     private View rootView;
     private SplashActivity splashActivity;
-    private ImageView imgLogo;
-    private CustomTextView img1, img2, img3, txtLogo;
 
     public SplashFragment() {
     }
@@ -46,6 +45,8 @@ public class SplashFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         splashActivity = (SplashActivity) getActivity();
+        splashActivity.changeStatusBarColorToAppColor();
+        splashActivity.setTopBar("SplashFragment");
     }
 
     private void initComponents() {
@@ -58,14 +59,15 @@ public class SplashFragment extends BaseFragment {
     }
 
     private void navigateToLogin() {
-//        if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, true)) {
-//            splashActivity.replaceFragment(IntroFragment.newInstance(), false, R.id.splashContainer);
-//        } else if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true)) {
-//            startActivity(new Intent(splashActivity, MainActivity.class));
-//            splashActivity.finishAffinity();
-//        } else {
-//            splashActivity.replaceFragment(LandingFragment.newInstance(new Bundle()), false, R.id.splashContainer);
-//        }
+        if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, true)) {
+            splashActivity.replaceFragment(IntroFragment.newInstance(), false, R.id.splashContainer);
+        } else if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true)) {
+            startActivity(new Intent(splashActivity, MainActivity.class));
+            splashActivity.finishAffinity();
+        } else {
+//            splashActivity.replaceFragment(SignupVerificationFragment.newInstance(), false, R.id.splashContainer);
+            splashActivity.replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
+        }
     }
 
 }

@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
+import com.ureview.utils.LocalStorage;
 
-public class Signup3Fragment extends BaseFragmentNew {
+public class Signup3Fragment extends BaseFragment {
     private View rootView;
     private SplashActivity splashActivity;
 
@@ -41,6 +42,7 @@ public class Signup3Fragment extends BaseFragmentNew {
         rootView.findViewById(R.id.txtDone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                LocalStorage.getInstance(splashActivity).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
                 startActivity(new Intent(splashActivity, MainActivity.class));
                 splashActivity.finishAffinity();
             }

@@ -7,7 +7,7 @@
         android:id="@+id/relTopBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="@dimen/pad_10">
+        android:visibility="visible">
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtTitle"
@@ -29,7 +29,7 @@
             android:text="Done"
             android:textColor="@color/app_text_color"
             android:textSize="@dimen/txt_size_18sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgBack"
@@ -37,7 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="@dimen/pad_10"
-            android:src="@drawable/back_copy" />
+            android:src="@drawable/back_copy"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

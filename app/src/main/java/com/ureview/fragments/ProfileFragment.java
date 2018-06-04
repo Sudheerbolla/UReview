@@ -20,7 +20,7 @@ import com.ureview.utils.views.CustomTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileFragment extends BaseFragmentNew implements View.OnClickListener {
+public class ProfileFragment extends BaseFragment implements View.OnClickListener {
     private View rootView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
