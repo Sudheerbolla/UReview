@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
+import com.ureview.utils.LocalStorage;
 import com.ureview.wsutils.WSInterface;
 import com.ureview.wsutils.WSUtils;
 
@@ -38,6 +39,12 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         initRetrofit();
         FacebookSdk.sdkInitialize(getApplicationContext());
+        getUserDataIfAvailable();
+    }
+
+    private void getUserDataIfAvailable() {
+        String json = LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, "");
+//        if (!TextUtils.isEmpty(json)) new Gson().fromJson(json, UserInfoModel.class);
     }
 
     public WSInterface getWsClientListener() {

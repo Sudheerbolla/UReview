@@ -53,6 +53,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+//            if (BaseApplication.userInfoModel != null) {
+//                String json = new Gson().toJson(BaseApplication.userInfoModel);
+//                LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
         checkPermissions();
     }
