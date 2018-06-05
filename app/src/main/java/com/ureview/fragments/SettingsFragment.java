@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.ureview.R;
 
 public class SettingsFragment extends BaseFragment {
+
     private View rootView;
 
     public static SettingsFragment newInstance() {
@@ -24,4 +25,5 @@ public class SettingsFragment extends BaseFragment {
     }
 
 }
-//LoginManager.getInstance().logOut();
+// LoginManager.getInstance().logOut();
+// IS_LOGGED_IN_ALREADY

@@ -137,7 +137,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                             e.printStackTrace();
                         }
                         if (!TextUtils.isEmpty(id)) requestForCheckUserWS();
-//                        requestForRegistrationWS();
                     }
                 });
         Bundle parameters = new Bundle();
@@ -165,7 +164,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void requestForCheckUserWS() {
-//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(AccessToken.getCurrentAccessToken().getToken());
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(id);
         new WSCallBacksListener().requestForJsonObject(splashActivity, WSUtils.REQ_FOR_CHECK_USER, call, this);
     }
@@ -187,7 +185,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             Bundle bundle = new Bundle();
             bundle.putString("firstName", firstName);
             bundle.putString("lastName", lastName);
-            bundle.putString("token", AccessToken.getCurrentAccessToken().getToken());
+            bundle.putString("token", id);
             bundle.putString("email", email);
             if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
 //register
@@ -197,13 +195,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 if (response.has("message")) {
                     StaticUtils.showToast(splashActivity, response.get("message").getAsString());
                 }
-                if (response.has("userInfo")) {
-                    BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
+                if (response.has("user_info")) {
+                    BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                    LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
                 }
-                if (response.has("userid")) {
-                    LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, response.get("userid").getAsString());
-                }
-                splashActivity.replaceFragment(SignupVerificationFragment.newInstance(), true, R.id.splashContainer);
+
+                splashActivity.replaceFragment(SignupVerificationFragment.newInstance(id), true, R.id.splashContainer);
 
             }
         }

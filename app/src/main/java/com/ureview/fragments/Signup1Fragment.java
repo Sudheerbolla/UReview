@@ -327,7 +327,6 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
                 customDialog.show();
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-//StaticUtils.showToast(splashActivity,"Something went wrong");
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());
             }
         }
