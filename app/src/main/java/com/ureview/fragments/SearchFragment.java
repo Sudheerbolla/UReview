@@ -46,7 +46,6 @@ public class SearchFragment extends BaseFragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFragment(new SearchVideosFragment(), "Videos");
         adapter.addFragment(new FollowersFragment(), "People");
-        adapter.addFragment(new SearchCategoryFragment(), "Category");
         viewPager.setAdapter(adapter);
     }
 
