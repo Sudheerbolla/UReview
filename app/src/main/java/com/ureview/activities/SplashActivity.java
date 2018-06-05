@@ -121,7 +121,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     private void proceedWithFlow() {
 //        printHashKey();
 //        check(new String[]{"10", "joe", "mary", "joe", "james", "james", "james", "mary", "mary"});
-        replaceFragment(SplashFragment.newInstance(), false, R.id.splashContainer);
+        replaceFragmentWithoutAnimation(SplashFragment.newInstance(), R.id.splashContainer, false);
     }
 
     private void check(String[] array) {

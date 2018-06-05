@@ -38,6 +38,9 @@ public interface WSInterface {
     @POST("/delete-notification")
     Call<JsonElement> deleteNotification(@Body RequestBody params);
 
+    @POST("/read-notification")
+    Call<JsonElement> readNotification(@Body RequestBody params);
+
 
 
 

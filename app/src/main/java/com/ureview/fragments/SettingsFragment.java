@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
+import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
@@ -123,6 +125,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         LocalStorage.getInstance(mainActivity).putBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, false);
 
         LoginManager.getInstance().logOut();
+
+        startActivity(new Intent(mainActivity, SplashActivity.class));
+        mainActivity.finishAffinity();
 
     }
 

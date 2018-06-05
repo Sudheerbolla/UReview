@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void proceedWithFlow() {
-        setToolBar("", "Mirpur 10, Dhaka", "", true, false, true, false, false);
+        setToolBar("", "", "", true, false, true, false, false);
         replaceFragmentWithoutAnimation(HomeCompleteFragment.newInstance(), R.id.mainContainer, false);
     }
 
