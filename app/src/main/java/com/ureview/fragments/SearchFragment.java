@@ -31,10 +31,10 @@ public class SearchFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+        viewPager = rootView.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) rootView.findViewById(R.id.searchTabs);
+        tabLayout = rootView.findViewById(R.id.searchTabs);
         tabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.colorDarkGrey),
                 ContextCompat.getColor(getActivity(), R.color.app_text_color));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getActivity(), R.color.app_text_color));
@@ -46,7 +46,6 @@ public class SearchFragment extends BaseFragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter.addFragment(new SearchVideosFragment(), "Videos");
         adapter.addFragment(new FollowersFragment(), "People");
-        adapter.addFragment(new SearchCategoryFragment(), "Category");
         viewPager.setAdapter(adapter);
     }
 

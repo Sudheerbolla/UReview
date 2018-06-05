@@ -68,4 +68,5 @@ public class HomeCompleteFragment extends BaseFragment implements View.OnClickLi
     public void onClick(View view) {
         mainActivity.setHomeFragment();
     }
+
 }

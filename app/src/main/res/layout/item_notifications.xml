@@ -22,12 +22,10 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:paddingBottom="@dimen/pad_19"
-            android:paddingLeft="@dimen/pad_23"
-            android:paddingRight="@dimen/pad_25"
-            android:paddingTop="@dimen/pad_19"
+            android:padding="@dimen/pad_23"
             android:text="Delete"
             android:textColor="@color/color_white" />
+
     </RelativeLayout>
 
     <RelativeLayout
