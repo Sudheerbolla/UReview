@@ -271,7 +271,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setNotificationsFragment() {
-        setToolBar("Notifications", "", "", false, true, false, false, false);
+        setToolBar("Notifications", "", "", false, false, false, false, false);
         replaceFragment(NotificationsFragment.newInstance(), true, R.id.mainContainer);
     }
 

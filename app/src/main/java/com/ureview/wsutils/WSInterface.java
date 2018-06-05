@@ -29,6 +29,19 @@ public interface WSInterface {
     @POST("/login-verify-otp")
     Call<JsonElement> loginVerifyOTP(@Body RequestBody params);
 
+    @POST("/delete-profile")
+    Call<JsonElement> deleteProfile(@Body RequestBody params);
+
+    @GET("/user-notications")
+    Call<JsonElement> getNotifications(@Query("user_id") String userId);
+
+    @POST("/delete-notification")
+    Call<JsonElement> deleteNotification(@Body RequestBody params);
+
+
+
+
+
     @GET("/get_employees/")
     Call<JsonElement> dummyCall();
 

@@ -12,13 +12,13 @@ public class WSUtils {
 //    public static final String BASE_URL = "http://vrs.amelglobalitsolutions.com";
 
     public static final int REQ_FOR_LOGIN = 100;
-    public static final int REQ_FOR_USER_REGISTRATION= 101;
-    public static final int REQ_FOR_CHECK_USER= 102;
-    public static final int REQ_FOR_CHECK_USER_OTP= 103;
-    public static final int REQ_FOR_CHECK_LOGIN_OTP= 104;
-    public static final int REQ_FOR_CREATE_USER_DEVICE = 105;
-    public static final int REQ_FOR_CUST_CREDIT_POINTS = 106;
-    public static final int REQ_FOR_GET_USER_DEVICES = 107;
+    public static final int REQ_FOR_USER_REGISTRATION = 101;
+    public static final int REQ_FOR_CHECK_USER = 102;
+    public static final int REQ_FOR_CHECK_USER_OTP = 103;
+    public static final int REQ_FOR_CHECK_LOGIN_OTP = 104;
+    public static final int REQ_FOR_DELETE_ACCOUNT = 105;
+    public static final int REQ_FOR_NOTIFICATIONS = 106;
+    public static final int REQ_FOR_DELETE_NOTIFICATION = 107;
     public static final int REQ_FOR_GET_CUST_CREDIT_POINTS = 108;
     public static final int REQ_FOR_GET_USER_PROFILES = 109;
     public static final int REQ_FOR_GET_CUSTOMER_DATA_USAGE = 110;

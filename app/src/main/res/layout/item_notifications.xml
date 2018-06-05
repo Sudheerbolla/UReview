@@ -34,18 +34,10 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/pad_10">
 
-        <ImageView
+        <com.ureview.utils.views.CircleImageView
             android:id="@+id/imgProfile"
             android:layout_width="@dimen/pad_45"
             android:layout_height="@dimen/pad_45"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher" />
-
-        <ImageView
-            android:id="@+id/imgPost"
-            android:layout_width="@dimen/pad_45"
-            android:layout_height="@dimen/pad_45"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_launcher" />
 
@@ -67,9 +59,8 @@
             android:layout_marginLeft="@dimen/pad_5"
             android:layout_marginRight="@dimen/pad_5"
             android:layout_marginTop="@dimen/pad_5"
-            android:layout_toLeftOf="@+id/imgPost"
             android:layout_toRightOf="@+id/txtName"
-            android:text="liked your video"
+            android:text="liked your video liked your video"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_12sp" />
 
@@ -81,11 +72,11 @@
             android:layout_marginLeft="@dimen/pad_5"
             android:layout_marginRight="@dimen/pad_5"
             android:layout_marginTop="@dimen/pad_3"
-            android:layout_toLeftOf="@+id/imgPost"
             android:layout_toRightOf="@+id/imgProfile"
             android:text="7 minutes ago"
             android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_12sp" />
 
     </RelativeLayout>
+
 </com.ureview.utils.swipeUtils.CustomSwipeView>
