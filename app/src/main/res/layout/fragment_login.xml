@@ -53,21 +53,34 @@
             android:textColor="@color/color_white"
             android:textSize="@dimen/txt_size_14sp" />
 
-        <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txtFbLogin"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/pad_20"
             android:layout_marginRight="@dimen/pad_20"
-            android:layout_marginTop="@dimen/pad_10"
-            android:background="@drawable/bg_fb"
-            android:drawablePadding="@dimen/pad_15"
-            android:drawableStart="@drawable/ic_fb"
-            android:gravity="center_vertical"
-            android:padding="@dimen/pad_10"
-            android:text="Log in with Facebook"
-            android:textColor="@color/color_white"
-            android:textSize="@dimen/txt_size_14sp" />
+            android:layout_marginTop="@dimen/pad_10">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtFbLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_fb"
+                android:drawablePadding="@dimen/pad_15"
+                android:drawableStart="@drawable/ic_fb"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_10"
+                android:text="Log in with Facebook"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/txt_size_14sp" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtInstagramLogin"

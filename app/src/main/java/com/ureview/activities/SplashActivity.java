@@ -1,6 +1,11 @@
 package com.ureview.activities;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,6 +17,8 @@ import com.ureview.utils.DialogUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,6 +68,11 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Sign Up");
                 break;
+            case "Signup3Fragment":
+                relTopBar.setVisibility(View.VISIBLE);
+                txtTitle.setVisibility(View.VISIBLE);
+                txtTitle.setText("Congratulations");
+                break;
             case "LoginFragment":
                 relTopBar.setVisibility(View.VISIBLE);
                 txtTitle.setVisibility(View.VISIBLE);
@@ -92,7 +104,22 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    public void printHashKey() {
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                String hashKey = new String(Base64.encode(md.digest(), 0));
+                Log.e("Hash Key: ", hashKey + "");
+            }
+        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
+        }
+    }
+
     private void proceedWithFlow() {
+//        printHashKey();
 //        check(new String[]{"10", "joe", "mary", "joe", "james", "james", "james", "mary", "mary"});
         replaceFragment(SplashFragment.newInstance(), false, R.id.splashContainer);
     }

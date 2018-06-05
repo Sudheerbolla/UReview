@@ -39,6 +39,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
         initBottomBar();
         initTopBar();
         proceedWithFlow();

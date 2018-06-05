@@ -61,7 +61,7 @@ public class SplashFragment extends BaseFragment {
     private void navigateToLogin() {
         if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_FIRST_TIME_LAUNCH, true)) {
             splashActivity.replaceFragment(IntroFragment.newInstance(), false, R.id.splashContainer);
-        } else if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true)) {
+        } else if (LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, false)) {
             startActivity(new Intent(splashActivity, MainActivity.class));
             splashActivity.finishAffinity();
         } else {

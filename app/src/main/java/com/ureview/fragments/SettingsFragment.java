@@ -24,3 +24,4 @@ public class SettingsFragment extends BaseFragment {
     }
 
 }
+//LoginManager.getInstance().logOut();

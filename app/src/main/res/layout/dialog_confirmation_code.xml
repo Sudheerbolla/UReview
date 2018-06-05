@@ -41,32 +41,45 @@ given phone number"
             android:orientation="horizontal">
 
             <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="2"
                 android:gravity="center"
                 android:inputType="number"
-                android:maxLength="1" />
+                android:maxLength="1"
+                android:nextFocusDown="@+id/edtCode2"
+                android:nextFocusForward="@+id/edtCode2"
+                android:nextFocusRight="@+id/edtCode2" />
 
             <com.ureview.utils.views.CustomEditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/pad_5"
-                android:ems="2"
-                android:gravity="center"
-                android:inputType="number"
-                android:maxLength="1" />
-
-            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_5"
                 android:ems="2"
                 android:gravity="center"
                 android:inputType="number"
-                android:maxLength="1" />
+                android:maxLength="1"
+                android:nextFocusDown="@+id/edtCode3"
+                android:nextFocusForward="@+id/edtCode3"
+                android:nextFocusRight="@+id/edtCode3" />
 
             <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_5"
+                android:ems="2"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:nextFocusDown="@+id/edtCode4"
+                android:nextFocusForward="@+id/edtCode4"
+                android:nextFocusRight="@+id/edtCode4" />
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_5"

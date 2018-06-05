@@ -3,6 +3,10 @@ package com.ureview;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
+import com.facebook.FacebookSdk;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
 import com.ureview.wsutils.WSInterface;
 import com.ureview.wsutils.WSUtils;
@@ -22,6 +26,7 @@ public class BaseApplication extends MultiDexApplication {
     private static BaseApplication mInstance;
     private static WSInterface wsInterface;
     private OkHttpClient okHttpClient;
+    public static UserInfoModel userInfoModel;
 
     public static synchronized BaseApplication getInstance() {
         if (mInstance == null) mInstance = new BaseApplication();
@@ -32,6 +37,7 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         initRetrofit();
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public WSInterface getWsClientListener() {
@@ -60,7 +66,10 @@ public class BaseApplication extends MultiDexApplication {
     }
 
     private Retrofit buildRetrofitClient(String baseUrl) {
-        return new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build();
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+        return new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create(gson)).client(okHttpClient).build();
     }
 
 
