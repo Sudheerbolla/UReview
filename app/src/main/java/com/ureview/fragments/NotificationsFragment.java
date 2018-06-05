@@ -72,8 +72,8 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     }
 
     private void requestForNotificationsWS() {
-//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getNotifications(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getNotifications("2");
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getNotifications(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getNotifications("2");
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NOTIFICATIONS, call, this);
     }
 

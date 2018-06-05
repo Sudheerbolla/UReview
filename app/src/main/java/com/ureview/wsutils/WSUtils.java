@@ -20,7 +20,7 @@ public class WSUtils {
     public static final int REQ_FOR_NOTIFICATIONS = 106;
     public static final int REQ_FOR_DELETE_NOTIFICATION = 107;
     public static final int REQ_FOR_READ_NOTIFICATION = 108;
-    public static final int REQ_FOR_GET_USER_PROFILES = 109;
+    public static final int REQ_FOR_GET_USER_PROFILE = 109;
     public static final int REQ_FOR_GET_CUSTOMER_DATA_USAGE = 110;
     public static final int REQ_FOR_CREATE_USER_PROFILE = 111;
     public static final int REQ_FOR_RESEND_OTP = 112;

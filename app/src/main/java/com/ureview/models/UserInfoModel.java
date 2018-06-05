@@ -3,7 +3,9 @@ package com.ureview.models;
 import com.google.gson.JsonObject;
 
 public class UserInfoModel {
-    public String id, first_name, last_name, user_name, email, gender, date_of_birth, age, country_code, mobile, otp, user_image, user_description, auth_id, auth_type, user_rating, status, videos_range, city, address, platform, device_token, created_date, userid;
+    public String id, first_name, last_name, user_name, email, gender, date_of_birth, age, country_code, mobile, otp,
+            user_image, user_description, auth_id, auth_type, user_rating, status, videos_range, city, address, platform,
+            device_token, created_date, userid, follow_status, follow_you_count, you_follow_count;
 
     public UserInfoModel(JsonObject jsonObject) {
         try {
@@ -17,7 +19,7 @@ public class UserInfoModel {
             age = jsonObject.get("age").getAsString();
             country_code = jsonObject.get("country_code").getAsString();
             mobile = jsonObject.get("mobile").getAsString();
-            otp = jsonObject.get("otp").getAsString();
+            if (jsonObject.has("otp")) otp = jsonObject.get("otp").getAsString();
             user_image = jsonObject.get("user_image").getAsString();
             user_description = jsonObject.get("user_description").getAsString();
             auth_id = jsonObject.get("auth_id").getAsString();
@@ -31,6 +33,13 @@ public class UserInfoModel {
             device_token = jsonObject.get("device_token").getAsString();
             created_date = jsonObject.get("created_date").getAsString();
             userid = jsonObject.get("userid").getAsString();
+
+            if (jsonObject.has("follow_status"))
+                follow_status = jsonObject.get("follow_status").getAsString();
+            if (jsonObject.has("follow_you_count"))
+                otp = jsonObject.get("follow_you_count").getAsString();
+            if (jsonObject.has("you_follow_count"))
+                otp = jsonObject.get("you_follow_count").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
         }
