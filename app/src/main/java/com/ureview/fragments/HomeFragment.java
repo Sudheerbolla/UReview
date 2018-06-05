@@ -13,14 +13,18 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
+import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
+import com.ureview.utils.views.CustomTextView;
 
-public class HomeFragment extends BaseFragment implements IClickListener {
+public class HomeFragment extends BaseFragment implements IClickListener, View.OnClickListener {
     private View rootView;
-    private RecyclerView rvCategories, rvNewsFeed;
+    private RecyclerView rvCategories, rvNewsFeed, rvNearByVideos, rvTopRated;
     private NewsFeedAdapter newsFeedAdapter;
     private HomeCategoryAdapter homeCategoryAdapter;
     private MainActivity mainActivity;
+    private CustomTextView txtSeeAllVideos, txtSeeAllTopRated;
+    private ProfileVideosAdapter profileVideosAdapter;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -48,6 +52,26 @@ public class HomeFragment extends BaseFragment implements IClickListener {
         rvNewsFeed.setAdapter(newsFeedAdapter);
         rvCategories.setAdapter(homeCategoryAdapter);
 
+
+        rvNearByVideos = rootView.findViewById(R.id.rvNearByVideos);
+        rvTopRated = rootView.findViewById(R.id.rvTopRated);
+
+        txtSeeAllVideos = rootView.findViewById(R.id.txtSeeAllVideos);
+        txtSeeAllTopRated = rootView.findViewById(R.id.txtSeeAllTopRated);
+
+        rvNearByVideos.setNestedScrollingEnabled(false);
+        rvTopRated.setNestedScrollingEnabled(false);
+
+        profileVideosAdapter = new ProfileVideosAdapter(getActivity());
+        rvNearByVideos.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        rvTopRated.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+
+        rvNearByVideos.setAdapter(profileVideosAdapter);
+        rvTopRated.setAdapter(profileVideosAdapter);
+
+        txtSeeAllTopRated.setOnClickListener(this);
+        txtSeeAllVideos.setOnClickListener(this);
+
         return rootView;
     }
 
@@ -58,6 +82,11 @@ public class HomeFragment extends BaseFragment implements IClickListener {
 
     @Override
     public void onLongClick(View view, int position) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
 
     }
 }
