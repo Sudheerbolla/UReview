@@ -13,17 +13,15 @@ import com.ureview.fragments.FollowersFragment;
 import com.ureview.fragments.HomeCompleteFragment;
 import com.ureview.fragments.HomeFragment;
 import com.ureview.fragments.LocationRadiusFragment;
-import com.ureview.fragments.LoginFragment;
 import com.ureview.fragments.NotificationsFragment;
 import com.ureview.fragments.ProfileFragment;
 import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
-import com.ureview.fragments.Signup1Fragment;
-import com.ureview.fragments.SignupVerificationFragment;
 import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
 import com.ureview.fragments.VideoReviewFragment;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomTextView;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -39,6 +37,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
         initBottomBar();
         initTopBar();
         proceedWithFlow();
@@ -230,35 +229,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         replaceFragment(ProfileFragment.newInstance(), R.id.mainContainer);
     }
 
-    private void setLoginFragment() {
-        setToolBar("Log In", "", "Sign Up", false, true,
-                false, false, false);
-//        tabLayout.setVisibility(View.GONE);
-        findViewById(R.id.bottomBar).setVisibility(View.GONE);
-        replaceFragment(LoginFragment.newInstance(), R.id.mainContainer);
-    }
-
-    private void setSignup1Fragment() {
-        setToolBar("Sign Up", "", "Log In", false, true,
-                false, false, false);
-//        tabLayout.setVisibility(View.GONE);
-        findViewById(R.id.bottomBar).setVisibility(View.GONE);
-        replaceFragment(Signup1Fragment.newInstance(), R.id.mainContainer);
-    }
-
-    private void setSignup2Fragment() {
-        setToolBar("Sign Up", "", "Log In", false, true,
-                false, false, false);
-//        tabLayout.setVisibility(View.GONE);
-        findViewById(R.id.bottomBar).setVisibility(View.GONE);
-//        replaceFragment(Signup2Fragment.newInstance(), R.id.mainContainer);
-    }
-
-    private void setSignupVerificationFragment() {
-        setToolBar("Sign Up", "", "Log In", false, true,
-                false, false, false);
-//        tabLayout.setVisibility(View.GONE);
-        findViewById(R.id.bottomBar).setVisibility(View.GONE);
-        replaceFragment(SignupVerificationFragment.newInstance(), R.id.mainContainer);
-    }
 }

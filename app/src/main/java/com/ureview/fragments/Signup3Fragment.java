@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
-import com.ureview.utils.LocalStorage;
 
 public class Signup3Fragment extends BaseFragment {
     private View rootView;
@@ -31,7 +30,7 @@ public class Signup3Fragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (splashActivity != null) {
-            splashActivity.setTopBar(Signup1Fragment.class.getSimpleName());
+            splashActivity.setTopBar(Signup3Fragment.class.getSimpleName());
         }
     }
 
@@ -42,7 +41,6 @@ public class Signup3Fragment extends BaseFragment {
         rootView.findViewById(R.id.txtDone).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalStorage.getInstance(splashActivity).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
                 startActivity(new Intent(splashActivity, MainActivity.class));
                 splashActivity.finishAffinity();
             }

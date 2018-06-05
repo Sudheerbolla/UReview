@@ -16,6 +16,19 @@ import retrofit2.http.QueryMap;
 
 public interface WSInterface {
 
+
+    @POST("/user-registration")
+    Call<JsonElement> userRegistration(@Body RequestBody params);
+
+    @GET("/check-user-profile")
+    Call<JsonElement> checkUserProfile(@Query("auth_id") String userId);
+
+    @POST("/check-user-otp")
+    Call<JsonElement> checkUserOTP(@Body RequestBody params);
+
+    @POST("/login-verify-otp")
+    Call<JsonElement> loginVerifyOTP(@Body RequestBody params);
+
     @GET("/get_employees/")
     Call<JsonElement> dummyCall();
 

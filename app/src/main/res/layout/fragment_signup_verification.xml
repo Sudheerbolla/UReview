@@ -59,7 +59,6 @@
                     android:background="@drawable/bg_edt_txt"
                     android:drawableLeft="@drawable/phone_copy"
                     android:drawablePadding="@dimen/pad_10"
-                    android:hint="+91"
                     android:paddingBottom="@dimen/pad_13"
                     android:paddingLeft="@dimen/pad_13"
                     android:paddingRight="@dimen/pad_13"

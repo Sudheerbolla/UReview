@@ -43,11 +43,11 @@
                     android:textSize="@dimen/txt_size_20sp" />
 
                 <RadioGroup
+                    android:id="@+id/rgGender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/pad_15"
                     android:gravity="center"
-                    android:id="@+id/rgGender"
                     android:orientation="horizontal"
                     android:padding="@dimen/pad_5">
 
