@@ -48,6 +48,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
     private ImageView imgProfile;
+    private ViewPagerAdapter adapter;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -146,8 +147,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
-    ViewPagerAdapter adapter;
-
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new AboutFragment(), "About");
@@ -190,7 +189,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         }
                         if (adapter.getItem(0) != null && adapter.getItem(0) instanceof AboutFragment)
                             ((AboutFragment) adapter.getItem(0)).updateData();
-
+                        setData();
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

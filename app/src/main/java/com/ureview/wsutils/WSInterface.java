@@ -2,12 +2,15 @@ package com.ureview.wsutils;
 
 import com.google.gson.JsonElement;
 
+import java.util.HashMap;
+
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface WSInterface {
 
@@ -45,7 +48,21 @@ public interface WSInterface {
     @GET("/follow_you_follow_list")
     Call<JsonElement> getFollowList(@Query("user_id") String userId);
 
-//
+    @POST("/follow-request")
+    Call<JsonElement> followUser(@Body RequestBody params);
+
+    @POST("/un-follow-user")
+    Call<JsonElement> unFollowUser(@Body RequestBody params);
+
+    @POST("/block-user")
+    Call<JsonElement> blockUser(@Body RequestBody params);
+
+    @POST("/search-videos")
+    Call<JsonElement> searchVideos(@Body RequestBody params);
+
+    @GET("/search-users")
+    Call<JsonElement> searchUsers(@QueryMap(encoded = true) HashMap<String, String> params);
+
 //    @GET("/get_employees/")
 //    Call<JsonElement> dummyCall();
 //

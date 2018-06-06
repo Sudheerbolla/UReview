@@ -25,8 +25,12 @@ import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class FollowersFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener {
@@ -38,6 +42,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private boolean showFollowers;
     private ArrayList<FollowModel> followModelArrayList;
     private CustomTextView txtNoData;
+    private String userId;
 
     public static FollowersFragment newInstance(boolean showFollowers) {
         FollowersFragment followersFragment = new FollowersFragment();
@@ -67,6 +72,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         if (bundle != null) {
             showFollowers = bundle.getBoolean("showFollowers");
         }
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Nullable
@@ -93,6 +99,32 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private void requestForGetFollowListWS() {
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getFollowList(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_FOLLOW_LIST, call, this);
+    }
+
+    private void requestForFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
+
+    private void requestForUnFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
+    }
+
+    private void requestForBlockUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().blockUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_BLOCK_USER, call, this);
+    }
+
+    private RequestBody getRequestBodyObject(String followId) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("id", Integer.parseInt(userId));
+            jsonObjectReq.put("follow_id", Integer.parseInt(followId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return StaticUtils.getRequestBody(jsonObjectReq);
     }
 
     @Override
@@ -151,47 +183,13 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     public void onLongClick(View view, int position) {
 
     }
+
 }
 
-/*{
-    "status": "success",
-    "message": "Follow You and You Follow List",
-    "follow_you_list": [
-        {
-            "user_id": "1",
-            "first_name": "Madhu",
-            "last_name": "Sudhan",
-            "email": "putta.msreddy@gmail.com",
-            "user_image": "",
-            "gender": "M",
-            "date_of_birth": "31/05/2013",
-            "age": "5",
-            "mobile": "8121407014",
-            "user_description": "",
-            "user_rating": "2",
-            "address": "",
-            "follow_status": "",
-            "status": "1",
-            "uploaded_videos_count": 10
-        }
-    ],
-    "you_follow_list": [
-        {
-            "user_id": "5",
-            "first_name": "Manish",
-            "last_name": "Pathak",
-            "email": "manishvijaykantpathak@gmail.com",
-            "user_image": "",
-            "gender": "M",
-            "date_of_birth": "01/06/2017",
-            "age": "1",
-            "mobile": "9820680804",
-            "user_description": "",
-            "user_rating": "0",
-            "address": "",
-            "follow_status": "follow",
-            "status": "1",
-            "uploaded_videos_count": 4
-        }
-    ]
-}*/
+/*http://18.216.101.112/follow-request
+http://18.216.101.112/un-follow-user
+http://18.216.101.112/block-user
+
+{"id":1,"follow_id":2}
+
+*/
