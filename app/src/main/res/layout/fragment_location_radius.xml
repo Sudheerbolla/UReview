@@ -36,6 +36,71 @@
             rsb:absoluteMaxValue="100"
             rsb:absoluteMinValue="0" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rangeSeekbar"
+            android:layout_marginTop="@dimen/pad_20"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/pad_15"
+            android:paddingStart="@dimen/pad_15">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--<AutoCompleteTextView-->
+                    <!--android:id="@+id/edtAutoCompleteSearch"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_toLeftOf="@+id/clear"-->
+                    <!--android:background="@null"-->
+                    <!--android:drawableLeft="@drawable/search_copy"-->
+                    <!--android:drawablePadding="@dimen/pad_12"-->
+                    <!--android:hint="Search"-->
+                    <!--android:imeOptions="actionSearch"-->
+                    <!--android:padding="@dimen/pad_10"-->
+                    <!--android:singleLine="true" />-->
+                <com.ureview.utils.views.CustomEditText
+                    android:id="@+id/edtAutoCompleteSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/clear"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/search_copy"
+                    android:drawablePadding="@dimen/pad_12"
+                    android:hint="Search"
+                    android:imeOptions="actionSearch"
+                    android:padding="@dimen/pad_10"
+                    android:singleLine="true" />
+
+                <ImageView
+                    android:id="@+id/clear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/pad_10"
+                    android:src="@drawable/ic_clear"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewAutoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="@dimen/pad_10"
+                android:background="@color/color_white" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

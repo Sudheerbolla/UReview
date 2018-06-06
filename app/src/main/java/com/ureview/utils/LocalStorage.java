@@ -18,6 +18,7 @@ public class LocalStorage {
     public static final String IS_PREFERENCE_SELECTED = "IS_PREFERENCE_SELECTED";
     public static final String PREF_LANGUAGE = "PREF_LANGUAGE";
     public static final String PREF_DEVICE_TOKEN = "DEVICE_TOKEN";
+    public static final String PREF_USER_INFO_DATA = "USER_INFO_DATA";
 
     private LocalStorage(Context mContext) {
         preferences = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);

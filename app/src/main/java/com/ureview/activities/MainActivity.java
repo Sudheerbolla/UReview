@@ -53,6 +53,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        try {
+//            if (BaseApplication.userInfoModel != null) {
+//                String json = new Gson().toJson(BaseApplication.userInfoModel);
+//                LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
         checkPermissions();
     }
@@ -114,7 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void proceedWithFlow() {
-        setToolBar("", "Mirpur 10, Dhaka", "", true, false, true, false, false);
+        setToolBar("", "", "", true, false, true, false, false);
         replaceFragmentWithoutAnimation(HomeFragment.newInstance(), R.id.mainContainer, false);
     }
 
@@ -271,7 +279,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setNotificationsFragment() {
-        setToolBar("Notifications", "", "", false, true, false, false, false);
+        setToolBar("Notifications", "", "", false, false, false, false, false);
         replaceFragment(NotificationsFragment.newInstance(), true, R.id.mainContainer);
     }
 

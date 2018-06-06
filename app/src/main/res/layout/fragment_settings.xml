@@ -14,47 +14,51 @@
             android:layout_height="0.9dp"
             android:background="@color/colorLightGrey" />
 
+        <!--
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/pad_15">
+
+                    <ImageView
+                        android:id="@+id/imgAbout"
+                        android:layout_width="@dimen/pad_35"
+                        android:layout_height="@dimen/pad_35"
+                        android:scaleType="centerInside"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/about_copy" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtAbout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/pad_10"
+                        android:layout_toRightOf="@+id/imgAbout"
+                        android:text="Account info"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/txt_size_15sp" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtAbout"
+                        android:layout_marginLeft="@dimen/pad_10"
+                        android:layout_marginTop="@dimen/pad_3"
+                        android:layout_toRightOf="@+id/imgAbout"
+                        android:text="Learn more about your account"
+                        android:textColor="@color/colorDarkGrey"
+                        android:textSize="@dimen/txt_size_11sp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.9dp"
+                    android:background="@color/colorLightGrey" />
+        -->
+
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad_15">
-
-            <ImageView
-                android:id="@+id/imgAbout"
-                android:layout_width="@dimen/pad_35"
-                android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
-                android:layout_centerVertical="true"
-                android:src="@drawable/about_copy" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtAbout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_toRightOf="@+id/imgAbout"
-                android:text="Account info"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_15sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtAbout"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_3"
-                android:layout_toRightOf="@+id/imgAbout"
-                android:text="Learn more about your account"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/txt_size_11sp" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.9dp"
-            android:background="@color/colorLightGrey" />
-
-        <RelativeLayout
+            android:id="@+id/relShareApp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -63,8 +67,8 @@
                 android:id="@+id/imgShare"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/share_app_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -95,6 +99,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relPrivacyPolicy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -103,8 +108,8 @@
                 android:id="@+id/imgPrivacy"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/privacy_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -135,6 +140,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relTermsAndConditions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -143,8 +149,8 @@
                 android:id="@+id/imgTerms"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/terms_and_condition_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -175,6 +181,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relHelpCenter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -183,8 +190,8 @@
                 android:id="@+id/imgHelp"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/help_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -215,6 +222,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relContactUs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -223,8 +231,8 @@
                 android:id="@+id/imgContactUs"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/contact_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -255,6 +263,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -263,8 +272,8 @@
                 android:id="@+id/imgLogout"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/logout_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -295,6 +304,7 @@
             android:background="@color/colorLightGrey" />
 
         <RelativeLayout
+            android:id="@+id/relDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/pad_15">
@@ -303,8 +313,8 @@
                 android:id="@+id/imgDelAcc"
                 android:layout_width="@dimen/pad_35"
                 android:layout_height="@dimen/pad_35"
-                android:scaleType="centerInside"
                 android:layout_centerVertical="true"
+                android:scaleType="centerInside"
                 android:src="@drawable/delete_account_copy" />
 
             <com.ureview.utils.views.CustomTextView
@@ -333,6 +343,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.9dp"
             android:background="@color/colorLightGrey" />
+
     </LinearLayout>
 
 </ScrollView>

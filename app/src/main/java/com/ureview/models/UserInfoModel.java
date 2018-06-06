@@ -1,9 +1,14 @@
 package com.ureview.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.JsonObject;
 
-public class UserInfoModel {
-    public String id, first_name, last_name, user_name, email, gender, date_of_birth, age, country_code, mobile, otp, user_image, user_description, auth_id, auth_type, user_rating, status, videos_range, city, address, platform, device_token, created_date, userid;
+public class UserInfoModel implements Parcelable {
+    public String id, first_name, last_name, user_name, email, gender, date_of_birth, age, country_code, mobile, otp,
+            user_image, user_description, auth_id, auth_type, user_rating, status, videos_range, city, address, platform,
+            device_token, created_date, userid, follow_status, follow_you_count, you_follow_count;
 
     public UserInfoModel(JsonObject jsonObject) {
         try {
@@ -17,7 +22,7 @@ public class UserInfoModel {
             age = jsonObject.get("age").getAsString();
             country_code = jsonObject.get("country_code").getAsString();
             mobile = jsonObject.get("mobile").getAsString();
-            otp = jsonObject.get("otp").getAsString();
+            if (jsonObject.has("otp")) otp = jsonObject.get("otp").getAsString();
             user_image = jsonObject.get("user_image").getAsString();
             user_description = jsonObject.get("user_description").getAsString();
             auth_id = jsonObject.get("auth_id").getAsString();
@@ -31,11 +36,95 @@ public class UserInfoModel {
             device_token = jsonObject.get("device_token").getAsString();
             created_date = jsonObject.get("created_date").getAsString();
             userid = jsonObject.get("userid").getAsString();
+
+            if (jsonObject.has("follow_status"))
+                follow_status = jsonObject.get("follow_status").getAsString();
+            if (jsonObject.has("follow_you_count"))
+                otp = jsonObject.get("follow_you_count").getAsString();
+            if (jsonObject.has("you_follow_count"))
+                otp = jsonObject.get("you_follow_count").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    protected UserInfoModel(Parcel in) {
+        id = in.readString();
+        first_name = in.readString();
+        last_name = in.readString();
+        user_name = in.readString();
+        email = in.readString();
+        gender = in.readString();
+        date_of_birth = in.readString();
+        age = in.readString();
+        country_code = in.readString();
+        mobile = in.readString();
+        otp = in.readString();
+        user_image = in.readString();
+        user_description = in.readString();
+        auth_id = in.readString();
+        auth_type = in.readString();
+        user_rating = in.readString();
+        status = in.readString();
+        videos_range = in.readString();
+        city = in.readString();
+        address = in.readString();
+        platform = in.readString();
+        device_token = in.readString();
+        created_date = in.readString();
+        userid = in.readString();
+        follow_status = in.readString();
+        follow_you_count = in.readString();
+        you_follow_count = in.readString();
+    }
+
+    public static final Creator<UserInfoModel> CREATOR = new Creator<UserInfoModel>() {
+        @Override
+        public UserInfoModel createFromParcel(Parcel in) {
+            return new UserInfoModel(in);
+        }
+
+        @Override
+        public UserInfoModel[] newArray(int size) {
+            return new UserInfoModel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(first_name);
+        parcel.writeString(last_name);
+        parcel.writeString(user_name);
+        parcel.writeString(email);
+        parcel.writeString(gender);
+        parcel.writeString(date_of_birth);
+        parcel.writeString(age);
+        parcel.writeString(country_code);
+        parcel.writeString(mobile);
+        parcel.writeString(otp);
+        parcel.writeString(user_image);
+        parcel.writeString(user_description);
+        parcel.writeString(auth_id);
+        parcel.writeString(auth_type);
+        parcel.writeString(user_rating);
+        parcel.writeString(status);
+        parcel.writeString(videos_range);
+        parcel.writeString(city);
+        parcel.writeString(address);
+        parcel.writeString(platform);
+        parcel.writeString(device_token);
+        parcel.writeString(created_date);
+        parcel.writeString(userid);
+        parcel.writeString(follow_status);
+        parcel.writeString(follow_you_count);
+        parcel.writeString(you_follow_count);
+    }
 }
 
 

@@ -19,6 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:inputType="text"
+            android:singleLine="true"
             android:text="Log In"
             android:textColor="@color/color_vDarkGrey"
             android:textSize="@dimen/txt_size_18sp"
@@ -30,7 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:inputType="text"
             android:padding="@dimen/pad_10"
+            android:singleLine="true"
             android:text="Done"
             android:textColor="@color/app_text_color"
             android:textSize="@dimen/txt_size_18sp"
@@ -42,6 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imgLoc"
+            android:inputType="text"
+            android:singleLine="true"
             android:text="Mirpur 10, Dhaka"
             android:textColor="@color/color_vDarkGrey"
             android:textSize="@dimen/txt_size_18sp"
@@ -110,7 +116,7 @@
                 android:padding="@dimen/pad_8"
                 android:src="@drawable/cancel_copy" />
 
-            <EditText
+            <com.ureview.utils.views.CustomEditText
                 android:id="@+id/edtText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -120,7 +126,10 @@
                 android:background="@android:color/transparent"
                 android:hint="Search"
                 android:inputType="text"
-                android:padding="@dimen/pad_8" />
+                android:padding="@dimen/pad_8"
+                android:singleLine="true" />
+
         </RelativeLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>
