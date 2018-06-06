@@ -10,18 +10,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.ureview.BaseApplication;
 import com.ureview.R;
+import com.ureview.fragments.BaseFragment;
 import com.ureview.fragments.FollowersFragment;
 import com.ureview.fragments.HomeCompleteFragment;
 import com.ureview.fragments.HomeFragment;
 import com.ureview.fragments.LocationBottomSheetFragment;
-import com.ureview.fragments.LocationRadiusFragment;
+import com.ureview.fragments.LocationFilterFragment;
 import com.ureview.fragments.NotificationsFragment;
 import com.ureview.fragments.ProfileFragment;
 import com.ureview.fragments.ReviewMapsFragment;
@@ -30,34 +34,42 @@ import com.ureview.fragments.SettingsFragment;
 import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
 import com.ureview.fragments.VideoReviewFragment;
+import com.ureview.models.FilterModel;
+import com.ureview.models.LocationModel;
 import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, LocationBottomSheetFragment.OnLocationOptionSelected {
+public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, /*LocationBottomSheetFragment.OnLocationFilterOptionSelected*/LocationFilterFragment.OnLocationFilterOptionSelected {
 
     public CustomTextView txtTitle, txtRight, txtLeft;
     public ImageView imgBack, imgLoc, imgNotf, imgEdit, imgSearch, imgClose;
     public EditText edtText;
-    public RelativeLayout rlEditView;
+    public RelativeLayout rlEditView, relGenTopBar;
     public ImageView imgHome, imgSearchB, imgVideo, imgProfile, imgSettings,
             imgHomeView, imgSearchView, imgProfileView, imgSettingsView;
     public static Location mLastLocation;
     public LocationManager mLocationManager;
     private boolean isLocationAlreadyFetched = false;
     private LocationBottomSheetFragment locationBottomSheetFragment;
+    private int DIALOG_FRAGMENT = 1;
+    private FragmentManager fragmentManager;
+    private long backPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        fragmentManager = getSupportFragmentManager();
         try {
-//            if (BaseApplication.userInfoModel != null) {
-//                String json = new Gson().toJson(BaseApplication.userInfoModel);
-//                LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
-//            }
+            if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, ""))) {
+                if (BaseApplication.userInfoModel != null) {
+                    String json = BaseApplication.userInfoModel.serialize();
+                    LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -75,7 +87,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             getCurrentLocation();
         }
     }
-
 
     @SuppressLint("MissingPermission")
     private void getCurrentLocation() {
@@ -97,14 +108,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
         }
+        if (mLastLocation != null && BaseApplication.locationModel == null) {
+            try {
+                if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_LOCATION_INFO, ""))) {
+                    BaseApplication.locationModel = new LocationModel(this, mLastLocation);
+                    String json = BaseApplication.locationModel.serialize();
+                    LocalStorage.getInstance(this).putString(LocalStorage.PREF_LOCATION_INFO, json);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         if (mLastLocation != null && !isLocationAlreadyFetched) {
             setTextToAddress();
         }
     }
 
     public void setTextToAddress() {
-        if (mLastLocation != null)
+        if (mLastLocation != null) {
             txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
+            txtLeft.setSelected(true);
+        }
     }
 
     @Override
@@ -129,14 +153,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {
         txtTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         txtTitle.setText(title);
+        txtTitle.setSelected(true);
         txtLeft.setVisibility(!TextUtils.isEmpty(leftText) ? View.VISIBLE : View.GONE);
         txtLeft.setText(leftText);
+        txtLeft.setSelected(true);
         txtRight.setVisibility(!TextUtils.isEmpty(rightText) ? View.VISIBLE : View.GONE);
         txtRight.setText(rightText);
         imgLoc.setVisibility(showLoc ? View.VISIBLE : View.GONE);
         imgBack.setVisibility(showBack ? View.VISIBLE : View.GONE);
         imgNotf.setVisibility(showNotf ? View.VISIBLE : View.GONE);
         rlEditView.setVisibility(showEdtView ? View.VISIBLE : View.GONE);
+        relGenTopBar.setVisibility(showEdtView ? View.GONE : View.VISIBLE);
         imgEdit.setVisibility(showEdt ? View.VISIBLE : View.GONE);
     }
 
@@ -151,6 +178,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         imgSearch = findViewById(R.id.imgSearch);
         imgClose = findViewById(R.id.imgClose);
         edtText = findViewById(R.id.edtText);
+        relGenTopBar = findViewById(R.id.relGenTopBar);
         rlEditView = findViewById(R.id.rlEditView);
         imgNotf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,34 +217,62 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         clearBackStackCompletely();
         switch (view.getId()) {
             case R.id.llHome:
-                setSelectedTab(imgHome, imgHomeView);
-                setHomeFragment();
+                if (!imgHome.isSelected())
+                    setHomeFragment();
                 break;
             case R.id.llSearch:
-                setSelectedTab(imgSearchB, imgSearchView);
-                setSearchFragment();
+                if (!imgSearchB.isSelected())
+                    setSearchFragment();
                 break;
             case R.id.llVideo:
-                setSelectedTab(imgVideo, null);
+                if (!imgVideo.isSelected()) {
+                    setSelectedTab(imgVideo, null);
 //                setUploadVideoFragment();
-                openVideoIntent();
+                    openVideoIntent();
+                }
                 break;
             case R.id.llProfile:
-                setSelectedTab(imgProfile, imgProfileView);
-                setProfileFragment();
+                if (!imgProfile.isSelected())
+                    setProfileFragment();
                 break;
             case R.id.llSettings:
-                setSelectedTab(imgSettings, imgSettingsView);
-                setSettingsFragment();
+                if (!imgSettings.isSelected())
+                    setSettingsFragment();
                 break;
             case R.id.imgBack:
-                onBackPressed();
+                popBackStack();
                 break;
             case R.id.txtLeft:
-                showLocationBottomSheet();
+//                showLocationBottomSheet();
+                setLocationRadiusFragment();
                 break;
             default:
                 break;
+        }
+    }
+
+    private BaseFragment getCurrentFragment() {
+        return (BaseFragment) fragmentManager.findFragmentById(R.id.mainContainer);
+    }
+
+    @Override
+    public void onBackPressed() {
+        BaseFragment fragment = getCurrentFragment();
+        if (fragment instanceof HomeFragment) {
+            if (backPressed + Constants.BACK_PRESSED_TIME > System.currentTimeMillis()) {
+                super.onBackPressed();
+            } else {
+                StaticUtils.showToast(this, "Press once again to exit");
+            }
+            backPressed = System.currentTimeMillis();
+        } else {
+            if (fragmentManager.getBackStackEntryCount() >= 1) {
+                popBackStack();
+            } else {
+//                super.onBackPressed();
+                clearBackStackCompletely();
+                setHomeFragment();
+            }
         }
     }
 
@@ -238,10 +294,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         imgProfile.setSelected(false);
         imgSettings.setSelected(false);
 
-        imgHomeView.setVisibility(View.GONE);
-        imgSearchView.setVisibility(View.GONE);
-        imgProfileView.setVisibility(View.GONE);
-        imgSettingsView.setVisibility(View.GONE);
+        imgHomeView.setVisibility(View.INVISIBLE);
+        imgSearchView.setVisibility(View.INVISIBLE);
+        imgProfileView.setVisibility(View.INVISIBLE);
+        imgSettingsView.setVisibility(View.INVISIBLE);
 
         selectedView.setSelected(true);
         if (imgH != null)
@@ -254,44 +310,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void setHomeFragment() {
-        setToolBar("", "Mirpur 10, Dhaka", "", true, false,
-                true, false, false);
-        replaceFragment(HomeFragment.newInstance(), R.id.mainContainer);
+        setSelectedTab(imgHome, imgHomeView);
+        replaceFragment(HomeFragment.newInstance(), false, R.id.mainContainer);
     }
 
     public void setHomeFragmentComplete() {
-        setToolBar("", "Mirpur 10, Dhaka", "", true, false,
-                true, false, false);
-//        replaceFragment(HomeFragment.newInstance(), R.id.mainContainer);
-        replaceFragment(HomeCompleteFragment.newInstance(), R.id.mainContainer);
+        replaceFragment(HomeCompleteFragment.newInstance(), false, R.id.mainContainer);
     }
 
     private void setLocationRadiusFragment() {
-        setToolBar("", "Mirpur 10, Dhaka", "", true, false,
-                true, false, false);
-        replaceFragment(LocationRadiusFragment.newInstance(), R.id.mainContainer);
+        LocationFilterFragment countrySelectionFragment = LocationFilterFragment.newInstance(0);
+//        countrySelectionFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+        countrySelectionFragment.show(getSupportFragmentManager(), "");
     }
 
     private void setSearchFragment() {
-        setToolBar("", "", "", false, false,
-                false, true, false);
-        replaceFragment(SearchFragment.newInstance(), R.id.mainContainer);
+        setSelectedTab(imgSearchB, imgSearchView);
+        replaceFragment(SearchFragment.newInstance(), false, R.id.mainContainer);
     }
 
     private void setNotificationsFragment() {
-        setToolBar("Notifications", "", "", false, false, false, false, false);
         replaceFragment(NotificationsFragment.newInstance(), true, R.id.mainContainer);
     }
 
     private void setSettingsFragment() {
-        setToolBar("Settings", "", "", false, false, true, false, false);
-        replaceFragment(SettingsFragment.newInstance(), R.id.mainContainer);
+        setSelectedTab(imgSettings, imgSettingsView);
+        replaceFragment(SettingsFragment.newInstance(), false, R.id.mainContainer);
     }
 
     public void setFollowersFragment() {
-        setToolBar("Followers", "", "", false, true,
-                true, false, false);
-        replaceFragment(FollowersFragment.newInstance(), R.id.mainContainer);
+        replaceFragment(FollowersFragment.newInstance(), true, R.id.mainContainer);
     }
 
     public void setUploadVideoFragment() {
@@ -313,7 +362,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setProfileFragment() {
-        replaceFragment(ProfileFragment.newInstance(), R.id.mainContainer);
+        setSelectedTab(imgProfile, imgProfileView);
+        replaceFragment(ProfileFragment.newInstance(), false, R.id.mainContainer);
     }
 
     @Override
@@ -329,7 +379,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onStop();
         mLocationManager.removeUpdates(this);
     }
-
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
@@ -347,8 +396,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public void locationCallback(String value) {
-
+    public void locationCallback(FilterModel value) {
+//        Log.e("Filtermodel: ", value.addressLine);
     }
 
 }

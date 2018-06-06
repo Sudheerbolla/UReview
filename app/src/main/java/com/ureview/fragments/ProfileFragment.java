@@ -6,14 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +28,7 @@ import com.ureview.models.UserInfoModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
+import com.ureview.utils.views.CustomViewPager;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -37,10 +38,12 @@ import java.util.List;
 import retrofit2.Call;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
+
     private View rootView;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private TabLayout tabLayout;
-    private CustomTextView txtFollowersCount, txtFollowers, txtFollowingCount, txtFollowing, txtName, txtLoc;
+    private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc;
+    private LinearLayout linFollowing, linFollowers;
     private RatingBar ratingBar;
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
@@ -56,6 +59,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         mainActivity = (MainActivity) getActivity();
         userInfoModel = BaseApplication.userInfoModel;
     }
+
 /*{
 "status":"success","message":"User data","user_info":{"first_name":"Madhu","last_name":"Sudhan","user_name":"",
 "email":"putta.msreddy@gmail.com","gender":"M","date_of_birth":"31\/05\/2013","age":"5","country_code":"+91",
@@ -67,10 +71,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_myprofile, container, false);
         initComponents();
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("My Profile", "", "", false, false, false, false, true);
     }
 
     private void initComponents() {
@@ -82,11 +94,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         tabLayout.setupWithViewPager(viewPager);
 
         txtFollowersCount = rootView.findViewById(R.id.txtFollowersCount);
-        txtFollowers = rootView.findViewById(R.id.txtFollowers);
         txtFollowingCount = rootView.findViewById(R.id.txtFollowingCount);
-        txtFollowing = rootView.findViewById(R.id.txtFollowing);
+
+        linFollowers = rootView.findViewById(R.id.linFollowers);
+        linFollowing = rootView.findViewById(R.id.linFollowing);
+
         txtName = rootView.findViewById(R.id.txtName);
         txtLoc = rootView.findViewById(R.id.txtLoc);
+
         ratingBar = rootView.findViewById(R.id.ratingBar);
         imgProfile = rootView.findViewById(R.id.imgProfile);
 
@@ -120,8 +135,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void setListeners() {
-        txtFollowing.setOnClickListener(this);
-        txtFollowers.setOnClickListener(this);
+        linFollowers.setOnClickListener(this);
+        linFollowing.setOnClickListener(this);
         txtFollowersCount.setOnClickListener(this);
         txtFollowingCount.setOnClickListener(this);
     }
@@ -131,12 +146,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(new StatsFragment(), "Stats");
-        adapter.addFragment(new VideosFragment(), "Videos");
+    ViewPagerAdapter adapter;
+
+    private void setupViewPager(CustomViewPager viewPager) {
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new AboutFragment(), "About");
+        adapter.addFragment(new VideosFragment(), "Videos");
+        adapter.addFragment(new StatsFragment(), "Stats");
         viewPager.setAdapter(adapter);
+        viewPager.setPagingEnabled(true);
     }
 
     @Override
@@ -160,9 +178,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (response.has("user_info")) {
-                        BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
-                        LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
-                        userInfoModel = BaseApplication.userInfoModel;
+                        try {
+                            userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                            if (userInfoModel != null) {
+                                BaseApplication.userInfoModel = userInfoModel;
+                                LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, userInfoModel.serialize());
+                            }
+                            LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_ID, userInfoModel.userid);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (adapter.getItem(0) != null && adapter.getItem(0) instanceof AboutFragment)
+                            ((AboutFragment) adapter.getItem(0)).updateData();
+
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -184,7 +212,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

@@ -35,7 +35,7 @@ public class UploadVideoFragment extends BaseFragment {
         txtLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mainActivity.replaceFragment(LocationRadiusFragment.newInstance(), true, R.id.mainContainer);
+                mainActivity.replaceFragment(LocationFilterFragment.newInstance(0), true, R.id.mainContainer);
             }
         });
         txtCompleteVideo.setOnClickListener(new View.OnClickListener() {

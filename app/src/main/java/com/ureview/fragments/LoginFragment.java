@@ -197,6 +197,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 }
                 if (response.has("user_info")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                    try {
+                        String json = BaseApplication.userInfoModel.serialize();
+                        LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
                 }
 

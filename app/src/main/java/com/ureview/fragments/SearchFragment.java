@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class SearchFragment extends BaseFragment {
     private View rootView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private MainActivity mainActivity;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -35,21 +37,34 @@ public class SearchFragment extends BaseFragment {
         setupViewPager(viewPager);
 
         tabLayout = rootView.findViewById(R.id.searchTabs);
-        tabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.colorDarkGrey),
-                ContextCompat.getColor(getActivity(), R.color.app_text_color));
+        tabLayout.setTabTextColors(ContextCompat.getColor(getActivity(), R.color.colorDarkGrey), ContextCompat.getColor(getActivity(), R.color.app_text_color));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(getActivity(), R.color.app_text_color));
         tabLayout.setupWithViewPager(viewPager);
+
         return rootView;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("", "", "", false, false, false, true, false);
+    }
+
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new SearchVideosFragment(), "Videos");
         adapter.addFragment(new FollowersFragment(), "People");
         viewPager.setAdapter(adapter);
     }
 
-    class ViewPagerAdapter extends FragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 

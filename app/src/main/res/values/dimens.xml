@@ -53,6 +53,8 @@
     <dimen name="pad_48">48dp</dimen>
     <dimen name="pad_49">49dp</dimen>
     <dimen name="pad_50">50dp</dimen>
+    <dimen name="pad_53">53dp</dimen>
+    <dimen name="pad_55">55dp</dimen>
     <dimen name="pad_60">60dp</dimen>
 
     <dimen name="txt_size_9sp">9sp</dimen>

@@ -16,6 +16,7 @@ import com.ureview.adapters.NewsFeedAdapter;
 import com.ureview.listeners.IClickListener;
 
 public class HomeFragment extends BaseFragment implements IClickListener {
+
     private View rootView;
     private RecyclerView rvCategories, rvNewsFeed;
     private NewsFeedAdapter newsFeedAdapter;
@@ -30,6 +31,14 @@ public class HomeFragment extends BaseFragment implements IClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("", "fetching location...", "", true, false, true, false, false);
+        mainActivity.setTextToAddress();
     }
 
     @Nullable

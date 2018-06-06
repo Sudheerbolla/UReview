@@ -304,6 +304,12 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 }
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
+                    try {
+                        String json = BaseApplication.userInfoModel.serialize();
+                        LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 splashActivity.replaceFragment(Signup3Fragment.newInstance(), true, R.id.splashContainer);
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
@@ -320,6 +326,12 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 }
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
+                    try {
+                        String json = BaseApplication.userInfoModel.serialize();
+                        LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (response.has("userid")) {
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, response.get("userid").getAsString());

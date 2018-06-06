@@ -35,6 +35,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     private RelativeLayout relShareApp, relPrivacyPolicy, relTermsAndConditions,
             relHelpCenter, relContactUs, relLogout, relDeleteAccount;
     private MainActivity mainActivity;
+    private String baseUrl = "";
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -44,6 +45,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+//        http://18.216.101.112/pages?slug_name=terms-conditions
+        baseUrl = WSUtils.BASE_URL + "/pages?slug_name=";
     }
 
     @Nullable
@@ -73,14 +76,22 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("Settings", "", "", false, false, true, false, false);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.relContactUs:
                 break;
             case R.id.relTermsAndConditions:
+                mainActivity.replaceFragment(StaticPagesFragment.newInstance("terms-conditions"), true, R.id.mainContainer);
                 break;
             case R.id.relDeleteAccount:
-                DialogUtils.showSimpleDialog(mainActivity, "Delete Account", "Are you sure you want to delete the account? This is a permanant action and cannot be reverted.", "Delete", "Cancel", new View.OnClickListener() {
+                DialogUtils.showSimpleDialog(mainActivity, "Delete Account", "Are you sure you want to delete the account? This is a permanent action and cannot be reverted.", "Delete", "Cancel", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         requestForDeleteAccountWS();
@@ -88,6 +99,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }, null, false, false);
                 break;
             case R.id.relHelpCenter:
+
                 break;
             case R.id.relLogout:
                 DialogUtils.showSimpleDialog(mainActivity, "Logout", "Are you sure you want to Logout? ", "Yes", "No", new View.OnClickListener() {
@@ -98,12 +110,22 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }, null, false, false);
                 break;
             case R.id.relShareApp:
+                shareViaIntent("UReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
                 break;
             case R.id.relPrivacyPolicy:
+                mainActivity.replaceFragment(StaticPagesFragment.newInstance("privacy-policy"), true, R.id.mainContainer);
                 break;
             default:
                 break;
         }
+    }
+
+    public void shareViaIntent(String subject, String shareContent) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareContent);
+        startActivity(Intent.createChooser(sharingIntent, "Share Using"));
     }
 
     private void requestForDeleteAccountWS() {
@@ -167,4 +189,5 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     public void noInternetConnection(int requestCode) {
 
     }
+
 }

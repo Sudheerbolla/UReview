@@ -39,9 +39,11 @@ public interface WSInterface {
     @GET("/get-userdata-by-id")
     Call<JsonElement> getUserData(@Query("user_id") String userId);
 
+    @GET("/pages")
+    Call<JsonElement> getStaticPagesContent(@Query("slug_name") String userId);
 
-
-
+    @GET("/follow_you_follow_list")
+    Call<JsonElement> getFollowList(@Query("user_id") String userId);
 
 //
 //    @GET("/get_employees/")

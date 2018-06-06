@@ -1,135 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tool_bar"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    app:contentInsetEnd="0dp"
-    app:contentInsetLeft="0dp"
-    app:contentInsetRight="0dp"
-    app:contentInsetStart="0dp"
-    app:elevation="@dimen/pad_3">
+    android:background="@color/color_white">
 
     <RelativeLayout
+        android:id="@+id/relGenTopBar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/relLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/back_copy"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imgLoc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/pad_7"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/location_copy"
+                android:visibility="visible" />
+
+        </RelativeLayout>
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/relLeft"
+            android:layout_toStartOf="@+id/relRight"
+            android:ellipsize="marquee"
+            android:gravity="center"
             android:inputType="text"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="@dimen/pad_6"
             android:singleLine="true"
-            android:text="Log In"
-            android:textColor="@color/color_vDarkGrey"
-            android:textSize="@dimen/txt_size_18sp"
-            android:visibility="visible" />
-
-        <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txtRight"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:inputType="text"
-            android:padding="@dimen/pad_10"
-            android:singleLine="true"
-            android:text="Done"
-            android:textColor="@color/app_text_color"
+            android:textColor="@color/color_vvDarkGrey"
             android:textSize="@dimen/txt_size_18sp"
             android:visibility="visible" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtLeft"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imgLoc"
+            android:layout_toEndOf="@id/relLeft"
+            android:layout_toStartOf="@+id/relRight"
+            android:ellipsize="marquee"
+            android:gravity="center_vertical"
             android:inputType="text"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="@dimen/pad_6"
             android:singleLine="true"
-            android:text="Mirpur 10, Dhaka"
-            android:textColor="@color/color_vDarkGrey"
+            android:textColor="@color/color_vvDarkGrey"
             android:textSize="@dimen/txt_size_18sp"
             android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/imgBack"
+        <LinearLayout
+            android:id="@+id/relRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/back_copy" />
+            android:layout_marginEnd="@dimen/pad_5"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imgLoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/location_copy" />
-
-        <ImageView
-            android:id="@+id/imgNotf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/notification_copy"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/imgEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/edit_copy" />
-
-        <RelativeLayout
-            android:id="@+id/rlEditView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/pad_5"
-            android:layout_marginLeft="@dimen/pad_10"
-            android:layout_marginRight="@dimen/pad_10"
-            android:layout_marginTop="@dimen/pad_5"
-            android:background="@drawable/bg_edt_txt">
-
-            <ImageView
-                android:id="@+id/imgSearch"
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/pad_8"
-                android:src="@drawable/seach_copy" />
-
-            <ImageView
-                android:id="@+id/imgClose"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="@dimen/pad_8"
-                android:src="@drawable/cancel_copy" />
-
-            <com.ureview.utils.views.CustomEditText
-                android:id="@+id/edtText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/imgClose"
-                android:layout_toRightOf="@+id/imgSearch"
-                android:background="@android:color/transparent"
-                android:hint="Search"
                 android:inputType="text"
-                android:padding="@dimen/pad_8"
-                android:singleLine="true" />
+                android:padding="@dimen/pad_10"
+                android:singleLine="true"
+                android:text="Done"
+                android:textColor="@color/app_text_color"
+                android:textSize="@dimen/txt_size_18sp"
+                android:visibility="gone" />
 
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/imgNotf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/notification_copy"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imgEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/edit_copy"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </RelativeLayout>
-</android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:id="@+id/rlEditView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/pad_5"
+        android:layout_marginLeft="@dimen/pad_10"
+        android:layout_marginRight="@dimen/pad_10"
+        android:layout_marginTop="@dimen/pad_5"
+        android:background="@drawable/bg_edt_txt"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/pad_8"
+            android:src="@drawable/seach_copy" />
+
+        <ImageView
+            android:id="@+id/imgClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/pad_8"
+            android:src="@drawable/cancel_copy" />
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imgClose"
+            android:layout_toRightOf="@+id/imgSearch"
+            android:background="@android:color/transparent"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:padding="@dimen/pad_8"
+            android:singleLine="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

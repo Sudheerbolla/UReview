@@ -3,6 +3,7 @@ package com.ureview.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,8 +29,11 @@ public class VideosFragment extends BaseFragment {
         rvVideos = rootView.findViewById(R.id.rvVideos);
         profileVideosAdapter = new ProfileVideosAdapter(getActivity());
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        rvVideos.setNestedScrollingEnabled(false);
         rvVideos.setAdapter(profileVideosAdapter);
+
+        ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);
+        ViewCompat.setNestedScrollingEnabled(rvVideos, false);
+
         return rootView;
     }
 
