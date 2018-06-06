@@ -12,10 +12,10 @@ public class WSUtils {
 //    public static final String BASE_URL = "http://vrs.amelglobalitsolutions.com";
 
     public static final int REQ_FOR_LOGIN = 100;
-    public static final int REQ_FOR_USER_REGISTRATION= 101;
-    public static final int REQ_FOR_CHECK_USER= 102;
-    public static final int REQ_FOR_CHECK_USER_OTP= 103;
-    public static final int REQ_FOR_CHECK_LOGIN_OTP= 104;
+    public static final int REQ_FOR_USER_REGISTRATION = 101;
+    public static final int REQ_FOR_CHECK_USER = 102;
+    public static final int REQ_FOR_CHECK_USER_OTP = 103;
+    public static final int REQ_FOR_CHECK_LOGIN_OTP = 104;
     public static final int REQ_FOR_CREATE_USER_DEVICE = 105;
     public static final int REQ_FOR_CUST_CREDIT_POINTS = 106;
     public static final int REQ_FOR_GET_USER_DEVICES = 107;
@@ -33,4 +33,7 @@ public class WSUtils {
     public static final int REQ_FOR_UPDATE_USED_COUPON_CODE = 119;
     public static final int REQ_FOR_GENERATE_COUPON_CODE = 120;
 
+    public static final int REQ_FOR_CATEGORY_LIST = 121;
+    public static final int REQ_FOR_NEWS_FEED_VIDEOS = 122;
+    public static final int REQ_FOR_VIDEO_LIST_BY_CAT = 123;
 }

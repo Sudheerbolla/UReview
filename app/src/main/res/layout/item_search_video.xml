@@ -92,7 +92,8 @@
         android:layout_below="@+id/txtLocBtm"
         android:layout_marginRight="@dimen/pad_5"
         android:layout_marginTop="@dimen/pad_5"
-        android:layout_toLeftOf="@+id/txtRatingsNo" />
+        android:layout_toLeftOf="@+id/txtRatingsNo"
+        android:isIndicator="true" />
 
     <View
         android:id="@+id/dividerView"

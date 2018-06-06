@@ -70,7 +70,8 @@
                     android:layout_below="@+id/txtLoc"
                     android:layout_marginLeft="@dimen/pad_10"
                     android:layout_marginTop="@dimen/pad_2"
-                    android:layout_toRightOf="@+id/imgProfile" />
+                    android:layout_toRightOf="@+id/imgProfile"
+                    android:isIndicator="true" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtFollowStatus"

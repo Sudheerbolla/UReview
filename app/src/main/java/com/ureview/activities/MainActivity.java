@@ -115,7 +115,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void proceedWithFlow() {
         setToolBar("", "Mirpur 10, Dhaka", "", true, false, true, false, false);
-        replaceFragmentWithoutAnimation(HomeCompleteFragment.newInstance(), R.id.mainContainer, false);
+        replaceFragmentWithoutAnimation(HomeFragment.newInstance(), R.id.mainContainer, false);
     }
 
     public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {

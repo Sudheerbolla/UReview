@@ -39,13 +39,13 @@
     </style>
 
     <style name="CustomRatingBarL" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/star_l_blank_copy</item>
+        <item name="android:progressDrawable">@drawable/selector_star_l</item>
         <item name="android:minHeight">@dimen/pad_23</item>
         <item name="android:maxHeight">25dip</item>
     </style>
 
     <style name="CustomRatingBarM" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/star_m_blank_copy</item>
+        <item name="android:progressDrawable">@drawable/selector_star_m</item>
         <item name="android:minHeight">@dimen/pad_15</item>
         <item name="android:maxHeight">@dimen/pad_20</item>
     </style>

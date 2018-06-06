@@ -32,8 +32,16 @@ public interface WSInterface {
     @GET("/get_employees/")
     Call<JsonElement> dummyCall();
 
-    @GET("/get_categories/")
-    Call<JsonElement> getAllCategories();
+    @GET("/get-categories")
+    Call<JsonElement> getAllCategories(@Query(value = "user_id", encoded = false) String userId);
+
+    @GET("/get-all-videos-by-category")
+    Call<JsonElement> getAllVideosByCategory(@Query(value = "category_id") String catId, @Query(value = "startFrom") String startFrom
+            , @Query(value = "count") String court, @Query(value = "user_id") String userId);
+
+    @GET("/news-feed-videos")
+    Call<JsonElement> getNewsFeedVideos(@Query(value = "startFrom") String startFrom
+            , @Query(value = "count") String count, @Query(value = "user_id") String userId);
 
     @POST("/clients")
     Call<JsonElement> createClient(@Body RequestBody params);

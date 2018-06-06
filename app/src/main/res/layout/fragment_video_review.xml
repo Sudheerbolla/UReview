@@ -152,7 +152,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtRate"
-                android:layout_marginTop="@dimen/pad_6" />
+                android:layout_marginTop="@dimen/pad_6"
+                android:isIndicator="true" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtRatingno"

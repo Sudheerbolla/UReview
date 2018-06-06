@@ -48,4 +48,30 @@
         <attr name="absoluteMaxValue" format="integer|float" />
         <attr name="singleThumb" format="boolean" />
     </declare-styleable>
+
+    // RecyclerView resources
+    <declare-styleable name="CustomRecyclerView">
+        <attr name="pagination" format="boolean" />
+        <attr name="loadmore_visibility" format="boolean" />
+        <attr name="gird_span" format="integer" />
+        <attr name="list_type" />
+        <attr name="list_orientation" />
+        <attr name="loadmore_type" />
+    </declare-styleable>
+
+    <attr name="loadmore_type">
+        <enum name="bottom" value="0" />
+        <enum name="top" value="1" />
+    </attr>
+
+    <attr name="list_type">
+        <enum name="list" value="0" />
+        <enum name="grid" value="1" />
+        <enum name="staggered" value="2" />
+    </attr>
+
+    <attr name="list_orientation">
+        <enum name="vertical" value="0" />
+        <enum name="horizontal" value="1" />
+    </attr>
 </resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/relItem"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -13,24 +13,12 @@
         android:src="@mipmap/ic_launcher" />
 
     <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtFollowStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_feed_btn_height"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/selector_app_pink_btn"
-        android:gravity="center"
-        android:text="Follow"
-        android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_15sp" />
-
-    <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/pad_8"
         android:layout_marginRight="@dimen/pad_8"
         android:layout_marginTop="@dimen/pad_3"
-        android:layout_toLeftOf="@+id/txtFollowStatus"
         android:layout_toRightOf="@+id/imgProfile"
         android:text="Terry Rodriguez"
         android:textColor="@color/colorBlack"
@@ -44,8 +32,8 @@
         android:layout_marginLeft="@dimen/pad_8"
         android:layout_marginRight="@dimen/pad_8"
         android:layout_marginTop="@dimen/pad_2"
-        android:layout_toLeftOf="@+id/txtFollowStatus"
         android:layout_toRightOf="@+id/imgProfile"
+        android:maxLines="2"
         android:text="Mirpur 10, Dhaka"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
@@ -53,13 +41,34 @@
     <ImageView
         android:id="@+id/imgLocation"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="170dp"
         android:layout_below="@+id/txtLoc"
         android:layout_marginTop="@dimen/pad_8"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background" />
 
     <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgLocation"
+        android:layout_alignLeft="@+id/imgLocation"
+        android:layout_marginBottom="@dimen/pad_8"
+        android:layout_marginLeft="@dimen/pad_5"
+        android:text="(405)"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/txt_size_12sp" />
+
+    <include
+        layout="@layout/item_category"
+        android:layout_width="130dp"
+        android:layout_height="@dimen/pad_30"
+        android:layout_alignBottom="@+id/imgLocation"
+        android:layout_alignRight="@+id/imgLocation"
+        android:layout_marginBottom="@dimen/pad_10"
+        android:layout_marginRight="@dimen/pad_10" />
+
+    <!--<com.ureview.utils.views.CustomTextView
         android:id="@+id/txtLocType"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/item_feed_btn_height"
@@ -71,7 +80,7 @@
         android:gravity="center"
         android:text="Hotel/Resort"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:textSize="@dimen/txt_size_15sp" />-->
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtSynth"
@@ -90,57 +99,46 @@
         android:layout_below="@+id/txtSynth"
         android:layout_marginTop="@dimen/pad_5"
         android:drawableLeft="@drawable/view_small_copy"
-        android:drawablePadding="@dimen/pad_8"
+        android:drawablePadding="@dimen/pad_5"
         android:text="408121"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
 
     <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtShareCount"
+        android:id="@+id/txtDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSynth"
         android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginTop="@dimen/pad_5"
         android:layout_toRightOf="@+id/txtViewCount"
-        android:drawableLeft="@drawable/share_small_copy"
-        android:drawablePadding="@dimen/pad_8"
+        android:drawableLeft="@drawable/location_small_copy"
+        android:drawablePadding="@dimen/pad_5"
         android:text="232"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
-
-    <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtLocBtm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/imgLocation"
-        android:layout_marginTop="@dimen/pad_12"
-        android:drawableLeft="@drawable/location_small_copy"
-        android:drawablePadding="@dimen/pad_8"
-        android:text="Mirpur 10, Dhaka"
-        android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_14sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtRatingsNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/txtLocBtm"
+        android:layout_below="@+id/txtSynth"
         android:layout_marginTop="@dimen/pad_5"
         android:text="(405)"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
 
     <RatingBar
+        android:id="@+id/ratingBarVideo"
         style="@style/CustomRatingBarL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtLocBtm"
+        android:layout_below="@+id/txtSynth"
         android:layout_marginRight="@dimen/pad_5"
         android:layout_marginTop="@dimen/pad_2"
-        android:layout_toLeftOf="@+id/txtRatingsNo" />
+        android:layout_toLeftOf="@+id/txtRatingsNo"
+        android:isIndicator="true" />
 
     <View
         android:id="@+id/dividerView"

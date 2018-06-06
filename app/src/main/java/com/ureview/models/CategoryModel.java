@@ -33,4 +33,5 @@ public class CategoryModel {
     @Expose
     public String createdDate;
 
+    public boolean isSelected;
 }

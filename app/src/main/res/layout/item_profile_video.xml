@@ -12,6 +12,18 @@
         android:src="@drawable/sample_image_rounded_corners" />
 
     <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imgVideo"
+        android:layout_alignLeft="@+id/imgVideo"
+        android:layout_marginBottom="@dimen/pad_8"
+        android:layout_marginLeft="@dimen/pad_5"
+        android:text="(405)"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/txt_size_12sp" />
+
+    <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,11 +34,12 @@
         android:textSize="@dimen/txt_size_13sp" />
 
     <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtLoc"
+        android:id="@+id/txtTags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtName"
         android:layout_marginTop="@dimen/pad_2"
+        android:maxLines="2"
         android:text="Mirpur 10, Dhaka"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
@@ -35,24 +48,22 @@
         android:id="@+id/txtViewCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtLoc"
+        android:layout_below="@+id/txtTags"
         android:layout_marginTop="@dimen/pad_2"
         android:drawableLeft="@drawable/view_small_copy"
-        android:drawablePadding="@dimen/pad_8"
+        android:drawablePadding="@dimen/pad_3"
         android:text="408121"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 
     <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtShareCount"
+        android:id="@+id/txtDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtLoc"
+        android:layout_below="@+id/txtTags"
         android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginTop="@dimen/pad_2"
         android:layout_toRightOf="@+id/txtViewCount"
-        android:drawableLeft="@drawable/share_small_copy"
-        android:drawablePadding="@dimen/pad_8"
         android:text="232"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
@@ -61,7 +72,7 @@
         android:id="@+id/txtRatingsNo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtShareCount"
+        android:layout_below="@+id/txtDistance"
         android:layout_marginTop="@dimen/pad_2"
         android:layout_toRightOf="@+id/ratingBar"
         android:text="(405)"
@@ -73,8 +84,10 @@
         style="@style/CustomRatingBarM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtShareCount"
+        android:layout_below="@+id/txtDistance"
         android:layout_marginRight="@dimen/pad_5"
-        android:layout_marginTop="@dimen/pad_4" />
+        android:layout_marginTop="@dimen/pad_4"
+        android:isIndicator="true"
+        android:numStars="5" />
 
 </RelativeLayout>

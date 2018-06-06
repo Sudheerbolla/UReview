@@ -13,9 +13,10 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.ProfileVideosAdapter;
+import com.ureview.listeners.IClickListener;
 import com.ureview.utils.views.CustomTextView;
 
-public class HomeCompleteFragment extends BaseFragment implements View.OnClickListener {
+public class HomeCompleteFragment extends BaseFragment implements View.OnClickListener, IClickListener {
     private View rootView;
     private RecyclerView rvCategories, rvNewsFeed, rvTopRated;
     private HomeCategoryAdapter homeCategoryAdapter;
@@ -50,7 +51,7 @@ public class HomeCompleteFragment extends BaseFragment implements View.OnClickLi
         rvTopRated.setNestedScrollingEnabled(false);
 
         profileVideosAdapter = new ProfileVideosAdapter(getActivity());
-        homeCategoryAdapter = new HomeCategoryAdapter(getActivity());
+        homeCategoryAdapter = new HomeCategoryAdapter(getActivity(),this);
         rvNewsFeed.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvTopRated.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -69,4 +70,13 @@ public class HomeCompleteFragment extends BaseFragment implements View.OnClickLi
         mainActivity.setHomeFragment();
     }
 
+    @Override
+    public void onClick(View view, int position) {
+
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+
+    }
 }
