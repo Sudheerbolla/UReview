@@ -4,33 +4,48 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.adapters.SearchVideosAdapter;
 import com.ureview.listeners.IParserListener;
+import com.ureview.models.VideoModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.views.CustomRecyclerView;
+import com.ureview.utils.views.CustomTextView;
+import com.ureview.utils.views.recyclerView.Paginate;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 
-public class SearchVideosFragment extends BaseFragment implements IParserListener<JsonElement> {
+public class SearchVideosFragment extends BaseFragment implements IParserListener<JsonElement>, Paginate.Callbacks {
     private View rootView;
-    private RecyclerView rvSearchVideo;
+    private CustomRecyclerView rvSearchVideo;
     private SearchVideosAdapter searchVideosAdapter;
+    private CustomTextView txtNoData;
     private MainActivity mainActivity;
     private String userId;
+    private ArrayList<VideoModel> videosArrList = new ArrayList<>();
+    private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
+
+    //Search People Pagination
+    private boolean isLoading, hasLoadedAllItems;
+    private int startFrom = 0;
+    protected String searchText = "";
 
     public static SearchVideosFragment newInstance() {
         return new SearchVideosFragment();
@@ -49,9 +64,14 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         rootView = inflater.inflate(R.layout.fragment_search_video, container, false);
 
         rvSearchVideo = rootView.findViewById(R.id.rvSearchVideo);
+        rvSearchVideo.setListPagination(this);
+        txtNoData = rootView.findViewById(R.id.txtNoData);
         searchVideosAdapter = new SearchVideosAdapter(getActivity());
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
+        videosArrList.clear();
+        hasLoadedAllItems = false;
+        startFrom = 0;
         requestForSearchVideos();
         return rootView;
     }
@@ -63,7 +83,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             jsonObjectReq.put("video_name", mainActivity.edtText.getText().toString().trim());
             jsonObjectReq.put("latitude", "17.325400");
             jsonObjectReq.put("longitude", "78.362000");
-            jsonObjectReq.put("startFrom", 0);
+            jsonObjectReq.put("startFrom", String.valueOf(startFrom));
             jsonObjectReq.put("count", 10);
             jsonObjectReq.put("current_latitude", "17.4138");
             jsonObjectReq.put("current_longitude", "78.4398");
@@ -76,7 +96,43 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {
+        switch (requestCode) {
+            case WSUtils.REQ_FOR_SEARCH_VIDEOS:
+                parseNewsFeedVideo(response);
+                break;
+        }
+    }
 
+    private void parseNewsFeedVideo(JsonElement response) {
+        isLoading = false;
+        try {
+            JSONObject jsonObject = new JSONObject(response.toString());
+            if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
+                txtNoData.setVisibility(View.GONE);
+                rvSearchVideo.setVisibility(View.VISIBLE);
+                if (jsonObject.has("search_videos")) {
+                    JSONArray feedVidArr = jsonObject.getJSONArray("search_videos");
+                    tempVideosArrList.clear();
+                    for (int i = 0; i < feedVidArr.length(); i++) {
+                        Gson gson = new Gson();
+                        VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
+                        videosArrList.add(videoModel);
+                        tempVideosArrList.add(videoModel);
+                    }
+                    startFrom += feedVidArr.length();
+                    searchVideosAdapter.addVideos(tempVideosArrList);
+                }
+            } else {
+                if (startFrom == 0) {
+                    txtNoData.setVisibility(View.VISIBLE);
+                    rvSearchVideo.setVisibility(View.GONE);
+                } else {
+                    hasLoadedAllItems = true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -87,6 +143,22 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     @Override
     public void noInternetConnection(int requestCode) {
 
+    }
+
+    @Override
+    public void onLoadMore() {
+        isLoading = true;
+        requestForSearchVideos();
+    }
+
+    @Override
+    public boolean isLoading() {
+        return isLoading;
+    }
+
+    @Override
+    public boolean hasLoadedAllItems() {
+        return hasLoadedAllItems;
     }
 }
 /*http://18.216.101.112/search-videos

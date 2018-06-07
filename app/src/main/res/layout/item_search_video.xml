@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,19 +12,38 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher_background" />
 
-    <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtLocType"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_feed_btn_height"
+        android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/imgLocation"
         android:layout_alignRight="@+id/imgLocation"
         android:layout_marginBottom="@dimen/pad_10"
-        android:layout_marginRight="@dimen/pad_10"
-        android:background="@drawable/resorts_bg"
-        android:gravity="center"
-        android:text="Hotel/Resort"
-        android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:layout_marginRight="@dimen/pad_10">
+
+        <ImageView
+            android:id="@+id/imgCatBg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/selector_app_pink_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/txtCategory"
+            app:layout_constraintLeft_toLeftOf="@+id/txtCategory"
+            app:layout_constraintRight_toRightOf="@+id/txtCategory"
+            app:layout_constraintTop_toTopOf="@+id/txtCategory" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingBottom="@dimen/pad_6"
+            android:paddingLeft="@dimen/pad_17"
+            android:paddingRight="@dimen/pad_17"
+            android:paddingTop="@dimen/pad_6"
+            android:text="News Feed"
+            android:textColor="@color/selector_txt_color" />
+    </android.support.constraint.ConstraintLayout>
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtSynth"
@@ -48,15 +68,15 @@
         android:textSize="@dimen/txt_size_12sp" />
 
     <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtShareCount"
+        android:id="@+id/txtDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSynth"
         android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginTop="@dimen/pad_5"
         android:layout_toRightOf="@+id/txtViewCount"
-        android:drawableLeft="@drawable/share_small_copy"
-        android:drawablePadding="@dimen/pad_8"
+        android:drawableLeft="@drawable/location_small_copy"
+        android:drawablePadding="@dimen/pad_5"
         android:text="232"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
@@ -86,6 +106,7 @@
         android:textSize="@dimen/txt_size_12sp" />
 
     <RatingBar
+        android:id="@+id/ratingBarVideo"
         style="@style/CustomRatingBarL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

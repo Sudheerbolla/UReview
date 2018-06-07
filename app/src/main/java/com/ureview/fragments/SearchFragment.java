@@ -11,9 +11,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.ureview.BaseApplication;
@@ -21,6 +24,7 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.utils.LocalStorage;
+import com.ureview.utils.StaticUtils;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -37,6 +41,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private TabLayout tabLayout;
     private MainActivity mainActivity;
     private String userId;
+    private SearchPeopleFragment searchPeopleFragment;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -47,6 +52,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
         viewPager = rootView.findViewById(R.id.viewpager);
+        searchPeopleFragment = new SearchPeopleFragment();
         setupViewPager(viewPager);
 
         tabLayout = rootView.findViewById(R.id.searchTabs);
@@ -77,6 +83,19 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             }
         });
 
+        mainActivity.edtText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
+                    StaticUtils.hideSoftKeyboard(mainActivity);
+                    if (searchPeopleFragment != null) {
+                        searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
+                    }
+                }
+                return false;
+            }
+        });
+
         mainActivity.imgClose.setOnClickListener(this);
 
         return rootView;
@@ -99,7 +118,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new SearchVideosFragment(), "Videos");
-//        adapter.addFragment(new FollowersFragment(), "People");
+        adapter.addFragment(searchPeopleFragment, "People");
         viewPager.setAdapter(adapter);
     }
 
@@ -109,6 +128,10 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             case R.id.imgClose:
                 if (mainActivity.edtText != null) {
                     mainActivity.edtText.setText("");
+                    StaticUtils.hideSoftKeyboard(mainActivity);
+                    if (searchPeopleFragment != null) {
+                        searchPeopleFragment.searchUser("");
+                    }
                 }
                 break;
         }

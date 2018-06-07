@@ -6,13 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
+import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
+
+import java.util.ArrayList;
 
 public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapter.NewsFeedViewHolder> {
 
     private Context context;
+    private ArrayList<VideoModel> videoArrList = new ArrayList<>();
 
     public SearchVideosAdapter(Context context) {
         this.context = context;
@@ -25,30 +33,54 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
 
     @Override
     public void onBindViewHolder(NewsFeedViewHolder holder, final int position) {
-        if (position == 4) {
+        VideoModel videoModel = videoArrList.get(position);
+        RequestOptions reqOptons = RequestOptions.bitmapTransform(new RoundedCorners(10));
+        Glide.with(context).load(videoModel.videoPosterImage).apply(reqOptons).into(holder.imgLocation);
+        Glide.with(context).load(videoModel.categoryBgImage).into(holder.imgCatBg);
+        holder.txtCategory.setText(videoModel.categoryName);
+        holder.txtSynth.setText(videoModel.videoTitle);
+        holder.txtViewCount.setText(videoModel.videoWatchedCount);
+        holder.txtDistance.setText(videoModel.distance);
+//        holder.txtDuration.setText(videoModel.videoDuration);
+        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
+        holder.ratingBarVideo.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+        holder.txtLocBtm.setText(videoModel.city);
+
+        if (position == videoArrList.size() - 1) {
             holder.dividerView.setVisibility(View.GONE);
         }
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return videoArrList.size();
+    }
+
+    public void addVideos(ArrayList<VideoModel> arrList) {
+        int lastPosition = videoArrList.size() > 0 ? videoArrList.size() - 1 : 0;
+        videoArrList.addAll(arrList);
+        notifyItemRangeInserted(lastPosition, arrList.size() - 1);
     }
 
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imgLocation;
-        private CustomTextView txtLocType, txtSynth,
-                txtViewCount, txtShareCount, txtLocBtm, txtRatingsNo;
+        private ImageView imgLocation, imgCatBg;
+        private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance,
+                txtViewCount, txtRatingsNo;
+        private RatingBar ratingBarVideo;
         private View dividerView;
 
         public NewsFeedViewHolder(View itemView) {
             super(itemView);
             imgLocation = itemView.findViewById(R.id.imgLocation);
-            txtLocType = itemView.findViewById(R.id.txtLocType);
+            txtCategory = itemView.findViewById(R.id.txtCategory);
             txtSynth = itemView.findViewById(R.id.txtSynth);
             txtViewCount = itemView.findViewById(R.id.txtViewCount);
-            txtShareCount = itemView.findViewById(R.id.txtShareCount);
+            txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
+            txtLocBtm = itemView.findViewById(R.id.txtLocBtm);
+            imgCatBg = itemView.findViewById(R.id.imgCatBg);
+            txtDistance = itemView.findViewById(R.id.txtDistance);
+            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
             dividerView = itemView.findViewById(R.id.dividerView);
         }
     }

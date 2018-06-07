@@ -21,6 +21,7 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.CategoryModel;
+import com.ureview.models.FilterModel;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomRecyclerView;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import retrofit2.Call;
 
 public class HomeFragment extends BaseFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, Paginate.Callbacks {
+    private static HomeFragment instance;
     private View rootView;
     private CustomRecyclerView rvCategories, rvNewsFeed, rvNearByVideos, rvTopRated, rvPopularsearch;
     private NewsFeedAdapter newsFeedAdapter;
@@ -49,10 +51,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private RelativeLayout relVideos, relTopRated, relPopularSearch;
     private boolean nearByData, topRatedData, popularData;
     private int loadedDataCount;
+    private String lat = "", lng = "", locMaxRange = "50", locMinRange = "0";
 
     //    News Feed Pagination
     private boolean isLoading, hasLoadedAllItems;
-    private String lat = "", lng = "";
     private int startFrom = 0;
 
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
@@ -62,10 +64,14 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> topRatedVideoList = new ArrayList<>();
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
-    private int latUpdatedPos = -1;
+    private int lastUpdatedPos = -1;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
+    }
+
+    public static HomeFragment getInstance() {
+        return instance;
     }
 
     @Override
@@ -87,7 +93,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
+        instance = this;
         rvNewsFeed = rootView.findViewById(R.id.rvNewsFeed);
         rvCategories = rootView.findViewById(R.id.rvCategories);
         rvNearByVideos = rootView.findViewById(R.id.rvNearByVideos);
@@ -134,17 +140,25 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     private void setData(String categoryName) {
         boolean b = categoryName.equalsIgnoreCase("New Feed");
-        rvNewsFeed.setVisibility(b ? View.VISIBLE : View.GONE);
-        relVideos.setVisibility(b ? View.GONE : View.VISIBLE);
-        rvNearByVideos.setVisibility(b ? View.GONE : View.VISIBLE);
-        relTopRated.setVisibility(b ? View.GONE : View.VISIBLE);
-        rvTopRated.setVisibility(b ? View.GONE : View.VISIBLE);
-        relPopularSearch.setVisibility(b ? View.GONE : View.VISIBLE);
-        rvPopularsearch.setVisibility(b ? View.GONE : View.VISIBLE);
+        rvNewsFeed.setVisibility(b && feedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        relVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        rvNearByVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        relTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        rvTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        relPopularSearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        rvPopularsearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
+    public void loadRelatedData(FilterModel value) {
+        lat = value.locationLat;
+        lng = value.locationLng;
+        locMaxRange = value.locationMax;
+        locMinRange = value.locationMin;
+        updateCategoryList(lastUpdatedPos, true);
     }
 
     private void requestForCategoryList() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllCategories("1");
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllCategories(userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_CATEGORY_LIST, call, this);
     }
 
@@ -152,7 +166,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("startFrom", String.valueOf(startFrom));
         queryMap.put("count", "5");
-        queryMap.put("user_id", userId);
+        queryMap.put("user_id", /*userId*/"1");
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
 
@@ -163,13 +177,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void requestForNearByVideos(String catId) {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
-        queryMap.put("startFrom", String.valueOf(startFrom));
-        queryMap.put("count", "5");
+        queryMap.put("startFrom", "0");
+        queryMap.put("count", "10");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
-        queryMap.put("max_range", "");
-        queryMap.put("min_range", "");
+        queryMap.put("max_range", locMaxRange);
+        queryMap.put("min_range", locMinRange);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllNearVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEAR_BY_VIDEOS, call, this);
     }
@@ -177,11 +191,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void requestForTopRatedVideos(String catId) {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
-        queryMap.put("startFrom", String.valueOf(startFrom));
-        queryMap.put("count", "5");
+        queryMap.put("startFrom", "0");
+        queryMap.put("count", "10");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
+//        queryMap.put("max_range", locMaxRange);
+//        queryMap.put("min_range", locMinRange);
 
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllTopRatedVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_TOP_RATED_VIDEOS, call, this);
@@ -190,11 +206,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void requestForPopularVideos(String catId) {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
-        queryMap.put("startFrom", String.valueOf(startFrom));
-        queryMap.put("count", "5");
+        queryMap.put("startFrom", "0");
+        queryMap.put("count", "10");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
+//        queryMap.put("max_range", locMaxRange);
+//        queryMap.put("min_range", locMinRange);
 
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllPopularVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
@@ -204,7 +222,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.imgCatBg:
-                updateCategoryList(position);
+                updateCategoryList(position, false);
                 break;
             default:
                 mainActivity.setVideoReviewFragment();
@@ -212,15 +230,18 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         }
     }
 
-    private void updateCategoryList(int position) {
-        if (latUpdatedPos != position) {
-            latUpdatedPos = position;
+    private void updateCategoryList(int position, boolean callApi) {
+        if (callApi || lastUpdatedPos != position) {
+            lastUpdatedPos = position;
             for (int i = 0; i < categoryList.size(); i++) {
                 categoryList.get(i).isSelected = i == position;
             }
             homeCategoryAdapter.addCategories(categoryList);
             if (categoryList.get(position).categoryName.equalsIgnoreCase("New Feed")) {
                 startFrom = 0;
+                feedVideoList.clear();
+                newsFeedAdapter.clearAllVideos();
+                hasLoadedAllItems = false;
                 requestForNewsFeedVideos();
             } else {
                 nearByData = false;
@@ -231,7 +252,6 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 requestForTopRatedVideos(categoryList.get(position).id);
                 requestForPopularVideos(categoryList.get(position).id);
             }
-            setData(categoryList.get(position).categoryName);
         }
     }
 
@@ -279,8 +299,11 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 categoryList.add(categoryModel);
             }
             homeCategoryAdapter.addCategories(categoryList);
-            setData(categoryList.get(0).categoryName);
+            lastUpdatedPos = 0;
             startFrom = 0;
+            feedVideoList.clear();
+            newsFeedAdapter.clearAllVideos();
+            hasLoadedAllItems = false;
             requestForNewsFeedVideos();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -305,7 +328,6 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                     }
                     startFrom += feedVidArr.length();
                     newsFeedAdapter.addVideos(tempFeedVideoList);
-                    setData(categoryList.get(0).categoryName);
                 }
             } else {
                 if (startFrom == 0) {
@@ -317,6 +339,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } finally {
+            setData(categoryList.get(0).categoryName);
         }
     }
 
@@ -346,7 +370,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                             txtNoData.setVisibility(View.VISIBLE);
                         }
                     }
-                    nearByVideosAdapter.addVideos(popularVideoList);
+                    nearByVideosAdapter.addVideos(nearByVideoList);
                 }
             } else {
                 relVideos.setVisibility(View.GONE);
@@ -358,6 +382,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } finally {
+            setData(categoryList.get(lastUpdatedPos).categoryName);
         }
     }
 
@@ -387,7 +413,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                             txtNoData.setVisibility(View.VISIBLE);
                         }
                     }
-                    topRatedVideosAdapter.addVideos(popularVideoList);
+                    topRatedVideosAdapter.addVideos(topRatedVideoList);
                 }
             } else {
                 relTopRated.setVisibility(View.GONE);
@@ -399,6 +425,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } finally {
+            setData(categoryList.get(lastUpdatedPos).categoryName);
         }
     }
 
@@ -420,6 +448,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                             popularVideoList.add(videoModel);
                         }
                         popularData = true;
+                        setData(categoryList.get(lastUpdatedPos).categoryName);
                     } else {
                         relPopularSearch.setVisibility(View.GONE);
                         rvPopularsearch.setVisibility(View.GONE);
