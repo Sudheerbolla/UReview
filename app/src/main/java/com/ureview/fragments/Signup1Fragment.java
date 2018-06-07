@@ -113,7 +113,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         txtDob.setOnClickListener(this);
         txtNext.setOnClickListener(this);
         if (currentCountriesModel != null) {
-            txtCountryCode.setText(currentCountriesModel.countryCode);
+            txtCountryCode.setText("+"+currentCountriesModel.countryCode);
         }
         initDatePicker();
         if (!TextUtils.isEmpty(firstName)) {

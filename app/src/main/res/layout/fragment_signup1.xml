@@ -195,7 +195,7 @@
                     android:layout_marginRight="@dimen/pad_20"
                     android:layout_marginTop="@dimen/pad_8"
                     android:background="@drawable/bg_edt_txt"
-                    android:drawableLeft="@drawable/phone_copy"
+                    android:drawableLeft="@drawable/location_copy"
                     android:drawablePadding="@dimen/pad_13"
                     android:hint="Location*"
                     android:inputType="text"

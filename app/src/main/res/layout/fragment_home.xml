@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
+        <com.ureview.utils.views.CustomRecyclerView
             android:id="@+id/rvCategories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,19 +17,169 @@
             android:paddingRight="@dimen/pad_7"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:list_orientation="horizontal"
+            app:list_type="list"
+            app:pagination="false" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.ureview.utils.views.CustomRecyclerView
             android:id="@+id/rvNewsFeed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/pad_15"
             android:layout_marginRight="@dimen/pad_15"
             android:layout_marginTop="@dimen/pad_10"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvCategories"
+            app:list_orientation="vertical"
+            app:list_type="list"
+            app:pagination="true" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="@dimen/pad_50"
+            android:paddingLeft="@dimen/pad_10"
+            android:paddingRight="@dimen/pad_10"
+            android:paddingTop="@dimen/pad_50"
+            android:text="No Data"
+            android:textColor="@color/app_text_color"
+            android:textSize="@dimen/txt_size_15sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvCategories" />
+
+        <RelativeLayout
+            android:id="@+id/relVideos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pad_10"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/rvCategories">
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Nearby"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_20sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtSeeAllVideos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="See all"
+                android:textColor="@color/app_color_dark"
+                android:textSize="@dimen/txt_size_16sp" />
+
+        </RelativeLayout>
+
+        <com.ureview.utils.views.CustomRecyclerView
+            android:id="@+id/rvNearByVideos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/pad_15"
+            android:layout_marginRight="@dimen/pad_15"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relVideos"
+            app:list_orientation="horizontal"
+            app:list_type="list"
+            app:pagination="false" />
+
+        <RelativeLayout
+            android:id="@+id/relTopRated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pad_10"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/rvNearByVideos">
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Top Rated"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_20sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtSeeAllTopRated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="See all"
+                android:textColor="@color/app_color_dark"
+                android:textSize="@dimen/txt_size_16sp" />
+
+        </RelativeLayout>
+
+        <com.ureview.utils.views.CustomRecyclerView
+            android:id="@+id/rvTopRated"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/pad_15"
+            android:layout_marginRight="@dimen/pad_15"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relTopRated"
+            app:list_orientation="horizontal"
+            app:list_type="list"
+            app:pagination="false" />
+
+        <RelativeLayout
+            android:id="@+id/relPopularSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pad_10"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/rvTopRated">
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Popular Search"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_20sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtSeeAllPopularSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="See all"
+                android:textColor="@color/app_color_dark"
+                android:textSize="@dimen/txt_size_16sp" />
+
+        </RelativeLayout>
+
+        <com.ureview.utils.views.CustomRecyclerView
+            android:id="@+id/rvPopularsearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/pad_15"
+            android:layout_marginRight="@dimen/pad_15"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relPopularSearch"
+            app:list_orientation="horizontal"
+            app:list_type="list"
+            app:pagination="false" />
+
 
     </android.support.constraint.ConstraintLayout>
 

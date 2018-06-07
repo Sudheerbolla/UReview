@@ -17,7 +17,7 @@ import com.ureview.utils.StaticUtils;
 public class CustomDialog extends Dialog {
 
     public SplashActivity splashActivity;
-    private CustomTextView txtVerify;
+    private CustomTextView txtVerify,txtChangeNumber,txtResendCodeAuto;
     ISearchClickListener iSearchClickListener;
     private CustomEditText edtCode1, edtCode2, edtCode3, edtCode4;
 
@@ -34,6 +34,8 @@ public class CustomDialog extends Dialog {
         getWindow().setBackgroundDrawable(ContextCompat.getDrawable(splashActivity, R.drawable.bg_dialog));
         setContentView(R.layout.dialog_confirmation_code);
         txtVerify = findViewById(R.id.txtVerify);
+        txtChangeNumber = findViewById(R.id.txtChangeNumber);
+        txtResendCodeAuto = findViewById(R.id.txtResendCodeAuto);
 
         edtCode1 = findViewById(R.id.edtCode1);
         edtCode2 = findViewById(R.id.edtCode2);
@@ -125,6 +127,16 @@ public class CustomDialog extends Dialog {
                 } else {
                     if (iSearchClickListener != null) iSearchClickListener.onClick(code);
                 }
+            }
+        });
+        txtChangeNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+        txtResendCodeAuto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
             }
         });
     }
