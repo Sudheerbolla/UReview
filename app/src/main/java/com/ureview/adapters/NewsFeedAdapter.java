@@ -43,13 +43,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         Glide.with(context).load(videoModel.userImage).apply(requestOptions).into(holder.imgProfile);
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
         holder.txtLoc.setText(videoModel.userLocation);
-        Glide.with(context).load(videoModel.videoPosterImage).into(holder.imgLocation);
+        RequestOptions reqOptons = RequestOptions.bitmapTransform(new RoundedCorners(10));
+        Glide.with(context).load(videoModel.videoPosterImage).apply(reqOptons).into(holder.imgLocation);
         Glide.with(context).load(videoModel.categoryBgImage).into(holder.imgCatBg);
-        Glide.with(context).load(videoModel.categoryImage).into(holder.imgCat);
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
-        holder.txtDistance.setText("12.00 KM");
+        holder.txtDistance.setText(videoModel.distance);
         holder.txtDuration.setText(videoModel.videoDuration);
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.ratingBarVideo.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
@@ -81,7 +81,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         private ImageView imgProfile, imgLocation;
         private CustomTextView txtName, txtLoc, txtSynth, txtDuration,
                 txtViewCount, txtDistance, txtRatingsNo, txtCategory;
-        private ImageView imgCat, imgCatBg;
+        private ImageView imgCatBg;
         private View dividerView;
         private RelativeLayout relItem;
         private RatingBar ratingBarVideo;
@@ -97,7 +97,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             txtCategory = itemView.findViewById(R.id.txtCategory);
             txtSynth = itemView.findViewById(R.id.txtSynth);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
-            imgCat = itemView.findViewById(R.id.imgCat);
             imgCatBg = itemView.findViewById(R.id.imgCatBg);
             txtViewCount = itemView.findViewById(R.id.txtViewCount);
             txtDistance = itemView.findViewById(R.id.txtDistance);

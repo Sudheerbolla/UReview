@@ -40,7 +40,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         holder.txtName.setText(videoModel.videoTitle);
         holder.txtTags.setText(videoModel.videoTags);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
-        holder.txtDistance.setText("12 KM");
+        holder.txtDistance.setText(videoModel.distance);
         holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.txtDuration.setText(videoModel.videoDuration);

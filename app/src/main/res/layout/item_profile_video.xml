@@ -18,7 +18,7 @@
         android:layout_alignBottom="@+id/imgVideo"
         android:layout_alignLeft="@+id/imgVideo"
         android:layout_marginBottom="@dimen/pad_8"
-        android:layout_marginLeft="@dimen/pad_5"
+        android:layout_marginLeft="@dimen/pad_10"
         android:text="(405)"
         android:textColor="@color/color_white"
         android:textSize="@dimen/txt_size_12sp" />
@@ -37,6 +37,8 @@
         android:id="@+id/txtTags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/imgVideo"
         android:layout_below="@+id/txtName"
         android:layout_marginTop="@dimen/pad_2"
         android:maxLines="2"

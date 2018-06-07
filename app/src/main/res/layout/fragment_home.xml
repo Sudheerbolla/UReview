@@ -38,6 +38,24 @@
             app:list_type="list"
             app:pagination="true" />
 
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtNoData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="@dimen/pad_50"
+            android:paddingLeft="@dimen/pad_10"
+            android:paddingRight="@dimen/pad_10"
+            android:paddingTop="@dimen/pad_50"
+            android:text="No Data"
+            android:textColor="@color/app_text_color"
+            android:textSize="@dimen/txt_size_15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvCategories" />
+
         <RelativeLayout
             android:id="@+id/relVideos"
             android:layout_width="match_parent"

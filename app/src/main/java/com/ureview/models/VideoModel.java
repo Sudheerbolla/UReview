@@ -8,9 +8,9 @@ public class VideoModel {
     @SerializedName("id")
     @Expose
     public String id;
-    @SerializedName("user_id")
+    @SerializedName("video_owner_id")
     @Expose
-    public String userId;
+    public String videoOwnerId;
     @SerializedName("video_title")
     @Expose
     public String videoTitle;
@@ -59,9 +59,15 @@ public class VideoModel {
     @SerializedName("video_status")
     @Expose
     public String videoStatus;
+    @SerializedName("video_privacy")
+    @Expose
+    public String videoPrivacy;
     @SerializedName("created_date")
     @Expose
     public String createdDate;
+    @SerializedName("user_id")
+    @Expose
+    public String userId;
     @SerializedName("first_name")
     @Expose
     public String firstName;
@@ -98,6 +104,9 @@ public class VideoModel {
     @SerializedName("rating_given")
     @Expose
     public Integer ratingGiven;
+    @SerializedName("distance")
+    @Expose
+    public String distance;
     @SerializedName("customer_rating")
     @Expose
     public Integer customerRating;
