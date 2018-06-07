@@ -91,6 +91,11 @@ public interface WSInterface {
     @GET("/follow-user-videoview-statistics")
     Call<JsonElement> getRankings(@Query("user_id") String userId);
 
+    @GET("/get-videos-by-user-id")
+    Call<JsonElement> getVideosByUserId(@QueryMap(encoded = true) HashMap<String, String> params);
+
+
+
 
 
 //    @GET("/get_employees/")

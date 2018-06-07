@@ -31,6 +31,7 @@ import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserStatsModel;
 import com.ureview.models.VideoViewsModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
@@ -58,8 +59,8 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
         mainActivity = (MainActivity) getActivity();
         userStatsModelArrayList = new ArrayList<>();
         videoViewsModelArrayList = new ArrayList<>();
-//        userId=LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-        userId = "1";
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+//        userId = "1";
     }
 
     public static StatsFragment newInstance() {

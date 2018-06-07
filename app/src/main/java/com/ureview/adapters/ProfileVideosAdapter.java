@@ -1,6 +1,7 @@
 package com.ureview.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
+import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
 
@@ -20,19 +22,27 @@ import java.util.ArrayList;
 public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdapter.CategoryViewHolder> {
 
     private Context context;
-    private ArrayList<VideoModel> videoList = new ArrayList<>();
+    private IClickListener iClickListener;
+    private ArrayList<VideoModel> videoList;
 
     public ProfileVideosAdapter(Context context) {
         this.context = context;
     }
 
+    public ProfileVideosAdapter(Context context, ArrayList<VideoModel> videoList, IClickListener iClickListener) {
+        this.context = context;
+        this.iClickListener = iClickListener;
+        this.videoList = videoList;
+    }
+
+    @NonNull
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CategoryViewHolder(LayoutInflater.from(context).inflate(R.layout.item_profile_video, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(CategoryViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, final int position) {
         VideoModel videoModel = videoList.get(position);
         RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
 //        requestOptions.placeholder(R.drawable.ic_launcher_background);
