@@ -59,6 +59,13 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("Notifications", "", "", false, true, false, false, false);
+    }
+
     private void initComponents() {
         rvNotifications = rootView.findViewById(R.id.rvNotifications);
         txtNoData = rootView.findViewById(R.id.txtNoData);

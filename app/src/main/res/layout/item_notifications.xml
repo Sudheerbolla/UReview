@@ -53,29 +53,30 @@
             android:textSize="@dimen/txt_size_15sp" />
 
         <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txtAction"
+            android:id="@+id/txtTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="@dimen/pad_5"
             android:layout_marginRight="@dimen/pad_5"
-            android:layout_marginTop="@dimen/pad_5"
-            android:layout_toRightOf="@+id/txtName"
-            android:text="liked your video liked your video"
-            android:textColor="@color/colorBlack"
+            android:layout_marginTop="@dimen/pad_3"
+            android:text="7 minutes ago"
+            android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_12sp" />
 
         <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txtTime"
+            android:id="@+id/txtAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtName"
             android:layout_marginLeft="@dimen/pad_5"
             android:layout_marginRight="@dimen/pad_5"
-            android:layout_marginTop="@dimen/pad_3"
+            android:layout_marginTop="@dimen/pad_5"
             android:layout_toRightOf="@+id/imgProfile"
-            android:text="7 minutes ago"
-            android:textColor="@color/color_vvvDarkGrey"
+            android:text="liked your video liked your video"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_12sp" />
+
 
     </RelativeLayout>
 

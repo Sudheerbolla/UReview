@@ -24,3 +24,23 @@ public class StatsFragment extends BaseFragment {
     }
 
 }
+/*
+http://18.216.101.112/user-videoview-statistics?user_id=1&year=2018
+{
+    "status": "success",
+    "message": "Video view statistics!..",
+    "video_views": [
+        {
+            "month": "Apr",
+            "count": 0
+        },
+        {
+            "month": "May",
+            "count": 90
+        },
+        {
+            "month": "Jun",
+            "count": 31
+        }
+    ]
+}*/

@@ -45,7 +45,7 @@ public class SplashFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         splashActivity = (SplashActivity) getActivity();
-        splashActivity.changeStatusBarColorToAppColor();
+        splashActivity.changeStatusBarColorToAppColorLight();
         splashActivity.setTopBar("SplashFragment");
     }
 

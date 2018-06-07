@@ -55,4 +55,14 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!--<style name="fullScreenDialogStyle" parent="Theme.AppCompat.Dialog.">-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--<item name="windowFullscreen">true</item>-->
+    <!--<item name="windowContentOverlay">@null</item>-->
+    <!--</style>-->
+
+    <!--
+    setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    -->
+
 </resources>

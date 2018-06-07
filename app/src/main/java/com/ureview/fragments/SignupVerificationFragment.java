@@ -230,6 +230,12 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
+                    try {
+                        String json = BaseApplication.userInfoModel.serialize();
+                        LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (response.has("userid")) {
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, response.get("userid").getAsString());
@@ -252,6 +258,12 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
+                    try {
+                        String json = BaseApplication.userInfoModel.serialize();
+                        LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 startActivity(new Intent(splashActivity, MainActivity.class));

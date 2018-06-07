@@ -5,34 +5,52 @@
     android:gravity="center"
     android:padding="@dimen/pad_6">
 
-    <ImageView
+    <com.ureview.utils.views.CircleImageView
         android:id="@+id/imgProfile"
-        android:layout_width="@dimen/pad_45"
-        android:layout_height="@dimen/pad_45"
+        android:layout_width="@dimen/pad_50"
+        android:layout_height="@dimen/pad_50"
         android:layout_centerVertical="true"
         android:src="@mipmap/ic_launcher" />
 
-    <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtFollowStatus"
+    <LinearLayout
+        android:id="@+id/linEnd"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/item_feed_btn_height"
-        android:layout_alignParentRight="true"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/selector_app_pink_btn"
-        android:gravity="center"
-        android:text="Follow Back"
-        android:textColor="@color/selector_txt_color"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgClear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/pad_5"
+            android:src="@drawable/ic_clear" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtFollowStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/selector_app_pink_btn"
+            android:gravity="center"
+            android:text="Follow Back"
+            android:textColor="@color/selector_txt_color"
+            android:textSize="@dimen/txt_size_15sp" />
+
+    </LinearLayout>
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/pad_5"
+        android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginRight="@dimen/pad_5"
         android:layout_marginTop="@dimen/pad_3"
-        android:layout_toLeftOf="@+id/txtFollowStatus"
+        android:layout_toLeftOf="@+id/linEnd"
         android:layout_toRightOf="@+id/imgProfile"
+        android:singleLine="true"
         android:text="Terry Rodriguez"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_15sp" />
@@ -47,5 +65,17 @@
         android:layout_marginTop="@dimen/pad_3"
         android:layout_toRightOf="@+id/imgProfile"
         android:isIndicator="true" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtReviewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ratingBar"
+        android:layout_marginLeft="@dimen/pad_10"
+        android:layout_marginRight="@dimen/pad_5"
+        android:layout_toRightOf="@+id/imgProfile"
+        android:text="Review Upload : 10"
+        android:textColor="@color/color_vDarkGrey"
+        android:textSize="@dimen/txt_size_12sp" />
 
 </RelativeLayout>

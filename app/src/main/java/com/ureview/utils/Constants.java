@@ -1,6 +1,9 @@
 package com.ureview.utils;
 
 public class Constants {
+
+    public final static int BACK_PRESSED_TIME = 2200;
+
     public final static int LOCATION_PERMISSION = 001;
     public final static int STORAGE_AND_CAMERA = 002;
     public final static int PLACE_AUTOCOMPLETE_REQUEST_CODE = 003;

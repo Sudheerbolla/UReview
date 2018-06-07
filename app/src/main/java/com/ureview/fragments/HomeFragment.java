@@ -69,6 +69,14 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         mainActivity = (MainActivity) getActivity();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("", "fetching location...", "", true, false, true, false, false);
+        mainActivity.setTextToAddress();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

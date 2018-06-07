@@ -2,10 +2,12 @@ package com.ureview;
 
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
+import android.text.TextUtils;
 
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ureview.models.LocationModel;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
@@ -27,6 +29,7 @@ public class BaseApplication extends MultiDexApplication {
     private static BaseApplication mInstance;
     private static WSInterface wsInterface;
     private OkHttpClient okHttpClient;
+    public static LocationModel locationModel;
     public static UserInfoModel userInfoModel;
 
     public static synchronized BaseApplication getInstance() {
@@ -40,11 +43,21 @@ public class BaseApplication extends MultiDexApplication {
         initRetrofit();
         FacebookSdk.sdkInitialize(getApplicationContext());
         getUserDataIfAvailable();
+        getLocationIfAvailable();
+    }
+
+    private void getLocationIfAvailable() {
+        String json = LocalStorage.getInstance(this).getString(LocalStorage.PREF_LOCATION_INFO, "");
+        if (!TextUtils.isEmpty(json)) {
+            locationModel = LocationModel.create(json);
+        }
     }
 
     private void getUserDataIfAvailable() {
         String json = LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, "");
-//        if (!TextUtils.isEmpty(json)) new Gson().fromJson(json, UserInfoModel.class);
+        if (!TextUtils.isEmpty(json)) {
+            userInfoModel = UserInfoModel.create(json);
+        }
     }
 
     public WSInterface getWsClientListener() {

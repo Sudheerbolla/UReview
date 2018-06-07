@@ -16,8 +16,8 @@
             android:id="@+id/rlProfileTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/pad_10"
-            android:paddingRight="@dimen/pad_10">
+            android:layout_marginTop="@dimen/pad_8"
+            android:padding="@dimen/pad_8">
 
             <com.ureview.utils.views.CircleImageView
                 android:id="@+id/imgProfile"
@@ -57,71 +57,80 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtLoc"
                 android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_2"
-                android:isIndicator="true"
+                android:layout_marginTop="@dimen/pad_5"
                 android:layout_toRightOf="@+id/imgProfile" />
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/item_feed_btn_height"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/ratingBar"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_3"
-                android:layout_toRightOf="@+id/imgProfile"
-                android:background="@drawable/selector_app_pink_btn"
-                android:gravity="center"
-                android:text="Follow"
-                android:textColor="@color/color_white"
-                android:textSize="@dimen/txt_size_15sp" />
+                android:layout_marginStart="@dimen/pad_10"
+                android:layout_toEndOf="@+id/imgProfile">
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowersCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtFollowStatus"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_12"
-                android:layout_toRightOf="@+id/imgProfile"
-                android:text="1232"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
+                <LinearLayout
+                    android:id="@+id/linFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_grey_small_curved"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/pad_3"
+                    android:paddingEnd="@dimen/pad_10"
+                    android:paddingStart="@dimen/pad_10"
+                    android:paddingTop="@dimen/pad_3">
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtFollowersCount"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_3"
-                android:layout_toRightOf="@+id/imgProfile"
-                android:text="Followers"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_11sp" />
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowersCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1232"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/txt_size_14sp" />
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowingCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtFollowStatus"
-                android:layout_marginLeft="@dimen/pad_15"
-                android:layout_marginTop="@dimen/pad_12"
-                android:layout_toRightOf="@+id/txtFollowers"
-                android:text="755"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pad_2"
+                        android:text="Followers"
+                        android:textColor="@color/color_vvDarkGrey"
+                        android:textSize="@dimen/txt_size_11sp" />
+                </LinearLayout>
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtFollowing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtFollowingCount"
-                android:layout_marginLeft="@dimen/pad_15"
-                android:layout_marginTop="@dimen/pad_3"
-                android:layout_toRightOf="@+id/txtFollowers"
-                android:text="Following"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_11sp" />
+                <LinearLayout
+                    android:id="@+id/linFollowing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_toRightOf="@+id/linFollowers"
+                    android:background="@drawable/bg_grey_small_curved"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/pad_3"
+                    android:paddingEnd="@dimen/pad_10"
+                    android:paddingStart="@dimen/pad_10"
+                    android:paddingTop="@dimen/pad_3">
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="755"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/txt_size_14sp" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/pad_2"
+                        android:text="Following"
+                        android:textColor="@color/color_vvDarkGrey"
+                        android:textSize="@dimen/txt_size_11sp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -141,12 +150,11 @@
             android:layout_height="0.5dp"
             android:background="@color/colorMediumGrey" />
 
-        <android.support.v4.view.ViewPager
+        <com.ureview.utils.views.CustomViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/pad_10"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+            android:layout_height="500dp"
+            android:layout_marginTop="@dimen/pad_5" />
 
     </LinearLayout>
 

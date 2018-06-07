@@ -11,14 +11,12 @@ public class LocalStorage {
     private static SharedPreferences preferences;
     private static Editor editor;
 
-    public static final String IS_GUEST_USER = "IS_GUEST_USER";
     public static final String IS_LOGGED_IN_ALREADY = "IS_LOGGED_IN_ALREADY";
     public static final String PREF_USER_ID = "PREF_USER_ID";
     public static final String IS_FIRST_TIME_LAUNCH = "IS_FIRST_TIME_LAUNCH";
-    public static final String IS_PREFERENCE_SELECTED = "IS_PREFERENCE_SELECTED";
-    public static final String PREF_LANGUAGE = "PREF_LANGUAGE";
     public static final String PREF_DEVICE_TOKEN = "DEVICE_TOKEN";
     public static final String PREF_USER_INFO_DATA = "USER_INFO_DATA";
+    public static final String PREF_LOCATION_INFO = "LOCATION_INFO";
 
     private LocalStorage(Context mContext) {
         preferences = mContext.getSharedPreferences(PREF_NAME, Activity.MODE_PRIVATE);

@@ -2,71 +2,79 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/transparent"
+    android:gravity="bottom"
     android:orientation="horizontal">
 
     <RelativeLayout
         android:id="@+id/llHome"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:background="@color/color_white"
+        android:gravity="center"
+        android:paddingBottom="@dimen/pad_12"
+        android:paddingTop="@dimen/pad_12">
 
         <ImageView
             android:id="@+id/imgHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pad_30"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/selector_home" />
 
         <ImageView
             android:id="@+id/imgHomeView"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgHome"
             android:layout_marginTop="@dimen/pad_3"
+            android:scaleType="fitXY"
             android:src="@drawable/navigation_active_bar_copy"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/llSearch"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:background="@color/color_white"
+        android:gravity="center"
+        android:paddingBottom="@dimen/pad_12"
+        android:paddingTop="@dimen/pad_12">
 
         <ImageView
             android:id="@+id/imgSearchB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pad_30"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/selector_search" />
 
         <ImageView
             android:id="@+id/imgSearchView"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgSearchB"
             android:layout_marginTop="@dimen/pad_3"
+            android:scaleType="fitXY"
             android:src="@drawable/navigation_active_bar_copy"
-            android:visibility="gone" />
+            android:visibility="invisible" />
+
     </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/llVideo"
         android:layout_width="0dp"
-        android:layout_height="75dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/imgVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-10dp"
-            android:layout_marginTop="@dimen/pad_8"
+            android:layout_marginBottom="-5dp"
             android:scaleType="centerCrop"
             android:src="@drawable/video_copy" />
 
@@ -75,49 +83,55 @@
     <RelativeLayout
         android:id="@+id/llProfile"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center_horizontal">
+        android:background="@color/color_white"
+        android:gravity="center"
+        android:paddingBottom="@dimen/pad_12"
+        android:paddingTop="@dimen/pad_12">
 
         <ImageView
             android:id="@+id/imgProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/pad_30"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/selector_profile" />
 
         <ImageView
             android:id="@+id/imgProfileView"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgProfile"
             android:layout_marginTop="@dimen/pad_3"
+            android:scaleType="fitXY"
             android:src="@drawable/navigation_active_bar_copy"
-            android:visibility="gone" />
+            android:visibility="invisible" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/llSettings"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/color_white"
         android:gravity="center"
-        android:padding="@dimen/pad_8">
+        android:paddingBottom="@dimen/pad_12"
+        android:paddingTop="@dimen/pad_12">
 
         <ImageView
             android:id="@+id/imgSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:src="@drawable/selector_settings" />
 
         <ImageView
             android:id="@+id/imgSettingsView"
-            android:layout_width="wrap_content"
+            android:layout_width="25dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgSettings"
             android:layout_marginTop="@dimen/pad_3"
+            android:scaleType="fitXY"
             android:src="@drawable/navigation_active_bar_copy"
-            android:visibility="gone" />
+            android:visibility="invisible" />
 
     </RelativeLayout>
 
