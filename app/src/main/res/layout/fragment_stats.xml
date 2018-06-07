@@ -1,19 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorDarkRed">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
 
-    <com.ureview.utils.views.CustomTextView
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="@dimen/pad_50"
-        android:text="Stats"
-        android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_25sp" />
-</android.support.constraint.ConstraintLayout>
+        android:orientation="vertical"
+        android:padding="@dimen/pad_5">
+
+        <!--<com.jjoe64.graphview.GraphView-->
+        <!--android:id="@+id/graph"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp" />-->
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/pad_8"
+            android:singleLine="true"
+            android:text="Ranking"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_22sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_8"
+                android:singleLine="true"
+                android:text="Rank"
+                android:textColor="@color/color_vDarkGrey"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_8"
+                android:singleLine="true"
+                android:text="Views"
+                android:textColor="@color/color_vDarkGrey"
+                android:textSize="@dimen/txt_size_15sp" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvRankings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:padding="@dimen/pad_8"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

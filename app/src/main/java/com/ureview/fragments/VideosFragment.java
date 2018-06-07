@@ -11,15 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 import com.ureview.adapters.ProfileVideosAdapter;
 
 public class VideosFragment extends BaseFragment {
     private View rootView;
     private RecyclerView rvVideos;
     private ProfileVideosAdapter profileVideosAdapter;
+    private MainActivity mainActivity;
 
     public static VideosFragment newInstance() {
         return new VideosFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Nullable

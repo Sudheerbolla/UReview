@@ -28,8 +28,8 @@ public class WSUtils {
     public static final int REQ_FOR_BLOCK_USER = 114;
     public static final int REQ_FOR_SEARCH_VIDEOS = 115;
     public static final int REQ_FOR_SEARCH_PEOPLE = 116;
-    public static final int REQ_FOR_PETITION = 117;
-    public static final int REQ_FOR_VALIDATE_COUPON_CODE = 118;
+    public static final int REQ_USER_STATISTICS = 117;
+    public static final int REQ_FOR_RANKINGS = 118;
     public static final int REQ_FOR_UPDATE_USED_COUPON_CODE = 119;
     public static final int REQ_FOR_GENERATE_COUPON_CODE = 120;
 

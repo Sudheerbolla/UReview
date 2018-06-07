@@ -85,6 +85,14 @@ public interface WSInterface {
     @GET("/search-users")
     Call<JsonElement> searchUsers(@QueryMap(encoded = true) HashMap<String, String> params);
 
+    @GET("/user-videoview-statistics")
+    Call<JsonElement> getUserStatistics(@Query("user_id") String userId, @Query("year") String year);
+
+    @GET("/follow-user-videoview-statistics")
+    Call<JsonElement> getRankings(@Query("user_id") String userId);
+
+
+
 //    @GET("/get_employees/")
 //    Call<JsonElement> dummyCall();
 //
