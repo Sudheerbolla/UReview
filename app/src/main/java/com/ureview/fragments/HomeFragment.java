@@ -22,6 +22,7 @@ import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.utils.views.recyclerView.Paginate;
@@ -33,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 
@@ -50,6 +52,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     //    News Feed Pagination
     private boolean isLoading, hasLoadedAllItems;
+    private String lat = "", lng = "";
     private int startFrom = 0;
 
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
@@ -58,6 +61,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> nearByVideoList = new ArrayList<>();
     private ArrayList<VideoModel> topRatedVideoList = new ArrayList<>();
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
+    private String userId;
+    private int latUpdatedPos = -1;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -67,6 +72,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Override
@@ -118,6 +124,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         txtSeeAllVideos.setOnClickListener(this);
         txtSeeAllPopularSearch.setOnClickListener(this);
 
+        lat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+        lng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+
         requestForCategoryList();
 
         return rootView;
@@ -140,27 +149,54 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     private void requestForNewsFeedVideos() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener()
-                .getNewsFeedVideos(String.valueOf(startFrom), "5", "1", "17.4138", "78.4398");
+        HashMap<String, String> queryMap = new HashMap<>();
+        queryMap.put("startFrom", String.valueOf(startFrom));
+        queryMap.put("count", "5");
+        queryMap.put("user_id", userId);
+        queryMap.put("current_latitude", lat);
+        queryMap.put("current_longitude", lng);
+
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getNewsFeedVideos(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEWS_FEED_VIDEOS, call, this);
     }
 
     private void requestForNearByVideos(String catId) {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener()
-                .getAllNearVideosByCategory(catId, "0", "10", "1", "17.4138", "78.4398",
-                        "", "");
+        HashMap<String, String> queryMap = new HashMap<>();
+        queryMap.put("category_id", catId);
+        queryMap.put("startFrom", String.valueOf(startFrom));
+        queryMap.put("count", "5");
+        queryMap.put("user_id", userId);
+        queryMap.put("current_latitude", lat);
+        queryMap.put("current_longitude", lng);
+        queryMap.put("max_range", "");
+        queryMap.put("min_range", "");
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllNearVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEAR_BY_VIDEOS, call, this);
     }
 
     private void requestForTopRatedVideos(String catId) {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener()
-                .getAllTopRatedVideosByCategory(catId, "0", "10", "1", "17.4138", "78.4398");
+        HashMap<String, String> queryMap = new HashMap<>();
+        queryMap.put("category_id", catId);
+        queryMap.put("startFrom", String.valueOf(startFrom));
+        queryMap.put("count", "5");
+        queryMap.put("user_id", userId);
+        queryMap.put("current_latitude", lat);
+        queryMap.put("current_longitude", lng);
+
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllTopRatedVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_TOP_RATED_VIDEOS, call, this);
     }
 
     private void requestForPopularVideos(String catId) {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener()
-                .getAllPopularVideosByCategory(catId, "0", "10", "1", "17.4138", "78.4398");
+        HashMap<String, String> queryMap = new HashMap<>();
+        queryMap.put("category_id", catId);
+        queryMap.put("startFrom", String.valueOf(startFrom));
+        queryMap.put("count", "5");
+        queryMap.put("user_id", userId);
+        queryMap.put("current_latitude", lat);
+        queryMap.put("current_longitude", lng);
+
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllPopularVideosByCategory(queryMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
     }
 
@@ -177,23 +213,26 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     private void updateCategoryList(int position) {
-        for (int i = 0; i < categoryList.size(); i++) {
-            categoryList.get(i).isSelected = i == position;
+        if (latUpdatedPos != position) {
+            latUpdatedPos = position;
+            for (int i = 0; i < categoryList.size(); i++) {
+                categoryList.get(i).isSelected = i == position;
+            }
+            homeCategoryAdapter.addCategories(categoryList);
+            if (categoryList.get(position).categoryName.equalsIgnoreCase("New Feed")) {
+                startFrom = 0;
+                requestForNewsFeedVideos();
+            } else {
+                nearByData = false;
+                topRatedData = false;
+                popularData = false;
+                loadedDataCount = 0;
+                requestForNearByVideos(categoryList.get(position).id);
+                requestForTopRatedVideos(categoryList.get(position).id);
+                requestForPopularVideos(categoryList.get(position).id);
+            }
+            setData(categoryList.get(position).categoryName);
         }
-        homeCategoryAdapter.addCategories(categoryList);
-        if (categoryList.get(position).categoryName.equalsIgnoreCase("New Feed")) {
-            startFrom = 0;
-            requestForNewsFeedVideos();
-        } else {
-            nearByData = false;
-            topRatedData = false;
-            popularData = false;
-            loadedDataCount = 0;
-            requestForNearByVideos(categoryList.get(position).id);
-            requestForTopRatedVideos(categoryList.get(position).id);
-            requestForPopularVideos(categoryList.get(position).id);
-        }
-        setData(categoryList.get(position).categoryName);
     }
 
     @Override

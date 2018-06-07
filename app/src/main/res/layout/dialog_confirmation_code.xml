@@ -108,6 +108,7 @@
             android:orientation="horizontal">
 
             <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtChangeNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"

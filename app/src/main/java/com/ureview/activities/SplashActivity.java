@@ -119,7 +119,7 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
     }
 
     private void proceedWithFlow() {
-//        printHashKey();
+        printHashKey();
 //        check(new String[]{"10", "joe", "mary", "joe", "james", "james", "james", "mary", "mary"});
         replaceFragmentWithoutAnimation(SplashFragment.newInstance(), R.id.splashContainer, false);
     }

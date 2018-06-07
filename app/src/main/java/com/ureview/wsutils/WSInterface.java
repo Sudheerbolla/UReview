@@ -41,28 +41,16 @@ public interface WSInterface {
             , @Query(value = "count") String court, @Query(value = "user_id") String userId);
 
     @GET("/news-feed-videos")
-    Call<JsonElement> getNewsFeedVideos(@Query(value = "startFrom") String startFrom
-            , @Query(value = "count") String count, @Query(value = "user_id") String userId
-            , @Query(value = "current_latitude") String currentLatitude, @Query(value = "current_longitude") String currentLongitude);
+    Call<JsonElement> getNewsFeedVideos(@QueryMap(encoded = true) HashMap<String, String> params);
 
     @GET("/get-all-near-videos-by-category")
-    Call<JsonElement> getAllNearVideosByCategory(@Query(value = "category_id") String categoryId,
-                                                 @Query(value = "startFrom") String startFrom
-            , @Query(value = "count") String count, @Query(value = "user_id") String userId
-            , @Query(value = "current_latitude") String currentLatitude, @Query(value = "current_longitude") String currentLongitude
-            , @Query(value = "max_range") String maxRange, @Query(value = "min_range") String minRange);
+    Call<JsonElement> getAllNearVideosByCategory(@QueryMap(encoded = true) HashMap<String, String> params);
 
     @GET("/get-all-top-rated-videos-by-category")
-    Call<JsonElement> getAllTopRatedVideosByCategory(@Query(value = "category_id") String categoryId,
-                                                     @Query(value = "startFrom") String startFrom
-            , @Query(value = "count") String count, @Query(value = "user_id") String userId
-            , @Query(value = "current_latitude") String currentLatitude, @Query(value = "current_longitude") String currentLongitude);
+    Call<JsonElement> getAllTopRatedVideosByCategory(@QueryMap(encoded = true) HashMap<String, String> params);
 
     @GET("/get-all-popular-videos-by-category")
-    Call<JsonElement> getAllPopularVideosByCategory(@Query(value = "category_id") String categoryId,
-                                                    @Query(value = "startFrom") String startFrom
-            , @Query(value = "count") String count, @Query(value = "user_id") String userId
-            , @Query(value = "current_latitude") String currentLatitude, @Query(value = "current_longitude") String currentLongitude);
+    Call<JsonElement> getAllPopularVideosByCategory(@QueryMap(encoded = true) HashMap<String, String> params);
 
     @GET("/user-notications")
     Call<JsonElement> getNotifications(@Query("user_id") String userId);
