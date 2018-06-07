@@ -30,7 +30,7 @@ public class WSUtils {
     public static final int REQ_FOR_SEARCH_PEOPLE = 116;
     public static final int REQ_USER_STATISTICS = 117;
     public static final int REQ_FOR_RANKINGS = 118;
-    public static final int REQ_FOR_UPDATE_USED_COUPON_CODE = 119;
+    public static final int REQ_FOR_PROFILE_VIDEOS= 119;
     public static final int REQ_FOR_GENERATE_COUPON_CODE = 120;
 
     public static final int REQ_FOR_CATEGORY_LIST = 121;

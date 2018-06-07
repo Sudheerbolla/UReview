@@ -17,7 +17,7 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
-import com.ureview.adapters.ProfileVideosAdapter;
+import com.ureview.adapters.VideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.CategoryModel;
@@ -47,7 +47,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private HomeCategoryAdapter homeCategoryAdapter;
     private MainActivity mainActivity;
     private CustomTextView txtSeeAllVideos, txtSeeAllTopRated, txtSeeAllPopularSearch, txtNoData;
-    private ProfileVideosAdapter nearByVideosAdapter, topRatedVideosAdapter, popularVideosAdapter;
+    private VideosAdapter nearByVideosAdapter, topRatedVideosAdapter, popularVideosAdapter;
     private RelativeLayout relVideos, relTopRated, relPopularSearch;
     private boolean nearByData, topRatedData, popularData;
     private int loadedDataCount;
@@ -107,9 +107,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
         newsFeedAdapter = new NewsFeedAdapter(getActivity(), this);
         homeCategoryAdapter = new HomeCategoryAdapter(getActivity(), this);
-        nearByVideosAdapter = new ProfileVideosAdapter(getActivity());
-        topRatedVideosAdapter = new ProfileVideosAdapter(getActivity());
-        popularVideosAdapter = new ProfileVideosAdapter(getActivity());
+        nearByVideosAdapter = new VideosAdapter(getActivity());
+        topRatedVideosAdapter = new VideosAdapter(getActivity());
+        popularVideosAdapter = new VideosAdapter(getActivity());
+
         rvNewsFeed.setAdapter(newsFeedAdapter);
         rvNewsFeed.setListPagination(this);
         rvCategories.setAdapter(homeCategoryAdapter);

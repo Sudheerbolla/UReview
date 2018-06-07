@@ -10,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
@@ -18,7 +21,7 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
-import com.ureview.utils.LocalStorage;
+import com.ureview.utils.StaticUtils;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -27,10 +30,10 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 
-public class VideosFragment extends BaseFragment implements IParserListener<JsonElement>,IClickListener {
+public class VideosFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener {
     private View rootView;
     private RecyclerView rvVideos;
-    private ProfileVideosAdapter profileVideosAdapter;
+    private ProfileVideosAdapter videosAdapter;
     private MainActivity mainActivity;
     private ArrayList<VideoModel> userVideosModelArrayList;
     private String userId;
@@ -44,7 +47,8 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userVideosModelArrayList = new ArrayList<>();
-        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+//        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        userId = "1";
     }
 
     @Nullable
@@ -52,9 +56,9 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_videos, container, false);
         rvVideos = rootView.findViewById(R.id.rvVideos);
-        profileVideosAdapter = new ProfileVideosAdapter(mainActivity,userVideosModelArrayList,this);
+        videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this);
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        rvVideos.setAdapter(profileVideosAdapter);
+        rvVideos.setAdapter(videosAdapter);
 
         ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);
         ViewCompat.setNestedScrollingEnabled(rvVideos, false);
@@ -68,12 +72,46 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         queryMap.put("current_longitude", "78.4398");
         queryMap.put("current_latitude", "17.4138");
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getVideosByUserId(queryMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_PROFILE_VIDEOS, call, this);
     }
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {
+        switch (requestCode) {
+            case WSUtils.REQ_FOR_PROFILE_VIDEOS:
+                parseGetProfileVideosResponse((JsonObject) response);
+                break;
+            default:
+                break;
+        }
+    }
 
+    private void parseGetProfileVideosResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                Gson gson = new Gson();
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    if (response.has("videos")) {
+                        try {
+                            userVideosModelArrayList.clear();
+                            JsonArray videoViewsArray = response.get("videos").getAsJsonArray();
+                            if (videoViewsArray.size() > 0) {
+                                for (int i = 0; i < videoViewsArray.size(); i++) {
+                                    userVideosModelArrayList.add(gson.fromJson(videoViewsArray.get(i).toString(), VideoModel.class));
+                                }
+                            }
+                            videosAdapter.notifyDataSetChanged();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,6 +135,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     }
 }
 /*
+
 {
     "status": "success",
     "message": "User videos data",

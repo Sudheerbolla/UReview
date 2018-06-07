@@ -22,7 +22,6 @@ import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.fragments.BaseFragment;
 import com.ureview.fragments.FollowersFragment;
-import com.ureview.fragments.HomeCompleteFragment;
 import com.ureview.fragments.HomeFragment;
 import com.ureview.fragments.LocationBottomSheetFragment;
 import com.ureview.fragments.LocationFilterFragment;
@@ -312,10 +311,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void setHomeFragment() {
         setSelectedTab(imgHome, imgHomeView);
         replaceFragment(HomeFragment.newInstance(), false, R.id.mainContainer);
-    }
-
-    public void setHomeFragmentComplete() {
-        replaceFragment(HomeCompleteFragment.newInstance(), false, R.id.mainContainer);
     }
 
     private void setLocationRadiusFragment() {

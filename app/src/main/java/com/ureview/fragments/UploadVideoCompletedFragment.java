@@ -32,7 +32,7 @@ public class UploadVideoCompletedFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 mainActivity.clearBackStackCompletely();
-                mainActivity.setHomeFragmentComplete();
+                mainActivity.setHomeFragment();
             }
         });
         return rootView;

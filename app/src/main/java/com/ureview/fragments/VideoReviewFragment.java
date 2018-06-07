@@ -10,12 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ureview.R;
-import com.ureview.adapters.ProfileVideosAdapter;
+import com.ureview.adapters.VideosAdapter;
 
 public class VideoReviewFragment extends BaseFragment {
     private View rootView;
     private RecyclerView rvTopVideos;
-    private ProfileVideosAdapter profileVideosAdapter;
+    private VideosAdapter videosAdapter;
 
     public static VideoReviewFragment newInstance() {
         return new VideoReviewFragment();
@@ -27,9 +27,9 @@ public class VideoReviewFragment extends BaseFragment {
         rootView = inflater.inflate(R.layout.fragment_video_review, container, false);
         rvTopVideos = rootView.findViewById(R.id.rvTopVideos);
         rvTopVideos.setNestedScrollingEnabled(false);
-        profileVideosAdapter = new ProfileVideosAdapter(getActivity());
+        videosAdapter = new VideosAdapter(getActivity());
         rvTopVideos.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        rvTopVideos.setAdapter(profileVideosAdapter);
+        rvTopVideos.setAdapter(videosAdapter);
         return rootView;
     }
 

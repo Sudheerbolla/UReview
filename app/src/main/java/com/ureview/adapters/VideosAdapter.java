@@ -19,17 +19,17 @@ import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
 
-public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdapter.CategoryViewHolder> {
+public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryViewHolder> {
 
     private Context context;
     private IClickListener iClickListener;
     private ArrayList<VideoModel> videoList;
 
-    public ProfileVideosAdapter(Context context) {
+    public VideosAdapter(Context context) {
         this.context = context;
     }
 
-    public ProfileVideosAdapter(Context context, ArrayList<VideoModel> videoList, IClickListener iClickListener) {
+    public VideosAdapter(Context context, ArrayList<VideoModel> videoList, IClickListener iClickListener) {
         this.context = context;
         this.iClickListener = iClickListener;
         this.videoList = videoList;
@@ -51,7 +51,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         holder.txtTags.setText(videoModel.videoTags);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
-        holder.ratingBar.setRating(Float.parseFloat(videoModel.videoRating));
+        holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.txtDuration.setText(videoModel.videoDuration);
     }
@@ -59,6 +59,11 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
     @Override
     public int getItemCount() {
         return videoList.size();
+    }
+
+    public void addVideos(ArrayList<VideoModel> list) {
+        this.videoList = list;
+        notifyDataSetChanged();
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
