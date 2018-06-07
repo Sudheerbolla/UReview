@@ -61,8 +61,8 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         return videoList.size();
     }
 
-    public void addVideos(ArrayList<VideoModel> videoList) {
-        this.videoList = videoList;
+    public void addVideos(ArrayList<VideoModel> list) {
+        this.videoList = list;
         notifyDataSetChanged();
     }
 

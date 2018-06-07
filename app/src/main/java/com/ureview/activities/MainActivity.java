@@ -397,9 +397,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void locationCallback(FilterModel value) {
-        if(value!=null){}
-//        Log.e("Filtermodel: ", value.addressLine);
-
+        if (value != null) {
+            if (HomeFragment.getInstance() != null) {
+                HomeFragment.getInstance().loadRelatedData(value);
+            }
+        }
     }
-
 }
