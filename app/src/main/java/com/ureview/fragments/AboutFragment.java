@@ -3,6 +3,7 @@ package com.ureview.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class AboutFragment extends BaseFragment {
         if (txtPhone != null) txtPhone.setText(userInfoModel.mobile);
         if (txtEmail != null) txtEmail.setText(userInfoModel.email);
         if (txtAge != null) txtAge.setText(userInfoModel.age);
-        if (txtAboutMe != null) txtAboutMe.setText(userInfoModel.user_description);
+        if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
+            txtAboutMe.setText(userInfoModel.user_description);
     }
 }
