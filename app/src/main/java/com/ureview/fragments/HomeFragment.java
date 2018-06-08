@@ -16,7 +16,7 @@ import com.google.gson.JsonElement;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
-import com.ureview.activities.VideoMP4Activity;
+import com.ureview.activities.VideoDetailActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
 import com.ureview.adapters.VideosAdapter;
@@ -228,12 +228,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 updateCategoryList(position, false);
                 break;
             case R.id.relItem:
-//                Intent intent = new Intent(mainActivity, VideoDetailActivity.class);
-//                intent.putExtra("news_feed", feedVideoList);
-//                intent.putExtra("position", position);
-//                startActivity(intent);
+                Intent intent = new Intent(mainActivity, VideoDetailActivity.class);
+                intent.putExtra("news_feed", feedVideoList);
+                intent.putExtra("position", position);
+                startActivity(intent);
 //                startActivity(new Intent(mainActivity, VideoPlayerActivity.class));
-                startActivity(new Intent(mainActivity, VideoMP4Activity.class));
+//                startActivity(new Intent(mainActivity, VideoMP4Activity.class));
                 break;
             default:
                 break;

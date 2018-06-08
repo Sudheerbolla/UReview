@@ -1,414 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        android:id="@+id/player_frame_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="200dp">
 
-        <RelativeLayout
+        <SurfaceView
+            android:id="@+id/sv_player"
             android:layout_width="match_parent"
-            android:layout_height="170dp">
+            android:layout_height="match_parent" />
 
-            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                android:id="@+id/playerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:focusable="true"
-                app:controller_layout_id="@layout/layout_exoplayer_controller" />
-
-            <ImageView
-                android:id="@+id/imgPause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                android:src="@drawable/play_button_copy" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <include
+            layout="@layout/player_media_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/color_vvvDarkGrey">
+            android:layout_gravity="center_horizontal|bottom" />
 
-            <ImageView
-                android:id="@+id/imgPlay"
-                android:layout_width="@dimen/pad_30"
-                android:layout_height="@dimen/pad_30"
-                android:padding="@dimen/pad_5"
-                android:src="@android:drawable/ic_media_play" />
+    </FrameLayout>
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/pad_8"
-                android:text="2.30"
-                android:textColor="@color/color_white"
-                android:textSize="@dimen/txt_size_12sp" />
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
 
-            <SeekBar
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/pad_2"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/pad_3"
-                android:layout_marginRight="@dimen/pad_3"
-                android:layout_toLeftOf="@+id/txtDuration"
-                android:layout_toRightOf="@+id/imgPlay"
-                android:progressDrawable="@drawable/seekbar_style"
-                android:thumb="@android:color/transparent" />
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/pad_15"
-            android:paddingRight="@dimen/pad_15"
-            android:paddingTop="@dimen/pad_20">
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical">
 
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtVideoTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_5"
-                android:text="Synth polaroid biology"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_18sp" />
-
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
-
-                <ImageView
-                    android:id="@+id/imgCatBg"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/selector_app_pink_btn"
-                    app:layout_constraintBottom_toBottomOf="@+id/txtCategory"
-                    app:layout_constraintLeft_toLeftOf="@+id/txtCategory"
-                    app:layout_constraintRight_toRightOf="@+id/txtCategory"
-                    app:layout_constraintTop_toTopOf="@+id/txtCategory" />
-
-                <com.ureview.utils.views.CustomTextView
-                    android:id="@+id/txtCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center"
-                    android:paddingBottom="@dimen/pad_6"
-                    android:paddingLeft="@dimen/pad_17"
-                    android:paddingRight="@dimen/pad_17"
-                    android:paddingTop="@dimen/pad_6"
-                    android:text="News Feed"
-                    android:textColor="@color/selector_txt_color"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toRightOf="@+id/imgCat"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtViewCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVideoTitle"
-                android:layout_marginTop="@dimen/pad_5"
-                android:drawableLeft="@drawable/view_small_copy"
-                android:drawablePadding="@dimen/pad_8"
-                android:text="408121"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_12sp" />
-
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="@style/CustomRatingBarM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVideoTitle"
-                android:layout_marginLeft="@dimen/pad_10"
-                android:layout_marginTop="@dimen/pad_6"
-                android:layout_toRightOf="@+id/txtViewCount"
-                android:isIndicator="true" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtRatingno"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtVideoTitle"
-                android:layout_marginLeft="@dimen/pad_3"
-                android:layout_marginTop="@dimen/pad_5"
-                android:layout_toRightOf="@+id/ratingBar"
-                android:text="(500)"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_12sp" />
-
-            <LinearLayout
-                android:id="@+id/llOptions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ratingBar"
-                android:layout_marginTop="@dimen/pad_8"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:id="@+id/llRate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.ureview.utils.views.CircleImageView
-                        android:layout_width="@dimen/pad_35"
-                        android:layout_height="@dimen/pad_35"
-                        android:src="@mipmap/ic_launcher" />
-
-                    <com.ureview.utils.views.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/pad_2"
-                        android:text="Rate"
-                        android:textColor="@color/color_vvvDarkGrey"
-                        android:textSize="@dimen/txt_size_11sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llShare"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.ureview.utils.views.CircleImageView
-                        android:layout_width="@dimen/pad_35"
-                        android:layout_height="@dimen/pad_35"
-                        android:src="@mipmap/ic_launcher" />
-
-                    <com.ureview.utils.views.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/pad_2"
-                        android:text="Share"
-                        android:textColor="@color/color_vvvDarkGrey"
-                        android:textSize="@dimen/txt_size_11sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llDirection"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.ureview.utils.views.CircleImageView
-                        android:layout_width="@dimen/pad_35"
-                        android:layout_height="@dimen/pad_35"
-                        android:src="@mipmap/ic_launcher" />
-
-                    <com.ureview.utils.views.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/pad_2"
-                        android:text="Direction"
-                        android:textColor="@color/color_vvvDarkGrey"
-                        android:textSize="@dimen/txt_size_11sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llReport"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <com.ureview.utils.views.CircleImageView
-                        android:layout_width="@dimen/pad_35"
-                        android:layout_height="@dimen/pad_35"
-                        android:src="@mipmap/ic_launcher" />
-
-                    <com.ureview.utils.views.CustomTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/pad_2"
-                        android:text="Report"
-                        android:textColor="@color/color_vvvDarkGrey"
-                        android:textSize="@dimen/txt_size_11sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtLoc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llOptions"
-                android:layout_marginTop="@dimen/pad_8"
-                android:drawableLeft="@drawable/location_small_copy"
-                android:drawablePadding="@dimen/pad_5"
-                android:text="Location"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/txt_size_11sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtLoc"
-                android:layout_marginTop="@dimen/pad_5"
-                android:text="Mirpur 10, Dhaka"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_15sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtTagsTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtLocation"
-                android:layout_marginTop="@dimen/pad_15"
-                android:text="Tags"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/txt_size_11sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtTags"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTagsTitle"
-                android:layout_marginTop="@dimen/pad_5"
-                android:text="DJ#Techno#Music#Dance#Crowd"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_15sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtUploadedBy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/txtTags"
-                android:layout_marginTop="@dimen/pad_15"
-                android:text="Uploaded by"
-                android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/txt_size_11sp" />
 
             <RelativeLayout
-                android:id="@+id/rlUploadedBy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/txtUploadedBy"
-                android:layout_marginTop="@dimen/pad_8">
-
-                <com.ureview.utils.views.CircleImageView
-                    android:id="@+id/imgProfile"
-                    android:layout_width="@dimen/pad_35"
-                    android:layout_height="@dimen/pad_35"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/ic_launcher" />
+                android:paddingLeft="@dimen/pad_15"
+                android:paddingRight="@dimen/pad_15"
+                android:paddingTop="@dimen/pad_20">
 
                 <com.ureview.utils.views.CustomTextView
-                    android:id="@+id/txtFollowStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/item_feed_btn_height"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/selector_app_pink_btn"
-                    android:gravity="center"
-                    android:text="Follow"
-                    android:textColor="@color/selector_txt_color"
-                    android:textSize="@dimen/txt_size_15sp" />
-
-                <com.ureview.utils.views.CustomTextView
-                    android:id="@+id/txtUserName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/pad_5"
-                    android:layout_marginRight="@dimen/pad_5"
-                    android:layout_marginTop="@dimen/pad_3"
-                    android:layout_toLeftOf="@+id/txtFollowStatus"
-                    android:layout_toRightOf="@+id/imgProfile"
-                    android:text="Terry Rodriguez"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/txt_size_15sp" />
-
-                <com.ureview.utils.views.CustomTextView
-                    android:id="@+id/txtUserLoc"
+                    android:id="@+id/txtVideoTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/txtUserName"
-                    android:layout_marginLeft="@dimen/pad_5"
-                    android:layout_marginRight="@dimen/pad_5"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:layout_toLeftOf="@+id/txtFollowStatus"
-                    android:layout_toRightOf="@+id/imgProfile"
-                    android:text="Mirpur 10, Dhaka"
+                    android:text="Synth polaroid biology"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_18sp" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <ImageView
+                        android:id="@+id/imgCatBg"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/selector_app_pink_btn"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtCategory"
+                        app:layout_constraintLeft_toLeftOf="@+id/txtCategory"
+                        app:layout_constraintRight_toRightOf="@+id/txtCategory"
+                        app:layout_constraintTop_toTopOf="@+id/txtCategory" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/pad_6"
+                        android:paddingLeft="@dimen/pad_17"
+                        android:paddingRight="@dimen/pad_17"
+                        android:paddingTop="@dimen/pad_6"
+                        android:text="News Feed"
+                        android:textColor="@color/selector_txt_color"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@+id/imgCat"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </android.support.constraint.ConstraintLayout>
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtViewCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:drawableLeft="@drawable/view_small_copy"
+                    android:drawablePadding="@dimen/pad_8"
+                    android:text="408121"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_12sp" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/CustomRatingBarM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_marginLeft="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_6"
+                    android:layout_toRightOf="@+id/txtViewCount"
+                    android:isIndicator="true" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtRatingno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_marginLeft="@dimen/pad_3"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:layout_toRightOf="@+id/ratingBar"
+                    android:text="(500)"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_12sp" />
+
+                <LinearLayout
+                    android:id="@+id/llOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/ratingBar"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/llRate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.ureview.utils.views.CircleImageView
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Rate"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llShare"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.ureview.utils.views.CircleImageView
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Share"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llDirection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.ureview.utils.views.CircleImageView
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Direction"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_11sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llReport"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <com.ureview.utils.views.CircleImageView
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:src="@mipmap/ic_launcher" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Report"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llOptions"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:drawableLeft="@drawable/location_small_copy"
+                    android:drawablePadding="@dimen/pad_5"
+                    android:text="Location"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLoc"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:text="Mirpur 10, Dhaka"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_15sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtTagsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLocation"
+                    android:layout_marginTop="@dimen/pad_15"
+                    android:text="Tags"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtTags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTagsTitle"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:text="DJ#Techno#Music#Dance#Crowd"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_15sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtUploadedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTags"
+                    android:layout_marginTop="@dimen/pad_15"
+                    android:text="Uploaded by"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rlUploadedBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtUploadedBy"
+                    android:layout_marginTop="@dimen/pad_8">
+
+                    <com.ureview.utils.views.CircleImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="@dimen/pad_35"
+                        android:layout_height="@dimen/pad_35"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_launcher" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/item_feed_btn_height"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/selector_app_pink_btn"
+                        android:gravity="center"
+                        android:text="Follow"
+                        android:textColor="@color/selector_txt_color"
+                        android:textSize="@dimen/txt_size_15sp" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/pad_5"
+                        android:layout_marginRight="@dimen/pad_5"
+                        android:layout_marginTop="@dimen/pad_3"
+                        android:layout_toLeftOf="@+id/txtFollowStatus"
+                        android:layout_toRightOf="@+id/imgProfile"
+                        android:text="Terry Rodriguez"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/txt_size_15sp" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtUserLoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtUserName"
+                        android:layout_marginLeft="@dimen/pad_5"
+                        android:layout_marginRight="@dimen/pad_5"
+                        android:layout_marginTop="@dimen/pad_5"
+                        android:layout_toLeftOf="@+id/txtFollowStatus"
+                        android:layout_toRightOf="@+id/imgProfile"
+                        android:text="Mirpur 10, Dhaka"
+                        android:textColor="@color/color_vvvDarkGrey"
+                        android:textSize="@dimen/txt_size_12sp" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/dividerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.9dp"
+                    android:layout_below="@+id/rlUploadedBy"
+                    android:layout_marginTop="@dimen/pad_13"
+                    android:background="@color/colorGrey" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtRelatedVideos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dividerView"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:text="Related Videos"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_13sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/dividerView"
+                    android:layout_marginTop="@dimen/pad_3"
+                    android:padding="@dimen/pad_8"
+                    android:text="See all"
+                    android:textColor="@color/app_text_color"
+                    android:textSize="@dimen/txt_size_15sp"
+                    android:visibility="gone" />
+
             </RelativeLayout>
 
-            <View
-                android:id="@+id/dividerView"
+            <com.ureview.utils.views.CustomRecyclerView
+                android:id="@+id/rvRelatedVideos"
                 android:layout_width="match_parent"
-                android:layout_height="0.9dp"
-                android:layout_below="@+id/rlUploadedBy"
-                android:layout_marginTop="@dimen/pad_13"
-                android:background="@color/colorGrey" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_9"
+                android:layout_marginRight="@dimen/pad_9"
+                app:list_orientation="horizontal"
+                app:list_type="list" />
 
             <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtRelatedVideos"
+                android:id="@+id/txtNoData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dividerView"
-                android:layout_marginTop="@dimen/pad_8"
-                android:text="Related Videos"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_13sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtSeeAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/dividerView"
-                android:layout_marginTop="@dimen/pad_3"
-                android:padding="@dimen/pad_8"
-                android:text="See all"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/pad_30"
+                android:paddingTop="@dimen/pad_30"
+                android:text="No related videos"
                 android:textColor="@color/app_text_color"
                 android:textSize="@dimen/txt_size_15sp"
                 android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <com.ureview.utils.views.CustomRecyclerView
-            android:id="@+id/rvRelatedVideos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/pad_9"
-            android:layout_marginRight="@dimen/pad_9"
-            app:list_orientation="horizontal"
-            app:list_type="list" />
-
-        <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txtNoData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingBottom="@dimen/pad_30"
-            android:paddingTop="@dimen/pad_30"
-            android:text="No related videos"
-            android:textColor="@color/app_text_color"
-            android:textSize="@dimen/txt_size_15sp"
-            android:visibility="gone" />
-    </LinearLayout>
-</android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>
