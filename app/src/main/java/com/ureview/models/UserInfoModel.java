@@ -38,9 +38,9 @@ public class UserInfoModel {
             if (jsonObject.has("follow_status"))
                 follow_status = jsonObject.get("follow_status").getAsString();
             if (jsonObject.has("follow_you_count"))
-                otp = jsonObject.get("follow_you_count").getAsString();
+                follow_you_count = jsonObject.get("follow_you_count").getAsString();
             if (jsonObject.has("you_follow_count"))
-                otp = jsonObject.get("you_follow_count").getAsString();
+                you_follow_count = jsonObject.get("you_follow_count").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
         }

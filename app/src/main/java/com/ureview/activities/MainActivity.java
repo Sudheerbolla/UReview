@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.fragments.BaseFragment;
-import com.ureview.fragments.FollowersFragment;
+import com.ureview.fragments.EditProfileFragment;
 import com.ureview.fragments.HomeFragment;
 import com.ureview.fragments.LocationBottomSheetFragment;
 import com.ureview.fragments.LocationFilterFragment;
@@ -179,14 +179,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         edtText = findViewById(R.id.edtText);
         relGenTopBar = findViewById(R.id.relGenTopBar);
         rlEditView = findViewById(R.id.rlEditView);
-        imgNotf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setNotificationsFragment();
-            }
-        });
+
+        imgNotf.setOnClickListener(this);
         txtLeft.setOnClickListener(this);
         imgBack.setOnClickListener(this);
+        imgEdit.setOnClickListener(this);
     }
 
     public void initBottomBar() {
@@ -244,6 +241,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.txtLeft:
 //                showLocationBottomSheet();
                 setLocationRadiusFragment();
+                break;
+            case R.id.imgEdit:
+                replaceFragment(EditProfileFragment.newInstance(), true, R.id.mainContainer);
+                break;
+            case R.id.imgNotf:
+                setNotificationsFragment();
                 break;
             default:
                 break;
@@ -332,10 +335,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void setSettingsFragment() {
         setSelectedTab(imgSettings, imgSettingsView);
         replaceFragment(SettingsFragment.newInstance(), false, R.id.mainContainer);
-    }
-
-    public void setFollowersFragment() {
-        replaceFragment(FollowersFragment.newInstance(), true, R.id.mainContainer);
     }
 
     public void setUploadVideoFragment() {

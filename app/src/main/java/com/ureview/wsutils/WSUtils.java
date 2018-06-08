@@ -2,7 +2,7 @@ package com.ureview.wsutils;
 
 public class WSUtils {
 
-    public static final String TAG = "LIQUR";
+    public static final String TAG = "UREVIEW";
     //SECONDS
     public static final long CONNECTION_TIMEOUT = 125;
 
@@ -31,7 +31,7 @@ public class WSUtils {
     public static final int REQ_USER_STATISTICS = 117;
     public static final int REQ_FOR_RANKINGS = 118;
     public static final int REQ_FOR_PROFILE_VIDEOS= 119;
-    public static final int REQ_FOR_GENERATE_COUPON_CODE = 120;
+    public static final int REQ_FOR_EDIT_PROFILE= 120;
 
     public static final int REQ_FOR_CATEGORY_LIST = 121;
     public static final int REQ_FOR_NEWS_FEED_VIDEOS = 122;

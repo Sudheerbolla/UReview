@@ -30,9 +30,6 @@ public interface WSInterface {
     @POST("/delete-profile")
     Call<JsonElement> deleteProfile(@Body RequestBody params);
 
-    @GET("/get_employees/")
-    Call<JsonElement> dummyCall();
-
     @GET("/get-categories")
     Call<JsonElement> getAllCategories(@Query(value = "user_id", encoded = false) String userId);
 
@@ -96,9 +93,16 @@ public interface WSInterface {
 
     @GET("/get-videos-by-user-id")
     Call<JsonElement> getVideosByUserId(@QueryMap(encoded = true) HashMap<String, String> params);
+//
+//    @Multipart
+//    @POST("/edit-profile")
+//    Call<JsonElement> editProfile(@Part RequestBody params, @Part MultipartBody.Part image);
 
+    @POST("/edit-profile")
+    Call<JsonElement> editProfile(@Body RequestBody params);
 
-
+//    @POST("/edit-profile")
+//    Call<JsonElement> editProfile(@Body MultipartBody params);
 
 
 //    @GET("/get_employees/")

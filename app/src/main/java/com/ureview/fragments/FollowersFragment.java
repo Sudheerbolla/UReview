@@ -19,7 +19,6 @@ import com.ureview.adapters.FollowersAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.FollowModel;
-import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -43,13 +42,15 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private ArrayList<FollowModel> followModelArrayList;
     private CustomTextView txtNoData;
     private String userId;
+    private int selectedPosition;
 
-    public static FollowersFragment newInstance(boolean showFollowers) {
+    public static FollowersFragment newInstance(boolean showFollowers, String userId) {
         FollowersFragment followersFragment = new FollowersFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean("showFollowers", showFollowers);
+        bundle.putString("userId", userId);
         followersFragment.setArguments(bundle);
-        return new FollowersFragment();
+        return followersFragment;
     }
 
     public static FollowersFragment newInstance() {
@@ -71,8 +72,8 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         Bundle bundle = getArguments();
         if (bundle != null) {
             showFollowers = bundle.getBoolean("showFollowers");
+            userId = bundle.getString("userId");
         }
-        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Nullable
@@ -91,13 +92,13 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     }
 
     private void setAdapter() {
-        followersAdapter = new FollowersAdapter(mainActivity, followModelArrayList, this);
+        followersAdapter = new FollowersAdapter(mainActivity, followModelArrayList, showFollowers, this);
         rvFollowers.setLayoutManager(new LinearLayoutManager(mainActivity));
         rvFollowers.setAdapter(followersAdapter);
     }
 
     private void requestForGetFollowListWS() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getFollowList(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getFollowList(userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_FOLLOW_LIST, call, this);
     }
 
@@ -133,8 +134,65 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
             case WSUtils.REQ_FOR_GET_FOLLOW_LIST:
                 parseGetFollowListResponse((JsonObject) response);
                 break;
+            case WSUtils.REQ_FOR_BLOCK_USER:
+                parseBlockUserResponse((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_FOLLOW_USER:
+                parseFollowUser((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_UN_FOLLOW_USER:
+                parseUnFollowUser((JsonObject) response);
+                break;
             default:
                 break;
+        }
+    }
+
+    //{"status":"success","message":"You are following this user!...","follow_you_count":1,"you_follow_count":2}
+    private void parseFollowUser(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    followModelArrayList.get(selectedPosition).status = "2";
+                    followModelArrayList.get(selectedPosition).follow_status = "follow";
+                    followersAdapter.notifyDataSetChanged();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseUnFollowUser(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    followModelArrayList.get(selectedPosition).status = "1";
+                    followModelArrayList.get(selectedPosition).follow_status = "";
+                    followersAdapter.notifyDataSetChanged();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseBlockUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    followModelArrayList.remove(selectedPosition);
+                    followersAdapter.notifyDataSetChanged();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -144,6 +202,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     JsonArray followArray = response.get(showFollowers ? "follow_you_list" : "you_follow_list").getAsJsonArray();
                     if (followArray.size() > 0) {
+                        followModelArrayList.clear();
                         for (int i = 0; i < followArray.size(); i++) {
                             FollowModel followModel = new FollowModel(followArray.get(i).getAsJsonObject());
                             followModelArrayList.add(followModel);
@@ -176,7 +235,24 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
     @Override
     public void onClick(View view, int position) {
-
+        selectedPosition = position;
+        switch (view.getId()) {
+            case R.id.txtFollowStatus:
+                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+                    requestForFollowUser(followModelArrayList.get(position).user_id);
+                } else if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Unfollow")) {
+                    requestForUnFollowUser(followModelArrayList.get(position).user_id);
+                }
+                break;
+            case R.id.relBody:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id), true, R.id.mainContainer);
+                break;
+            case R.id.imgClear:
+                requestForBlockUser(followModelArrayList.get(position).user_id);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

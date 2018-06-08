@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -45,12 +46,26 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         requestOptions.placeholder(R.mipmap.ic_launcher);
         Glide.with(context).load(peopleModel.userImage).into(holder.imgProfile);
         holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
-        if (!TextUtils.isEmpty(peopleModel.userRating))
-            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
-        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
+//        if (!TextUtils.isEmpty(peopleModel.userRating))
+//            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
+        holder.ratingBar.setVisibility(View.GONE);
+//        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.imgClear.setVisibility(View.GONE);
+        holder.txtReviewCount.setVisibility(View.GONE);
         holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Following");
         holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus));
+        holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(view, position);
+            }
+        });
+        holder.relBody.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -63,6 +78,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         private CustomTextView txtFollowStatus, txtName, txtReviewCount;
         private RatingBar ratingBar;
         private CircleImageView imgProfile;
+        private RelativeLayout relBody;
         private ImageView imgClear;
 
         public PeopleViewHolder(View itemView) {
@@ -73,6 +89,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
             ratingBar = itemView.findViewById(R.id.ratingBar);
             imgProfile = itemView.findViewById(R.id.imgProfile);
             imgClear = itemView.findViewById(R.id.imgClear);
+            relBody = itemView.findViewById(R.id.relBody);
         }
     }
 }

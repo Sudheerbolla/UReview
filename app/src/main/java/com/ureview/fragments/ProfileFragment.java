@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -32,9 +33,13 @@ import com.ureview.utils.views.CustomViewPager;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class ProfileFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
@@ -42,16 +47,27 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private View rootView;
     private CustomViewPager viewPager;
     private TabLayout tabLayout;
-    private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc;
+    private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc, txtFollowStatus;
     private LinearLayout linFollowing, linFollowers;
     private RatingBar ratingBar;
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
     private ImageView imgProfile;
     private ViewPagerAdapter adapter;
+    private String userId, otherUserId;
+    private boolean isDiffUser;
+    public static UserInfoModel otherInfoModel;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
+    }
+
+    public static ProfileFragment newInstance(String userId) {
+        ProfileFragment followersFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("otherUserId", userId);
+        followersFragment.setArguments(bundle);
+        return followersFragment;
     }
 
     @Override
@@ -59,21 +75,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userInfoModel = BaseApplication.userInfoModel;
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            otherUserId = bundle.getString("otherUserId");
+            isDiffUser = !TextUtils.isEmpty(otherUserId) && !otherUserId.equalsIgnoreCase(userId);
+        }
     }
-
-/*{
-"status":"success","message":"User data","user_info":{"first_name":"Madhu","last_name":"Sudhan","user_name":"",
-"email":"putta.msreddy@gmail.com","gender":"M","date_of_birth":"31\/05\/2013","age":"5","country_code":"+91",
-"mobile":"8121407014","user_image":"","user_description":"","auth_id":"1862768607112909","auth_type":"Facebook",
-"user_rating":"2","status":"A","videos_range":"30","city":"Hyderabad","address":"","platform":"ios",
-"device_token":"247CF8F9450EFD6709131935C45E53091DC2783B368F7522C5E6C0F9C5B6B33C","created_date":"2018-06-05 09:20:31",
-"userid":"1","follow_status":"","follow_you_count":5,"you_follow_count":3}
-}*/
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_myprofile, container, false);
         initComponents();
         return rootView;
@@ -83,16 +95,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("My Profile", "", "", false, false, false, false, true);
+        mainActivity.setToolBar(isDiffUser ? "Profile" : "My Profile", "", "", false, isDiffUser, false, false, !isDiffUser);
     }
 
     private void initComponents() {
         viewPager = rootView.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+
         tabLayout = rootView.findViewById(R.id.profileTabs);
         tabLayout.setTabTextColors(ContextCompat.getColor(mainActivity, R.color.colorDarkGrey), ContextCompat.getColor(mainActivity, R.color.app_text_color));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(mainActivity, R.color.app_text_color));
-        tabLayout.setupWithViewPager(viewPager);
 
         txtFollowersCount = rootView.findViewById(R.id.txtFollowersCount);
         txtFollowingCount = rootView.findViewById(R.id.txtFollowingCount);
@@ -101,6 +112,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         linFollowing = rootView.findViewById(R.id.linFollowing);
 
         txtName = rootView.findViewById(R.id.txtName);
+        txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
         txtLoc = rootView.findViewById(R.id.txtLoc);
 
         ratingBar = rootView.findViewById(R.id.ratingBar);
@@ -114,51 +126,84 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void setData() {
+        UserInfoModel userInfoModel = isDiffUser ? otherInfoModel : this.userInfoModel;
         if (userInfoModel != null) {
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
             txtLoc.setText(userInfoModel.city + ", " + userInfoModel.address);
             ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
+            txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
+            if (isDiffUser)
+                txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
+
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()
                         .placeholder(R.mipmap.ic_launcher)
+                        .bitmapTransform(new RoundedCorners(7))
                         .fitCenter()
                         .error(R.mipmap.ic_launcher);
-
                 Glide.with(this)
                         .load(userInfoModel.user_image)
                         .apply(options)
                         .into(imgProfile);
             } else imgProfile.setImageResource(R.mipmap.ic_launcher);
-
         }
     }
 
     private void setListeners() {
+        txtFollowStatus.setOnClickListener(this);
         linFollowers.setOnClickListener(this);
         linFollowing.setOnClickListener(this);
-        txtFollowersCount.setOnClickListener(this);
-        txtFollowingCount.setOnClickListener(this);
     }
 
     private void requestForGetProfileDataWS() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(isDiffUser ? otherUserId : userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new AboutFragment(), "About");
-        adapter.addFragment(new VideosFragment(), "Videos");
-        adapter.addFragment(new StatsFragment(), "Stats");
+        adapter.addFragment(AboutFragment.newInstance(isDiffUser ? otherUserId : userId), "About");
+        adapter.addFragment(VideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
+        if (!isDiffUser)
+            adapter.addFragment(StatsFragment.newInstance(isDiffUser ? otherUserId : userId), "Stats");
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(true);
     }
 
     @Override
     public void onClick(View view) {
-        mainActivity.setFollowersFragment();
+        switch (view.getId()) {
+            case R.id.linFollowers:
+                mainActivity.replaceFragment(FollowersFragment.newInstance(true, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
+                break;
+            case R.id.linFollowing:
+                mainActivity.replaceFragment(FollowersFragment.newInstance(false, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
+                break;
+            case R.id.txtFollowStatus:
+                requestForFollowUser(otherUserId);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void requestForFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
+
+    private RequestBody getRequestBodyObject(String followId) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("id", Integer.parseInt(userId));
+            jsonObjectReq.put("follow_id", Integer.parseInt(followId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return StaticUtils.getRequestBody(jsonObjectReq);
     }
 
     @Override
@@ -178,18 +223,23 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (response.has("user_info")) {
                         try {
-                            userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
-                            if (userInfoModel != null) {
+                            UserInfoModel userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                            if (isDiffUser) {
+                                otherInfoModel = userInfoModel;
+                            } else {
+                                this.userInfoModel = userInfoModel;
                                 BaseApplication.userInfoModel = userInfoModel;
                                 LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, userInfoModel.serialize());
                             }
-                            LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_ID, userInfoModel.userid);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if (adapter.getItem(0) != null && adapter.getItem(0) instanceof AboutFragment)
-                            ((AboutFragment) adapter.getItem(0)).updateData();
+
+                        setupViewPager(viewPager);
+                        tabLayout.setupWithViewPager(viewPager);
                         setData();
+                        if (adapter.getItem(0) != null && adapter.getItem(0) instanceof AboutFragment)
+                            ((AboutFragment) adapter.getItem(0)).updateData(isDiffUser ? otherInfoModel : userInfoModel);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

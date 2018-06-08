@@ -24,11 +24,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.ureview.BuildConfig;
 import com.ureview.R;
 import com.ureview.models.CountriesModel;
+import com.ureview.utils.pickimage.ScalingUtilities;
 
 import org.json.JSONObject;
 
@@ -37,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -51,6 +54,13 @@ public class StaticUtils {
     private static final String DISPLAY_DATE_TIME_FORMAT = "dd-MM-yyyy hh:mm a";
     public static final String storageDir = Environment.getExternalStorageDirectory().getPath() + "/" + "Devotted" + "/";
     public static int screen_height, screen_width;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int TAKE_PICTURE_FROM_CAMERA = 3;
+    public static final int PHONE_GALLERY_CLICK = 4;
+    public static final int TAKE_VIDEO_FROM_CAMERA = 5;
+    public static final int PICK_VIDEO_GALLERY = 6;
+    public static final int PROFILE_IMAGE_SIZE = 300;
 
     public static boolean checkInternetConnection(Context context) {
         NetworkInfo _activeNetwork = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -116,16 +126,31 @@ public class StaticUtils {
         return true;
     }
 
-    public static Uri getOutputMediaFileUri() {
-        return Uri.fromFile(getOutputMediaFile());
+    public static Uri getOutputMediaFileUri(Context context, int type) {
+        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", getOutputMediaFile(type));
     }
 
-    public static Uri getOutputMediaFileUri(Context context) {
-        return FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", getOutputMediaFile());
+    public static File getOutputMediaFile(int type) {
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "UReview");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                return null;
+            }
+        }
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        return mediaFile;
     }
 
     private static File getOutputMediaFile() {
-        String imageFileName = "Devotted" + "_" + System.currentTimeMillis();
+        String imageFileName = "UReview" + "_" + System.currentTimeMillis();
         File image;
         File storageDirFile = new File(storageDir);
         if (!storageDirFile.exists()) {
@@ -210,6 +235,60 @@ public class StaticUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Bitmap getResizeImage(Context context, int dstWidth, int dstHeight, ScalingUtilities.ScalingLogic scalingLogic, boolean rotationNeeded, String currentPhotoPath, Uri IMAGE_CAPTURE_URI) {
+        try {
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+            bmOptions.inJustDecodeBounds = false;
+            if (bmOptions.outWidth < dstWidth && bmOptions.outHeight < dstHeight) {
+                Bitmap bitmap;
+                bitmap = BitmapFactory.decodeFile(currentPhotoPath, bmOptions);
+                return setSelectedImage(bitmap, context, currentPhotoPath, IMAGE_CAPTURE_URI);
+            } else {
+                Bitmap unscaledBitmap = ScalingUtilities.decodeResource(currentPhotoPath, dstWidth, dstHeight,
+                        scalingLogic);
+                Matrix matrix = new Matrix();
+                if (rotationNeeded) {
+                    matrix.setRotate(getCameraPhotoOrientation(context, Uri.fromFile(new File(currentPhotoPath)), currentPhotoPath));
+                    unscaledBitmap = Bitmap.createBitmap(unscaledBitmap, 0, 0, unscaledBitmap.getWidth(), unscaledBitmap.getHeight(), matrix, false);
+                }
+                /*Bitmap scaledBitmap = ScalingUtilities.createScaledBitmap(unscaledBitmap, dstWidth, dstHeight, scalingLogic);
+                unscaledBitmap.recycle();
+                if (scaledBitmap.getWidth() > 0 && scaledBitmap.getHeight() > 0) {
+                    return scaledBitmap;
+                } else {*/
+                return unscaledBitmap;
+//                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Bitmap setSelectedImage(Bitmap orignalBitmap, Context context, String imagePath, Uri IMAGE_CAPTURE_URI) {
+        try {
+            String manufacturer = Build.MANUFACTURER;
+            String model = Build.MODEL;
+            if (manufacturer.equalsIgnoreCase("samsung") || model.equalsIgnoreCase("samsung")) {
+                return rotateBitmap(context, orignalBitmap, imagePath, IMAGE_CAPTURE_URI);
+            } else {
+                return orignalBitmap;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return orignalBitmap;
+        }
+    }
+
+    public static Bitmap rotateBitmap(Context context, Bitmap bit, String imagePath, Uri IMAGE_CAPTURE_URI) {
+        int rotation = StaticUtils.getCameraPhotoOrientation(context, IMAGE_CAPTURE_URI, imagePath);
+        Matrix matrix = new Matrix();
+        matrix.postRotate(rotation);
+        return Bitmap.createBitmap(bit, 0, 0, bit.getWidth(), bit.getHeight(), matrix, true);
     }
 
     public static String getDateAndTime(Calendar calendar) {
@@ -361,6 +440,36 @@ public class StaticUtils {
         return countryName;
     }
 
+    public static RequestBody getFileRequestBody(File file) {
+        MediaType MEDIA_TYPE = MediaType.parse(getMimeType(file.getAbsolutePath()));
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE, file);
+        return requestBody;
+    }
+
+    public RequestBody getFileRequestBodyPdf(File file) {
+        MediaType MEDIA_TYPE = MediaType.parse(file.getAbsolutePath());
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE, file);
+        return requestBody;
+    }
+
+    public static RequestBody getStringRequestBody(String value) {
+        MediaType MEDIA_TYPE_TEXT = MediaType.parse("text/plain");
+        RequestBody requestBody = RequestBody.create(MEDIA_TYPE_TEXT, value);
+        return requestBody;
+    }
+
+    private static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
+
+    public static String getFileUploadKey(String key, File file) {
+        return "" + key + "\"; filename=\"" + file.getName();
+    }
 }
 
 
