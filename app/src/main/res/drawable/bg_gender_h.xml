@@ -10,5 +10,5 @@
         android:top="@dimen/pad_5" />
     <stroke
         android:width="@dimen/pad_1"
-        android:color="@color/color_250_250_250" />
+        android:color="@color/app_color_medium" />
 </shape>

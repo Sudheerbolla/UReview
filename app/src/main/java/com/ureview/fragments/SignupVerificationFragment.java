@@ -98,7 +98,7 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
         txtSendVerfCode.setOnClickListener(this);
         txtCountryCode.setOnClickListener(this);
         if (currentCountriesModel != null) {
-            txtCountryCode.setText(currentCountriesModel.countryCode);
+            txtCountryCode.setText("+" + currentCountriesModel.countryCode);
         }
         return rootView;
     }

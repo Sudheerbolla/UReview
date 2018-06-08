@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/pad_20"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp">
+
+            <com.ureview.utils.views.CircleImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/profile_active_copy" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/pad_5"
+                android:padding="@dimen/pad_5"
+                android:src="@drawable/ic_camera" />
+
+        </RelativeLayout>
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtFirstName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_25"
+            android:background="@drawable/bg_edt_txt"
+            android:drawableLeft="@drawable/full_name_copy"
+            android:drawablePadding="@dimen/pad_13"
+            android:hint="First Name"
+            android:inputType="text"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:background="@drawable/bg_edt_txt"
+            android:drawableLeft="@drawable/full_name_copy"
+            android:drawablePadding="@dimen/pad_13"
+            android:hint="Last Name"
+            android:inputType="text"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:background="@drawable/bg_edt_txt"
+            android:drawableLeft="@drawable/email_copy"
+            android:drawablePadding="@dimen/pad_13"
+            android:editable="false"
+            android:enabled="false"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtDob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:background="@drawable/bg_edt_txt"
+            android:drawableLeft="@drawable/dob_copy"
+            android:drawablePadding="@dimen/pad_13"
+            android:hint="Date of birth *"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:orientation="horizontal">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/pad_3"
+                android:background="@drawable/bg_edt_txt"
+                android:drawableEnd="@drawable/drop_down_copy"
+                android:drawablePadding="@dimen/pad_10"
+                android:drawableStart="@drawable/phone_copy"
+                android:editable="false"
+                android:enabled="false"
+                android:hint="+91"
+                android:paddingBottom="@dimen/pad_13"
+                android:paddingLeft="@dimen/pad_13"
+                android:paddingRight="@dimen/pad_13"
+                android:paddingTop="@dimen/pad_13"
+                android:text="+91"
+                android:textColor="@color/colorDarkBlue"
+                android:textSize="@dimen/txt_size_14sp" />
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtMobileNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/pad_3"
+                android:background="@drawable/bg_edt_txt"
+                android:editable="false"
+                android:enabled="false"
+                android:hint="Mobile number"
+                android:inputType="phone"
+                android:maxLength="12"
+                android:paddingBottom="@dimen/pad_13"
+                android:paddingLeft="@dimen/pad_13"
+                android:paddingRight="@dimen/pad_13"
+                android:paddingTop="@dimen/pad_13"
+                android:textSize="@dimen/txt_size_14sp" />
+
+        </LinearLayout>
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:background="@drawable/bg_edt_txt"
+            android:drawableLeft="@drawable/location_copy"
+            android:drawablePadding="@dimen/pad_13"
+            android:hint="Location*"
+            android:inputType="text"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <com.ureview.utils.views.CustomEditText
+            android:id="@+id/edtAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_8"
+            android:background="@drawable/bg_edt_txt"
+            android:gravity="start"
+            android:hint="Write something about you..."
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:lines="4"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingLeft="@dimen/pad_13"
+            android:paddingRight="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_20"
+            android:background="@drawable/bg_custom_btn_app_color"
+            android:gravity="center"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:text="Update"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/pad_60" />
+
+    </LinearLayout>
+
+</ScrollView>

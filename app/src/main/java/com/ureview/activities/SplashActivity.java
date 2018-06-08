@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class SplashActivity extends BaseActivity implements View.OnClickListener {
     private RelativeLayout relTopBar;
-    public CustomTextView txtSignup, txtTitle, txtRight;
+    public CustomTextView txtTitle, txtRight;
     private ImageView imgBack;
 
     @Override
@@ -49,7 +49,6 @@ public class SplashActivity extends BaseActivity implements View.OnClickListener
 
     private void initComps() {
         relTopBar = findViewById(R.id.relTopBar);
-        txtSignup = findViewById(R.id.txtSignup);
         txtTitle = findViewById(R.id.txtTitle);
         txtRight = findViewById(R.id.txtRight);
         imgBack = findViewById(R.id.imgBack);

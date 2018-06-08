@@ -50,6 +50,8 @@ public class DialogUtils {
             }
         });
         alert = builder.create();
+        alert.setCancelable(true);
+        alert.setCanceledOnTouchOutside(false);
         alert.show();
     }
 
@@ -65,8 +67,7 @@ public class DialogUtils {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
 
-    public static void showSimpleDialog(final Context mContext, final String heading, final String message, final String positiveText, final String negativeText, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick, final boolean singleButton,
-                                        final boolean isCancelable) {
+    public static void showSimpleDialog(final Context mContext, final String heading, final String message, final String positiveText, final String negativeText, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick, final boolean singleButton, final boolean isCancelable) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
 

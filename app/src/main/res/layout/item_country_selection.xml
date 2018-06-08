@@ -23,8 +23,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:padding="@dimen/pad_5"
             android:textColor="@color/color_vvvDarkGrey"
-            android:textSize="@dimen/txt_size_15sp"
-            app:txt_font_type="bold" />
+            android:textSize="@dimen/txt_size_15sp" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtCountryCode"
@@ -32,8 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:padding="@dimen/pad_5"
-            android:textSize="@dimen/txt_size_15sp"
             android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_15sp"
             app:txt_font_type="bold" />
 
     </RelativeLayout>

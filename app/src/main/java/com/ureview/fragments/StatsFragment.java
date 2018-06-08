@@ -53,14 +53,24 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     private VideoViewRankingAdapter videoViewRankingAdapter;
     private String userId;
 
+    public static StatsFragment newInstance(String userId) {
+        StatsFragment followersFragment = new StatsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", userId);
+        followersFragment.setArguments(bundle);
+        return followersFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userStatsModelArrayList = new ArrayList<>();
         videoViewsModelArrayList = new ArrayList<>();
-        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
 //        userId = "1";
+        if (getArguments() != null) userId = getArguments().getString("userId");
+        else
+            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     public static StatsFragment newInstance() {
@@ -80,7 +90,6 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
         rvRankings = rootView.findViewById(R.id.rvRankings);
 
         requestForGetRankingsWS();
-//        videoViewsModelArrayList
 
         ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);
         ViewCompat.setNestedScrollingEnabled(rvRankings, false);
@@ -97,7 +106,6 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getRankings(userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_RANKINGS, call, this);
     }
-//    http://18.216.101.112/follow-user-videoview-statistics?user_id=1
 
     private void setGraphData() {
         if (userStatsModelArrayList.size() > 0) {

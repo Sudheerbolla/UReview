@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relBody"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
@@ -26,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="@dimen/pad_5"
-            android:src="@drawable/ic_clear" />
+            android:src="@drawable/ic_clear"
+            android:visibility="gone" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtFollowStatus"
@@ -35,7 +37,6 @@
             android:layout_gravity="center"
             android:background="@drawable/selector_app_pink_btn"
             android:gravity="center"
-            android:text="Follow Back"
             android:textColor="@color/selector_txt_color"
             android:textSize="@dimen/txt_size_15sp" />
 
@@ -51,7 +52,6 @@
         android:layout_toLeftOf="@+id/linEnd"
         android:layout_toRightOf="@+id/imgProfile"
         android:singleLine="true"
-        android:text="Terry Rodriguez"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_15sp" />
 
@@ -74,7 +74,6 @@
         android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginRight="@dimen/pad_5"
         android:layout_toRightOf="@+id/imgProfile"
-        android:text="Review Upload : 10"
         android:textColor="@color/color_vDarkGrey"
         android:textSize="@dimen/txt_size_12sp" />
 

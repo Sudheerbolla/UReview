@@ -19,7 +19,7 @@
             android:layout_marginTop="@dimen/pad_8"
             android:padding="@dimen/pad_8">
 
-            <com.ureview.utils.views.CircleImageView
+            <ImageView
                 android:id="@+id/imgProfile"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
@@ -61,6 +61,7 @@
                 android:layout_toRightOf="@+id/imgProfile" />
 
             <RelativeLayout
+                android:id="@+id/relFollow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ratingBar"
@@ -131,6 +132,22 @@
                 </LinearLayout>
 
             </RelativeLayout>
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtFollowStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relFollow"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/pad_10"
+                android:layout_marginTop="@dimen/pad_5"
+                android:layout_toEndOf="@id/imgProfile"
+                android:background="@drawable/selector_app_pink_btn"
+                android:gravity="center"
+                android:text="Follow"
+                android:textColor="@color/selector_txt_color"
+                android:textSize="@dimen/txt_size_15sp"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

@@ -19,13 +19,21 @@
             android:layout_centerVertical="true">
 
             <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/back_copy"
+                android:visibility="invisible" />
+
+            <ImageView
                 android:id="@+id/imgBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_10"
                 android:src="@drawable/back_copy"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/imgLoc"
@@ -35,7 +43,7 @@
                 android:layout_marginStart="@dimen/pad_7"
                 android:padding="@dimen/pad_10"
                 android:src="@drawable/location_copy"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -73,45 +81,59 @@
             android:textSize="@dimen/txt_size_18sp"
             android:visibility="gone" />
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/relRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/pad_5"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="@dimen/pad_10"
-                android:singleLine="true"
-                android:text="Done"
-                android:textColor="@color/app_text_color"
-                android:textSize="@dimen/txt_size_18sp"
-                android:visibility="gone" />
+            android:layout_marginEnd="@dimen/pad_5">
 
             <ImageView
-                android:id="@+id/imgNotf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/pad_10"
                 android:src="@drawable/notification_copy"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
-            <ImageView
-                android:id="@+id/imgEdit"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/pad_10"
-                android:src="@drawable/edit_copy"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:padding="@dimen/pad_10"
+                    android:singleLine="true"
+                    android:text="Done"
+                    android:textColor="@color/app_text_color"
+                    android:textSize="@dimen/txt_size_18sp"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imgNotf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/pad_10"
+                    android:src="@drawable/notification_copy"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imgEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/pad_10"
+                    android:src="@drawable/edit_copy"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 

@@ -27,9 +27,13 @@ import com.ureview.utils.views.recyclerView.Paginate;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class SearchPeopleFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener, Paginate.Callbacks {
@@ -46,6 +50,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private boolean isLoading, hasLoadedAllItems;
     private int startFrom = 0;
     protected String searchText = "";
+    private int selectedPosition;
 
     public static SearchPeopleFragment newInstance() {
         return new SearchPeopleFragment();
@@ -100,12 +105,30 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
     }
 
+    private void requestForFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
+
+    private RequestBody getRequestBodyObject(String followId) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("id", Integer.parseInt(userId));
+            jsonObjectReq.put("follow_id", Integer.parseInt(followId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return StaticUtils.getRequestBody(jsonObjectReq);
+    }
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
             case WSUtils.REQ_FOR_SEARCH_PEOPLE:
                 parseGetSearchPeopleResponse((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_FOLLOW_USER:
+                parseFollowUserResponse((JsonObject) response);
                 break;
             default:
                 break;
@@ -147,6 +170,21 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         }
     }
 
+    private void parseFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    peopleArrList.get(selectedPosition).followStatus = "follow";
+                    peopleAdapter.notifyDataSetChanged();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void errorResponse(int requestCode, String error) {
 
@@ -159,7 +197,19 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
 
     @Override
     public void onClick(View view, int position) {
-
+        selectedPosition = position;
+        switch (view.getId()) {
+            case R.id.txtFollowStatus:
+                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+                    requestForFollowUser(peopleArrList.get(position).userId);
+                }
+                break;
+            case R.id.relBody:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId), true, R.id.mainContainer);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

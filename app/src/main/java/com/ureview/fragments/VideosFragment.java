@@ -21,6 +21,7 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
@@ -42,13 +43,24 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         return new VideosFragment();
     }
 
+    public static VideosFragment newInstance(String userId) {
+        VideosFragment followersFragment = new VideosFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", userId);
+        followersFragment.setArguments(bundle);
+        return followersFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userVideosModelArrayList = new ArrayList<>();
 //        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-        userId = "1";
+//        userId = "1";
+        if (getArguments() != null) userId = getArguments().getString("userId");
+        else
+            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Nullable
