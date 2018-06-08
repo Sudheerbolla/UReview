@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
+import com.ureview.activities.VideoPlayerActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
 import com.ureview.adapters.VideosAdapter;
@@ -225,8 +227,14 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             case R.id.imgCatBg:
                 updateCategoryList(position, false);
                 break;
+            case R.id.relItem:
+//                Intent intent = new Intent(mainActivity, VideoDetailActivity.class);
+//                intent.putExtra("news_feed", feedVideoList);
+//                intent.putExtra("position", position);
+//                startActivity(intent);
+                startActivity(new Intent(mainActivity, VideoPlayerActivity.class));
+                break;
             default:
-                mainActivity.setVideoReviewFragment();
                 break;
         }
     }

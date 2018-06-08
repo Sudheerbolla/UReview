@@ -36,13 +36,13 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
     }
 
     @Override
-    public void onBindViewHolder(NewsFeedViewHolder holder, final int position) {
+    public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = feedVideoList.get(position);
         RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(20));
         requestOptions.placeholder(R.drawable.ic_launcher_background);
         Glide.with(context).load(videoModel.userImage).apply(requestOptions).into(holder.imgProfile);
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
-        holder.txtLoc.setText(videoModel.userLocation);
+        holder.txtLoc.setText(videoModel.city);
         RequestOptions reqOptons = RequestOptions.bitmapTransform(new RoundedCorners(10));
         Glide.with(context).load(videoModel.videoPosterImage).apply(reqOptons).into(holder.imgLocation);
         Glide.with(context).load(videoModel.categoryBgImage).into(holder.imgCatBg);
@@ -60,7 +60,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.relItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
+                if (iClickListener != null) iClickListener.onClick(holder.relItem, position);
             }
         });
     }
