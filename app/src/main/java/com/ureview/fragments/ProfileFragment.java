@@ -135,7 +135,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
             if (isDiffUser)
-                txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
+                if (!TextUtils.isEmpty(userInfoModel.follow_status)) {
+                    txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
+                } else {
+                    txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
+                }
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()

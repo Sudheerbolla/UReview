@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.ureview.BaseApplication;
 import com.ureview.R;
@@ -22,6 +23,7 @@ public class AboutFragment extends BaseFragment {
     private UserInfoModel userInfoModel;
     private CustomTextView txtEmail, txtAge, txtPhone, txtAboutMe;
     private String userId;
+    private LinearLayout linPersonal;
 
     public static AboutFragment newInstance(String userId) {
         AboutFragment followersFragment = new AboutFragment();
@@ -67,14 +69,14 @@ public class AboutFragment extends BaseFragment {
         txtAge = rootView.findViewById(R.id.txtAge);
         txtEmail = rootView.findViewById(R.id.txtEmail);
         txtPhone = rootView.findViewById(R.id.txtPhone);
-        if (userInfoModel == null) {
-            if (getArguments().getString("userId").equalsIgnoreCase(userId)) {
-                hideSensitiveData = false;
-                userInfoModel = BaseApplication.userInfoModel;
-            } else {
-                hideSensitiveData = true;
-                userInfoModel = ProfileFragment.otherInfoModel;
-            }
+        linPersonal = rootView.findViewById(R.id.linPersonal);
+
+        if (getArguments().getString("userId").equalsIgnoreCase(userId)) {
+            hideSensitiveData = false;
+            userInfoModel = BaseApplication.userInfoModel;
+        } else {
+            hideSensitiveData = true;
+            userInfoModel = ProfileFragment.otherInfoModel;
         }
         updateData(userInfoModel);
     }
@@ -84,13 +86,10 @@ public class AboutFragment extends BaseFragment {
             if (userInfoModel != null) {
                 if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
                     txtAboutMe.setText(userInfoModel.user_description);
-                txtEmail.setVisibility(View.GONE);
-                txtPhone.setVisibility(View.GONE);
-                txtAge.setVisibility(View.GONE);
-
+                linPersonal.setVisibility(View.GONE);
             }
             return;
-        }
+        } else linPersonal.setVisibility(View.VISIBLE);
         if (userInfoModel != null) {
             if (txtPhone != null) txtPhone.setText(userInfoModel.mobile);
             if (txtEmail != null) txtEmail.setText(userInfoModel.email);

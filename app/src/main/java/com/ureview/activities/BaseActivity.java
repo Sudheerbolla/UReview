@@ -142,7 +142,7 @@ public class BaseActivity extends AppCompatActivity {
         FragmentManager fragment = getSupportFragmentManager();
         setCustomAnimation(fragment.beginTransaction(), true);
 //        fragment.popBackStackImmediate();
-        fragment.popBackStack();
+        fragment.popBackStackImmediate();
     }
 
     private static void setCustomAnimation(FragmentTransaction ft, boolean reverseAnimation) {

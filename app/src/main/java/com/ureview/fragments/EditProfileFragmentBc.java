@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -37,6 +37,7 @@ import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.pickimage.ScalingUtilities;
 import com.ureview.utils.views.CircleImageView;
 import com.ureview.utils.views.CustomDialog;
 import com.ureview.utils.views.CustomEditText;
@@ -47,8 +48,6 @@ import com.ureview.wsutils.WSUtils;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -57,7 +56,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class EditProfileFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
+public class EditProfileFragmentBc extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
     private View rootView;
     private MainActivity mainActivity;
@@ -78,12 +77,12 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private final int PERMISSION_FOR_STORAGE = 122;
     public Uri IMAGE_CAPTURE_URI;
 
-    public static EditProfileFragment newInstance() {
-        return new EditProfileFragment();
+    public static EditProfileFragmentBc newInstance() {
+        return new EditProfileFragmentBc();
     }
 
-    public static EditProfileFragment newInstance(Bundle bundle) {
-        EditProfileFragment signup1Fragment = new EditProfileFragment();
+    public static EditProfileFragmentBc newInstance(Bundle bundle) {
+        EditProfileFragmentBc signup1Fragment = new EditProfileFragmentBc();
         signup1Fragment.setArguments(bundle);
         return signup1Fragment;
     }
@@ -301,13 +300,19 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void clickOnCamera() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(mainActivity.getPackageManager()) != null) {
-            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity,StaticUtils.MEDIA_TYPE_IMAGE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGE_CAPTURE_URI);
-            startActivityForResult(takePictureIntent, StaticUtils.TAKE_PICTURE_FROM_CAMERA);
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity, StaticUtils.MEDIA_TYPE_IMAGE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGE_CAPTURE_URI);
+        startActivityForResult(intent, StaticUtils.TAKE_PICTURE_FROM_CAMERA);
+
+
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(mainActivity.getPackageManager()) != null) {
+//            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity,StaticUtils.MEDIA_TYPE_IMAGE);
+//            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGE_CAPTURE_URI);
+//            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+//        }
     }
 
     private void clickOnGalary() {
@@ -469,17 +474,16 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                         if (data != null) {
                             Uri _uri = data.getData();
                             if (_uri != null) {
-                                setImageAttachment(_uri);
-//                                Cursor cursor = mainActivity.getContentResolver().query(_uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
-//                                cursor.moveToFirst();
-//                                try {
-//                                    imagePath = cursor.getString(0);
-//                                    profilePicBitmap = StaticUtils.getResizeImage(mainActivity, StaticUtils.PROFILE_IMAGE_SIZE, StaticUtils.PROFILE_IMAGE_SIZE, ScalingUtilities.ScalingLogic.CROP, true, imagePath, _uri);
-//                                    imgProfile.setImageBitmap(profilePicBitmap);
-//                                } catch (Exception e) {
-//                                    e.getStackTrace();
-//                                }
-//                                cursor.close();
+                                Cursor cursor = mainActivity.getContentResolver().query(_uri, new String[]{MediaStore.Images.ImageColumns.DATA}, null, null, null);
+                                cursor.moveToFirst();
+                                try {
+                                    imagePath = cursor.getString(0);
+                                    profilePicBitmap = StaticUtils.getResizeImage(mainActivity, StaticUtils.PROFILE_IMAGE_SIZE, StaticUtils.PROFILE_IMAGE_SIZE, ScalingUtilities.ScalingLogic.CROP, true, imagePath, _uri);
+                                    imgProfile.setImageBitmap(profilePicBitmap);
+                                } catch (Exception e) {
+                                    e.getStackTrace();
+                                }
+                                cursor.close();
                             }
                         }
                     } catch (Exception e) {
@@ -490,12 +494,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             case StaticUtils.TAKE_PICTURE_FROM_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
                     try {
-//                        profilePicBitmap = StaticUtils.getImageFromCamera(mainActivity, IMAGE_CAPTURE_URI);
-//                        imgProfile.setImageBitmap(profilePicBitmap);
-//                        imagePath = IMAGE_CAPTURE_URI.getPath();
-
-                        setImageAttachment(IMAGE_CAPTURE_URI);
-
+                        profilePicBitmap = StaticUtils.getImageFromCamera(mainActivity, IMAGE_CAPTURE_URI);
+                        imgProfile.setImageBitmap(profilePicBitmap);
+                        imagePath = IMAGE_CAPTURE_URI.getPath();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -503,28 +504,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 break;
         }
     }
-
-    private void setImageAttachment(Uri cameraFile) {
-        RequestOptions options = new RequestOptions()
-                .placeholder(R.mipmap.ic_launcher)
-                .fitCenter()
-                .error(R.mipmap.ic_launcher);
-
-        Glide.with(this)
-                .load(cameraFile)
-                .apply(options)
-                .into(imgProfile);
-
-//        profilePicBitmap = StaticUtils.getImageFromCamera(mainActivity, cameraFile);
-        final InputStream imageStream;
-        try {
-            imageStream = mainActivity.getContentResolver().openInputStream(cameraFile);
-            profilePicBitmap = BitmapFactory.decodeStream(imageStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {
