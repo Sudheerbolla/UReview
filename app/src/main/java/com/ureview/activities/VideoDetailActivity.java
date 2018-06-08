@@ -115,6 +115,11 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
             }
 
             @Override
+            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+            }
+
+            @Override
             public void onPlayerError(ExoPlaybackException error) {
                 player.stop();
                 player.prepare(loopingSource);
@@ -122,12 +127,18 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
             }
 
             @Override
-            public void onPositionDiscontinuity() {
+            public void onPositionDiscontinuity(int reason) {
+
+            }
+
+
+            @Override
+            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
 
             }
 
             @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+            public void onSeekProcessed() {
 
             }
         });
