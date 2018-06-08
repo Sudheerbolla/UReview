@@ -212,8 +212,26 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case WSUtils.REQ_FOR_GET_USER_PROFILE:
                 parseGetUserProfileResponse((JsonObject) response);
                 break;
+            case WSUtils.REQ_FOR_FOLLOW_USER:
+                parseFollowUserResponse((JsonObject) response);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void parseFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    userInfoModel.follow_status = "follow";
+                    txtFollowStatus.setText("Following");
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
