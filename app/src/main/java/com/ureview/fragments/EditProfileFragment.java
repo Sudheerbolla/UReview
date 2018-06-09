@@ -38,7 +38,6 @@ import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CircleImageView;
-import com.ureview.utils.views.CustomDialog;
 import com.ureview.utils.views.CustomEditText;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -68,7 +67,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private String firstName, lastName, email, userId, dob, mobile, address, about, countryCode, imagePath;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtMobileNumber, edtLocation, edtAbout;
     public static final int DIALOG_FRAGMENT = 1;
-    private CustomDialog customDialog;
     private UserInfoModel userInfoModel;
     private CircleImageView imgProfile;
     private RelativeLayout relImage;
@@ -304,7 +302,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(mainActivity.getPackageManager()) != null) {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity,StaticUtils.MEDIA_TYPE_IMAGE);
+            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity, StaticUtils.MEDIA_TYPE_IMAGE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGE_CAPTURE_URI);
             startActivityForResult(takePictureIntent, StaticUtils.TAKE_PICTURE_FROM_CAMERA);
         }
@@ -353,9 +351,10 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 ////                jsonObjectReq.put(StaticUtils.getFileUploadKey("user_image", StaticUtils.bitmapToFile(profilePicBitmap)), StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
 //            } else
 //                jsonObjectReq.put("user_image", "");
-
-            if (profilePicBitmap != null)
-                jsonObjectReq.put("user_image", imageBytes(profilePicBitmap));
+            if (!TextUtils.isEmpty(profileImage))
+                jsonObjectReq.put("user_image", profileImage);
+//                if (profilePicBitmap != null)
+//                    jsonObjectReq.put("user_image", imageBytes(profilePicBitmap));
 
 //            File file = StaticUtils.bitmapToFile(profilePicBitmap);
 //            requestBodyImage = RequestBody.create(MEDIA_TYPE_IMG, file);
@@ -378,66 +377,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
         return encodedImage;
     }
-//    private void requestForRegistrationWS() {
-//        JSONObject jsonObjectReq = new JSONObject();
-//        JSONObject imageObject = new JSONObject();
-//        try {
-//            MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
-//            requestBodyBuilder.setType(MultipartBody.FORM);
-//            MediaType MEDIA_TYPE_IMG = MediaType.parse("image/*");
-//            RequestBody requestBodyImage;
-//
-//            requestBodyBuilder.addFormDataPart("first_name", null, StaticUtils.getStringRequestBody(firstName));
-//            requestBodyBuilder.addFormDataPart("last_name", null, StaticUtils.getStringRequestBody(lastName));
-//            requestBodyBuilder.addFormDataPart("user_description", null, StaticUtils.getStringRequestBody(about));
-//            requestBodyBuilder.addFormDataPart("mobile", null, StaticUtils.getStringRequestBody(mobile));
-//            requestBodyBuilder.addFormDataPart("user_id", null, StaticUtils.getStringRequestBody(userId));
-//            requestBodyBuilder.addFormDataPart("address", null, StaticUtils.getStringRequestBody(address));
-//            requestBodyBuilder.addFormDataPart("date_of_birth", null, StaticUtils.getStringRequestBody(dob));
-//            requestBodyBuilder.addFormDataPart("country_code", null, StaticUtils.getStringRequestBody(countryCode));
-//            requestBodyBuilder.addFormDataPart("user_image", null, StaticUtils.getStringRequestBody(""));
-//
-////            File file = StaticUtils.bitmapToFile(profilePicBitmap);
-////            requestBodyImage = RequestBody.create(MEDIA_TYPE_IMG, file);
-////            requestBodyBuilder.addFormDataPart("user_image", file.getName(), requestBodyImage);
-//
-//            Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(requestBodyBuilder.build());
-//            new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-//    private void requestForRegistrationWS() {
-//        JSONObject jsonObjectReq = new JSONObject();
-//        JSONObject imageObject = new JSONObject();
-//        try {
-//            jsonObjectReq.put("first_name", firstName);
-//            jsonObjectReq.put("last_name", lastName);
-//            jsonObjectReq.put("user_description", about);
-//            jsonObjectReq.put("mobile", mobile);
-//
-//            jsonObjectReq.put("user_id", userId);
-//            jsonObjectReq.put("address", address);
-//            jsonObjectReq.put("date_of_birth", dob);
-//            jsonObjectReq.put("country_code", countryCode);
-//            if (profilePicBitmap == null && !TextUtils.isEmpty(profileImage)) {
-//                imageObject.put("user_image", StaticUtils.getStringRequestBody(profileImage));
-//            } else if (profilePicBitmap != null) {
-//                imageObject.put("user_image", StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-////                jsonObjectReq.put(StaticUtils.getFileUploadKey("user_image", StaticUtils.bitmapToFile(profilePicBitmap)), StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        File file = StaticUtils.bitmapToFile(profilePicBitmap);
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("user_image", file.getName(), StaticUtils.getFileRequestBody(file));
-//
-//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(StaticUtils.getRequestBody(jsonObjectReq), body);
-//        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
-//    }
 
     private void checkValidations() {
         firstName = edtFirstName.getText().toString().trim();
@@ -520,6 +459,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         try {
             imageStream = mainActivity.getContentResolver().openInputStream(cameraFile);
             profilePicBitmap = BitmapFactory.decodeStream(imageStream);
+            profileImage = imageBytes(profilePicBitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
