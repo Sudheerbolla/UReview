@@ -155,7 +155,7 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
         rangeSeekbar.setRangeValues(1, 100);
         rangeSeekbar.setSelectedMinValue(1);
         rangeSeekbar.setSelectedMaxValue(50);
-
+//        rangeSeekbar.setActiveColor();
         rangeSeekbar.setTextAboveThumbsColorResource(R.color.app_color_dark);
 //        rangeSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
 //            @Override

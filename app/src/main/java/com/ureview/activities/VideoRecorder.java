@@ -121,7 +121,7 @@ public class VideoRecorder extends BaseActivity {
                     tvRight.setText(getTime(mp.getDuration() / 1000));
                     mp.setLooping(true);
                     rangeSeekBar.setRangeValues(0, duration);
-                    rangeSeekBar.setSelectedMinValue(0);
+                    rangeSeekBar.setSelectedMinValue(1);
                     rangeSeekBar.setSelectedMaxValue(duration);
                     rangeSeekBar.setEnabled(true);
 
@@ -129,11 +129,8 @@ public class VideoRecorder extends BaseActivity {
                         @Override
                         public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
                             videoView.seekTo((int) minValue * 1000);
-
                             tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
-
                             tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
-
                         }
                     });
 

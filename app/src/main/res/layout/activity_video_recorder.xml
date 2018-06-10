@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:rsb="http://schemas.android.com/tools"
     android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,12 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/VideoView"
-            android:layout_marginEnd="@dimen/pad_10"
-            android:layout_marginStart="@dimen/pad_10"
-            android:layout_marginTop="@dimen/pad_10"
-            app:showLabels="false"
-            rsb:activeColor="#ED1C24"
-            rsb:textAboveThumbsColor="#ED1C24" />
+            android:layout_marginEnd="@dimen/pad_5"
+            android:layout_marginStart="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_5"
+            android:background="@color/colorDarkGrey"
+            android:focusableInTouchMode="true"
+            app:showLabels="false" />
 
         <TextView
             android:id="@+id/tvLeft"
