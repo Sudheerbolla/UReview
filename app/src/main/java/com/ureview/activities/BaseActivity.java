@@ -91,9 +91,9 @@ public class BaseActivity extends AppCompatActivity {
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         setCustomAnimation(fragmentTransaction, false);
         if (needToAddToBackStack)
-            fragmentTransaction.replace(containerId, fragment, tag).addToBackStack(tag).commit();
+            fragmentTransaction.add(containerId, fragment, tag).addToBackStack(tag).commit();
         else
-            fragmentTransaction.replace(containerId, fragment, tag).commit();
+            fragmentTransaction.add(containerId, fragment, tag).commit();
     }
 
     public void replaceFragment(Fragment fragment, int containerId) {

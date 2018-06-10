@@ -134,6 +134,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
+    public void setTextToAddress(String address) {
+        if (!TextUtils.isEmpty(address)) {
+            txtLeft.setText(address);
+            txtLeft.setSelected(true);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -516,6 +523,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (value != null) {
             if (HomeFragment.getInstance() != null) {
                 HomeFragment.getInstance().loadRelatedData(value);
+                setTextToAddress(value.addressLine);
             }
         }
     }

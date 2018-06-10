@@ -244,7 +244,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     @Override
     public void onWatchCountClick(View view, int position) {
-        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
+        mainActivity.addFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
     }
 
     @Override
