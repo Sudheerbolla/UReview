@@ -66,15 +66,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         if (!TextUtils.isEmpty(notificationsModel.user_image)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.ic_profile)
                     .fitCenter()
-                    .error(R.mipmap.ic_launcher);
+                    .error(R.drawable.ic_profile);
 
             Glide.with(context)
                     .load(notificationsModel.user_image)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.mipmap.ic_launcher);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
 
     }
 

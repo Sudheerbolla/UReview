@@ -52,17 +52,29 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
     @Override
     public void onBindViewHolder(@NonNull final PeopleViewHolder holder, final int position) {
         PeopleModel peopleModel = peopleArrayList.get(position);
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.mipmap.ic_launcher);
-        Glide.with(context).load(peopleModel.userImage).into(holder.imgProfile);
+
+        if (!TextUtils.isEmpty(peopleModel.userImage)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(peopleModel.userImage)
+                    .apply(options)
+                    .into(holder.imgProfile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+
         holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
 //        if (!TextUtils.isEmpty(peopleModel.userRating))
 //            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
         holder.ratingBar.setVisibility(View.GONE);
 //        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.llViewCount.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
+//        holder.ratingBar.setVisibility(View.GONE);
+        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.imgClear.setVisibility(View.GONE);
-        holder.txtReviewCount.setVisibility(View.GONE);
+//        holder.txtReviewCount.setVisibility(View.GONE);
         holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Following");
         holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus));
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {

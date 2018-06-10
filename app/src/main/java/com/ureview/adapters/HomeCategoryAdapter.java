@@ -1,6 +1,7 @@
 package com.ureview.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.CategoryModel;
@@ -41,16 +44,33 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         CategoryModel categoryModel = categoryList.get(position);
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
-        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
-                .into(holder.imgCatBg);
-        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage)
-                .into(holder.imgCat);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
+                into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        holder.txtCategory.setBackground(resource);
+                    }
+                });
+
+        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage).
+                into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                        holder.txtCategory.setCompoundDrawablesWithIntrinsicBounds(resource, null, null, null);
+                    }
+                });
+
+//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
+//                .into(holder.imgCatBg);
+//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage)
+//                .into(holder.imgCat);
+
+        holder.txtCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.imgCatBg, holder.getAdapterPosition());
+                    iClickListener.onClick(holder.txtCategory, holder.getAdapterPosition());
             }
         });
     }
@@ -68,8 +88,8 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         public CategoryViewHolder(View itemView) {
             super(itemView);
             txtCategory = itemView.findViewById(R.id.txtCategory);
-            imgCat = itemView.findViewById(R.id.imgCat);
-            imgCatBg = itemView.findViewById(R.id.imgCatBg);
+//            imgCat = itemView.findViewById(R.id.imgCat);
+//            imgCatBg = itemView.findViewById(R.id.imgCatBg);
         }
     }
 }

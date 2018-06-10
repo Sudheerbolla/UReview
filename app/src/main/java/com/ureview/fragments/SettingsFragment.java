@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
 import com.facebook.login.LoginManager;
 import com.google.gson.JsonElement;
@@ -21,6 +20,7 @@ import com.ureview.listeners.IParserListener;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -32,8 +32,8 @@ import retrofit2.Call;
 public class SettingsFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
     private View rootView;
-    private RelativeLayout relShareApp, relPrivacyPolicy, relTermsAndConditions,
-            relHelpCenter, relContactUs, relLogout, relDeleteAccount;
+    private CustomTextView txtShare, txtPrivacy, txtTerms,
+            txtHelp, txtContactUs, txtLogout, txtDelAcc;
     private MainActivity mainActivity;
     private String baseUrl = "";
 
@@ -45,7 +45,6 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-//        http://18.216.101.112/pages?slug_name=terms-conditions
         baseUrl = WSUtils.BASE_URL + "/pages?slug_name=";
     }
 
@@ -58,21 +57,21 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initComponents() {
-        relShareApp = rootView.findViewById(R.id.relShareApp);
-        relPrivacyPolicy = rootView.findViewById(R.id.relPrivacyPolicy);
-        relTermsAndConditions = rootView.findViewById(R.id.relTermsAndConditions);
-        relDeleteAccount = rootView.findViewById(R.id.relDeleteAccount);
-        relHelpCenter = rootView.findViewById(R.id.relHelpCenter);
-        relLogout = rootView.findViewById(R.id.relLogout);
-        relContactUs = rootView.findViewById(R.id.relContactUs);
+        txtShare = rootView.findViewById(R.id.txtShare);
+        txtPrivacy = rootView.findViewById(R.id.txtPrivacy);
+        txtTerms = rootView.findViewById(R.id.txtTerms);
+        txtDelAcc = rootView.findViewById(R.id.txtDelAcc);
+        txtHelp = rootView.findViewById(R.id.txtHelp);
+        txtLogout = rootView.findViewById(R.id.txtLogout);
+        txtContactUs = rootView.findViewById(R.id.txtContactUs);
 
-        relShareApp.setOnClickListener(this);
-        relLogout.setOnClickListener(this);
-        relHelpCenter.setOnClickListener(this);
-        relDeleteAccount.setOnClickListener(this);
-        relTermsAndConditions.setOnClickListener(this);
-        relPrivacyPolicy.setOnClickListener(this);
-        relContactUs.setOnClickListener(this);
+        txtShare.setOnClickListener(this);
+        txtLogout.setOnClickListener(this);
+        txtHelp.setOnClickListener(this);
+        txtDelAcc.setOnClickListener(this);
+        txtTerms.setOnClickListener(this);
+        txtPrivacy.setOnClickListener(this);
+        txtContactUs.setOnClickListener(this);
     }
 
     @Override
@@ -85,39 +84,48 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.relContactUs:
-                break;
-            case R.id.relTermsAndConditions:
+            case R.id.txtTerms:
                 mainActivity.replaceFragment(StaticPagesFragment.newInstance("terms-conditions"), true, R.id.mainContainer);
                 break;
-            case R.id.relDeleteAccount:
-                DialogUtils.showSimpleDialog(mainActivity, "Delete Account", "Are you sure you want to delete the account? This is a permanent action and cannot be reverted.", "Delete", "Cancel", new View.OnClickListener() {
+            case R.id.txtDelAcc:
+                DialogUtils.showLogoutDialog(mainActivity, "Delete Account", "Are you sure you want to delete the account? This is a permanent action and cannot be reverted.", "Delete", "Cancel", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         requestForDeleteAccountWS();
                     }
-                }, null, false, false);
+                }, null);
                 break;
-            case R.id.relHelpCenter:
-
+            case R.id.txtContactUs:
+            case R.id.txtHelp:
+                openEmailIntent();
                 break;
-            case R.id.relLogout:
-                DialogUtils.showSimpleDialog(mainActivity, "Logout", "Are you sure you want to Logout? ", "Yes", "No", new View.OnClickListener() {
+            case R.id.txtLogout:
+                DialogUtils.showLogoutDialog(mainActivity, "Logout", "Are you sure you want to Logout? ", "Yes", "No", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         logoutFromApp();
                     }
-                }, null, false, false);
+                }, null);
                 break;
-            case R.id.relShareApp:
+            case R.id.txtShare:
                 shareViaIntent("UReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
                 break;
-            case R.id.relPrivacyPolicy:
+            case R.id.txtPrivacy:
                 mainActivity.replaceFragment(StaticPagesFragment.newInstance("privacy-policy"), true, R.id.mainContainer);
                 break;
             default:
                 break;
         }
+    }
+
+    private void openEmailIntent() {
+        Intent intent2 = new Intent();
+        intent2.setAction(Intent.ACTION_SEND);
+        intent2.setType("message/rfc822");
+        intent2.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@ureview.com"});
+        intent2.putExtra(Intent.EXTRA_SUBJECT, "Contact UReview");
+        intent2.putExtra(Intent.EXTRA_TEXT, "Write your message for us.");
+        startActivity(intent2);
     }
 
     public void shareViaIntent(String subject, String shareContent) {

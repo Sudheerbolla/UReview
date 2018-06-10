@@ -1,30 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
-    <Button
-        android:id="@+id/CaptureVideoButton"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Capture Video" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/CaptureVideoWithoutDataButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Capture Video without Data" />
+        <VideoView
+            android:id="@+id/VideoView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_5" />
 
-    <Button
-        android:id="@+id/PlayVideoButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Play Video" />
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:id="@+id/rangeSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/VideoView"
+            android:layout_marginEnd="@dimen/pad_5"
+            android:layout_marginStart="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_5"
+            android:background="@color/colorDarkGrey"
+            android:focusableInTouchMode="true"
+            app:showLabels="false" />
 
-    <VideoView
-        android:id="@+id/VideoView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tvLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/rangeSeekBar"
+            android:layout_alignStart="@+id/rangeSeekBar"
+            android:layout_below="@+id/rangeSeekBar"
+            android:textColor="#000000" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/tvRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/rangeSeekBar"
+            android:layout_alignRight="@+id/rangeSeekBar"
+            android:layout_below="@+id/rangeSeekBar"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/uploadVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvLeft"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/pad_20"
+            android:background="@drawable/selector_app_pink_btn"
+            android:gravity="center"
+            android:padding="@dimen/pad_10"
+            android:text="uploadVideo"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/txt_size_16sp" />
+
+        <TextView
+            android:id="@+id/cropVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/uploadVideo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/pad_20"
+            android:background="@drawable/selector_app_purple_btn"
+            android:gravity="center"
+            android:padding="@dimen/pad_10"
+            android:text="Trim Video"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/txt_size_16sp" />
+
+    </RelativeLayout>
+
+</ScrollView>

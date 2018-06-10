@@ -69,17 +69,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginStart="-6dp"
             android:layout_toEndOf="@id/relLeft"
             android:layout_toStartOf="@+id/relRight"
+            android:drawableEnd="@drawable/drop_down_copy"
+            android:drawablePadding="@dimen/pad_5"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
             android:inputType="text"
             android:marqueeRepeatLimit="marquee_forever"
-            android:padding="@dimen/pad_6"
+            android:paddingEnd="@dimen/pad_3"
             android:singleLine="true"
             android:textColor="@color/color_vvDarkGrey"
             android:textSize="@dimen/txt_size_18sp"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/relRight"

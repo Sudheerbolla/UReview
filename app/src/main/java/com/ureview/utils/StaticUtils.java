@@ -385,6 +385,11 @@ public class StaticUtils {
         return RequestBody.create(MEDIA_TYPE_TEXT, jsonObject.toString());
     }
 
+    public static RequestBody getRequestBodyJson(JSONObject jsonObject) {
+        MediaType MEDIA_TYPE_TEXT = MediaType.parse(Constants.CONTENT_TYPE_JSON);
+        return RequestBody.create(MEDIA_TYPE_TEXT, jsonObject.toString());
+    }
+
     public static CountriesModel getCurrentCountryModel(Context context) {
         String countryCode = getCountryCodeNew(context);
         CountriesModel currentCountriesModel = null;

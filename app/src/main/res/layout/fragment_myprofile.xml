@@ -32,7 +32,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_10"
                 android:layout_toRightOf="@+id/imgProfile"
-                android:text="Marilyn Andrews"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_17sp" />
 
@@ -46,7 +45,6 @@
                 android:layout_toRightOf="@+id/imgProfile"
                 android:drawableLeft="@drawable/location_small_copy"
                 android:drawablePadding="@dimen/pad_5"
-                android:text="Dhaka, Bangladesh"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_11sp" />
 
@@ -84,7 +82,6 @@
                         android:id="@+id/txtFollowersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1232"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/txt_size_14sp" />
 
@@ -116,7 +113,6 @@
                         android:id="@+id/txtFollowingCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="755"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/txt_size_14sp" />
 

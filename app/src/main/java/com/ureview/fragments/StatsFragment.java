@@ -47,7 +47,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     private View rootView;
     private RecyclerView rvRankings;
     private MainActivity mainActivity;
-    LineChart chart;
+    private LineChart chart;
     private ArrayList<UserStatsModel> userStatsModelArrayList;
     private ArrayList<VideoViewsModel> videoViewsModelArrayList;
     private VideoViewRankingAdapter videoViewRankingAdapter;
@@ -248,7 +248,13 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
 
     @Override
     public void onClick(View view, int position) {
-
+        switch (view.getId()) {
+            case R.id.relBody:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(videoViewsModelArrayList.get(position).user_id), true, R.id.mainContainer);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

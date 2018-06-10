@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -143,15 +143,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()
-                        .placeholder(R.mipmap.ic_launcher)
-                        .bitmapTransform(new RoundedCorners(7))
+                        .placeholder(R.drawable.ic_profile)
                         .fitCenter()
-                        .error(R.mipmap.ic_launcher);
+                        .error(R.drawable.ic_profile);
                 Glide.with(this)
                         .load(userInfoModel.user_image)
                         .apply(options)
                         .into(imgProfile);
-            } else imgProfile.setImageResource(R.mipmap.ic_launcher);
+            } else imgProfile.setImageResource(R.drawable.ic_profile);
         }
     }
 
@@ -159,6 +158,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         txtFollowStatus.setOnClickListener(this);
         linFollowers.setOnClickListener(this);
         linFollowing.setOnClickListener(this);
+        imgProfile.setOnClickListener(this);
     }
 
     private void requestForGetProfileDataWS() {
@@ -187,6 +187,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.txtFollowStatus:
                 requestForFollowUser(otherUserId);
+                break;
+            case R.id.imgProfile:
+                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
+                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                }
                 break;
             default:
                 break;

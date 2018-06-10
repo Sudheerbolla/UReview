@@ -55,7 +55,7 @@ public class SplashFragment extends BaseFragment {
             public void run() {
                 navigateToLogin();
             }
-        }, 1750);
+        }, 2000);
     }
 
     private void navigateToLogin() {
@@ -65,7 +65,6 @@ public class SplashFragment extends BaseFragment {
             startActivity(new Intent(splashActivity, MainActivity.class));
             splashActivity.finishAffinity();
         } else {
-//            splashActivity.replaceFragment(SignupVerificationFragment.newInstance(), false, R.id.splashContainer);
             splashActivity.replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
         }
     }

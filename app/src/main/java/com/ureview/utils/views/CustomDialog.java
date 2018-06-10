@@ -17,7 +17,7 @@ import com.ureview.utils.StaticUtils;
 public class CustomDialog extends Dialog {
 
     public SplashActivity splashActivity;
-    private CustomTextView txtVerify,txtChangeNumber,txtResendCodeAuto;
+    private CustomTextView txtVerify, txtChangeNumber, txtResendCodeAuto;
     ISearchClickListener iSearchClickListener;
     private CustomEditText edtCode1, edtCode2, edtCode3, edtCode4;
 
@@ -132,6 +132,7 @@ public class CustomDialog extends Dialog {
         txtChangeNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss();
             }
         });
         txtResendCodeAuto.setOnClickListener(new View.OnClickListener() {

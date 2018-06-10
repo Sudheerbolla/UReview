@@ -226,6 +226,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.imgCatBg:
+            case R.id.txtCategory:
                 updateCategoryList(position, false);
                 break;
             case R.id.relItem:

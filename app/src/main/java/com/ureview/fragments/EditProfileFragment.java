@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +39,6 @@ import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CircleImageView;
-import com.ureview.utils.views.CustomDialog;
 import com.ureview.utils.views.CustomEditText;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -52,9 +52,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class EditProfileFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
@@ -68,7 +65,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private String firstName, lastName, email, userId, dob, mobile, address, about, countryCode, imagePath;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtMobileNumber, edtLocation, edtAbout;
     public static final int DIALOG_FRAGMENT = 1;
-    private CustomDialog customDialog;
     private UserInfoModel userInfoModel;
     private CircleImageView imgProfile;
     private RelativeLayout relImage;
@@ -77,6 +73,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private final int PERMISSION_FOR_CAMERA = 121;
     private final int PERMISSION_FOR_STORAGE = 122;
     public Uri IMAGE_CAPTURE_URI;
+    private ProgressBar progressBar;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -101,7 +98,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         email = userInfoModel.email;
         dob = userInfoModel.date_of_birth;
         mobile = userInfoModel.mobile;
-        address = userInfoModel.address;
+        address = userInfoModel.city;
         about = userInfoModel.user_description;
         countryCode = userInfoModel.country_code;
         imagePath = userInfoModel.user_image;
@@ -120,6 +117,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
         txtDob = rootView.findViewById(R.id.txtDob);
 
+        progressBar = rootView.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         edtFirstName = rootView.findViewById(R.id.edtFirstName);
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
@@ -147,7 +146,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         }
         if (!TextUtils.isEmpty(email)) {
             edtEmail.setText(email);
-            edtEmail.setEnabled(false);
         }
         if (!TextUtils.isEmpty(dob)) {
             txtDob.setText(dob);
@@ -169,7 +167,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
         RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
         Glide.with(this).load(imagePath).apply(requestOptions).into(imgProfile);
-
+//
     }
 
     private void initDatePicker() {
@@ -217,7 +215,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 showDOBDialog();
                 break;
             case R.id.relImage:
-                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "Cancel"}, relImage, new View.OnClickListener() {
+                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "View Picture", "Remove Picture", "Cancel"}, relImage, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch ((String) view.getTag()) {
@@ -226,6 +224,31 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                                 break;
                             case "Gallery":
                                 checkAndRequestPermissionGallery();
+                                break;
+                            case "View Picture":
+                                if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
+                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
+                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                    return;
+                                }
+                                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
+                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                }
+                                break;
+                            case "Remove Picture":
+                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
+                                setImageAttachment(uri);
+//                                try {
+//                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
+//                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
+//                                    profileImage = imageBytes(profilePicBitmap);
+//                                } catch (FileNotFoundException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                imgProfile.setImageResource(R.drawable.ic_profile);
                                 break;
                             case "Cancel":
                                 break;
@@ -304,7 +327,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(mainActivity.getPackageManager()) != null) {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity,StaticUtils.MEDIA_TYPE_IMAGE);
+            IMAGE_CAPTURE_URI = StaticUtils.getOutputMediaFileUri(mainActivity, StaticUtils.MEDIA_TYPE_IMAGE);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, IMAGE_CAPTURE_URI);
             startActivityForResult(takePictureIntent, StaticUtils.TAKE_PICTURE_FROM_CAMERA);
         }
@@ -328,38 +351,27 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-
     private void requestForRegistrationWS() {
+        progressBar.setVisibility(View.VISIBLE);
         JSONObject jsonObjectReq = new JSONObject();
         try {
-            MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
-            requestBodyBuilder.setType(MultipartBody.FORM);
-            MediaType MEDIA_TYPE_IMG = MediaType.parse("image/*");
-            RequestBody requestBodyImage;
-
             jsonObjectReq.put("first_name", firstName);
             jsonObjectReq.put("last_name", lastName);
             jsonObjectReq.put("user_description", about);
             jsonObjectReq.put("mobile", mobile);
-
+            jsonObjectReq.put("email", email);
             jsonObjectReq.put("user_id", userId);
-            jsonObjectReq.put("address", address);
+            jsonObjectReq.put("address", "");
             jsonObjectReq.put("date_of_birth", dob);
             jsonObjectReq.put("country_code", countryCode);
-//            if (profilePicBitmap == null && !TextUtils.isEmpty(profileImage)) {
-//                jsonObjectReq.put("user_image", StaticUtils.getStringRequestBody(profileImage));
-//            } else if (profilePicBitmap != null) {
-//                jsonObjectReq.put("user_image", StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-////                jsonObjectReq.put(StaticUtils.getFileUploadKey("user_image", StaticUtils.bitmapToFile(profilePicBitmap)), StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-//            } else
-//                jsonObjectReq.put("user_image", "");
-
-            if (profilePicBitmap != null)
-                jsonObjectReq.put("user_image", imageBytes(profilePicBitmap));
-
-//            File file = StaticUtils.bitmapToFile(profilePicBitmap);
-//            requestBodyImage = RequestBody.create(MEDIA_TYPE_IMG, file);
-//            requestBodyBuilder.addFormDataPart("user_image", file.getName(), requestBodyImage);
+            jsonObjectReq.put("city", address);
+            jsonObjectReq.put("gender", userInfoModel.gender);
+            jsonObjectReq.put("latitude", "0.0");
+            jsonObjectReq.put("longitude", "0.0");
+            if (!TextUtils.isEmpty(profileImage))
+                jsonObjectReq.put("user_image", profileImage);
+            else
+                jsonObjectReq.put("user_image", "");
 
             Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(StaticUtils.getRequestBody(jsonObjectReq));
             new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
@@ -375,69 +387,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-        return encodedImage;
+        return Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
     }
-//    private void requestForRegistrationWS() {
-//        JSONObject jsonObjectReq = new JSONObject();
-//        JSONObject imageObject = new JSONObject();
-//        try {
-//            MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
-//            requestBodyBuilder.setType(MultipartBody.FORM);
-//            MediaType MEDIA_TYPE_IMG = MediaType.parse("image/*");
-//            RequestBody requestBodyImage;
-//
-//            requestBodyBuilder.addFormDataPart("first_name", null, StaticUtils.getStringRequestBody(firstName));
-//            requestBodyBuilder.addFormDataPart("last_name", null, StaticUtils.getStringRequestBody(lastName));
-//            requestBodyBuilder.addFormDataPart("user_description", null, StaticUtils.getStringRequestBody(about));
-//            requestBodyBuilder.addFormDataPart("mobile", null, StaticUtils.getStringRequestBody(mobile));
-//            requestBodyBuilder.addFormDataPart("user_id", null, StaticUtils.getStringRequestBody(userId));
-//            requestBodyBuilder.addFormDataPart("address", null, StaticUtils.getStringRequestBody(address));
-//            requestBodyBuilder.addFormDataPart("date_of_birth", null, StaticUtils.getStringRequestBody(dob));
-//            requestBodyBuilder.addFormDataPart("country_code", null, StaticUtils.getStringRequestBody(countryCode));
-//            requestBodyBuilder.addFormDataPart("user_image", null, StaticUtils.getStringRequestBody(""));
-//
-////            File file = StaticUtils.bitmapToFile(profilePicBitmap);
-////            requestBodyImage = RequestBody.create(MEDIA_TYPE_IMG, file);
-////            requestBodyBuilder.addFormDataPart("user_image", file.getName(), requestBodyImage);
-//
-//            Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(requestBodyBuilder.build());
-//            new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-//    private void requestForRegistrationWS() {
-//        JSONObject jsonObjectReq = new JSONObject();
-//        JSONObject imageObject = new JSONObject();
-//        try {
-//            jsonObjectReq.put("first_name", firstName);
-//            jsonObjectReq.put("last_name", lastName);
-//            jsonObjectReq.put("user_description", about);
-//            jsonObjectReq.put("mobile", mobile);
-//
-//            jsonObjectReq.put("user_id", userId);
-//            jsonObjectReq.put("address", address);
-//            jsonObjectReq.put("date_of_birth", dob);
-//            jsonObjectReq.put("country_code", countryCode);
-//            if (profilePicBitmap == null && !TextUtils.isEmpty(profileImage)) {
-//                imageObject.put("user_image", StaticUtils.getStringRequestBody(profileImage));
-//            } else if (profilePicBitmap != null) {
-//                imageObject.put("user_image", StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-////                jsonObjectReq.put(StaticUtils.getFileUploadKey("user_image", StaticUtils.bitmapToFile(profilePicBitmap)), StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        File file = StaticUtils.bitmapToFile(profilePicBitmap);
-//        MultipartBody.Part body = MultipartBody.Part.createFormData("user_image", file.getName(), StaticUtils.getFileRequestBody(file));
-//
-//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(StaticUtils.getRequestBody(jsonObjectReq), body);
-//        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
-//    }
 
     private void checkValidations() {
         firstName = edtFirstName.getText().toString().trim();
@@ -445,8 +396,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         about = edtAbout.getText().toString().trim();
         mobile = edtMobileNumber.getText().toString().trim();
         imagePath = "";
+        email = edtEmail.getText().toString().trim();
         address = edtLocation.getText().toString().trim();
-        dob = edtEmail.getText().toString().trim();
+        dob = txtDob.getText().toString().trim();
         countryCode = txtCountryCode.getText().toString().trim();
     }
 
@@ -506,25 +458,26 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void setImageAttachment(Uri cameraFile) {
         RequestOptions options = new RequestOptions()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_profile)
                 .fitCenter()
-                .error(R.mipmap.ic_launcher);
+                .error(R.drawable.ic_profile);
 
         Glide.with(this)
                 .load(cameraFile)
                 .apply(options)
                 .into(imgProfile);
 
+        profileImage = "null";
 //        profilePicBitmap = StaticUtils.getImageFromCamera(mainActivity, cameraFile);
         final InputStream imageStream;
         try {
             imageStream = mainActivity.getContentResolver().openInputStream(cameraFile);
             profilePicBitmap = BitmapFactory.decodeStream(imageStream);
+            profileImage = imageBytes(profilePicBitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {
@@ -541,35 +494,42 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void parseEditProfileResponse(JsonObject response) {
-        if (response.has("status")) {
-            if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                if (response.has("message")) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    if (response.has("message")) {
+                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                    }
+                    if (response.has("user_info")) {
+                        BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                        try {
+                            String json = BaseApplication.userInfoModel.serialize();
+                            LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    mainActivity.popBackStack();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
-                if (response.has("user_info")) {
-                    BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
-                    try {
-                        String json = BaseApplication.userInfoModel.serialize();
-                        LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-//                mainActivity.popBackStack();
-            } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                StaticUtils.showToast(mainActivity, response.get("message").getAsString());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void errorResponse(int requestCode, String error) {
         Log.e("error: ", error);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-
+        progressBar.setVisibility(View.GONE);
     }
 
 }

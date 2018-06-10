@@ -187,4 +187,66 @@ public class DialogUtils {
         }
     }
 
+    public static void showLogoutDialog(final Context mContext,
+                                        final String heading,
+                                        final String message,
+                                        final String positiveText,
+                                        final String negativeText,
+                                        final View.OnClickListener positiveClick,
+                                        final View.OnClickListener negativeClick) {
+        try {
+            CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
+
+            final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
+            alertDialog.setCancelable(false);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_logout_dialog);
+            txtHeading = alertDialog.findViewById(R.id.txtHeading);
+            txtMessage = alertDialog.findViewById(R.id.txtMessage);
+            txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
+            txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            txtHeading.setText(TextUtils.isEmpty(heading) ? mContext.getString(R.string.app_name) : heading);
+            txtMessage.setText(message);
+
+            txtPositiveButton.setText(TextUtils.isEmpty(positiveText) ? "Ok" : positiveText);
+            txtNegativeButton.setText(TextUtils.isEmpty(negativeText) ? "Close" : negativeText);
+
+            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (positiveClick != null) {
+                        positiveClick.onClick(v);
+                    }
+                }
+            });
+
+            txtNegativeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (negativeClick != null) {
+                        negativeClick.onClick(v);
+                    }
+                }
+            });
+
+            alertDialog.setCancelable(true);
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

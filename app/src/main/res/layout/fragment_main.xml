@@ -19,14 +19,6 @@
         android:layout_above="@+id/bottomBar"
         android:layout_below="@+id/topBar" />
 
-    <!-- <android.support.design.widget.TabLayout
-         android:id="@+id/tabLayout"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true"
-         app:tabGravity="fill"
-         app:tabMode="fixed" />-->
-
     <include
         android:id="@+id/bottomBar"
         layout="@layout/layout_bottom_bar"
