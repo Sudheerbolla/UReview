@@ -155,14 +155,8 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
         rangeSeekbar.setRangeValues(1, 100);
         rangeSeekbar.setSelectedMinValue(1);
         rangeSeekbar.setSelectedMaxValue(50);
-//        rangeSeekbar.setActiveColor();
+
         rangeSeekbar.setTextAboveThumbsColorResource(R.color.app_color_dark);
-//        rangeSeekbar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
-//            @Override
-//            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
-//
-//            }
-//        });
     }
 
     private void setAdapter() {
@@ -173,7 +167,6 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
     }
 
     public void onButtonPressed(boolean isUseCurrentLocation) {
-
         FilterModel filterModel = new FilterModel();
         filterModel.isUseCurrentLocation = isUseCurrentLocation;
         filterModel.addressLine = addressLine;
@@ -181,7 +174,6 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
         filterModel.locationLng = selLong == null ? String.valueOf(MainActivity.mLastLocation.getLongitude()) : selLong;
         filterModel.locationMax = rangeSeekbar.getSelectedMaxValue().toString();
         filterModel.locationMin = rangeSeekbar.getSelectedMinValue().toString();
-
         if (mListener != null) {
             mListener.locationCallback(filterModel);
         }
@@ -270,11 +262,13 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
         PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
         placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
             @Override
-            public void onResult(PlaceBuffer places) {
+            public void onResult(@NonNull PlaceBuffer places) {
                 if (places.getCount() == 1) {
                     selLat = String.valueOf(places.get(0).getLatLng().latitude);
                     selLong = String.valueOf(places.get(0).getLatLng().longitude);
                     addressLine = places.get(0).getAddress().toString();
+                    onButtonPressed(false);
+                    dismissAllowingStateLoss();
                 } else {
                     StaticUtils.showToast(mainActivity, "something went wrong");
                 }

@@ -23,6 +23,7 @@ import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -38,6 +39,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     private MainActivity mainActivity;
     private ArrayList<VideoModel> userVideosModelArrayList;
     private String userId;
+    private CustomTextView txtNoDatafound;
 
     public static VideosFragment newInstance() {
         return new VideosFragment();
@@ -68,6 +70,8 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_videos, container, false);
         rvVideos = rootView.findViewById(R.id.rvVideos);
+        txtNoDatafound = rootView.findViewById(R.id.txtNoDatafound);
+
         videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this);
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvVideos.setAdapter(videosAdapter);
@@ -111,6 +115,11 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
                                 for (int i = 0; i < videoViewsArray.size(); i++) {
                                     userVideosModelArrayList.add(gson.fromJson(videoViewsArray.get(i).toString(), VideoModel.class));
                                 }
+                                txtNoDatafound.setVisibility(View.GONE);
+                                rvVideos.setVisibility(View.VISIBLE);
+                            } else {
+                                txtNoDatafound.setVisibility(View.VISIBLE);
+                                rvVideos.setVisibility(View.GONE);
                             }
                             videosAdapter.notifyDataSetChanged();
                         } catch (Exception e) {

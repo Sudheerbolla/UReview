@@ -15,13 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@drawable/bg_custom_btn_round_app_color"
-        android:paddingBottom="@dimen/pad_8"
-        android:paddingLeft="@dimen/pad_20"
-        android:paddingRight="@dimen/pad_20"
-        android:paddingTop="@dimen/pad_8"
-        android:text="No New Updates"
-        android:textColor="@color/color_white"
+        android:text="No data found"
+        android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_18sp" />
-
 </RelativeLayout>

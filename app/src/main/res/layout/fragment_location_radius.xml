@@ -15,14 +15,13 @@
         <RelativeLayout
             android:id="@+id/relTopBar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/pad_45">
+            android:layout_height="?attr/actionBarSize">
 
             <ImageView
                 android:id="@+id/imgBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/pad_6"
                 android:padding="@dimen/pad_8"
                 android:src="@drawable/back_copy" />
 

@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -51,9 +52,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class EditProfileFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
@@ -75,6 +73,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private final int PERMISSION_FOR_CAMERA = 121;
     private final int PERMISSION_FOR_STORAGE = 122;
     public Uri IMAGE_CAPTURE_URI;
+    private ProgressBar progressBar;
 
     public static EditProfileFragment newInstance() {
         return new EditProfileFragment();
@@ -99,7 +98,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         email = userInfoModel.email;
         dob = userInfoModel.date_of_birth;
         mobile = userInfoModel.mobile;
-        address = userInfoModel.address;
+        address = userInfoModel.city;
         about = userInfoModel.user_description;
         countryCode = userInfoModel.country_code;
         imagePath = userInfoModel.user_image;
@@ -118,6 +117,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
         txtDob = rootView.findViewById(R.id.txtDob);
 
+        progressBar = rootView.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
         edtFirstName = rootView.findViewById(R.id.edtFirstName);
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
@@ -145,7 +146,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         }
         if (!TextUtils.isEmpty(email)) {
             edtEmail.setText(email);
-            edtEmail.setEnabled(false);
         }
         if (!TextUtils.isEmpty(dob)) {
             txtDob.setText(dob);
@@ -167,7 +167,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
         RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
         Glide.with(this).load(imagePath).apply(requestOptions).into(imgProfile);
-
+//
     }
 
     private void initDatePicker() {
@@ -326,39 +326,27 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-
     private void requestForRegistrationWS() {
+        progressBar.setVisibility(View.VISIBLE);
         JSONObject jsonObjectReq = new JSONObject();
         try {
-            MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
-            requestBodyBuilder.setType(MultipartBody.FORM);
-            MediaType MEDIA_TYPE_IMG = MediaType.parse("image/*");
-            RequestBody requestBodyImage;
-
             jsonObjectReq.put("first_name", firstName);
             jsonObjectReq.put("last_name", lastName);
             jsonObjectReq.put("user_description", about);
             jsonObjectReq.put("mobile", mobile);
-
+            jsonObjectReq.put("email", email);
             jsonObjectReq.put("user_id", userId);
-            jsonObjectReq.put("address", address);
+            jsonObjectReq.put("address", "");
             jsonObjectReq.put("date_of_birth", dob);
             jsonObjectReq.put("country_code", countryCode);
-//            if (profilePicBitmap == null && !TextUtils.isEmpty(profileImage)) {
-//                jsonObjectReq.put("user_image", StaticUtils.getStringRequestBody(profileImage));
-//            } else if (profilePicBitmap != null) {
-//                jsonObjectReq.put("user_image", StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-////                jsonObjectReq.put(StaticUtils.getFileUploadKey("user_image", StaticUtils.bitmapToFile(profilePicBitmap)), StaticUtils.getFileRequestBody(StaticUtils.bitmapToFile(profilePicBitmap)));
-//            } else
-//                jsonObjectReq.put("user_image", "");
+            jsonObjectReq.put("city", address);
+            jsonObjectReq.put("gender", userInfoModel.gender);
+            jsonObjectReq.put("latitude", "0.0");
+            jsonObjectReq.put("longitude", "0.0");
             if (!TextUtils.isEmpty(profileImage))
                 jsonObjectReq.put("user_image", profileImage);
-//                if (profilePicBitmap != null)
-//                    jsonObjectReq.put("user_image", imageBytes(profilePicBitmap));
-
-//            File file = StaticUtils.bitmapToFile(profilePicBitmap);
-//            requestBodyImage = RequestBody.create(MEDIA_TYPE_IMG, file);
-//            requestBodyBuilder.addFormDataPart("user_image", file.getName(), requestBodyImage);
+            else
+                jsonObjectReq.put("user_image", "");
 
             Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().editProfile(StaticUtils.getRequestBody(jsonObjectReq));
             new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_EDIT_PROFILE, call, this);
@@ -384,8 +372,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         about = edtAbout.getText().toString().trim();
         mobile = edtMobileNumber.getText().toString().trim();
         imagePath = "";
+        email = edtEmail.getText().toString().trim();
         address = edtLocation.getText().toString().trim();
-        dob = edtEmail.getText().toString().trim();
+        dob = txtDob.getText().toString().trim();
         countryCode = txtCountryCode.getText().toString().trim();
     }
 
@@ -481,35 +470,42 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void parseEditProfileResponse(JsonObject response) {
-        if (response.has("status")) {
-            if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                if (response.has("message")) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    if (response.has("message")) {
+                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                    }
+                    if (response.has("user_info")) {
+                        BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
+                        try {
+                            String json = BaseApplication.userInfoModel.serialize();
+                            LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    mainActivity.popBackStack();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
-                if (response.has("user_info")) {
-                    BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
-                    try {
-                        String json = BaseApplication.userInfoModel.serialize();
-                        LocalStorage.getInstance(mainActivity).putString(LocalStorage.PREF_USER_INFO_DATA, json);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-//                mainActivity.popBackStack();
-            } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                StaticUtils.showToast(mainActivity, response.get("message").getAsString());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            progressBar.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void errorResponse(int requestCode, String error) {
         Log.e("error: ", error);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-
+        progressBar.setVisibility(View.GONE);
     }
 
 }

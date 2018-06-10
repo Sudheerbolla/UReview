@@ -1,41 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
-    android:layout_height="@dimen/pad_35">
-
-    <ImageView
-        android:id="@+id/imgCatBg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/pad_10"
-        android:scaleType="fitXY"
-        android:src="@drawable/selector_app_pink_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgCat"
-        android:layout_width="@dimen/pad_18"
-        android:layout_height="@dimen/pad_18"
-        android:layout_marginLeft="@dimen/pad_8"
-        android:src="@drawable/edit_copy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="@+id/imgCatBg"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/pad_6"
-        android:gravity="center"
-        android:text="News Feed"
-        android:textColor="@color/selector_txt_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/imgCat"
-        android:ellipsize="end"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+<com.ureview.utils.views.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/txtCategory"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_margin="@dimen/pad_3"
+    android:background="@drawable/selector_app_pink_btn"
+    android:drawablePadding="@dimen/pad_10"
+    android:drawableStart="@drawable/edit_copy"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:padding="@dimen/pad_8"
+    android:text="News Feed"
+    android:textColor="@color/selector_txt_color" />

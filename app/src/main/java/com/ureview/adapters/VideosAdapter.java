@@ -3,6 +3,7 @@ package com.ureview.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
@@ -44,9 +44,19 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, final int position) {
         VideoModel videoModel = videoList.get(position);
-        RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
-//        requestOptions.placeholder(R.drawable.ic_launcher_background);
-        Glide.with(context).load(videoModel.videoPosterImage).apply(requestOptions).into(holder.imgVideo);
+
+        if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(videoModel.videoPosterImage)
+                    .apply(options)
+                    .into(holder.imgVideo);
+        } else holder.imgVideo.setImageResource(R.drawable.ic_profile);
+
         holder.txtName.setText(videoModel.videoTitle);
         holder.txtTags.setText(videoModel.videoTags);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);

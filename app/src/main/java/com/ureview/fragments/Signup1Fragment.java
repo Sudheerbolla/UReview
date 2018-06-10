@@ -19,11 +19,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.listeners.ISearchClickListener;
 import com.ureview.models.CountriesModel;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomDialog;
@@ -113,20 +115,17 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         txtDob.setOnClickListener(this);
         txtNext.setOnClickListener(this);
         if (currentCountriesModel != null) {
-            txtCountryCode.setText("+"+currentCountriesModel.countryCode);
+            txtCountryCode.setText("+" + currentCountriesModel.countryCode);
         }
         initDatePicker();
         if (!TextUtils.isEmpty(firstName)) {
             edtFirstName.setText(firstName);
-            edtFirstName.setEnabled(false);
         }
         if (!TextUtils.isEmpty(lastName)) {
             edtLastName.setText(lastName);
-            edtLastName.setEnabled(false);
         }
         if (!TextUtils.isEmpty(email)) {
             edtEmail.setText(email);
-            edtEmail.setEnabled(false);
         }
     }
 
@@ -311,7 +310,13 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                         e.printStackTrace();
                     }
                 }
-                splashActivity.replaceFragment(Signup3Fragment.newInstance(), true, R.id.splashContainer);
+                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with UReview!", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(splashActivity, MainActivity.class));
+                        splashActivity.finishAffinity();
+                    }
+                }, null, true);
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());
             }

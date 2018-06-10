@@ -2,6 +2,7 @@ package com.ureview.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,33 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     @Override
     public void onBindViewHolder(NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = videoArrList.get(position);
-        RequestOptions reqOptons = RequestOptions.bitmapTransform(new RoundedCorners(10));
-        Glide.with(context).load(videoModel.videoPosterImage).apply(reqOptons).into(holder.imgLocation);
-        Glide.with(context).load(videoModel.categoryBgImage).into(holder.imgCatBg);
+        if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .bitmapTransform(new RoundedCorners(10))
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(videoModel.videoPosterImage)
+                    .apply(options)
+                    .into(holder.imgLocation);
+        } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
+
+        if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .bitmapTransform(new RoundedCorners(10))
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(videoModel.categoryBgImage)
+                    .apply(options)
+                    .into(holder.imgCatBg);
+        } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
+
+
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);

@@ -96,8 +96,19 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
                 if (iClickListener != null) iClickListener.onClick(view, position);
             }
         });
-        RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
-        Glide.with(context).load(followModel.user_image).apply(requestOptions).into(holder.imgProfile);
+
+        if (!TextUtils.isEmpty(followModel.user_image)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .bitmapTransform(new RoundedCorners(7))
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+            Glide.with(context)
+                    .load(followModel.user_image)
+                    .apply(options)
+                    .into(holder.imgProfile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+
     }
 
     @Override

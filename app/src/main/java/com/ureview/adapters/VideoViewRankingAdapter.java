@@ -1,13 +1,17 @@
 package com.ureview.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoViewsModel;
@@ -35,7 +39,7 @@ public class VideoViewRankingAdapter extends RecyclerView.Adapter<VideoViewRanki
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FollowersViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull FollowersViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         VideoViewsModel videoViewsModel = videoViewsModelArrayList.get(position);
         holder.txtName.setText(videoViewsModel.name);
         holder.txtSno.setText(videoViewsModel.rank);
@@ -48,6 +52,17 @@ public class VideoViewRankingAdapter extends RecyclerView.Adapter<VideoViewRanki
                 }
             }
         });
+        if (!TextUtils.isEmpty(videoViewsModel.user_image)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(videoViewsModel.user_image)
+                    .apply(options)
+                    .into(holder.imgProfile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
     }
 
     @Override

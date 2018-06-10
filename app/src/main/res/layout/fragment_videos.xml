@@ -6,13 +6,28 @@
     android:fillViewport="true"
     android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/rvVideos"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:paddingLeft="@dimen/pad_5"
-        android:paddingRight="@dimen/pad_5"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/rvVideos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingLeft="@dimen/pad_5"
+            android:paddingRight="@dimen/pad_5"
+            android:scrollbars="none" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtNoDatafound"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Data Found"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_20sp" />
+
+    </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>
