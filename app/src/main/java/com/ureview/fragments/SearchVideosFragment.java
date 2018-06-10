@@ -1,5 +1,7 @@
 package com.ureview.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.adapters.SearchVideosAdapter;
+import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.LocalStorage;
@@ -32,7 +35,7 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 
-public class SearchVideosFragment extends BaseFragment implements IParserListener<JsonElement>, Paginate.Callbacks {
+public class SearchVideosFragment extends BaseFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener {
     private View rootView;
     private CustomRecyclerView rvSearchVideo;
     private SearchVideosAdapter searchVideosAdapter;
@@ -41,6 +44,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private String userId;
     private ArrayList<VideoModel> videosArrList = new ArrayList<>();
     private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
+    private String currLat, currLng;
 
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
@@ -55,6 +59,10 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        if (mainActivity.mLastLocation != null) {
+            currLat = String.valueOf(mainActivity.mLastLocation.getLatitude());
+            currLng = String.valueOf(mainActivity.mLastLocation.getLongitude());
+        }
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
@@ -66,7 +74,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         rvSearchVideo = rootView.findViewById(R.id.rvSearchVideo);
         rvSearchVideo.setListPagination(this);
         txtNoData = rootView.findViewById(R.id.txtNoData);
-        searchVideosAdapter = new SearchVideosAdapter(getActivity());
+        searchVideosAdapter = new SearchVideosAdapter(getActivity(), this);
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
         videosArrList.clear();
@@ -85,8 +93,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             jsonObjectReq.put("longitude", "78.362000");
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
             jsonObjectReq.put("count", 10);
-            jsonObjectReq.put("current_latitude", "17.4138");
-            jsonObjectReq.put("current_longitude", "78.4398");
+            jsonObjectReq.put("current_latitude", currLat);
+            jsonObjectReq.put("current_longitude", currLng);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -159,6 +167,30 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     @Override
     public boolean hasLoadedAllItems() {
         return hasLoadedAllItems;
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.imgLocation:
+                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
+                break;
+            case R.id.txtViewCount:
+                mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id), true, R.id.mainContainer);
+                break;
+            case R.id.txtDistance:
+                VideoModel videoModel = videosArrList.get(position);
+                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
+                        + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(mapIntent);
+                break;
+        }
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+
     }
 }
 /*http://18.216.101.112/search-videos

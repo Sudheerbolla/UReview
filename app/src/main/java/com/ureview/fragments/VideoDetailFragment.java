@@ -1,14 +1,18 @@
-package com.ureview.activities;
+package com.ureview.fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -17,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -39,18 +44,34 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
+import com.google.gson.JsonElement;
+import com.ureview.BaseApplication;
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 import com.ureview.adapters.VideosAdapter;
+import com.ureview.listeners.IClickListener;
+import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.DialogUtils;
+import com.ureview.utils.LocalStorage;
+import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
+import com.ureview.wsutils.WSCallBacksListener;
+import com.ureview.wsutils.WSUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Locale;
 
-public class VideoDetailActivity extends BaseActivity implements VideoRendererEventListener, AdaptiveMediaSourceEventListener {
+import retrofit2.Call;
+
+public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
+        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement> {
 
     private ImageView imgCatBg, imgProfile;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtRatingno, txtLocation,
@@ -64,6 +85,8 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     private NestedScrollView nestedScrollView;
     //    private SimpleExoPlayer player;
     LoopingMediaSource loopingSource;
+    private View rootView;
+    private MainActivity mainActivity;
 
     //video player
     SurfaceView svPlayer;
@@ -88,34 +111,52 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     private Formatter mFormatter;
     private DataSource.Factory dataSourceFactory;
 
+    public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position) {
+        VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("news_feed", feedVideoList);
+        bundle.putInt("position", position);
+        videoDetailFragment.setArguments(bundle);
+        return videoDetailFragment;
+
+    }
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_video_detail);
+        mainActivity = (MainActivity) getActivity();
+    }
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_video_detail, container, false);
         getBundleData();
         initComponents();
 //        initVideoPlayer();
         initVideoPlayer2();
+        return rootView;
     }
 
     private void initVideoPlayer2() {
-        svPlayer = findViewById(R.id.sv_player);
-        prev = findViewById(R.id.prev);
-        rew = findViewById(R.id.rew);
-        btnPlay = findViewById(R.id.btnPlay);
-        ffwd = findViewById(R.id.ffwd);
-        next = findViewById(R.id.next);
-        timeCurrent = findViewById(R.id.time_current);
-        mediacontrollerProgress = findViewById(R.id.mediacontroller_progress);
-        playerEndTime = findViewById(R.id.player_end_time);
-        fullscreen = findViewById(R.id.fullscreen);
-        linMediaController = findViewById(R.id.lin_media_controller);
-        playerFrameLayout = findViewById(R.id.player_frame_layout);
+        svPlayer = rootView.findViewById(R.id.sv_player);
+        prev = rootView.findViewById(R.id.prev);
+        rew = rootView.findViewById(R.id.rew);
+        btnPlay = rootView.findViewById(R.id.btnPlay);
+        ffwd = rootView.findViewById(R.id.ffwd);
+        next = rootView.findViewById(R.id.next);
+        timeCurrent = rootView.findViewById(R.id.time_current);
+        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
+        playerEndTime = rootView.findViewById(R.id.player_end_time);
+        fullscreen = rootView.findViewById(R.id.fullscreen);
+        linMediaController = rootView.findViewById(R.id.lin_media_controller);
+        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         handler = new Handler();
         initDataSource();
-        initMp4Player(feedVideo.video);
+        initMp4Player();
 
         if (bAutoplay) {
             if (exoPlayer != null) {
@@ -127,9 +168,9 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     }
 
     private void initDataSource() {
-        dataSourceFactory =
-                new DefaultDataSourceFactory(this, Util.getUserAgent(this, "yourApplicationName"),
-                        new DefaultBandwidthMeter());
+        dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
+                Util.getUserAgent(mainActivity, "yourApplicationName"),
+                new DefaultBandwidthMeter());
     }
 
     private void initMediaControls() {
@@ -278,12 +319,12 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
 
     private void showController() {
         linMediaController.setVisibility(View.VISIBLE);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     private void hideMediaController() {
         linMediaController.setVisibility(View.GONE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     private void initPlayButton() {
@@ -303,19 +344,19 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
         });
     }
 
-    private void initMp4Player(String mp4URL) {
+    private void initMp4Player() {
+        if (feedVideo.video != null) {
+            MediaSource sampleSource =
+                    new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
+                            handler, new ExtractorMediaSource.EventListener() {
+                        @Override
+                        public void onLoadError(IOException error) {
 
-        MediaSource sampleSource =
-                new ExtractorMediaSource(Uri.parse(mp4URL), dataSourceFactory, new DefaultExtractorsFactory(),
-                        handler, new ExtractorMediaSource.EventListener() {
-                    @Override
-                    public void onLoadError(IOException error) {
+                        }
+                    });
 
-                    }
-                });
-
-
-        initExoPlayer(sampleSource);
+            initExoPlayer(sampleSource);
+        }
     }
 
     private void initExoPlayer(MediaSource sampleSource) {
@@ -325,16 +366,18 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
             TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
             // 2. Create the player
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(mainActivity, trackSelector);
         }
+        initMediaControls();
+        startVideoPlaying(sampleSource);
+    }
 
+    private void startVideoPlaying(MediaSource sampleSource) {
         exoPlayer.prepare(sampleSource);
 
         exoPlayer.setVideoSurfaceView(svPlayer);
 
         exoPlayer.setPlayWhenReady(true);
-
-        initMediaControls();
     }
 
     private void initHLSPlayer(String dashUrl) {
@@ -350,21 +393,21 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
                               int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
                               long mediaEndTimeMs, long elapsedRealtimeMs) {
-
+        Toast.makeText(mainActivity, "on load started", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
                                 int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
                                 long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-
+        Toast.makeText(mainActivity, "on load completed", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
                                int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
                                long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-
+        Toast.makeText(mainActivity, "on load cancelled", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -372,7 +415,7 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
                             int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
                             long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded,
                             IOException error, boolean wasCanceled) {
-
+        Toast.makeText(mainActivity, "on load error", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -386,78 +429,9 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
 
     }
 
-  /*  private void initVideoPlayer() {
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-
-        player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
-//        playerView.setUseController(true);
-//        playerView.requestFocus();
-//        playerView.setPlayer(player);
-
-        Uri mp4VideoUri = Uri.parse(feedVideo.video); //Radnom 540p indian channel
-
-        DefaultBandwidthMeter bandwidthMeterA = new DefaultBandwidthMeter();
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "videoplayer"), bandwidthMeterA);
-
-        MediaSource videoSource = new HlsMediaSource(mp4VideoUri, dataSourceFactory, 1, null, null);
-        loopingSource = new LoopingMediaSource(videoSource);
-
-        player.prepare(loopingSource);
-
-        player.addListener(new Player.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-            }
-
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-            }
-
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-
-            }
-
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
-            }
-
-            @Override
-            public void onRepeatModeChanged(int repeatMode) {
-
-            }
-
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-                player.stop();
-                player.prepare(loopingSource);
-                player.setPlayWhenReady(true);
-            }
-
-            @Override
-            public void onPositionDiscontinuity() {
-
-            }
-
-
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-            }
-        });
-
-        player.setPlayWhenReady(true);
-        player.setVideoDebugListener(this);
-    }*/
-
     private void getBundleData() {
-        if (getIntent() != null && getIntent().getExtras() != null) {
-            Bundle bundle = getIntent().getExtras();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
             if (bundle.containsKey("news_feed")) {
                 feedVideoList = bundle.getParcelableArrayList("news_feed");
                 if (bundle.containsKey("position")) {
@@ -469,30 +443,36 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     }
 
     private void initComponents() {
+        mainActivity.setToolBar("", "", "", false, true, false, false, false);
 //        playerView = findViewById(R.id.playerView);
-        txtVideoTitle = findViewById(R.id.txtVideoTitle);
-        imgCatBg = findViewById(R.id.imgCatBg);
-        txtCategory = findViewById(R.id.txtCategory);
-        txtViewCount = findViewById(R.id.txtViewCount);
-        ratingBar = findViewById(R.id.ratingBar);
-        txtRatingno = findViewById(R.id.txtRatingno);
-        llRate = findViewById(R.id.llRate);
-        llShare = findViewById(R.id.llShare);
-        llDirection = findViewById(R.id.llDirection);
-        llReport = findViewById(R.id.llReport);
-        txtLocation = findViewById(R.id.txtLocation);
-        txtTags = findViewById(R.id.txtTags);
-        imgProfile = findViewById(R.id.imgProfile);
-        txtFollowStatus = findViewById(R.id.txtFollowStatus);
-        txtUserName = findViewById(R.id.txtUserName);
-        txtUserLoc = findViewById(R.id.txtUserLoc);
-        rvRelatedVideos = findViewById(R.id.rvRelatedVideos);
-        txtNoData = findViewById(R.id.txtNoData);
-        nestedScrollView = findViewById(R.id.nestedScrollView);
+        txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
+        imgCatBg = rootView.findViewById(R.id.imgCatBg);
+        txtCategory = rootView.findViewById(R.id.txtCategory);
+        txtViewCount = rootView.findViewById(R.id.txtViewCount);
+        ratingBar = rootView.findViewById(R.id.ratingBar);
+        txtRatingno = rootView.findViewById(R.id.txtRatingno);
+        llRate = rootView.findViewById(R.id.llRate);
+        llShare = rootView.findViewById(R.id.llShare);
+        llDirection = rootView.findViewById(R.id.llDirection);
+        llReport = rootView.findViewById(R.id.llReport);
+        txtLocation = rootView.findViewById(R.id.txtLocation);
+        txtTags = rootView.findViewById(R.id.txtTags);
+        imgProfile = rootView.findViewById(R.id.imgProfile);
+        txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
+        txtUserName = rootView.findViewById(R.id.txtUserName);
+        txtUserLoc = rootView.findViewById(R.id.txtUserLoc);
+        rvRelatedVideos = rootView.findViewById(R.id.rvRelatedVideos);
+        txtNoData = rootView.findViewById(R.id.txtNoData);
+        nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
         nestedScrollView.smoothScrollTo(0, 0);
 
+        llRate.setOnClickListener(this);
+        llDirection.setOnClickListener(this);
+        llReport.setOnClickListener(this);
+        llShare.setOnClickListener(this);
+
         rvRelatedVideos.setNestedScrollingEnabled(false);
-        videosAdapter = new VideosAdapter(this);
+        videosAdapter = new VideosAdapter(mainActivity, this);
         rvRelatedVideos.setAdapter(videosAdapter);
 
         if (feedVideo != null)
@@ -525,19 +505,19 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-//        player.release();
+        exoPlayer.release();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
-//        player.stop();
+        exoPlayer.stop();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
 //        if (player != null) {
 //            if (loopingSource != null) player.prepare(loopingSource);
@@ -577,6 +557,123 @@ public class VideoDetailActivity extends BaseActivity implements VideoRendererEv
 
     @Override
     public void onVideoDisabled(DecoderCounters counters) {
+
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        VideoModel toBeAdded = feedVideo;
+        feedVideo = feedVideoList.get(position);
+        feedVideoList.remove(position);
+        feedVideoList.add(toBeAdded);
+        videosAdapter.addVideos(feedVideoList);
+        if (feedVideo != null) {
+            setVideoDetails();
+            initMp4Player();
+        }
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.llRate:
+                showRatingDialog();
+                break;
+            case R.id.llShare:
+                showShareDialog();
+                break;
+            case R.id.llDirection:
+                showDirectionMaps();
+                break;
+            case R.id.llReport:
+                mainActivity.replaceFragment(ReportVideoFragment.newInstance(), true, R.id.mainContainer);
+                break;
+        }
+    }
+
+    private void showDirectionMaps() {
+        String url = "http://maps.google.com/maps?saddr=" + feedVideo.userLatitude + "," + feedVideo.userLongitude
+                + "&daddr=" + feedVideo.videoLatitude + "," + feedVideo.videoLongitude;
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(mapIntent);
+    }
+
+    private void showShareDialog() {
+        try {
+//            Intent shareIntent = new Intent();
+//            shareIntent.setAction(Intent.ACTION_SEND);
+//            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(feedVideo.video));
+//            shareIntent.setType("text/plain");
+//            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+//            startActivity(Intent.createChooser(shareIntent, "Share video"));
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedVideo.video);
+            startActivity(Intent.createChooser(sharingIntent, "share video"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showRatingDialog() {
+        final TextView textView = new TextView(mainActivity);
+        DialogUtils.showRatingDialog(mainActivity, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestForGiveRating(textView.getText().toString().trim());
+            }
+        }, textView);
+    }
+
+    private void requestForGiveRating(String rating) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("user_id", LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+            jsonObjectReq.put("video_id", feedVideo.id);
+            jsonObjectReq.put("rating", rating);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().videoRatingByUser(StaticUtils.getRequestBody(jsonObjectReq));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_RATING_VIDEO, call, this);
+
+    }
+
+    @Override
+    public void successResponse(int requestCode, JsonElement response) {
+        switch (requestCode) {
+            case WSUtils.REQ_FOR_RATING_VIDEO:
+                parseVideoRatingResponse();
+                break;
+        }
+    }
+
+    private void parseVideoRatingResponse() {
+        DialogUtils.showSimpleDialog(mainActivity, "Rating submitted successfully", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        }, true);
+    }
+
+    @Override
+    public void errorResponse(int requestCode, String error) {
+
+    }
+
+    @Override
+    public void noInternetConnection(int requestCode) {
 
     }
 }

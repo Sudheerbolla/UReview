@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
+import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
 
@@ -19,11 +20,13 @@ import java.util.ArrayList;
 
 public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapter.NewsFeedViewHolder> {
 
+    private final IClickListener iClickListener;
     private Context context;
     private ArrayList<VideoModel> videoArrList = new ArrayList<>();
 
-    public SearchVideosAdapter(Context context) {
+    public SearchVideosAdapter(Context context, IClickListener iClickListener) {
         this.context = context;
+        this.iClickListener = iClickListener;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     }
 
     @Override
-    public void onBindViewHolder(NewsFeedViewHolder holder, final int position) {
+    public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = videoArrList.get(position);
         RequestOptions reqOptons = RequestOptions.bitmapTransform(new RoundedCorners(10));
         Glide.with(context).load(videoModel.videoPosterImage).apply(reqOptons).into(holder.imgLocation);
@@ -49,6 +52,31 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         if (position == videoArrList.size() - 1) {
             holder.dividerView.setVisibility(View.GONE);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.imgLocation, holder.getAdapterPosition());
+                }
+            }
+        });
+        holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.txtViewCount, holder.getAdapterPosition());
+                }
+            }
+        });
+        holder.txtDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.txtDistance, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override

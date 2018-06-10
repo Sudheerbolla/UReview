@@ -197,6 +197,7 @@ public class VideoMP4Activity extends Activity implements AdaptiveMediaSourceEve
 
             @Override
             public void run() {
+                btnPlay.setSelected(bAutoplay);
                 if (exoPlayer != null && bIsPlaying) {
                     mediacontrollerProgress.setMax(0);
                     mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
@@ -222,7 +223,7 @@ public class VideoMP4Activity extends Activity implements AdaptiveMediaSourceEve
                     // the progress bar's position.
                     return;
                 }
-
+                btnPlay.setSelected(bIsPlaying);
                 exoPlayer.seekTo(progress * 1000);
             }
 
@@ -242,7 +243,6 @@ public class VideoMP4Activity extends Activity implements AdaptiveMediaSourceEve
     }
 
     private void toggleMediaControls() {
-
         if (bControlsActive) {
             hideMediaController();
             bControlsActive = false;
@@ -268,6 +268,7 @@ public class VideoMP4Activity extends Activity implements AdaptiveMediaSourceEve
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnPlay.setSelected(bIsPlaying);
                 if (bIsPlaying) {
                     exoPlayer.setPlayWhenReady(false);
                     bIsPlaying = false;

@@ -29,10 +29,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         this.context = context;
     }
 
-    public VideosAdapter(Context context, ArrayList<VideoModel> videoList, IClickListener iClickListener) {
+    public VideosAdapter(Context context, IClickListener iClickListener) {
         this.context = context;
         this.iClickListener = iClickListener;
-        this.videoList = videoList;
     }
 
     @NonNull
@@ -42,7 +41,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
         VideoModel videoModel = videoList.get(position);
         RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
 //        requestOptions.placeholder(R.drawable.ic_launcher_background);
@@ -54,6 +53,14 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.txtDuration.setText(videoModel.videoDuration);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.itemView, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override

@@ -172,6 +172,6 @@
         android:id="@+id/dividerView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/pad_15"
-        android:layout_below="@id/txtShareCount" />
+        android:layout_below="@id/txtViewCount" />
 
 </RelativeLayout>

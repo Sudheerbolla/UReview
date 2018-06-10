@@ -1,6 +1,7 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,12 +17,12 @@ import com.google.gson.JsonElement;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
-import com.ureview.activities.VideoDetailActivity;
 import com.ureview.adapters.HomeCategoryAdapter;
 import com.ureview.adapters.NewsFeedAdapter;
 import com.ureview.adapters.VideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
+import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.VideoModel;
@@ -41,7 +42,7 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 
-public class HomeFragment extends BaseFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, Paginate.Callbacks {
+public class HomeFragment extends BaseFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, Paginate.Callbacks, IVideosClickListener {
     private static HomeFragment instance;
     private View rootView;
     private CustomRecyclerView rvCategories, rvNewsFeed, rvNearByVideos, rvTopRated, rvPopularsearch;
@@ -228,16 +229,31 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 updateCategoryList(position, false);
                 break;
             case R.id.relItem:
-                Intent intent = new Intent(mainActivity, VideoDetailActivity.class);
-                intent.putExtra("news_feed", feedVideoList);
-                intent.putExtra("position", position);
-                startActivity(intent);
-//                startActivity(new Intent(mainActivity, VideoPlayerActivity.class));
-//                startActivity(new Intent(mainActivity, VideoMP4Activity.class));
+                mainActivity.replaceFragment(VideoDetailFragment.newInstance(feedVideoList, position), true, R.id.mainContainer);
+                break;
+            case R.id.imgProfile:
+            case R.id.txtName:
+            case R.id.txtLoc:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId), true, R.id.mainContainer);
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onWatchCountClick(View view, int position) {
+        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
+    }
+
+    @Override
+    public void onDistanceClick(View view, int position) {
+        VideoModel videoModel = feedVideoList.get(position);
+        String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
+                + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
     }
 
     private void updateCategoryList(int position, boolean callApi) {

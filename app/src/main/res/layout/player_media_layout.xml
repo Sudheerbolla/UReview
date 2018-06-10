@@ -37,7 +37,10 @@
 
         <ImageButton
             android:id="@+id/btnPlay"
-            style="@android:style/MediaButton.Play" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_play_pause" />
 
         <ImageButton
             android:id="@+id/ffwd"

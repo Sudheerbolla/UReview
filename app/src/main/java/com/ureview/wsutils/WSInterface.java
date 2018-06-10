@@ -55,6 +55,12 @@ public interface WSInterface {
     @GET("/user-notications")
     Call<JsonElement> getNotifications(@Query("user_id") String userId);
 
+    @POST("/video-rating-by-user")
+    Call<JsonElement> videoRatingByUser(@Body RequestBody params);
+
+    @POST("/report-video")
+    Call<JsonElement> reportVideo(@Body RequestBody params);
+
     @POST("/delete-notification")
     Call<JsonElement> deleteNotification(@Body RequestBody params);
 

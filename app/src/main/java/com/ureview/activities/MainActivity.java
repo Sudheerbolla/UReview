@@ -102,7 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
 
-            if (isGPSEnabled) {
+            if (mLastLocation == null && isGPSEnabled) {
                 mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 10, this);
                 mLastLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
@@ -357,7 +357,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void setProfileFragment() {
         setSelectedTab(imgProfile, imgProfileView);
-        replaceFragment(ProfileFragment.newInstance(), false, R.id.mainContainer);
+        replaceFragment(ProfileFragment.newInstance(), true, R.id.mainContainer);
     }
 
     @Override

@@ -58,16 +58,16 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
             if (isFollowers) {
                 if (followModel.status.equalsIgnoreCase("1")) {
                     holder.txtFollowStatus.setText("Follow");
-                    holder.txtFollowStatus.setSelected(true);
+                    holder.txtFollowStatus.setSelected(false);
                     holder.imgClear.setVisibility(View.VISIBLE);
                 } else if (followModel.status.equalsIgnoreCase("2")) {
                     holder.txtFollowStatus.setText("Unfollow");
-                    holder.txtFollowStatus.setSelected(false);
+                    holder.txtFollowStatus.setSelected(true);
                     holder.imgClear.setVisibility(View.GONE);
                 }
             } else {
                 holder.txtFollowStatus.setText("Follow");
-                holder.txtFollowStatus.setSelected(true);
+                holder.txtFollowStatus.setSelected(false);
                 holder.imgClear.setVisibility(View.VISIBLE);
             }
         }

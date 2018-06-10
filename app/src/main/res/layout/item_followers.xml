@@ -30,6 +30,31 @@
             android:src="@drawable/ic_clear"
             android:visibility="gone" />
 
+        <LinearLayout
+            android:id="@+id/llViewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/pad_8"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtViewNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="59"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_14sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Views"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_14sp" />
+        </LinearLayout>
+
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtFollowStatus"
             android:layout_width="wrap_content"

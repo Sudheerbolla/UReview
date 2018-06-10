@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
-import com.ureview.listeners.IClickListener;
+import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
 
@@ -22,10 +22,10 @@ import java.util.ArrayList;
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder> {
 
     private Context context;
-    IClickListener iClickListener;
+    IVideosClickListener iClickListener;
     private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
 
-    public NewsFeedAdapter(Context context, IClickListener iClickListener) {
+    public NewsFeedAdapter(Context context, IVideosClickListener iClickListener) {
         this.context = context;
         this.iClickListener = iClickListener;
     }
@@ -61,6 +61,38 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             @Override
             public void onClick(View view) {
                 if (iClickListener != null) iClickListener.onClick(holder.relItem, position);
+            }
+        });
+        holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null)
+                    iClickListener.onWatchCountClick(holder.txtViewCount, position);
+            }
+        });
+        holder.txtDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null)
+                    iClickListener.onDistanceClick(holder.txtDistance, position);
+            }
+        });
+        holder.imgProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(holder.imgProfile, position);
+            }
+        });
+        holder.txtName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(holder.txtName, position);
+            }
+        });
+        holder.txtLoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(holder.txtLoc, position);
             }
         });
     }

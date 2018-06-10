@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder> {
 
+    private boolean showViewCount;
     private Context context;
     private IClickListener iClickListener;
     private ArrayList<PeopleModel> peopleArrayList;
@@ -33,6 +35,14 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         this.peopleArrayList = peopleArrayList;
     }
 
+    public PeopleAdapter(Context context, ArrayList<PeopleModel> peopleArrayList,
+                         IClickListener iClickListener, boolean showViewCount) {
+        this.context = context;
+        this.iClickListener = iClickListener;
+        this.peopleArrayList = peopleArrayList;
+        this.showViewCount = showViewCount;
+    }
+
     @NonNull
     @Override
     public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,7 +50,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PeopleViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final PeopleViewHolder holder, final int position) {
         PeopleModel peopleModel = peopleArrayList.get(position);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.mipmap.ic_launcher);
@@ -50,6 +60,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
 //            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
         holder.ratingBar.setVisibility(View.GONE);
 //        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
+        holder.llViewCount.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
         holder.imgClear.setVisibility(View.GONE);
         holder.txtReviewCount.setVisibility(View.GONE);
         holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Following");
@@ -79,12 +90,14 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         private RatingBar ratingBar;
         private CircleImageView imgProfile;
         private RelativeLayout relBody;
+        private LinearLayout llViewCount;
         private ImageView imgClear;
 
         public PeopleViewHolder(View itemView) {
             super(itemView);
             txtFollowStatus = itemView.findViewById(R.id.txtFollowStatus);
             txtName = itemView.findViewById(R.id.txtName);
+            llViewCount = itemView.findViewById(R.id.llViewCount);
             txtReviewCount = itemView.findViewById(R.id.txtReviewCount);
             ratingBar = itemView.findViewById(R.id.ratingBar);
             imgProfile = itemView.findViewById(R.id.imgProfile);

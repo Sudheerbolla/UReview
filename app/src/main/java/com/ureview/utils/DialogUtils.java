@@ -8,7 +8,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ureview.R;
 import com.ureview.utils.views.CustomTextView;
@@ -122,6 +124,63 @@ public class DialogUtils {
 
             alertDialog.setCancelable(isCancelable);
             alertDialog.setCanceledOnTouchOutside(isCancelable);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showRatingDialog(final Context mContext, final View.OnClickListener positiveClick, final TextView givenRating) {
+        try {
+            CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
+
+            final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_dialog);
+            txtHeading = alertDialog.findViewById(R.id.txtHeading);
+            txtMessage = alertDialog.findViewById(R.id.txtMessage);
+            final RatingBar ratingBar = alertDialog.findViewById(R.id.ratingBar);
+            ratingBar.setVisibility(View.VISIBLE);
+            txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
+            txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
+            txtNegativeButton.setVisibility(View.GONE);
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            txtHeading.setText("Rate this Video");
+            txtPositiveButton.setText("Submit your rating");
+            txtMessage.setVisibility(View.GONE);
+            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating,
+                                            boolean fromUser) {
+                    // TODO Auto-generated method stub
+                    Toast.makeText(mContext, Float.toString(rating), Toast.LENGTH_LONG).show();
+
+                }
+
+            });
+            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (positiveClick != null) {
+                        givenRating.setText(String.valueOf(ratingBar.getRating()));
+                        positiveClick.onClick(v);
+                    }
+                }
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
         } catch (Exception e) {
             e.printStackTrace();

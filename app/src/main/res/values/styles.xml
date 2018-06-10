@@ -22,7 +22,7 @@
 
     <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog">
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+        <!--<item name="windowNoTitle">true</item>-->
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowFullscreen">false</item>
     </style>
@@ -36,7 +36,16 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">@dimen/pad_7</item>
         <item name="android:textColorHint">@color/color_white</item>
-        <item name="android:padding">@dimen/pad_10</item>
+        <item name="android:paddingLeft">@dimen/pad_12</item>
+        <item name="android:paddingRight">@dimen/pad_12</item>
+        <item name="android:paddingTop">@dimen/pad_7</item>
+        <item name="android:paddingBottom">@dimen/pad_7</item>
+    </style>
+
+    <style name="CustomRatingBarXL" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_star_xl</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">@dimen/pad_30</item>
     </style>
 
     <style name="CustomRatingBarL" parent="@android:style/Widget.RatingBar">
