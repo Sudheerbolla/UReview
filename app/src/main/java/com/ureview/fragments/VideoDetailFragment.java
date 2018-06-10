@@ -45,6 +45,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Locale;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
@@ -110,6 +112,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     private StringBuilder mFormatBuilder;
     private Formatter mFormatter;
     private DataSource.Factory dataSourceFactory;
+    private String userId;
 
     public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position) {
         VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
@@ -125,6 +128,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
 
@@ -161,6 +165,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         if (bAutoplay) {
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(true);
+                btnPlay.setSelected(true);
                 bIsPlaying = true;
                 setProgress();
             }
@@ -262,6 +267,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             @Override
             public void run() {
                 if (exoPlayer != null && bIsPlaying) {
+                    btnPlay.setSelected(bIsPlaying);
                     mediacontrollerProgress.setMax(0);
                     mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
                     int mCurrentPosition = (int) exoPlayer.getCurrentPosition() / 1000;
@@ -332,6 +338,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnPlay.setSelected(bIsPlaying);
                 if (bIsPlaying) {
                     exoPlayer.setPlayWhenReady(false);
                     bIsPlaying = false;
@@ -492,7 +499,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         Glide.with(this).load(feedVideo.userImage).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
         txtUserLoc.setText(feedVideo.userLocation);
-        txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ? "Follow" : "Following");
+        txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ? "Follow" : "Unfollow");
+        txtFollowStatus.setOnClickListener(this);
         txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus));
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
@@ -581,6 +589,13 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.txtFollowStatus:
+                if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
+                    requestForUnFollowUser();
+                } else {
+                    requestForFollowUser();
+                }
+                break;
             case R.id.llRate:
                 showRatingDialog();
                 break;
@@ -644,12 +659,69 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     }
 
+    private void requestForFollowUser() {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject());
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
+
+    private void requestForUnFollowUser() {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject());
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
+    }
+
+    private RequestBody getRequestBodyObject() {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("id", Integer.parseInt(userId));
+            jsonObjectReq.put("follow_id", Integer.parseInt(feedVideo.userId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return StaticUtils.getRequestBody(jsonObjectReq);
+    }
+
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
             case WSUtils.REQ_FOR_RATING_VIDEO:
                 parseVideoRatingResponse();
                 break;
+            case WSUtils.REQ_FOR_FOLLOW_USER:
+                parseFollowUserResponse((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_UN_FOLLOW_USER:
+                parseUnFollowUser((JsonObject) response);
+                break;
+        }
+    }
+
+    private void parseFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    txtFollowStatus.setText("Unfollow");
+                    feedVideo.followStatus = "follow";
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseUnFollowUser(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    txtFollowStatus.setText("Follow");
+                    feedVideo.followStatus = "Unfollow";
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

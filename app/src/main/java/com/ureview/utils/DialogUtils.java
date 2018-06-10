@@ -10,7 +10,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ureview.R;
 import com.ureview.utils.views.CustomTextView;
@@ -157,17 +156,6 @@ public class DialogUtils {
             txtHeading.setText("Rate this Video");
             txtPositiveButton.setText("Submit your rating");
             txtMessage.setVisibility(View.GONE);
-            ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-
-                @Override
-                public void onRatingChanged(RatingBar ratingBar, float rating,
-                                            boolean fromUser) {
-                    // TODO Auto-generated method stub
-                    Toast.makeText(mContext, Float.toString(rating), Toast.LENGTH_LONG).show();
-
-                }
-
-            });
             txtPositiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

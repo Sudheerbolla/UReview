@@ -75,7 +75,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.imgClear.setVisibility(View.GONE);
 //        holder.txtReviewCount.setVisibility(View.GONE);
-        holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Following");
+        holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Unfollow");
         holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus));
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
             @Override
