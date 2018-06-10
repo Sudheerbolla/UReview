@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -145,7 +144,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()
                         .placeholder(R.drawable.ic_profile)
-                        .bitmapTransform(new RoundedCorners(7))
                         .fitCenter()
                         .error(R.drawable.ic_profile);
                 Glide.with(this)

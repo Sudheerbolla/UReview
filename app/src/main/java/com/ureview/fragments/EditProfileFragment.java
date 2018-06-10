@@ -225,6 +225,22 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                             case "Gallery":
                                 checkAndRequestPermissionGallery();
                                 break;
+                            case "View Picture":
+                                if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
+                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
+                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                    return;
+                                }
+                                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
+                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                }
+                                break;
+                            case "Remove Picture":
+
+                                break;
                             case "Cancel":
                                 break;
                             default:
