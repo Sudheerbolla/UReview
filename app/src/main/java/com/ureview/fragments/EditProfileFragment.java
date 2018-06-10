@@ -215,7 +215,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 showDOBDialog();
                 break;
             case R.id.relImage:
-                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "Cancel"}, relImage, new View.OnClickListener() {
+                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "View Picture", "Remove Picture", "Cancel"}, relImage, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch ((String) view.getTag()) {
@@ -239,7 +239,16 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                                 }
                                 break;
                             case "Remove Picture":
-
+                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
+                                setImageAttachment(uri);
+//                                try {
+//                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
+//                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
+//                                    profileImage = imageBytes(profilePicBitmap);
+//                                } catch (FileNotFoundException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                imgProfile.setImageResource(R.drawable.ic_profile);
                                 break;
                             case "Cancel":
                                 break;
@@ -378,8 +387,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-        return encodedImage;
+        return Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
     }
 
     private void checkValidations() {
@@ -450,15 +458,16 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void setImageAttachment(Uri cameraFile) {
         RequestOptions options = new RequestOptions()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_profile)
                 .fitCenter()
-                .error(R.mipmap.ic_launcher);
+                .error(R.drawable.ic_profile);
 
         Glide.with(this)
                 .load(cameraFile)
                 .apply(options)
                 .into(imgProfile);
 
+        profileImage = "null";
 //        profilePicBitmap = StaticUtils.getImageFromCamera(mainActivity, cameraFile);
         final InputStream imageStream;
         try {
@@ -469,7 +478,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void successResponse(int requestCode, JsonElement response) {

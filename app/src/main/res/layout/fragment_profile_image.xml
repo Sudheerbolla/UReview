@@ -17,6 +17,6 @@
         android:layout_height="match_parent"
         android:layout_below="@id/imgBack"
         android:layout_margin="@dimen/pad_15"
-        android:scaleType="matrix" />
-
+        />
+<!--android:scaleType="matrix" -->
 </RelativeLayout>

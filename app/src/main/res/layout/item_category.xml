@@ -12,4 +12,5 @@
     android:gravity="center"
     android:padding="@dimen/pad_8"
     android:text="News Feed"
-    android:textColor="@color/selector_txt_color" />
+    android:textColor="@color/selector_txt_color"
+    android:textSize="@dimen/txt_size_16sp" />
