@@ -16,9 +16,9 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-feature android:name="android.hardware.camera" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature
@@ -31,6 +31,7 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -117,6 +118,7 @@
         <activity android:name=".activities.VideoDetailActivity" />
         <activity android:name=".activities.VideoPlayerActivity" />
         <activity android:name=".activities.VideoMP4Activity" />
+        <activity android:name=".activities.PreviewActivity" />
 
         <!-- FCM related -->
 

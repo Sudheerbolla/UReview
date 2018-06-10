@@ -61,13 +61,11 @@
             <com.ureview.utils.views.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:padding="@dimen/pad_10"
                 android:text="Location Radius"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_16sp"
                 android:textStyle="bold" />
-
 
             <!--  <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
                   android:id="@+id/rangeSeekbar"
@@ -79,13 +77,13 @@
                   rsb:absoluteMaxValue="100"
                   rsb:absoluteMinValue="0" />-->
 
-
             <org.florescu.android.rangeseekbar.RangeSeekBar
                 android:id="@+id/rangeSeekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/pad_8"
                 android:layout_marginStart="@dimen/pad_8"
+                rsb:activeColor="@color/app_color_dark"
                 rsb:showLabels="false" />
 
             <RelativeLayout

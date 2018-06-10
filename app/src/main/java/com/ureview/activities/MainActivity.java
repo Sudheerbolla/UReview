@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -36,10 +37,13 @@ import com.ureview.fragments.VideoReviewFragment;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
 import com.ureview.utils.Constants;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, /*LocationBottomSheetFragment.OnLocationFilterOptionSelected*/LocationFilterFragment.OnLocationFilterOptionSelected {
 
@@ -133,15 +137,81 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (StaticUtils.isAllPermissionsGranted(grantResults)) {
-            initBottomBar();
-            initTopBar();
-            proceedWithFlow();
-            getCurrentLocation();
+        if (requestCode == PERMISSION_FOR_CAMERA) {
+            if (grantResults.length < 1) {
+                StaticUtils.showToast(this, "Camera Permission Denied");
+                return;
+            }
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    StaticUtils.showToast(this, "Camera Permission Denied");
+                    return;
+                }
+            }
+            clickOnCamera();
+        } else if (requestCode == PERMISSION_FOR_STORAGE) {
+            if (grantResults.length < 1) {
+                StaticUtils.showToast(this, "Gallery Permission Denied");
+                return;
+            }
+
+            // Verify that each required permission has been granted, otherwise return false.
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    StaticUtils.showToast(this, "Gallery Permission Denied");
+                    return;
+                }
+            }
+            clickOnGalary();
         } else {
-            StaticUtils.showToast(this, "Location permission is mandatory to access your location");
-            checkPermissions();
+            if (StaticUtils.isAllPermissionsGranted(grantResults)) {
+                initBottomBar();
+                initTopBar();
+                proceedWithFlow();
+                getCurrentLocation();
+            } else {
+                StaticUtils.showToast(this, "Location permission is mandatory to access your location");
+                checkPermissions();
+            }
+
         }
+    }
+
+    private Uri selectedVideoUri;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
+                selectedVideoUri = data.getData();
+                openVideoIntent(selectedVideoUri);
+            } else if (requestCode == REQUEST_TAKE_CAMERA_VIDEO) {
+                selectedVideoUri = data.getData();
+                openVideoIntent(selectedVideoUri);
+            }
+        }
+    }
+
+    private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
+    private static final int REQUEST_TAKE_CAMERA_VIDEO = 101;
+
+    private void clickOnGalary() {
+        try {
+            Intent intent = new Intent();
+            intent.setType("video/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void clickOnCamera() {
+        Intent captureVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+//        captureVideoIntent.putExtra("android.intent.extra.durationLimit", 100000);
+        captureVideoIntent.putExtra("EXTRA_VIDEO_QUALITY", 0);
+        startActivityForResult(captureVideoIntent, REQUEST_TAKE_CAMERA_VIDEO);
     }
 
     private void proceedWithFlow() {
@@ -221,11 +291,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     setSearchFragment();
                 break;
             case R.id.llVideo:
-                if (!imgVideo.isSelected()) {
-                    setSelectedTab(imgVideo, null);
+//                if (!imgVideo.isSelected()) {
+//                    setSelectedTab(imgVideo, null);
 //                setUploadVideoFragment();
-                    openVideoIntent();
-                }
+//                openVideoIntent();
+//                }
+                DialogUtils.showDropDownListStrings(this, new String[]{"Camera", "Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch ((String) view.getTag()) {
+                            case "Camera":
+                                checkAndRequestPermissionCamera();
+                                break;
+                            case "Gallery":
+                                checkAndRequestPermissionGallery();
+                                break;
+                            case "Cancel":
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+
                 break;
             case R.id.llProfile:
                 if (!imgProfile.isSelected())
@@ -252,6 +340,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
         }
     }
+
+    private final int PERMISSION_FOR_CAMERA = 121;
+    private final int PERMISSION_FOR_STORAGE = 122;
+
+    private void checkAndRequestPermissionCamera() {
+        ArrayList<String> neededPermissions = new ArrayList<>();
+        if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            neededPermissions.add(Manifest.permission.CAMERA);
+        }
+        if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            neededPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
+        if (neededPermissions.size() > 0) {
+            RuntimePermissionUtils.requestForPermission(this, neededPermissions.toArray(new String[neededPermissions.size()]), PERMISSION_FOR_CAMERA);
+        } else {
+            clickOnCamera();
+        }
+    }
+
+    private void checkAndRequestPermissionGallery() {
+        ArrayList<String> neededPermissions = new ArrayList<>();
+        if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            neededPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (neededPermissions.size() > 0) {
+            RuntimePermissionUtils.requestForPermission(this, neededPermissions.toArray(new String[neededPermissions.size()]), PERMISSION_FOR_STORAGE);
+        } else {
+            clickOnGalary();
+        }
+    }
+
 
     private BaseFragment getCurrentFragment() {
         return (BaseFragment) fragmentManager.findFragmentById(R.id.mainContainer);
@@ -283,10 +403,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         locationBottomSheetFragment.show(getSupportFragmentManager(), locationBottomSheetFragment.getTag());
     }
 
-    private void openVideoIntent() {
+    private void openVideoIntent(Uri selectedVideoUri) {
 //        Intent captureVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
 //        startActivityForResult(captureVideoIntent,VIDEO_CAPTURED);
-        startActivity(new Intent(this, VideoRecorder.class));
+        Intent intent = new Intent(this, VideoRecorder.class);
+        intent.putExtra("selectedVideoUri", selectedVideoUri);
+        startActivity(intent);
     }
 
     private void setSelectedTab(ImageView selectedView, ImageView imgH) {
