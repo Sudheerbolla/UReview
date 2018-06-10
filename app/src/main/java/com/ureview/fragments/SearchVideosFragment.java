@@ -176,7 +176,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                mainActivity.addFragment(VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id), true, R.id.mainContainer);
+                mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id), true, R.id.mainContainer);
                 break;
             case R.id.txtDistance:
                 VideoModel videoModel = videosArrList.get(position);
