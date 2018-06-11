@@ -35,7 +35,7 @@ public class WSUtils {
 
     public static final int REQ_FOR_CATEGORY_LIST = 121;
     public static final int REQ_FOR_NEWS_FEED_VIDEOS = 122;
-    public static final int REQ_FOR_VIDEO_LIST_BY_CAT = 123;
+    public static final int REQ_FOR_VIDEO_VIEWED_PEOPLE_LIST = 123;
     public static final int REQ_FOR_NEAR_BY_VIDEOS = 124;
     public static final int REQ_FOR_TOP_RATED_VIDEOS = 125;
     public static final int REQ_FOR_POPULAR_VIDEOS = 126;

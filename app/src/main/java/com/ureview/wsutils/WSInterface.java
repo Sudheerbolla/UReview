@@ -52,6 +52,9 @@ public interface WSInterface {
     @GET("search-users")
     Call<JsonElement> getSearchUsers(@QueryMap(encoded = true) HashMap<String, String> params);
 
+    @GET("get-video-viewed-userlist")
+    Call<JsonElement> getVideoViewedUserList(@QueryMap(encoded = true) HashMap<String, String> params);
+
     @GET("/user-notications")
     Call<JsonElement> getNotifications(@Query("user_id") String userId);
 

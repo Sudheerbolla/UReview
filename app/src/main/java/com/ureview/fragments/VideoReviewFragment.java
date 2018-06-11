@@ -11,8 +11,10 @@ import android.view.ViewGroup;
 
 import com.ureview.R;
 import com.ureview.adapters.VideosAdapter;
+import com.ureview.listeners.IVideosClickListener;
+import com.ureview.models.VideoModel;
 
-public class VideoReviewFragment extends BaseFragment {
+public class VideoReviewFragment extends BaseFragment implements IVideosClickListener {
     private View rootView;
     private RecyclerView rvTopVideos;
     private VideosAdapter videosAdapter;
@@ -27,10 +29,19 @@ public class VideoReviewFragment extends BaseFragment {
         rootView = inflater.inflate(R.layout.fragment_video_review, container, false);
         rvTopVideos = rootView.findViewById(R.id.rvTopVideos);
         rvTopVideos.setNestedScrollingEnabled(false);
-        videosAdapter = new VideosAdapter(getActivity());
+        videosAdapter = new VideosAdapter(getActivity(), this, false);
         rvTopVideos.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvTopVideos.setAdapter(videosAdapter);
         return rootView;
     }
 
+    @Override
+    public void onClick(View view, VideoModel videoModel, int position) {
+
+    }
+
+    @Override
+    public void onLongClick(View view, int position) {
+
+    }
 }

@@ -65,7 +65,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
                     .into(holder.imgProfile);
         } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
 
-        holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
+        if (peopleModel.firstName != null && peopleModel.lastName != null)
+            holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
 //        if (!TextUtils.isEmpty(peopleModel.userRating))
 //            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
         holder.ratingBar.setVisibility(View.GONE);
@@ -74,9 +75,15 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
 //        holder.ratingBar.setVisibility(View.GONE);
         holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.imgClear.setVisibility(View.GONE);
+        if (peopleModel.videoViews != null) {
+            holder.txtViewNo.setText(peopleModel.videoViews);
+            holder.txtViews.setText(Integer.parseInt(peopleModel.videoViews) == 1 ? "View" : "Views");
+        }
 //        holder.txtReviewCount.setVisibility(View.GONE);
-        holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ? "Follow" : "Unfollow");
-        holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus));
+        holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ||
+                peopleModel.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
+        holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus)&&
+                peopleModel.followStatus.equalsIgnoreCase("Unfollow"));
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,9 +103,14 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         return peopleArrayList.size();
     }
 
+    public void addItems(ArrayList<PeopleModel> arrList) {
+        peopleArrayList = arrList;
+        notifyDataSetChanged();
+    }
+
     public class PeopleViewHolder extends RecyclerView.ViewHolder {
 
-        private CustomTextView txtFollowStatus, txtName, txtReviewCount;
+        private CustomTextView txtFollowStatus, txtName, txtReviewCount, txtViewNo, txtViews;
         private RatingBar ratingBar;
         private CircleImageView imgProfile;
         private RelativeLayout relBody;
@@ -115,6 +127,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
             imgProfile = itemView.findViewById(R.id.imgProfile);
             imgClear = itemView.findViewById(R.id.imgClear);
             relBody = itemView.findViewById(R.id.relBody);
+            txtViewNo = itemView.findViewById(R.id.txtViewNo);
+            txtViews = itemView.findViewById(R.id.txtViews);
         }
     }
 }

@@ -37,7 +37,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
 
     @Override
     public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
-        VideoModel videoModel = feedVideoList.get(position);
+        final VideoModel videoModel = feedVideoList.get(position);
 
         if (!TextUtils.isEmpty(videoModel.userImage)) {
             RequestOptions options = new RequestOptions()
@@ -93,39 +93,43 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.relItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(holder.relItem, position);
+                if (iClickListener != null)
+                    iClickListener.onClick(holder.relItem, videoModel, position);
             }
         });
         holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onWatchCountClick(holder.txtViewCount, position);
+                    iClickListener.onClick(holder.txtViewCount, videoModel, position);
             }
         });
         holder.txtDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onDistanceClick(holder.txtDistance, position);
+                    iClickListener.onClick(holder.txtDistance, videoModel, position);
             }
         });
         holder.imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(holder.imgProfile, position);
+                if (iClickListener != null)
+                    iClickListener.onClick(holder.imgProfile, videoModel, position);
             }
         });
         holder.txtName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(holder.txtName, position);
+                if (iClickListener != null)
+                    iClickListener.onClick(holder.txtName, videoModel, position);
             }
         });
         holder.txtLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(holder.txtLoc, position);
+                if (iClickListener != null)
+                    iClickListener.onClick(holder.txtLoc, videoModel, position);
             }
         });
     }

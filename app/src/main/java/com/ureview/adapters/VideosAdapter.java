@@ -2,6 +2,7 @@ package com.ureview.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -9,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
-import com.ureview.listeners.IClickListener;
+import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
 
@@ -21,17 +23,15 @@ import java.util.ArrayList;
 
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryViewHolder> {
 
+    private final boolean only10Items;
     private Context context;
-    private IClickListener iClickListener;
+    private IVideosClickListener iClickListener;
     private ArrayList<VideoModel> videoList;
 
-    public VideosAdapter(Context context) {
-        this.context = context;
-    }
-
-    public VideosAdapter(Context context, IClickListener iClickListener) {
+    public VideosAdapter(Context context, IVideosClickListener iClickListener, boolean only10Items) {
         this.context = context;
         this.iClickListener = iClickListener;
+        this.only10Items = only10Items;
     }
 
     @NonNull
@@ -42,35 +42,64 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
-        VideoModel videoModel = videoList.get(position);
+        boolean val = only10Items && position >= 5;
+        if (val) {
+            holder.cvMore.setVisibility(position > 5 ? View.GONE : View.VISIBLE);
+        } else {
+            holder.cvMore.setVisibility(View.GONE);
+        }
+        holder.imgVideo.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.txtName.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.txtTags.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.txtViewCount.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.txtDistance.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.ratingBar.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.txtRatingsNo.setVisibility(val ? View.GONE : View.VISIBLE);
 
-        if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .fitCenter()
-                    .error(R.drawable.ic_profile);
+        if (position < 10) {
+            final VideoModel videoModel = videoList.get(position);
+            if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
+                RequestOptions options = new RequestOptions()
+                        .placeholder(R.drawable.ic_profile)
+                        .fitCenter()
+                        .error(R.drawable.ic_profile);
 
-            Glide.with(context)
-                    .load(videoModel.videoPosterImage)
-                    .apply(options)
-                    .into(holder.imgVideo);
-        } else holder.imgVideo.setImageResource(R.drawable.ic_profile);
+                Glide.with(context)
+                        .load(videoModel.videoPosterImage)
+                        .apply(options)
+                        .into(holder.imgVideo);
+            } else holder.imgVideo.setImageResource(R.drawable.ic_profile);
 
-        holder.txtName.setText(videoModel.videoTitle);
-        holder.txtTags.setText(videoModel.videoTags);
-        holder.txtViewCount.setText(videoModel.videoWatchedCount);
-        holder.txtDistance.setText(videoModel.distance);
-        holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
-        holder.txtDuration.setText(videoModel.videoDuration);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) {
-                    iClickListener.onClick(holder.itemView, holder.getAdapterPosition());
+            holder.txtName.setText(videoModel.videoTitle);
+            holder.txtTags.setText(videoModel.videoTags);
+            holder.txtViewCount.setText(videoModel.videoWatchedCount);
+            holder.txtDistance.setText(videoModel.distance);
+            holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+            holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
+            holder.txtDuration.setText(videoModel.videoDuration);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (iClickListener != null) {
+                        iClickListener.onClick(holder.relItem, videoModel, holder.getAdapterPosition());
+                    }
                 }
-            }
-        });
+            });
+            holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (iClickListener != null)
+                        iClickListener.onClick(holder.txtViewCount, videoModel, holder.getAdapterPosition());
+                }
+            });
+            holder.txtDistance.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (iClickListener != null)
+                        iClickListener.onClick(holder.txtDistance, videoModel, holder.getAdapterPosition());
+                }
+            });
+        }
     }
 
     @Override
@@ -87,6 +116,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         private ImageView imgVideo;
         private CustomTextView txtName, txtTags, txtViewCount, txtDistance, txtRatingsNo, txtDuration;
         private RatingBar ratingBar;
+        private CardView cvMore;
+        private RelativeLayout relItem;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
@@ -98,6 +129,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             txtDuration = itemView.findViewById(R.id.txtDuration);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            cvMore = itemView.findViewById(R.id.cvMore);
+            relItem = itemView.findViewById(R.id.relItem);
         }
     }
 }
