@@ -54,7 +54,9 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activities.VideoRecorder"
+            android:excludeFromRecents="true"
             android:screenOrientation="portrait"
+            android:theme="@style/AlertDialogCustom"
             android:windowSoftInputMode="adjustPan" />
 
         <meta-data

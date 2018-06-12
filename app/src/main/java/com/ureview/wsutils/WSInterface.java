@@ -107,8 +107,11 @@ public interface WSInterface {
     @POST("/edit-profile")
     Call<JsonElement> editProfile(@Body RequestBody params);
 
-//    @POST("/edit-profile")
-//    Call<JsonElement> editProfile(@Body MultipartBody params);
+    @POST("/video-upload")
+    Call<JsonElement> uploadVideo(@Body RequestBody params);
+
+    @POST("/delete-video")
+    Call<JsonElement> deleteVideo(@Body RequestBody params);
 
 
 //    @GET("/get_employees/")

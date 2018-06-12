@@ -32,7 +32,6 @@ public class WSUtils {
     public static final int REQ_FOR_RANKINGS = 118;
     public static final int REQ_FOR_PROFILE_VIDEOS = 119;
     public static final int REQ_FOR_EDIT_PROFILE = 120;
-
     public static final int REQ_FOR_CATEGORY_LIST = 121;
     public static final int REQ_FOR_NEWS_FEED_VIDEOS = 122;
     public static final int REQ_FOR_VIDEO_LIST_BY_CAT = 123;
@@ -40,4 +39,6 @@ public class WSUtils {
     public static final int REQ_FOR_TOP_RATED_VIDEOS = 125;
     public static final int REQ_FOR_POPULAR_VIDEOS = 126;
     public static final int REQ_FOR_RATING_VIDEO = 127;
+    public static final int REQ_FOR_UPLOAD_VIDEO = 128;
+    public static final int REQ_FOR_DELETE_VIDEO = 129;
 }

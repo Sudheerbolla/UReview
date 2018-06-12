@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:drawablePadding="@dimen/pad_10"
-        android:drawableTop="@drawable/logo_main_onboarding"
+        android:drawableTop="@mipmap/ic_launcher"
         android:text="UReview"
         android:textColor="@color/color_white"
         android:textSize="@dimen/txt_size_22sp" />

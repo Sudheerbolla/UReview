@@ -1,10 +1,12 @@
 package com.ureview.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -14,7 +16,9 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -29,13 +33,14 @@ import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunnin
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.ureview.R;
 import com.ureview.utils.StaticUtils;
-import com.ureview.utils.views.CustomTextView;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class VideoRecorder extends BaseActivity {
+public class VideoRecorderBc extends BaseActivity {
 
     private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
     private VideoView videoView;
@@ -46,8 +51,7 @@ public class VideoRecorder extends BaseActivity {
     private Uri selectedVideoUri;
     private static final String TAG = "Sudheer";
     private static final String POSITION = "position";
-    private CustomTextView cutVideo;
-
+    private static final String FILEPATH = "filepath";
     private int stopPosition;
     private TextView tvLeft, tvRight;
     private RelativeLayout mainlayout;
@@ -61,8 +65,8 @@ public class VideoRecorder extends BaseActivity {
         setContentView(R.layout.activity_video_recorder);
         this.setFinishOnTouchOutside(false);
         mContext = this;
-
-        cutVideo = findViewById(R.id.cropVideo);
+//        final TextView uploadVideo = findViewById(R.id.uploadVideo);
+        TextView cutVideo = findViewById(R.id.cropVideo);
         videoView = findViewById(R.id.VideoView);
         rangeSeekBar = findViewById(R.id.rangeSeekBar);
         mainlayout = findViewById(R.id.mainlayout);
@@ -74,22 +78,27 @@ public class VideoRecorder extends BaseActivity {
         progressDialog.setCancelable(false);
         rangeSeekBar.setEnabled(false);
         loadFFMpegBinary();
+//        uploadVideo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (Build.VERSION.SDK_INT >= 23)
+//                    getPermission();
+//                else
+//                    uploadVideo();
+//
+//            }
+//        });
         cutVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (selectedVideoUri != null) {
-                    if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 59) {
-                        StaticUtils.showToast(VideoRecorder.this, "Video cannot be more than 60 seconds in duration");
-                    } else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
+                    if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
                             && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
-//                        StaticUtils.showToast(VideoRecorder.this, "Original video is same as the trimmed video");
-                        Intent intent = new Intent();
-                        intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
-                        setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
-                        finish();
-                    } else {
-                        proceedWithVideoOperation();
-                    }
+                        StaticUtils.showToast(VideoRecorderBc.this, "Original video is same as the trimmed video");
+                    } else if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 60000) {
+                        StaticUtils.showToast(VideoRecorderBc.this, "Video cannot be more than 60 seconds duration");
+                    } else
+                        executeCutVideoCommand(rangeSeekBar.getSelectedMinValue().intValue() * 1000, rangeSeekBar.getSelectedMaxValue().intValue() * 1000);
                 } else
                     Snackbar.make(mainlayout, "Please upload a video", 4000).show();
             }
@@ -113,7 +122,7 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     duration = mp.getDuration() / 1000;
-                    tvLeft.setText("00:00:01");
+                    tvLeft.setText("00:00:00");
 
                     tvRight.setText(getTime(mp.getDuration() / 1000));
                     mp.setLooping(true);
@@ -121,22 +130,13 @@ public class VideoRecorder extends BaseActivity {
                     rangeSeekBar.setSelectedMinValue(1);
                     rangeSeekBar.setSelectedMaxValue(duration);
                     rangeSeekBar.setEnabled(true);
-                    if (duration > 60) {
-                        cutVideo.setText("Trim Video and continue");
-                    } else {
-                        cutVideo.setText("Upload Video");
-                    }
+
                     rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
                         @Override
                         public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
                             videoView.seekTo((int) minValue * 1000);
                             tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
                             tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
-                            if (bar.getSelectedMaxValue().intValue() - bar.getSelectedMinValue().intValue() > 60) {
-                                cutVideo.setText("Trim Video and continue");
-                            } else {
-                                cutVideo.setText("Upload Video");
-                            }
                         }
                     });
 
@@ -155,14 +155,62 @@ public class VideoRecorder extends BaseActivity {
         }
     }
 
-    private void proceedWithVideoOperation() {
-//        executeCutVideoCommand(rangeSeekBar.getSelectedMinValue().intValue() * 1000, rangeSeekBar.getSelectedMaxValue().intValue() * 1000);
-        executeCutVideoCommand(rangeSeekBar.getSelectedMinValue().intValue(), rangeSeekBar.getSelectedMaxValue().intValue());
-    }
-
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
+    }
+
+    private void getPermission() {
+        String[] params = null;
+        String writeExternalStorage = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String readExternalStorage = Manifest.permission.READ_EXTERNAL_STORAGE;
+
+        int hasWriteExternalStoragePermission = ActivityCompat.checkSelfPermission(this, writeExternalStorage);
+        int hasReadExternalStoragePermission = ActivityCompat.checkSelfPermission(this, readExternalStorage);
+        List<String> permissions = new ArrayList<String>();
+
+        if (hasWriteExternalStoragePermission != PackageManager.PERMISSION_GRANTED)
+            permissions.add(writeExternalStorage);
+        if (hasReadExternalStoragePermission != PackageManager.PERMISSION_GRANTED)
+            permissions.add(readExternalStorage);
+
+        if (!permissions.isEmpty()) {
+            params = permissions.toArray(new String[permissions.size()]);
+        }
+        if (params != null && params.length > 0) {
+            ActivityCompat.requestPermissions(this, params, 100);
+        } else
+            uploadVideo();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 100: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    uploadVideo();
+                }
+            }
+            break;
+        }
+
+    }
+
+
+    /**
+     * Opening gallery for uploading video
+     */
+    private void uploadVideo() {
+        try {
+            Intent intent = new Intent();
+            intent.setType("video/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+        } catch (Exception e) {
+
+        }
     }
 
     @Override
@@ -179,6 +227,62 @@ public class VideoRecorder extends BaseActivity {
         videoView.start();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
+                selectedVideoUri = data.getData();
+                videoView.setVideoURI(selectedVideoUri);
+                videoView.start();
+
+
+                videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        // TODO Auto-generated method stub
+                        duration = mp.getDuration() / 1000;
+                        tvLeft.setText("00:00:00");
+
+                        tvRight.setText(getTime(mp.getDuration() / 1000));
+                        mp.setLooping(true);
+                        rangeSeekBar.setRangeValues(0, duration);
+                        rangeSeekBar.setSelectedMinValue(0);
+                        rangeSeekBar.setSelectedMaxValue(duration);
+                        rangeSeekBar.setEnabled(true);
+
+                        rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+                            @Override
+                            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                                videoView.seekTo((int) minValue * 1000);
+
+                                tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
+
+                                tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
+
+                            }
+                        });
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(r = new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if (videoView.getCurrentPosition() >= rangeSeekBar.getSelectedMaxValue().intValue() * 1000)
+                                    videoView.seekTo(rangeSeekBar.getSelectedMinValue().intValue() * 1000);
+                                handler.postDelayed(r, 1000);
+                            }
+                        }, 1000);
+
+                    }
+                });
+
+//                }
+            }
+        }
+    }
+
     private String getTime(int seconds) {
         int hr = seconds / 3600;
         int rem = seconds % 3600;
@@ -187,6 +291,9 @@ public class VideoRecorder extends BaseActivity {
         return String.format("%02d", hr) + ":" + String.format("%02d", mn) + ":" + String.format("%02d", sec);
     }
 
+    /**
+     * Load FFmpeg binary
+     */
     private void loadFFMpegBinary() {
         try {
             if (ffmpeg == null) {
@@ -232,7 +339,10 @@ public class VideoRecorder extends BaseActivity {
      * Command for cutting video
      */
     private void executeCutVideoCommand(int startMs, int endMs) {
-        File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        File moviesDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_MOVIES
+        );
+
         String filePrefix = "cut_video";
         String fileExtn = ".mp4";
         String yourRealPath = getPath(this, selectedVideoUri);
@@ -242,14 +352,19 @@ public class VideoRecorder extends BaseActivity {
             fileNo++;
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
+
+        Log.d(TAG, "startTrim: src: " + yourRealPath);
+        Log.d(TAG, "startTrim: dest: " + dest.getAbsolutePath());
+        Log.d(TAG, "startTrim: startMs: " + startMs);
+        Log.d(TAG, "startTrim: endMs: " + endMs);
         filePath = dest.getAbsolutePath();
-//        String[] complexCommand = {"-ss", "" + startMs / 1000, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs) / 1000, "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
-        String[] complexCommand = {"-ss", "" + startMs, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs), "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
+        //String[] complexCommand = {"-i", yourRealPath, "-ss", "" + startMs / 1000, "-t", "" + endMs / 1000, dest.getAbsolutePath()};
+        String[] complexCommand = {"-ss", "" + startMs / 1000, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs) / 1000, "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
+
         execFFmpegBinary(complexCommand);
 
     }
 
-    // ffmpeg -i "input.mp4" -ss 00:00:03 -t 00:00:15 -acodec copy -vcodec copy "output.mp4"            ffmpeg -i "input.mp4" -ss 00:00:03 -t 00:00:15 -acodec libx264 -vcodec ac3 "output.mp4"
     public static String[] combine(String[] arg1, String[] arg2, String[] arg3) {
         String[] result = new String[arg1.length + arg2.length + arg3.length];
         System.arraycopy(arg1, 0, result, 0, arg1.length);
@@ -272,20 +387,15 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onSuccess(String s) {
                     Log.d(TAG, "SUCCESS with output : " + s);
-//                    Intent intent = new Intent(VideoRecorder.this, PreviewActivity.class);
-//                    intent.putExtra(FILEPATH, filePath);
-//                    startActivity(intent);
-                    Intent intent = new Intent();
-                    intent.putExtra(StaticUtils.FILEPATH, filePath);
-                    setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
-                    finish();
+                    Intent intent = new Intent(VideoRecorderBc.this, PreviewActivity.class);
+                    intent.putExtra(FILEPATH, filePath);
+                    startActivity(intent);
                 }
 
                 @Override
                 public void onProgress(String s) {
                     Log.d(TAG, "Started command : ffmpeg " + command);
-//                    progressDialog.setMessage("progress : " + s);
-                    progressDialog.setMessage("Processing...");
+                    progressDialog.setMessage("progress : " + s);
                     Log.d(TAG, "progress : " + s);
                 }
 
@@ -299,7 +409,6 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onFinish() {
                     Log.d(TAG, "Finished command : ffmpeg " + command);
-                    progressDialog.hide();
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
@@ -311,8 +420,8 @@ public class VideoRecorder extends BaseActivity {
         if (dir.isDirectory()) {
             String[] children = dir.list();
             if (children != null) {
-                for (String aChildren : children) {
-                    boolean success = deleteDir(new File(dir, aChildren));
+                for (int i = 0; i < children.length; i++) {
+                    boolean success = deleteDir(new File(dir, children[i]));
                     if (!success) {
                         return false;
                     }

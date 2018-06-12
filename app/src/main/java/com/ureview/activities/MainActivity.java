@@ -34,6 +34,7 @@ import com.ureview.fragments.SettingsFragment;
 import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
 import com.ureview.fragments.VideoReviewFragment;
+import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
 import com.ureview.utils.Constants;
@@ -45,7 +46,7 @@ import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, /*LocationBottomSheetFragment.OnLocationFilterOptionSelected*/LocationFilterFragment.OnLocationFilterOptionSelected {
+public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, LocationFilterFragment.OnLocationFilterOptionSelected {
 
     public CustomTextView txtTitle, txtRight, txtLeft;
     public ImageView imgBack, imgLoc, imgNotf, imgEdit, imgSearch, imgClose;
@@ -60,6 +61,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private int DIALOG_FRAGMENT = 1;
     private FragmentManager fragmentManager;
     private long backPressed;
+    private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
+    private static final int REQUEST_TAKE_CAMERA_VIDEO = 101;
+    private final int PERMISSION_FOR_CAMERA = 102;
+    private final int PERMISSION_FOR_STORAGE = 103;
+    private Uri selectedVideoUri;
+    public static ArrayList<CategoryModel> categoryListStatic = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,68 +147,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             txtLeft.setSelected(true);
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_FOR_CAMERA) {
-            if (grantResults.length < 1) {
-                StaticUtils.showToast(this, "Camera Permission Denied");
-                return;
-            }
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    StaticUtils.showToast(this, "Camera Permission Denied");
-                    return;
-                }
-            }
-            clickOnCamera();
-        } else if (requestCode == PERMISSION_FOR_STORAGE) {
-            if (grantResults.length < 1) {
-                StaticUtils.showToast(this, "Gallery Permission Denied");
-                return;
-            }
-
-            // Verify that each required permission has been granted, otherwise return false.
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    StaticUtils.showToast(this, "Gallery Permission Denied");
-                    return;
-                }
-            }
-            clickOnGalary();
-        } else {
-            if (StaticUtils.isAllPermissionsGranted(grantResults)) {
-                initBottomBar();
-                initTopBar();
-                proceedWithFlow();
-                getCurrentLocation();
-            } else {
-                StaticUtils.showToast(this, "Location permission is mandatory to access your location");
-                checkPermissions();
-            }
-
-        }
-    }
-
-    private Uri selectedVideoUri;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
-                selectedVideoUri = data.getData();
-                openVideoIntent(selectedVideoUri);
-            } else if (requestCode == REQUEST_TAKE_CAMERA_VIDEO) {
-                selectedVideoUri = data.getData();
-                openVideoIntent(selectedVideoUri);
-            }
-        }
-    }
-
-    private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
-    private static final int REQUEST_TAKE_CAMERA_VIDEO = 101;
 
     private void clickOnGalary() {
         try {
@@ -348,9 +293,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    private final int PERMISSION_FOR_CAMERA = 121;
-    private final int PERMISSION_FOR_STORAGE = 122;
-
     private void checkAndRequestPermissionCamera() {
         ArrayList<String> neededPermissions = new ArrayList<>();
         if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -378,7 +320,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             clickOnGalary();
         }
     }
-
 
     private BaseFragment getCurrentFragment() {
         return (BaseFragment) fragmentManager.findFragmentById(R.id.mainContainer);
@@ -411,11 +352,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void openVideoIntent(Uri selectedVideoUri) {
-//        Intent captureVideoIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
-//        startActivityForResult(captureVideoIntent,VIDEO_CAPTURED);
         Intent intent = new Intent(this, VideoRecorder.class);
         intent.putExtra("selectedVideoUri", selectedVideoUri);
-        startActivity(intent);
+        startActivityForResult(intent, StaticUtils.VIDEO_TRIMMING_RESULT);
+//        setUploadVideoFragment(selectedVideoUri);
+    }
+
+    public void setUploadVideoFragment(String filePath) {
+        replaceFragment(UploadVideoFragment.newInstance(filePath), R.id.mainContainer);
+    }
+
+    public void setUploadVideoFragment(Uri selectedVideoUri) {
+        replaceFragment(UploadVideoFragment.newInstance(selectedVideoUri), R.id.mainContainer);
+    }
+
+    public void setUploadVideoCompletedFragment() {
+        replaceFragment(UploadVideoCompletedFragment.newInstance(), R.id.mainContainer);
+    }
+
+    public void setVideoReviewFragment() {
+        setToolBar("Video Review", "", "", false, true, true, false, false);
+        replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
     }
 
     private void setSelectedTab(ImageView selectedView, ImageView imgH) {
@@ -466,25 +423,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragment(SettingsFragment.newInstance(), false, R.id.mainContainer);
     }
 
-    public void setUploadVideoFragment() {
-        setToolBar("Upload video", "", "", false, true,
-                true, false, false);
-        replaceFragment(UploadVideoFragment.newInstance(), R.id.mainContainer);
-    }
-
-    public void setUploadVideoCompletedFragment() {
-        setToolBar("Upload video", "", "", false, true,
-                true, false, false);
-        replaceFragment(UploadVideoCompletedFragment.newInstance(), R.id.mainContainer);
-    }
-
-    public void setVideoReviewFragment() {
-        setToolBar("Video Review", "", "", false, true,
-                true, false, false);
-        replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
-    }
-
-    private void setProfileFragment() {
+    public void setProfileFragment() {
         setSelectedTab(imgProfile, imgProfileView);
         replaceFragment(ProfileFragment.newInstance(), true, R.id.mainContainer);
     }
@@ -527,4 +466,73 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_FOR_CAMERA) {
+            if (grantResults.length < 1) {
+                StaticUtils.showToast(this, "Camera Permission Denied");
+                return;
+            }
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    StaticUtils.showToast(this, "Camera Permission Denied");
+                    return;
+                }
+            }
+            clickOnCamera();
+        } else if (requestCode == PERMISSION_FOR_STORAGE) {
+            if (grantResults.length < 1) {
+                StaticUtils.showToast(this, "Gallery Permission Denied");
+                return;
+            }
+
+            // Verify that each required permission has been granted, otherwise return false.
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    StaticUtils.showToast(this, "Gallery Permission Denied");
+                    return;
+                }
+            }
+            clickOnGalary();
+        } else {
+            if (StaticUtils.isAllPermissionsGranted(grantResults)) {
+                initBottomBar();
+                initTopBar();
+                proceedWithFlow();
+                getCurrentLocation();
+            } else {
+                StaticUtils.showToast(this, "Location permission is mandatory to access your location");
+                checkPermissions();
+            }
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
+                selectedVideoUri = data.getData();
+                openVideoIntent(selectedVideoUri);
+            } else if (requestCode == REQUEST_TAKE_CAMERA_VIDEO) {
+                selectedVideoUri = data.getData();
+                openVideoIntent(selectedVideoUri);
+            }
+        } else if (resultCode == StaticUtils.VIDEO_TRIMMING_RESULT) {
+            if (data.getExtras() != null) {
+                Bundle bundle = data.getExtras();
+                if (bundle.containsKey(StaticUtils.FILEPATH)) {
+                    setUploadVideoFragment(bundle.getString(StaticUtils.FILEPATH));
+                } else if (bundle.containsKey(StaticUtils.FILEURI)) {
+//                    if (selectedVideoUri == null)
+                    selectedVideoUri = bundle.getParcelable(StaticUtils.FILEURI);
+                    setUploadVideoFragment(selectedVideoUri);
+                }
+            }
+        }
+    }
+
 }

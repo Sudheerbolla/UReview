@@ -14,7 +14,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +45,6 @@ import com.ureview.wsutils.WSUtils;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -382,14 +380,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    private String imageBytes(Bitmap bitmap) {
-//        Bitmap bm = BitmapFactory.decodeFile("/path/to/image.jpg");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-        byte[] byteArrayImage = baos.toByteArray();
-        return Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-    }
-
     private void checkValidations() {
         firstName = edtFirstName.getText().toString().trim();
         lastName = edtLastName.getText().toString().trim();
@@ -473,7 +463,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         try {
             imageStream = mainActivity.getContentResolver().openInputStream(cameraFile);
             profilePicBitmap = BitmapFactory.decodeStream(imageStream);
-            profileImage = imageBytes(profilePicBitmap);
+            profileImage = StaticUtils.imageBytes(profilePicBitmap);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -509,7 +499,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                             e.printStackTrace();
                         }
                     }
-                    mainActivity.popBackStack();
+                    mainActivity.clearBackStackCompletely();
+                    mainActivity.setProfileFragment();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

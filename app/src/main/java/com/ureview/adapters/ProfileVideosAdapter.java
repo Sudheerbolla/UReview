@@ -65,6 +65,13 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         holder.ratingBar.setRating(Float.parseFloat(videoModel.videoRating));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.txtDuration.setText(videoModel.videoDuration);
+        holder.imgDeleteVideo.setVisibility(View.GONE);
+        holder.imgDeleteVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -73,7 +80,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgVideo;
+        private ImageView imgVideo, imgDeleteVideo;
         private CustomTextView txtName, txtTags, txtViewCount, txtDistance, txtRatingsNo, txtDuration;
         private RatingBar ratingBar;
 
@@ -87,6 +94,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
             txtDuration = itemView.findViewById(R.id.txtDuration);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            imgDeleteVideo = itemView.findViewById(R.id.imgDeleteVideo);
         }
     }
 }

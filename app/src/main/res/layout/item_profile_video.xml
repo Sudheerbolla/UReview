@@ -4,18 +4,33 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/pad_6">
 
-    <ImageView
-        android:id="@+id/imgVideo"
+    <RelativeLayout
+        android:id="@+id/relImageVideo"
         android:layout_width="130dp"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="120dp">
+
+        <ImageView
+            android:id="@+id/imgVideo"
+            android:layout_width="130dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/imgDeleteVideo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/pad_6"
+            android:src="@drawable/delete_account_copy" />
+
+    </RelativeLayout>
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imgVideo"
-        android:layout_alignLeft="@+id/imgVideo"
+        android:layout_alignBottom="@+id/relImageVideo"
+        android:layout_alignLeft="@+id/relImageVideo"
         android:layout_marginBottom="@dimen/pad_8"
         android:layout_marginLeft="@dimen/pad_10"
         android:textColor="@color/color_white"
@@ -25,7 +40,7 @@
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imgVideo"
+        android:layout_below="@+id/relImageVideo"
         android:layout_marginTop="@dimen/pad_5"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_13sp" />
@@ -34,8 +49,8 @@
         android:id="@+id/txtTags"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/relImageVideo"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/imgVideo"
         android:layout_below="@+id/txtName"
         android:layout_marginTop="@dimen/pad_2"
         android:maxLines="2"
