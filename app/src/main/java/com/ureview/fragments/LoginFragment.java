@@ -87,6 +87,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtInstagramLogin:
+                requestForCheckUserWS("179833959388215");
                 break;
             case R.id.txtTwitterLogin:
                 startActivity(new Intent(splashActivity, MainActivity.class));
@@ -136,7 +137,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (!TextUtils.isEmpty(id)) requestForCheckUserWS();
+                        if (!TextUtils.isEmpty(id)) requestForCheckUserWS(id);
                     }
                 });
         Bundle parameters = new Bundle();
@@ -163,7 +164,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-    private void requestForCheckUserWS() {
+    private void requestForCheckUserWS(String id) {
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(id);
         new WSCallBacksListener().requestForJsonObject(splashActivity, WSUtils.REQ_FOR_CHECK_USER, call, this);
     }

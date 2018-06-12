@@ -331,6 +331,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 categoryList.add(categoryModel);
             }
             homeCategoryAdapter.addCategories(categoryList);
+            MainActivity.categoryListStatic.clear();
+            MainActivity.categoryListStatic.addAll(categoryList);
             lastUpdatedPos = 0;
             startFrom = 0;
             feedVideoList.clear();

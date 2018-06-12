@@ -27,6 +27,8 @@ import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,6 +42,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     private ArrayList<VideoModel> userVideosModelArrayList;
     private String userId;
     private CustomTextView txtNoDatafound;
+    private int clickedPosition = -1;
 
     public static VideosFragment newInstance() {
         return new VideosFragment();
@@ -58,8 +61,6 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userVideosModelArrayList = new ArrayList<>();
-//        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-//        userId = "1";
         if (getArguments() != null) userId = getArguments().getString("userId");
         else
             userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
@@ -72,7 +73,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         rvVideos = rootView.findViewById(R.id.rvVideos);
         txtNoDatafound = rootView.findViewById(R.id.txtNoDatafound);
 
-        videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this);
+        videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this, userId.equalsIgnoreCase(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "")));
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvVideos.setAdapter(videosAdapter);
 
@@ -91,14 +92,50 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_PROFILE_VIDEOS, call, this);
     }
 
+    private void requestForDeleteVideoWS(String id) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("video_id", id);
+            jsonObjectReq.put("user_id", userId);
+
+            Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().deleteVideo(StaticUtils.getRequestBody(jsonObjectReq));
+            new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_DELETE_VIDEO, call, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
             case WSUtils.REQ_FOR_PROFILE_VIDEOS:
                 parseGetProfileVideosResponse((JsonObject) response);
                 break;
+            case WSUtils.REQ_FOR_DELETE_VIDEO:
+                parseDeleteVideoWSResponse((JsonObject) response);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void parseDeleteVideoWSResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                Gson gson = new Gson();
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                    if (clickedPosition != -1) {
+                        userVideosModelArrayList.remove(clickedPosition);
+                        videosAdapter.notifyDataSetChanged();
+                    }
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -147,7 +184,14 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
 
     @Override
     public void onClick(View view, int position) {
-
+        clickedPosition = position;
+        switch (view.getId()) {
+            case R.id.imgDeleteVideo:
+                requestForDeleteVideoWS(userVideosModelArrayList.get(position).id);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
