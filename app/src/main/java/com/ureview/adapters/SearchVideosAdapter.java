@@ -59,7 +59,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                     .error(R.drawable.ic_profile);
 
             Glide.with(context)
-                    .load(videoModel.categoryBgImage)
+                    .load("http://18.216.101.112/uploads/category_images/".concat(videoModel.categoryBgImage))
                     .apply(options)
                     .into(holder.imgCatBg);
         } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);

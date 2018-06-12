@@ -20,8 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/pad_10"
         android:background="@drawable/bg_edt_txt"
+        android:gravity="left|top"
         android:lines="10"
-        android:maxLines="10" />
+        android:maxLines="10"
+        android:padding="@dimen/pad_5" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -33,10 +35,10 @@
             android:id="@+id/txtNegative"
             style="@style/AppButtonStyle"
             android:layout_width="100dp"
-            android:textColor="@color/color_vvvDarkGrey"
-            android:background="@drawable/news_feed_active_bg"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:background="@drawable/news_feed_active_bg"
+            android:text="Cancel"
+            android:textColor="@color/color_vvvDarkGrey" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtPositive"

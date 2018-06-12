@@ -40,4 +40,5 @@ public class WSUtils {
     public static final int REQ_FOR_TOP_RATED_VIDEOS = 125;
     public static final int REQ_FOR_POPULAR_VIDEOS = 126;
     public static final int REQ_FOR_RATING_VIDEO = 127;
+    public static final int REQ_FOR_SHARE_VIDEO = 128;
 }

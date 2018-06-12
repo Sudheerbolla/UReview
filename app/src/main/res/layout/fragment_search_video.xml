@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="No Data Found"
+        android:text="No data found"
         android:textSize="@dimen/txt_size_18sp"
         android:textColor="@color/app_text_color"
         app:layout_constraintBottom_toBottomOf="parent"

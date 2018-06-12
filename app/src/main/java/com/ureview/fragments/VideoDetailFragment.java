@@ -68,13 +68,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
+import java.util.HashMap;
 import java.util.Locale;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
-        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>,IVideosClickListener {
+        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
     private ImageView imgCatBg, imgProfile;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtRatingno, txtLocation,
@@ -500,7 +501,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         Glide.with(this).load(feedVideo.userImage).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
         txtUserLoc.setText(feedVideo.userLocation);
-        txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ? "Follow" : "Unfollow");
+        txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ||
+                feedVideo.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
         txtFollowStatus.setOnClickListener(this);
         txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus));
         if (feedVideoList.size() > 0) {
@@ -625,13 +627,37 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void showShareDialog() {
+        DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Share on your profile",
+                "Share Video with your friends",
+                "Share Link with your friends",
+                "Cancel"}, rootView.findViewById(R.id.llShare), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch ((String) view.getTag()) {
+                    case "Share on your profile":
+                        requestForShareVideo();
+                        break;
+                    case "Share Video with your friends":
+                        shareVideoWithFriends();
+                        break;
+                    case "Share Link with your friends":
+                        shareLinkWithFriends();
+                        break;
+                    case "Cancel":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    private void shareVideoWithFriends() {
+
+    }
+
+    private void shareLinkWithFriends() {
         try {
-//            Intent shareIntent = new Intent();
-//            shareIntent.setAction(Intent.ACTION_SEND);
-//            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(feedVideo.video));
-//            shareIntent.setType("text/plain");
-//            shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-//            startActivity(Intent.createChooser(shareIntent, "Share video"));
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedVideo.video);
@@ -649,6 +675,14 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 requestForGiveRating(textView.getText().toString().trim());
             }
         }, textView);
+    }
+
+    private void requestForShareVideo() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("user_id", LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+        hashMap.put("video_id", feedVideo.id);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().shareVideo(hashMap);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SHARE_VIDEO, call, this);
     }
 
     private void requestForGiveRating(String rating) {
@@ -692,12 +726,26 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             case WSUtils.REQ_FOR_RATING_VIDEO:
                 parseVideoRatingResponse();
                 break;
+            case WSUtils.REQ_FOR_SHARE_VIDEO:
+                parseShareVideoResponse(response);
+                break;
             case WSUtils.REQ_FOR_FOLLOW_USER:
                 parseFollowUserResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_UN_FOLLOW_USER:
                 parseUnFollowUser((JsonObject) response);
                 break;
+        }
+    }
+
+    private void parseShareVideoResponse(JsonElement res) {
+        try {
+            JSONObject response = new JSONObject(res.toString());
+            if (response.has("message")) {
+                StaticUtils.showToast(mainActivity, response.getString("message"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -26,7 +26,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     private final boolean only10Items;
     private Context context;
     private IVideosClickListener iClickListener;
-    private ArrayList<VideoModel> videoList;
+    private ArrayList<VideoModel> videoList = new ArrayList<>();
 
     public VideosAdapter(Context context, IVideosClickListener iClickListener, boolean only10Items) {
         this.context = context;
@@ -42,9 +42,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
-        boolean val = only10Items && position >= 5;
+        boolean val = only10Items && position >= 10;
         if (val) {
-            holder.cvMore.setVisibility(position > 5 ? View.GONE : View.VISIBLE);
+            holder.cvMore.setVisibility(position >10 ? View.GONE : View.VISIBLE);
         } else {
             holder.cvMore.setVisibility(View.GONE);
         }

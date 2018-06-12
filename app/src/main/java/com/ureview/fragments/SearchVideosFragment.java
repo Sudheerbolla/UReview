@@ -96,7 +96,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         JSONObject jsonObjectReq = new JSONObject();
         try {
             jsonObjectReq.put("user_id", userId);
-            jsonObjectReq.put("video_name", mainActivity.edtText.getText().toString().trim());
+            jsonObjectReq.put("video_name", searchText);
             jsonObjectReq.put("latitude", "17.325400");
             jsonObjectReq.put("longitude", "78.362000");
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
@@ -184,7 +184,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id), true, R.id.mainContainer);
+                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
+                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
                 VideoModel videoModel = videosArrList.get(position);

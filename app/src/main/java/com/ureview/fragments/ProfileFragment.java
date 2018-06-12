@@ -134,12 +134,9 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
-            if (isDiffUser)
-                if (!TextUtils.isEmpty(userInfoModel.follow_status)) {
-                    txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
-                } else {
-                    txtFollowStatus.setText(userInfoModel.follow_status.equalsIgnoreCase("follow") ? "Following" : "Follow");
-                }
+            if (isDiffUser) {
+                setFollowTextAndBg();
+            }
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()
@@ -152,6 +149,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         .into(imgProfile);
             } else imgProfile.setImageResource(R.drawable.ic_profile);
         }
+    }
+
+    private void setFollowTextAndBg() {
+        txtFollowStatus.setText(TextUtils.isEmpty(userInfoModel.follow_status) ||
+                userInfoModel.follow_status.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
+        txtFollowStatus.setSelected(!(TextUtils.isEmpty(userInfoModel.follow_status) ||
+                userInfoModel.follow_status.equalsIgnoreCase("Unfollow")));
     }
 
     private void setListeners() {
@@ -186,7 +190,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 mainActivity.replaceFragment(FollowersFragment.newInstance(false, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
                 break;
             case R.id.txtFollowStatus:
-                requestForFollowUser(otherUserId);
+                if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
+                    requestForUnFollowUser(otherUserId);
+                } else {
+                    requestForFollowUser(otherUserId);
+                }
                 break;
             case R.id.imgProfile:
                 if (!TextUtils.isEmpty(userInfoModel.user_image)) {
@@ -204,6 +212,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void requestForFollowUser(String followId) {
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
+
+    private void requestForUnFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
     }
 
     private RequestBody getRequestBodyObject(String followId) {
@@ -226,8 +239,26 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             case WSUtils.REQ_FOR_FOLLOW_USER:
                 parseFollowUserResponse((JsonObject) response);
                 break;
+            case WSUtils.REQ_FOR_UN_FOLLOW_USER:
+                parseUnFollowUserResponse((JsonObject) response);
+                break;
             default:
                 break;
+        }
+    }
+
+    private void parseUnFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    userInfoModel.follow_status = "Unfollow";
+                    setFollowTextAndBg();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -235,8 +266,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "follow";
-                    txtFollowStatus.setText("Following");
+                    userInfoModel.follow_status = "Follow";
+                    setFollowTextAndBg();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

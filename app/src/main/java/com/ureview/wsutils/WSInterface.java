@@ -91,6 +91,9 @@ public interface WSInterface {
     @POST("/search-videos")
     Call<JsonElement> searchVideos(@Body RequestBody params);
 
+    @GET("/share-video")
+    Call<JsonElement> shareVideo(@QueryMap(encoded = true) HashMap<String, String> params);
+
     @GET("/search-users")
     Call<JsonElement> searchUsers(@QueryMap(encoded = true) HashMap<String, String> params);
 

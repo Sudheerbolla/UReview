@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/relItem"
     android:padding="@dimen/pad_6">
 
     <ImageView
@@ -16,7 +16,9 @@
         android:id="@+id/cvMore"
         android:layout_width="130dp"
         android:layout_height="120dp"
-        android:visibility="gone"
+        app:cardBackgroundColor="@color/color_white"
+        android:elevation="@dimen/pad_4"
+        android:visibility="visible"
         app:cardCornerRadius="@dimen/pad_5">
 
         <com.ureview.utils.views.CustomTextView
@@ -43,6 +45,8 @@
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/imgVideo"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/imgVideo"
         android:layout_marginTop="@dimen/pad_5"
         android:textColor="@color/colorBlack"
@@ -65,9 +69,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:padding="@dimen/pad_5"
         android:drawableLeft="@drawable/view_small_copy"
         android:drawablePadding="@dimen/pad_3"
+        android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 
@@ -77,8 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
         android:layout_marginLeft="@dimen/pad_5"
-        android:padding="@dimen/pad_5"
         android:layout_toRightOf="@+id/txtViewCount"
+        android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 

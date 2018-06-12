@@ -144,11 +144,11 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 if (mainActivity.edtText != null) {
                     mainActivity.edtText.setText("");
                     StaticUtils.hideSoftKeyboard(mainActivity);
-                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
-                        searchPeopleFragment.searchUser("");
-                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
-                        searchVideosFragment.searchVideo("");
-                    }
+//                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
+//                        searchPeopleFragment.searchUser("");
+//                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
+//                        searchVideosFragment.searchVideo("");
+//                    }
                 }
                 break;
         }

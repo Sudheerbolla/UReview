@@ -82,8 +82,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
 //        holder.txtReviewCount.setVisibility(View.GONE);
         holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ||
                 peopleModel.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
-        holder.txtFollowStatus.setSelected(!TextUtils.isEmpty(peopleModel.followStatus)&&
-                peopleModel.followStatus.equalsIgnoreCase("Unfollow"));
+        holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(peopleModel.followStatus) ||
+                peopleModel.followStatus.equalsIgnoreCase("Unfollow")));
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
