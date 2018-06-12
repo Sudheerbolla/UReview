@@ -23,7 +23,6 @@ import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
-import com.ureview.utils.views.recyclerView.Paginate;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -36,7 +35,7 @@ import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class SearchPeopleFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener, Paginate.Callbacks {
+public class VideoViewedPeopleFragmentBc extends BaseFragment implements IParserListener<JsonElement>, IClickListener {
 
     private View rootView;
     private CustomRecyclerView rvPeople;
@@ -46,22 +45,28 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private CustomTextView txtNoData;
     private String userId;
 
-    //Search People Pagination
-    private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0;
-    protected String searchText = "";
     private int selectedPosition;
 
-    public static SearchPeopleFragment newInstance() {
-        return new SearchPeopleFragment();
+    public static VideoViewedPeopleFragmentBc newInstance(String videoId) {
+        VideoViewedPeopleFragmentBc videoViewedPeopleFragment = new VideoViewedPeopleFragmentBc();
+        Bundle bundle = new Bundle();
+        bundle.putString("videoId", videoId);
+        videoViewedPeopleFragment.setArguments(bundle);
+        return new VideoViewedPeopleFragmentBc();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
         peopleArrList = new ArrayList<>();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("Views List", "", "", false, true, false, false, false);
     }
 
     @Nullable
@@ -70,36 +75,25 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         rootView = inflater.inflate(R.layout.fragment_followers, container, false);
 
         rvPeople = rootView.findViewById(R.id.rvFollowers);
-        rvPeople.setListPagination(this);
         txtNoData = rootView.findViewById(R.id.txtNoData);
-        txtNoData.setVisibility(View.GONE);
+
         setAdapter();
-        startFrom = 0;
-        hasLoadedAllItems = false;
-//        requestForSearchPeopleListWS();
+        requestForSearchPeopleListWS();
 
         return rootView;
     }
 
     private void setAdapter() {
-        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this);
+        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this, true);
         rvPeople.setLayoutManager(new LinearLayoutManager(mainActivity));
         rvPeople.setAdapter(peopleAdapter);
     }
 
-    protected void searchUser(String searchUser) {
-        searchText = searchUser;
-        peopleArrList.clear();
-        startFrom = 0;
-        hasLoadedAllItems = false;
-        requestForSearchPeopleListWS();
-    }
-
     protected void requestForSearchPeopleListWS() {
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("user_name", searchText);
+        hashMap.put("user_name", "a");
         hashMap.put("user_id", userId);
-        hashMap.put("startFrom", String.valueOf(startFrom));
+        hashMap.put("startFrom", "0");
         hashMap.put("count", "10");
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getSearchUsers(hashMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
@@ -136,7 +130,6 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void parseGetSearchPeopleResponse(JsonObject response) {
-        isLoading = false;
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
@@ -147,7 +140,6 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                             PeopleModel peopleModel = gson.fromJson(usersData.get(i).getAsJsonObject(), PeopleModel.class);
                             peopleArrList.add(peopleModel);
                         }
-                        startFrom += usersData.size();
                         txtNoData.setVisibility(View.GONE);
                         rvPeople.setVisibility(View.VISIBLE);
                     } else {
@@ -155,14 +147,9 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                         rvPeople.setVisibility(View.GONE);
                     }
                     peopleAdapter.notifyDataSetChanged();
-                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
-                    if (startFrom == 0) {
-                        txtNoData.setVisibility(View.VISIBLE);
-                        rvPeople.setVisibility(View.GONE);
-                    } else {
-                        hasLoadedAllItems = true;
-                    }
+                } else {
+                    txtNoData.setVisibility(View.VISIBLE);
+                    rvPeople.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
@@ -215,21 +202,5 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     @Override
     public void onLongClick(View view, int position) {
 
-    }
-
-    @Override
-    public void onLoadMore() {
-        isLoading = true;
-        requestForSearchPeopleListWS();
-    }
-
-    @Override
-    public boolean isLoading() {
-        return isLoading;
-    }
-
-    @Override
-    public boolean hasLoadedAllItems() {
-        return hasLoadedAllItems;
     }
 }

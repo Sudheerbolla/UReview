@@ -8,6 +8,9 @@ public class PeopleModel {
     @SerializedName("user_id")
     @Expose
     public String userId;
+    @SerializedName("video_views")
+    @Expose
+    public String videoViews;
     @SerializedName("first_name")
     @Expose
     public String firstName;
@@ -16,7 +19,7 @@ public class PeopleModel {
     public String lastName;
     @SerializedName("user_image")
     @Expose
-    public String userImage;
+    public String userImage = "";
     @SerializedName("user_rating")
     @Expose
     public String userRating;

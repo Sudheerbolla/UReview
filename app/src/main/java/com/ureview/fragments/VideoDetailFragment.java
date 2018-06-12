@@ -52,6 +52,7 @@ import com.ureview.activities.MainActivity;
 import com.ureview.adapters.VideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
+import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
@@ -73,7 +74,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
-        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement> {
+        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>,IVideosClickListener {
 
     private ImageView imgCatBg, imgProfile;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtRatingno, txtLocation,
@@ -479,7 +480,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         llShare.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
-        videosAdapter = new VideosAdapter(mainActivity, this);
+        videosAdapter = new VideosAdapter(mainActivity, this, false);
         rvRelatedVideos.setAdapter(videosAdapter);
 
         if (feedVideo != null)
@@ -570,6 +571,11 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void onClick(View view, int position) {
+
+    }
+
+    @Override
+    public void onClick(View view, VideoModel videoModel, int position) {
         VideoModel toBeAdded = feedVideo;
         feedVideo = feedVideoList.get(position);
         feedVideoList.remove(position);

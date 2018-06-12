@@ -80,8 +80,16 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         videosArrList.clear();
         hasLoadedAllItems = false;
         startFrom = 0;
-        requestForSearchVideos();
+//        requestForSearchVideos();
         return rootView;
+    }
+
+    protected void searchVideo(String searchVideo) {
+        searchText = searchVideo;
+        videosArrList.clear();
+        startFrom = 0;
+        hasLoadedAllItems = false;
+        requestForSearchVideos();
     }
 
     private void requestForSearchVideos() {

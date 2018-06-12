@@ -110,9 +110,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
         newsFeedAdapter = new NewsFeedAdapter(getActivity(), this);
         homeCategoryAdapter = new HomeCategoryAdapter(getActivity(), this);
-        nearByVideosAdapter = new VideosAdapter(getActivity());
-        topRatedVideosAdapter = new VideosAdapter(getActivity());
-        popularVideosAdapter = new VideosAdapter(getActivity());
+        nearByVideosAdapter = new VideosAdapter(getActivity(), this, true);
+        topRatedVideosAdapter = new VideosAdapter(getActivity(), this, true);
+        popularVideosAdapter = new VideosAdapter(getActivity(), this, true);
 
         rvNewsFeed.setAdapter(newsFeedAdapter);
         rvNewsFeed.setListPagination(this);
@@ -147,10 +147,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         rvNewsFeed.setVisibility(b && feedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         relVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvNearByVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        txtSeeAllVideos.setVisibility(!b && nearByVideoList.size() > 3 ? View.VISIBLE : View.GONE);
         relTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        txtSeeAllTopRated.setVisibility(!b && topRatedVideoList.size() > 3 ? View.VISIBLE : View.GONE);
         relPopularSearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvPopularsearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
+        txtSeeAllPopularSearch.setVisibility(!b && popularVideoList.size() > 3 ? View.VISIBLE : View.GONE);
     }
 
     public void loadRelatedData(FilterModel value) {
@@ -182,7 +185,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
-        queryMap.put("count", "10");
+        queryMap.put("count", "11");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
@@ -196,7 +199,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
-        queryMap.put("count", "10");
+        queryMap.put("count", "11");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
@@ -211,7 +214,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
-        queryMap.put("count", "10");
+        queryMap.put("count", "11");
         queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
@@ -223,12 +226,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     @Override
-    public void onClick(View view, int position) {
+    public void onClick(View view, VideoModel videoModel, int position) {
         switch (view.getId()) {
-            case R.id.imgCatBg:
-            case R.id.txtCategory:
-                updateCategoryList(position, false);
-                break;
             case R.id.relItem:
                 mainActivity.replaceFragment(VideoDetailFragment.newInstance(feedVideoList, position), true, R.id.mainContainer);
                 break;
@@ -237,24 +236,20 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             case R.id.txtLoc:
                 mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId), true, R.id.mainContainer);
                 break;
+            case R.id.txtViewCount:
+                //        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
+                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
+                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                break;
+            case R.id.txtDistance:
+                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
+                        + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(mapIntent);
+                break;
             default:
                 break;
         }
-    }
-
-    @Override
-    public void onWatchCountClick(View view, int position) {
-        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
-    }
-
-    @Override
-    public void onDistanceClick(View view, int position) {
-        VideoModel videoModel = feedVideoList.get(position);
-        String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
-                + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
     }
 
     private void updateCategoryList(int position, boolean callApi) {
@@ -279,6 +274,16 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 requestForTopRatedVideos(categoryList.get(position).id);
                 requestForPopularVideos(categoryList.get(position).id);
             }
+        }
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.imgCatBg:
+            case R.id.txtCategory:
+                updateCategoryList(position, false);
+                break;
         }
     }
 

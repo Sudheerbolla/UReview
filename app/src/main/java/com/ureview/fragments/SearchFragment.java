@@ -19,20 +19,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
-import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
-import com.ureview.wsutils.WSCallBacksListener;
-import com.ureview.wsutils.WSUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
 
 public class SearchFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
@@ -41,7 +35,9 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private TabLayout tabLayout;
     private MainActivity mainActivity;
     private String userId;
+    private SearchVideosFragment searchVideosFragment;
     private SearchPeopleFragment searchPeopleFragment;
+    private boolean isInSearchPeopleFragment;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -52,6 +48,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
         viewPager = rootView.findViewById(R.id.viewpager);
+        searchVideosFragment = new SearchVideosFragment();
         searchPeopleFragment = new SearchPeopleFragment();
         setupViewPager(viewPager);
 
@@ -59,6 +56,22 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         tabLayout.setTabTextColors(ContextCompat.getColor(mainActivity, R.color.colorDarkGrey), ContextCompat.getColor(mainActivity, R.color.app_text_color));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(mainActivity, R.color.app_text_color));
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                isInSearchPeopleFragment = tab.getText().toString().equalsIgnoreCase("People");
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         mainActivity.edtText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -88,8 +101,10 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (i == EditorInfo.IME_ACTION_SEARCH) {
                     StaticUtils.hideSoftKeyboard(mainActivity);
-                    if (searchPeopleFragment != null) {
+                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
                         searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
+                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
+                        searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim());
                     }
                 }
                 return false;
@@ -117,7 +132,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(new SearchVideosFragment(), "Videos");
+        adapter.addFragment(searchVideosFragment, "Videos");
         adapter.addFragment(searchPeopleFragment, "People");
         viewPager.setAdapter(adapter);
     }
@@ -129,8 +144,10 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 if (mainActivity.edtText != null) {
                     mainActivity.edtText.setText("");
                     StaticUtils.hideSoftKeyboard(mainActivity);
-                    if (searchPeopleFragment != null) {
+                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
                         searchPeopleFragment.searchUser("");
+                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
+                        searchVideosFragment.searchVideo("");
                     }
                 }
                 break;
@@ -180,17 +197,6 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             return mFragmentTitleList.get(position);
         }
     }
-
-    private void requestForSearchPeople() {
-        HashMap<String, String> queryMap = new HashMap<>();
-        queryMap.put("user_name", mainActivity.edtText.getText().toString().trim());
-        queryMap.put("user_id", userId);
-        queryMap.put("startFrom", "0");
-        queryMap.put("count", "10");
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().searchUsers(queryMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
-    }
-
 }
 /*
 http://18.216.101.112/search-users?user_name=a&user_id=24&startFrom=0&count=10

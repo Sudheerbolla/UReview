@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/pad_6">
@@ -24,6 +26,22 @@
             android:src="@drawable/delete_account_copy" />
 
     </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvMore"
+        android:layout_width="130dp"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/pad_5">
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="More.."
+            android:textColor="@color/app_text_color"
+            android:textSize="@dimen/txt_size_15sp" />
+    </android.support.v7.widget.CardView>
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtDuration"
@@ -62,9 +80,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:layout_marginTop="@dimen/pad_2"
         android:drawableLeft="@drawable/view_small_copy"
         android:drawablePadding="@dimen/pad_3"
+        android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 
@@ -73,9 +91,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_marginTop="@dimen/pad_2"
+        android:layout_marginLeft="@dimen/pad_5"
         android:layout_toRightOf="@+id/txtViewCount"
+        android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 
