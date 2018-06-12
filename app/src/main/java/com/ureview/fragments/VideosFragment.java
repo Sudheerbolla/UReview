@@ -73,7 +73,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         rvVideos = rootView.findViewById(R.id.rvVideos);
         txtNoDatafound = rootView.findViewById(R.id.txtNoDatafound);
 
-        videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this);
+        videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this, userId.equalsIgnoreCase(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "")));
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         rvVideos.setAdapter(videosAdapter);
 
