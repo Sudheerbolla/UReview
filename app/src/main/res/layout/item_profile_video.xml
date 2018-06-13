@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:padding="@dimen/pad_6"
-            android:src="@drawable/delete_account_copy" />
+            android:src="@drawable/delete_account_copy"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

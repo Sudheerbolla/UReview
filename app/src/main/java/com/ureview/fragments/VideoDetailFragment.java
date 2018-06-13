@@ -96,7 +96,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     SurfaceView svPlayer;
     ImageButton prev;
     ImageButton rew;
-    ImageButton btnPlay;
+    ImageView btnPlay;
     ImageButton ffwd, next;
     TextView timeCurrent;
     SeekBar mediacontrollerProgress;
@@ -196,6 +196,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             @Override
             public void onClick(View view) {
                 exoPlayer.seekTo(exoPlayer.getDuration());
+                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
             }
         });
     }
@@ -206,6 +207,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             @Override
             public void onClick(View view) {
                 exoPlayer.seekTo(exoPlayer.getCurrentPosition() - 10000);
+                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
             }
         });
     }
@@ -216,6 +218,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             @Override
             public void onClick(View view) {
                 exoPlayer.seekTo(0);
+                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
             }
         });
     }
@@ -226,6 +229,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             @Override
             public void onClick(View view) {
                 exoPlayer.seekTo(exoPlayer.getCurrentPosition() + 10000);
+                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
             }
         });
     }
@@ -340,7 +344,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                btnPlay.setSelected(bIsPlaying);
                 if (bIsPlaying) {
                     exoPlayer.setPlayWhenReady(false);
                     bIsPlaying = false;
@@ -349,6 +352,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                     bIsPlaying = true;
                     setProgress();
                 }
+                btnPlay.setSelected(bIsPlaying);
             }
         });
     }

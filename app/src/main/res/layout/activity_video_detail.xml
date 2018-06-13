@@ -47,15 +47,18 @@
                     android:id="@+id/txtVideoTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/pad_8"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:text="Synth polaroid biology"
+                    android:layout_toStartOf="@+id/consCat"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/txt_size_18sp" />
 
                 <android.support.constraint.ConstraintLayout
+                    android:id="@+id/consCat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentEnd="true">
 
                     <ImageView
                         android:id="@+id/imgCatBg"
@@ -78,10 +81,8 @@
                         android:paddingLeft="@dimen/pad_17"
                         android:paddingRight="@dimen/pad_17"
                         android:paddingTop="@dimen/pad_6"
-                        android:text="News Feed"
                         android:textColor="@color/selector_txt_color"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toRightOf="@+id/imgCat"
                         app:layout_constraintTop_toTopOf="parent" />
                 </android.support.constraint.ConstraintLayout>
 
@@ -91,9 +92,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:drawableLeft="@drawable/view_small_copy"
                     android:drawablePadding="@dimen/pad_8"
-                    android:text="408121"
+                    android:drawableStart="@drawable/view_small_copy"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_12sp" />
 
@@ -103,9 +103,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
-                    android:layout_marginLeft="@dimen/pad_10"
+                    android:layout_marginStart="@dimen/pad_10"
                     android:layout_marginTop="@dimen/pad_6"
-                    android:layout_toRightOf="@+id/txtViewCount"
+                    android:layout_toEndOf="@+id/txtViewCount"
                     android:isIndicator="true" />
 
                 <com.ureview.utils.views.CustomTextView
@@ -113,10 +113,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
-                    android:layout_marginLeft="@dimen/pad_3"
+                    android:layout_marginStart="@dimen/pad_3"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:layout_toRightOf="@+id/ratingBar"
-                    android:text="(500)"
+                    android:layout_toEndOf="@+id/ratingBar"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_12sp" />
 
@@ -138,9 +137,9 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_35"
-                            android:layout_height="@dimen/pad_35"
-                            android:src="@mipmap/ic_launcher" />
+                            android:layout_width="@dimen/pad_32"
+                            android:layout_height="@dimen/pad_32"
+                            android:src="@drawable/icon_rate" />
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -161,9 +160,9 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_35"
-                            android:layout_height="@dimen/pad_35"
-                            android:src="@mipmap/ic_launcher" />
+                            android:layout_width="@dimen/pad_30"
+                            android:layout_height="@dimen/pad_30"
+                            android:src="@drawable/icon_share" />
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -184,9 +183,9 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_35"
-                            android:layout_height="@dimen/pad_35"
-                            android:src="@mipmap/ic_launcher" />
+                            android:layout_width="@dimen/pad_32"
+                            android:layout_height="@dimen/pad_32"
+                            android:src="@drawable/icon_direction" />
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -207,9 +206,9 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_35"
-                            android:layout_height="@dimen/pad_35"
-                            android:src="@mipmap/ic_launcher" />
+                            android:layout_width="@dimen/pad_32"
+                            android:layout_height="@dimen/pad_32"
+                            android:src="@drawable/icon_report" />
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -227,8 +226,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/llOptions"
                     android:layout_marginTop="@dimen/pad_8"
-                    android:drawableLeft="@drawable/location_small_copy"
                     android:drawablePadding="@dimen/pad_5"
+                    android:drawableStart="@drawable/location_small_copy"
                     android:text="Location"
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />
@@ -239,7 +238,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtLoc"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:text="Mirpur 10, Dhaka"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_15sp" />
 
@@ -259,7 +257,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtTagsTitle"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:text="DJ#Techno#Music#Dance#Crowd"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_15sp" />
 
@@ -291,11 +288,10 @@
                         android:id="@+id/txtFollowStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/item_feed_btn_height"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/selector_app_pink_btn"
                         android:gravity="center"
-                        android:text="Follow"
                         android:textColor="@color/selector_txt_color"
                         android:textSize="@dimen/txt_size_15sp" />
 
@@ -306,9 +302,8 @@
                         android:layout_marginLeft="@dimen/pad_5"
                         android:layout_marginRight="@dimen/pad_5"
                         android:layout_marginTop="@dimen/pad_3"
-                        android:layout_toLeftOf="@+id/txtFollowStatus"
-                        android:layout_toRightOf="@+id/imgProfile"
-                        android:text="Terry Rodriguez"
+                        android:layout_toEndOf="@+id/imgProfile"
+                        android:layout_toStartOf="@+id/txtFollowStatus"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/txt_size_15sp" />
 
@@ -320,9 +315,8 @@
                         android:layout_marginLeft="@dimen/pad_5"
                         android:layout_marginRight="@dimen/pad_5"
                         android:layout_marginTop="@dimen/pad_5"
-                        android:layout_toLeftOf="@+id/txtFollowStatus"
-                        android:layout_toRightOf="@+id/imgProfile"
-                        android:text="Mirpur 10, Dhaka"
+                        android:layout_toEndOf="@+id/imgProfile"
+                        android:layout_toStartOf="@+id/txtFollowStatus"
                         android:textColor="@color/color_vvvDarkGrey"
                         android:textSize="@dimen/txt_size_12sp" />
                 </RelativeLayout>
@@ -349,7 +343,7 @@
                     android:id="@+id/txtSeeAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_below="@+id/dividerView"
                     android:layout_marginTop="@dimen/pad_3"
                     android:padding="@dimen/pad_8"
