@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -56,7 +57,7 @@ import retrofit2.Call;
 public class UploadVideoFragment extends BaseFragment implements IParserListener {
     private View rootView;
     private CustomTextView txtCompleteVideo, txtLocation, tvLeft, tvRight, txtCategory;
-    private ImageView imgPlay;
+    private ImageView imgPlay, imgPlayPause;
     private CustomEditText edtVideoTitle, edtTags;
     private MainActivity mainActivity;
     private Uri selectedVideoUri;
@@ -71,6 +72,19 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     private String userId;
     private double longitude, latitude, userLat, userLong;
     private String videoThumb;
+
+    private Runnable onEverySecond = new Runnable() {
+
+        @Override
+        public void run() {
+            if (seekBar != null) {
+                seekBar.setProgress(videoView.getCurrentPosition() / 1000);
+            }
+            if (videoView.isPlaying()) {
+                seekBar.postDelayed(onEverySecond, 500);
+            }
+        }
+    };
 
     public static UploadVideoFragment newInstance(Uri selectedVideoUri) {
         UploadVideoFragment uploadVideoFragment = new UploadVideoFragment();
@@ -128,6 +142,13 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         videoView.start();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopPosition = videoView.getCurrentPosition(); //stopPosition is an int
+        videoView.pause();
+    }
+
     private void setSelectedCategoryid(String categoryName) {
         for (CategoryModel categoryModel : categoryModelArrayList) {
             if (categoryModel.categoryName.equalsIgnoreCase(categoryName)) {
@@ -156,12 +177,33 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         edtVideoTitle = rootView.findViewById(R.id.edtVideoTitle);
         edtTags = rootView.findViewById(R.id.edtTags);
         imgPlay = rootView.findViewById(R.id.imgPlay);
+        imgPlayPause = rootView.findViewById(R.id.imgPlayPause);
+        imgPlay.setVisibility(View.GONE);
+        imgPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgPlay.setVisibility(View.GONE);
+            }
+        });
+
+        imgPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (videoView.isPlaying()) {
+                    imgPlayPause.setSelected(false);
+                    videoView.pause();
+                } else {
+                    imgPlayPause.setSelected(true);
+                    videoView.seekTo(stopPosition);
+                    videoView.start();
+                }
+            }
+        });
 
         txtLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openSearch();
-//                mainActivity.replaceFragment(LocationFilterFragment.newInstance(0), true, R.id.mainContainer);
             }
         });
 
@@ -170,7 +212,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             public void onClick(View view) {
                 String message = checkValidations();
                 if (TextUtils.isEmpty(message)) {
-                    performBase64Operation();
+//                    performBase64Operation();
+                    ConvertVideoToBytes convertVideoToBytes = new ConvertVideoToBytes();
+                    convertVideoToBytes.execute();
 //                    mainActivity.setUploadVideoCompletedFragment();
                 } else {
                     StaticUtils.showToast(mainActivity, message);
@@ -198,7 +242,6 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         setVideoViewData();
     }
 
-    //{"video_poster_image":""
     private void requestForUploadVideoWS(String baseVideo) {
         JSONObject jsonObjectReq = new JSONObject();
         try {
@@ -215,7 +258,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             jsonObjectReq.put("video_status", "A");
             jsonObjectReq.put("video_privacy", "private");
 
-            if (TextUtils.isEmpty(videoThumb)) {
+            if (!TextUtils.isEmpty(videoThumb)) {
                 jsonObjectReq.put("video_poster_image", videoThumb);
             } else {
                 jsonObjectReq.put("video_poster_image", "");
@@ -230,40 +273,6 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UPLOAD_VIDEO, call, this);
 
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void performBase64Operation() {
-        progressDialog.setMessage("Uploading video.Please wait...");
-        progressDialog.show();
-        final InputStream inputStream;
-        try {
-            String path = "file://" + selectedVideoUri.getPath();
-            inputStream = mainActivity.getContentResolver().openInputStream(Uri.parse(path));
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-            int len;
-            try {
-                while ((len = inputStream.read(buffer)) != -1) {
-                    byteBuffer.write(buffer, 0, len);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println("converted!");
-
-            String videoData = "";
-            videoData = Base64.encodeToString(byteBuffer.toByteArray(), Base64.DEFAULT);
-            Log.d("VideoData**>  ", videoData);
-            String sinSaltoFinal2 = videoData.trim();
-            String sinsinSalto2 = sinSaltoFinal2.replaceAll("\n", "");
-            Log.d("VideoData**>  ", sinsinSalto2);
-
-            String baseVideo = sinsinSalto2;
-            requestForUploadVideoWS(baseVideo);
-        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -300,13 +309,6 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopPosition = videoView.getCurrentPosition(); //stopPosition is an int
-        videoView.pause();
-    }
-
     private void setVideoViewData() {
         if (selectedVideoUri == null) {
             if (!TextUtils.isEmpty(filePath)) {
@@ -315,7 +317,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
         if (selectedVideoUri != null) {
             videoView.setVideoURI(selectedVideoUri);
-            videoView.start();
+//            videoView.start();
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 
                 @Override
@@ -324,9 +326,10 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     tvLeft.setText("00:00:00");
 
                     tvRight.setText(StaticUtils.getTime(mp.getDuration() / 1000));
-                    mp.setLooping(false);
+                    mp.setLooping(true);
                     seekBar.setMax(duration);
-                    seekBar.postDelayed(onEverySecond, 1000);
+                    seekBar.postDelayed(onEverySecond, 500);
+                    imgPlayPause.setSelected(true);
                 }
             });
 
@@ -343,7 +346,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (fromUser) {
-                        videoView.seekTo(progress);
+                        videoView.seekTo(progress * 1000);
                     }
                 }
             });
@@ -367,22 +370,43 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             }
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                videoThumb = StaticUtils.imageBytes(bMap);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
+    private void setTextToAddress(String address) {
+        txtLocation.setText(address);
+    }
 
-    private Runnable onEverySecond = new Runnable() {
-
-        @Override
-        public void run() {
-            if (seekBar != null) {
-                seekBar.setProgress(videoView.getCurrentPosition());
-            }
-            if (videoView.isPlaying()) {
-                seekBar.postDelayed(onEverySecond, 1000);
+    @Override
+    public void successResponse(int requestCode, Object response) {
+        if (response != null) {
+            Log.e("response: ", response.toString());
+            switch (requestCode) {
+                case WSUtils.REQ_FOR_UPLOAD_VIDEO:
+                    parseUploadVideoResponse((JsonObject) response);
+                    break;
+                default:
+                    break;
             }
         }
-    };
+    }
+
+    @Override
+    public void errorResponse(int requestCode, String error) {
+        Log.e("error: ", error);
+        progressDialog.hide();
+    }
+
+    @Override
+    public void noInternetConnection(int requestCode) {
+        progressDialog.hide();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -408,24 +432,6 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
     }
 
-    private void setTextToAddress(String address) {
-        txtLocation.setText(address);
-    }
-
-    @Override
-    public void successResponse(int requestCode, Object response) {
-        if (response != null) {
-            Log.e("response: ", response.toString());
-            switch (requestCode) {
-                case WSUtils.REQ_FOR_UPLOAD_VIDEO:
-                    parseUploadVideoResponse((JsonObject) response);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     private void parseUploadVideoResponse(JsonObject response) {
         try {
             if (response.has("status")) {
@@ -446,14 +452,108 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
     }
 
-    @Override
-    public void errorResponse(int requestCode, String error) {
-        Log.e("error: ", error);
-        progressDialog.hide();
+    private class ConvertVideoToBytes extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            InputStream inputStream = null;
+            try {
+                String path = "file://" + selectedVideoUri.getPath();
+                inputStream = mainActivity.getContentResolver().openInputStream(Uri.parse(path));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                try {
+                    inputStream = mainActivity.getContentResolver().openInputStream(selectedVideoUri);
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                    progressDialog.hide();
+                }
+            }
+            if (inputStream != null) {
+                int bufferSize = 1024;
+                byte[] buffer = new byte[bufferSize];
+                ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+                int len;
+                try {
+                    while ((len = inputStream.read(buffer)) != -1) {
+                        byteBuffer.write(buffer, 0, len);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("converted!");
+
+                String videoData = "                                                                                                 ";
+                videoData = Base64.encodeToString(byteBuffer.toByteArray(), Base64.DEFAULT);
+                Log.d("VideoData**>  ", videoData);
+                String sinSaltoFinal2 = videoData.trim();
+                String sinsinSalto2 = sinSaltoFinal2.replaceAll("\n", "");
+                Log.d("VideoData**>  ", sinsinSalto2);
+                return sinsinSalto2;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            progressDialog.hide();
+            if (TextUtils.isEmpty(result)) {
+                StaticUtils.showToast(mainActivity, "Something went wrong");
+            } else {
+                progressDialog.setMessage("Loading");
+                progressDialog.show();
+                requestForUploadVideoWS(result);
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.setMessage("Converting and Uploading video.Please wait...");
+            progressDialog.show();
+        }
+
     }
 
-    @Override
-    public void noInternetConnection(int requestCode) {
-        progressDialog.hide();
+    private void performBase64Operation() {
+        InputStream inputStream = null;
+        try {
+            String path = "file://" + selectedVideoUri.getPath();
+            inputStream = mainActivity.getContentResolver().openInputStream(Uri.parse(path));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            try {
+                inputStream = mainActivity.getContentResolver().openInputStream(selectedVideoUri);
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+                progressDialog.hide();
+            }
+        }
+        if (inputStream != null) {
+            int bufferSize = 1024;
+            byte[] buffer = new byte[bufferSize];
+            ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+            int len;
+            try {
+                while ((len = inputStream.read(buffer)) != -1) {
+                    byteBuffer.write(buffer, 0, len);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("converted!");
+
+            String videoData = "                                                                                                 ";
+            videoData = Base64.encodeToString(byteBuffer.toByteArray(), Base64.DEFAULT);
+            Log.d("VideoData**>  ", videoData);
+            String sinSaltoFinal2 = videoData.trim();
+            String sinsinSalto2 = sinSaltoFinal2.replaceAll("\n", "");
+            Log.d("VideoData**>  ", sinsinSalto2);
+
+            String baseVideo = sinsinSalto2;
+            requestForUploadVideoWS(baseVideo);
+        } else {
+            StaticUtils.showToast(mainActivity, "Something went wrong");
+        }
     }
+
 }

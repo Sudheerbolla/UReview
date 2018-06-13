@@ -199,4 +199,5 @@ public class CustomRecyclerView extends RecyclerView {
             }
         }
     }
+
 }

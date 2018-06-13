@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -75,6 +76,12 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
                 if (iClickListener != null) iClickListener.onClick(view, position);
             }
         });
+        holder.relItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) iClickListener.onClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -86,6 +93,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         private ImageView imgVideo, imgDeleteVideo;
         private CustomTextView txtName, txtTags, txtViewCount, txtDistance, txtRatingsNo, txtDuration;
         private RatingBar ratingBar;
+        private RelativeLayout relItem;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
@@ -97,6 +105,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
             txtDuration = itemView.findViewById(R.id.txtDuration);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
             ratingBar = itemView.findViewById(R.id.ratingBar);
+            relItem=itemView.findViewById(R.id.relItem);
             imgDeleteVideo = itemView.findViewById(R.id.imgDeleteVideo);
         }
     }

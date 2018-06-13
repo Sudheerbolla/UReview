@@ -57,7 +57,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private String lat = "", lng = "", locMaxRange = "50", locMinRange = "0";
 
     //    News Feed Pagination
-    private boolean isLoading, hasLoadedAllItems;
+    private boolean hasLoadedAllItems;
     private int startFrom = 0;
 
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
@@ -68,6 +68,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
     private int lastUpdatedPos = -1;
+
+    private boolean isNextPageAvailable = false;
+    private boolean isLoading = false;
+    private int pageIndex = 1;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -97,6 +101,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         instance = this;
+        pageIndex = 1;
         rvNewsFeed = rootView.findViewById(R.id.rvNewsFeed);
         rvCategories = rootView.findViewById(R.id.rvCategories);
         rvNearByVideos = rootView.findViewById(R.id.rvNearByVideos);
@@ -529,6 +534,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     @Override
     public boolean hasLoadedAllItems() {
+        if (isNextPageAvailable) {
+            return false;
+        }
         return hasLoadedAllItems;
     }
 }
