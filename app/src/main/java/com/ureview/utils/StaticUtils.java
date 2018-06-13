@@ -58,7 +58,7 @@ public class StaticUtils {
 
     private static final int IMAGE_SAMPLE_SIZE = 4;
     private static final String DISPLAY_DATE_TIME_FORMAT = "dd-MM-yyyy hh:mm a";
-    public static final String storageDir = Environment.getExternalStorageDirectory().getPath() + "/" + "Devotted" + "/";
+    public static final String storageDir = Environment.getExternalStorageDirectory().getPath() + "/" + "UReview" + "/";
     public static int screen_height, screen_width;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
