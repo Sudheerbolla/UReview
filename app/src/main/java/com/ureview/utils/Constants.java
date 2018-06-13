@@ -19,4 +19,6 @@ public class Constants {
     public static final String BEARER = "Bearer ";
 
     public static final String COUNTRY_CODE = "countryCode";
+
+    public static final String INSTA_CLIENT_ID = "fcd93ed62dd54e9f8ba1e317fa2bfec4";
 }

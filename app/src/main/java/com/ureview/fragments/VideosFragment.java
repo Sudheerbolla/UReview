@@ -123,7 +123,6 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     private void parseDeleteVideoWSResponse(JsonObject response) {
         try {
             if (response.has("status")) {
-                Gson gson = new Gson();
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                     if (clickedPosition != -1) {
@@ -188,6 +187,9 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         switch (view.getId()) {
             case R.id.imgDeleteVideo:
                 requestForDeleteVideoWS(userVideosModelArrayList.get(position).id);
+                break;
+            case R.id.relItem:
+                mainActivity.replaceFragment(VideoDetailFragment.newInstance(userVideosModelArrayList, position), true, R.id.mainContainer);
                 break;
             default:
                 break;

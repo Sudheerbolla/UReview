@@ -44,8 +44,8 @@
 
                     <ImageView
                         android:id="@+id/imgPlayPause"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/pad_30"
+                        android:layout_height="@dimen/pad_30"
                         android:padding="@dimen/pad_3"
                         android:scaleType="centerCrop"
                         android:src="@drawable/icon_play_pause" />

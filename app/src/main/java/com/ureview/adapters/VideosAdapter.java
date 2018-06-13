@@ -44,7 +44,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
         boolean val = only10Items && position >= 10;
         if (val) {
-            holder.cvMore.setVisibility(position >10 ? View.GONE : View.VISIBLE);
+            holder.cvMore.setVisibility(position > 10 ? View.GONE : View.VISIBLE);
         } else {
             holder.cvMore.setVisibility(View.GONE);
         }
@@ -74,7 +74,12 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             holder.txtTags.setText(videoModel.videoTags);
             holder.txtViewCount.setText(videoModel.videoWatchedCount);
             holder.txtDistance.setText(videoModel.distance);
-            holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+            try {
+                holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+            } catch (Exception e) {
+                e.printStackTrace();
+                holder.ratingBar.setRating(0f);
+            }
             holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
             holder.txtDuration.setText(videoModel.videoDuration);
             holder.itemView.setOnClickListener(new View.OnClickListener() {

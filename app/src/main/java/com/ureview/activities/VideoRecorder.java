@@ -54,6 +54,7 @@ public class VideoRecorder extends BaseActivity {
     private String filePath;
     private int duration;
     private Context mContext;
+    private int option = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,6 +233,7 @@ public class VideoRecorder extends BaseActivity {
      * Command for cutting video
      */
     private void executeCutVideoCommand(int startMs, int endMs) {
+        option = 0;
         File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
         String filePrefix = "cut_video";
         String fileExtn = ".mp4";
@@ -249,7 +251,26 @@ public class VideoRecorder extends BaseActivity {
 
     }
 
-    // ffmpeg -i "input.mp4" -ss 00:00:03 -t 00:00:15 -acodec copy -vcodec copy "output.mp4"            ffmpeg -i "input.mp4" -ss 00:00:03 -t 00:00:15 -acodec libx264 -vcodec ac3 "output.mp4"
+    private void executeCompressVideoCommand() {
+        option = 1;
+        File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        String filePrefix = "compress_video";
+        String fileExtn = ".mp4";
+        String path = "file://" + filePath;
+        String yourRealPath = getPath(this, Uri.parse(path));
+        File dest = new File(moviesDir, filePrefix + fileExtn);
+        int fileNo = 0;
+        while (dest.exists()) {
+            fileNo++;
+            dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
+        }
+        Log.d(TAG, "startTrim: src: " + yourRealPath);
+        Log.d(TAG, "startTrim: dest: " + dest.getAbsolutePath());
+        this.filePath = dest.getAbsolutePath();
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "160x120", "-r", "25", "-vcodec", "mpeg4", "-b:v", "150k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+        execFFmpegBinary(complexCommand);
+    }
+
     public static String[] combine(String[] arg1, String[] arg2, String[] arg3) {
         String[] result = new String[arg1.length + arg2.length + arg3.length];
         System.arraycopy(arg1, 0, result, 0, arg1.length);
@@ -272,13 +293,15 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onSuccess(String s) {
                     Log.d(TAG, "SUCCESS with output : " + s);
-//                    Intent intent = new Intent(VideoRecorder.this, PreviewActivity.class);
-//                    intent.putExtra(FILEPATH, filePath);
-//                    startActivity(intent);
-                    Intent intent = new Intent();
-                    intent.putExtra(StaticUtils.FILEPATH, filePath);
-                    setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
-                    finish();
+                    if (option == 0) {
+                        executeCompressVideoCommand();
+                        progressDialog.show();
+                    } else if (option == 1) {
+                        Intent intent = new Intent();
+                        intent.putExtra(StaticUtils.FILEPATH, filePath);
+                        setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
+                        finish();
+                    }
                 }
 
                 @Override
@@ -392,8 +415,7 @@ public class VideoRecorder extends BaseActivity {
     /**
      * Get the value of the data column for this Uri.
      */
-    private String getDataColumn(Context context, Uri uri, String selection,
-                                 String[] selectionArgs) {
+    private String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -414,7 +436,6 @@ public class VideoRecorder extends BaseActivity {
         }
         return null;
     }
-
 
     /**
      * @param uri The Uri to check.

@@ -222,4 +222,5 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     public void noInternetConnection(int requestCode) {
         Log.e("internet: ", "noInternetConnection");
     }
+
 }
