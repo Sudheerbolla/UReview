@@ -56,6 +56,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.google.android.exoplayer:exoplayer:2.6.0'
-
 }
 apply plugin: 'com.google.gms.google-services'

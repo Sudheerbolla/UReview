@@ -112,7 +112,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     public void addVideos(ArrayList<VideoModel> arrList) {
         int lastPosition = videoArrList.size() > 0 ? videoArrList.size() - 1 : 0;
         videoArrList.addAll(arrList);
-        notifyItemRangeInserted(lastPosition, arrList.size() - 1);
+        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
     }
 
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {

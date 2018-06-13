@@ -47,8 +47,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private String currLat, currLng;
 
     //Search People Pagination
-    private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0;
+    private boolean isLoading = false, hasLoadedAllItems;
+    private int startFrom = 0, count = 5;
     protected String searchText = "";
 
     public static SearchVideosFragment newInstance() {
@@ -72,22 +72,27 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         rootView = inflater.inflate(R.layout.fragment_search_video, container, false);
 
         rvSearchVideo = rootView.findViewById(R.id.rvSearchVideo);
-        rvSearchVideo.setListPagination(this);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         searchVideosAdapter = new SearchVideosAdapter(getActivity(), this);
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
-        videosArrList.clear();
-        hasLoadedAllItems = false;
-        startFrom = 0;
-//        requestForSearchVideos();
+        rvSearchVideo.setListPagination(this);
         return rootView;
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (mainActivity.edtText != null && !TextUtils.isEmpty(mainActivity.edtText.getText().toString())) {
+//            searchVideo(mainActivity.edtText.getText().toString());
+//        }
+//    }
 
     protected void searchVideo(String searchVideo) {
         searchText = searchVideo;
         videosArrList.clear();
         startFrom = 0;
+        isLoading = false;
         hasLoadedAllItems = false;
         requestForSearchVideos();
     }
@@ -100,7 +105,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             jsonObjectReq.put("latitude", "17.325400");
             jsonObjectReq.put("longitude", "78.362000");
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
-            jsonObjectReq.put("count", 10);
+            jsonObjectReq.put("count", String.valueOf(count));
             jsonObjectReq.put("current_latitude", currLat);
             jsonObjectReq.put("current_longitude", currLng);
         } catch (JSONException e) {
@@ -136,6 +141,10 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                         tempVideosArrList.add(videoModel);
                     }
                     startFrom += feedVidArr.length();
+                    if (startFrom % count != 0) {
+                        hasLoadedAllItems = true;
+                        isLoading = false;
+                    }
                     searchVideosAdapter.addVideos(tempVideosArrList);
                 }
             } else {

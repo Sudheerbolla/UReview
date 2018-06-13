@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,9 @@ import retrofit2.Call;
 public class HomeFragment extends BaseFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, Paginate.Callbacks, IVideosClickListener {
     private static HomeFragment instance;
     private View rootView;
+    private NestedScrollView nestedScroll;
     private CustomRecyclerView rvCategories, rvNewsFeed, rvNearByVideos, rvTopRated, rvPopularsearch;
+    private LinearLayoutManager linearLayoutManager;
     private NewsFeedAdapter newsFeedAdapter;
     private HomeCategoryAdapter homeCategoryAdapter;
     private MainActivity mainActivity;
@@ -58,7 +62,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     //    News Feed Pagination
     private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0;
+    private int startFrom = 0, count = 5;
 
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
     private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
@@ -68,6 +72,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
     private int lastUpdatedPos = -1;
+    private int visibleItemCount, totalItemCount, pastVisiblesItems;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -97,7 +102,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
         instance = this;
+        nestedScroll = rootView.findViewById(R.id.nestedScroll);
         rvNewsFeed = rootView.findViewById(R.id.rvNewsFeed);
+        linearLayoutManager = new LinearLayoutManager(mainActivity);
+        rvNewsFeed.setLayoutManager(linearLayoutManager);
         rvCategories = rootView.findViewById(R.id.rvCategories);
         rvNearByVideos = rootView.findViewById(R.id.rvNearByVideos);
         rvTopRated = rootView.findViewById(R.id.rvTopRated);
@@ -121,6 +129,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         rvTopRated.setAdapter(topRatedVideosAdapter);
         rvPopularsearch.setAdapter(popularVideosAdapter);
 
+        setScrollListeners();
+        rvNewsFeed.setLayoutManager(new LinearLayoutManager(mainActivity));
+
         relVideos = rootView.findViewById(R.id.relVideos);
         relTopRated = rootView.findViewById(R.id.relTopRated);
         relPopularSearch = rootView.findViewById(R.id.relPopularSearch);
@@ -140,6 +151,48 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         requestForCategoryList();
 
         return rootView;
+    }
+
+    private void setScrollListeners() {
+        nestedScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (v.getChildAt(v.getChildCount() - 1) != null) {
+//                    if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
+//                            scrollY > oldScrollY) {
+//                        visibleItemCount = linearLayoutManager.getChildCount();
+//                        totalItemCount = linearLayoutManager.getItemCount();
+//                        pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
+//
+//                        if (!isLoading()) {
+//                            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+//                                onLoadMore();
+//                            }
+//                        }
+//                    }
+                    View view = (View) nestedScroll.getChildAt(nestedScroll.getChildCount() - 1);
+                    int diff = (view.getBottom() - (nestedScroll.getHeight() + nestedScroll
+                            .getScrollY()));
+                    //Log.e("lav diff", diff + "");// Compared with 30 as it is the Least diff.
+                    if (diff <= 30 && !isLoading() && !hasLoadedAllItems())
+                        onLoadMore();
+                }
+            }
+        });
+//        nestedScroll.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+//            @Override
+//            public void onScrollChanged() {
+//                View view = (View) nestedScroll.getChildAt(nestedScroll.getChildCount() - 1);
+//                int diff = (view.getBottom() - (nestedScroll.getHeight() + nestedScroll
+//                        .getScrollY()));
+//                if (diff <= 10) {
+//                    if (!isLoading() && !hasLoadedAllItems()) {
+//                        Toast.makeText(mainActivity, "Need to call API", Toast.LENGTH_SHORT).show();
+//                        onLoadMore();
+//                    }
+//                }
+//            }
+//        });
     }
 
     private void setData(String categoryName) {
@@ -172,8 +225,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void requestForNewsFeedVideos() {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("startFrom", String.valueOf(startFrom));
-        queryMap.put("count", "5");
-        queryMap.put("user_id", /*userId*/"1");
+        queryMap.put("count", String.valueOf(count));
+        queryMap.put("user_id", userId);
         queryMap.put("current_latitude", lat);
         queryMap.put("current_longitude", lng);
 
@@ -260,6 +313,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             }
             homeCategoryAdapter.addCategories(categoryList);
             if (categoryList.get(position).categoryName.equalsIgnoreCase("New Feed")) {
+                rvNewsFeed.scrollToPosition(0);
                 startFrom = 0;
                 feedVideoList.clear();
                 newsFeedAdapter.clearAllVideos();
@@ -361,6 +415,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                         tempFeedVideoList.add(videoModel);
                     }
                     startFrom += feedVidArr.length();
+                    if (startFrom % count != 0) {
+                        hasLoadedAllItems = true;
+                        isLoading = false;
+                    }
                     newsFeedAdapter.addVideos(tempFeedVideoList);
                 }
             } else {
@@ -369,12 +427,14 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                     rvNewsFeed.setVisibility(View.GONE);
                 } else {
                     hasLoadedAllItems = true;
+                    isLoading = false;
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
-            setData(categoryList.get(0).categoryName);
+            if (categoryList != null && categoryList.size() > 0)
+                setData(categoryList.get(0).categoryName);
         }
     }
 
@@ -531,4 +591,5 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public boolean hasLoadedAllItems() {
         return hasLoadedAllItems;
     }
+
 }

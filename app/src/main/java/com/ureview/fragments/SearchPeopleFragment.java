@@ -42,13 +42,14 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private CustomRecyclerView rvPeople;
     private PeopleAdapter peopleAdapter;
     private MainActivity mainActivity;
-    private ArrayList<PeopleModel> peopleArrList;
+    private ArrayList<PeopleModel> peopleArrList = new ArrayList<>();
+    private ArrayList<PeopleModel> tempPeopleArrList = new ArrayList<>();
     private CustomTextView txtNoData;
     private String userId;
 
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0;
+    private int startFrom = 0, count = 10;
     protected String searchText = "";
     private int selectedPosition;
 
@@ -60,7 +61,6 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        peopleArrList = new ArrayList<>();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
@@ -70,16 +70,20 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         rootView = inflater.inflate(R.layout.fragment_followers, container, false);
 
         rvPeople = rootView.findViewById(R.id.rvFollowers);
-        rvPeople.setListPagination(this);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         txtNoData.setVisibility(View.GONE);
         setAdapter();
-        startFrom = 0;
-        hasLoadedAllItems = false;
-//        requestForSearchPeopleListWS();
-
+        rvPeople.setListPagination(this);
         return rootView;
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (mainActivity.edtText != null && !TextUtils.isEmpty(mainActivity.edtText.getText().toString())) {
+//            searchUser(mainActivity.edtText.getText().toString());
+//        }
+//    }
 
     private void setAdapter() {
         peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this);
@@ -100,7 +104,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         hashMap.put("user_name", searchText);
         hashMap.put("user_id", userId);
         hashMap.put("startFrom", String.valueOf(startFrom));
-        hashMap.put("count", "10");
+        hashMap.put("count", String.valueOf(count));
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getSearchUsers(hashMap);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
     }
@@ -141,20 +145,26 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     JsonArray usersData = response.get("users_data").getAsJsonArray();
+                    tempPeopleArrList.clear();
                     if (usersData.size() > 0) {
                         for (int i = 0; i < usersData.size(); i++) {
                             Gson gson = new Gson();
                             PeopleModel peopleModel = gson.fromJson(usersData.get(i).getAsJsonObject(), PeopleModel.class);
                             peopleArrList.add(peopleModel);
+                            tempPeopleArrList.add(peopleModel);
                         }
                         startFrom += usersData.size();
+                        if (startFrom % count != 0) {
+                            hasLoadedAllItems = true;
+                            isLoading = false;
+                        }
                         txtNoData.setVisibility(View.GONE);
                         rvPeople.setVisibility(View.VISIBLE);
                     } else {
                         txtNoData.setVisibility(View.VISIBLE);
                         rvPeople.setVisibility(View.GONE);
                     }
-                    peopleAdapter.notifyDataSetChanged();
+                    peopleAdapter.addItems(tempPeopleArrList);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                     if (startFrom == 0) {

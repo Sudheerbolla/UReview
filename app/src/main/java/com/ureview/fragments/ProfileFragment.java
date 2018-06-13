@@ -251,7 +251,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Unfollow";
+                    userInfoModel.follow_status = "Follow";
                     setFollowTextAndBg();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -266,7 +266,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Follow";
+                    userInfoModel.follow_status = "Unfollow";
                     setFollowTextAndBg();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

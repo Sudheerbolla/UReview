@@ -142,7 +142,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
     public void addVideos(ArrayList<VideoModel> feedVideoList) {
         int lastPosition = this.feedVideoList.size() > 0 ? this.feedVideoList.size() - 1 : 0;
         this.feedVideoList.addAll(feedVideoList);
-        notifyItemRangeInserted(lastPosition, feedVideoList.size() - 1);
+        notifyItemRangeInserted(lastPosition + 1, feedVideoList.size() - 1);
     }
 
     public void clearAllVideos() {

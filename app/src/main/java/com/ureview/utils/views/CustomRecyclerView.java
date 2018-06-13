@@ -32,6 +32,7 @@ public class CustomRecyclerView extends RecyclerView {
     private int listType;
     private int layoutOrientation;
     private boolean addLoadingRow = true;
+    private boolean isNotParent = true;
     private boolean customLoadingListItem = false;
     private int grid_span = 1;
 
@@ -68,6 +69,7 @@ public class CustomRecyclerView extends RecyclerView {
 
         needPagination = ta.getBoolean(R.styleable.CustomRecyclerView_pagination, false);
         addLoadingRow = ta.getBoolean(R.styleable.CustomRecyclerView_loadmore_visibility, true);
+        isNotParent = ta.getBoolean(R.styleable.CustomRecyclerView_is_not_parent, true);
         loadMoreType = ta.getInt(R.styleable.CustomRecyclerView_loadmore_type, 0);
         listOrientation = ta.getInt(R.styleable.CustomRecyclerView_list_orientation, 0);
         listType = ta.getInt(R.styleable.CustomRecyclerView_list_type, 0);
@@ -130,6 +132,7 @@ public class CustomRecyclerView extends RecyclerView {
             Paginate.with(this, callbacks)
                     .setLoadingTriggerThreshold(0)
                     .addLoadingListItem(addLoadingRow)
+                    .isNotParent(isNotParent)
                     .setLoadingListItemCreator(customLoadingListItem ? new CustomLoadingListItemCreator() : null)
                     .setLoadingListItemSpanSizeLookup(new RecyclerPaginate.LoadingListItemSpanLookup() {
                         @Override
@@ -175,8 +178,8 @@ public class CustomRecyclerView extends RecyclerView {
         private Drawable mDivider;
 
         public SimpleDividerItemDecoration(Context context, int white) {
-            mDivider = ContextCompat.getDrawable(context,R.drawable.line_divider);
-            GradientDrawable gradientDrawable = (GradientDrawable)mDivider;
+            mDivider = ContextCompat.getDrawable(context, R.drawable.line_divider);
+            GradientDrawable gradientDrawable = (GradientDrawable) mDivider;
             gradientDrawable.setColor(context.getResources().getColor(white));
         }
 

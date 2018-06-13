@@ -15,6 +15,7 @@ public final class RecyclerPaginate extends Paginate {
     private final RecyclerView recyclerView;
     private final Callbacks callbacks;
     private final int loadingTriggerThreshold;
+    private final boolean isNotParent;
     private WrapperAdapter wrapperAdapter;
     private WrapperSpanSizeLookup wrapperSpanSizeLookup;
 
@@ -22,14 +23,17 @@ public final class RecyclerPaginate extends Paginate {
                      Callbacks callbacks,
                      int loadingTriggerThreshold,
                      boolean addLoadingListItem,
+                     boolean isNotParent,
                      LoadingListItemCreator loadingListItemCreator,
                      LoadingListItemSpanLookup loadingListItemSpanLookup) {
         this.recyclerView = recyclerView;
         this.callbacks = callbacks;
         this.loadingTriggerThreshold = loadingTriggerThreshold;
+        this.isNotParent = isNotParent;
 
         // Attach scrolling listener in order to perform end offset check on each scroll event
         recyclerView.addOnScrollListener(mOnScrollListener);
+//        recyclerView.setOnScrollChangeListener(mOnScrollChangedListener);
 
         if (addLoadingListItem) {
             // Wrap existing adapter with new adapter that will add loading row
@@ -112,7 +116,8 @@ public final class RecyclerPaginate extends Paginate {
     private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            checkEndOffset(); // Each time when list is scrolled check if end of the list is reached
+            if (dy > 0 && !isNotParent)
+                checkEndOffset(); // Each time when list is scrolled check if end of the list is reached
         }
     };
 
@@ -161,6 +166,7 @@ public final class RecyclerPaginate extends Paginate {
 
         private int loadingTriggerThreshold = 5;
         private boolean addLoadingListItem = true;
+        private boolean isNotParent = true;
         private LoadingListItemCreator loadingListItemCreator;
         private LoadingListItemSpanLookup loadingListItemSpanLookup;
 
@@ -174,7 +180,7 @@ public final class RecyclerPaginate extends Paginate {
          * if 5.
          *
          * @param threshold number of items from the end of the list.
-         * @return {@link }
+         * @return {@link Builder}
          */
         public Builder setLoadingTriggerThreshold(int threshold) {
             this.loadingTriggerThreshold = threshold;
@@ -188,12 +194,17 @@ public final class RecyclerPaginate extends Paginate {
          * row will be added.
          *
          * @param addLoadingListItem true if loading row needs to be added, false otherwise.
-         * @return {@link }
+         * @return {@link Builder}
          * @see {@link Callbacks#hasLoadedAllItems()}
-         * @see {@link }
+         * @see {@link Builder#setLoadingListItemCreator(LoadingListItemCreator)}
          */
         public Builder addLoadingListItem(boolean addLoadingListItem) {
             this.addLoadingListItem = addLoadingListItem;
+            return this;
+        }
+
+        public Builder isNotParent(boolean isNotParent) {
+            this.isNotParent = isNotParent;
             return this;
         }
 
@@ -201,7 +212,7 @@ public final class RecyclerPaginate extends Paginate {
          * Set custom loading list item creator. If no creator is set default one will be used.
          *
          * @param creator Creator that will ne called for inflating and binding loading list item.
-         * @return {@link }
+         * @return {@link Builder}
          */
         public Builder setLoadingListItemCreator(LoadingListItemCreator creator) {
             this.loadingListItemCreator = creator;
@@ -213,7 +224,7 @@ public final class RecyclerPaginate extends Paginate {
          * loading list item needs to have custom span. Full span of {@link GridLayoutManager} is used by default.
          *
          * @param loadingListItemSpanLookup LoadingListItemSpanLookup that will be called for loading list item span.
-         * @return {@link }
+         * @return {@link Builder}
          */
         public Builder setLoadingListItemSpanSizeLookup(LoadingListItemSpanLookup loadingListItemSpanLookup) {
             this.loadingListItemSpanLookup = loadingListItemSpanLookup;
@@ -242,7 +253,7 @@ public final class RecyclerPaginate extends Paginate {
             }
 
             return new RecyclerPaginate(recyclerView, callbacks, loadingTriggerThreshold, addLoadingListItem,
-                    loadingListItemCreator, loadingListItemSpanLookup);
+                    isNotParent, loadingListItemCreator, loadingListItemSpanLookup);
         }
     }
 

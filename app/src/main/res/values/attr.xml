@@ -53,6 +53,7 @@
     <declare-styleable name="CustomRecyclerView">
         <attr name="pagination" format="boolean" />
         <attr name="loadmore_visibility" format="boolean" />
+        <attr name="is_not_parent" format="boolean" />
         <attr name="gird_span" format="integer" />
         <attr name="list_type" />
         <attr name="list_orientation" />

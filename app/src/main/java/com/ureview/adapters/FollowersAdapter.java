@@ -52,7 +52,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
 
         if (!TextUtils.isEmpty(followModel.follow_status) && followModel.follow_status.equalsIgnoreCase("follow")) {
             holder.txtFollowStatus.setText("Unfollow");
-            holder.txtFollowStatus.setSelected(false);
+            holder.txtFollowStatus.setSelected(true);
             holder.imgClear.setVisibility(View.GONE);
         } else {
             if (isFollowers) {

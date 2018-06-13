@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -60,6 +61,13 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 isInSearchPeopleFragment = tab.getText().toString().equalsIgnoreCase("People");
+                if (!TextUtils.isEmpty(mainActivity.edtText.getText().toString().trim())) {
+                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
+                        searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
+                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
+                        searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim());
+                    }
+                }
             }
 
             @Override
@@ -72,7 +80,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-
+        mainActivity.edtText.setText("");
         mainActivity.edtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

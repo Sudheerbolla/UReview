@@ -653,7 +653,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void shareVideoWithFriends() {
-
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.setType("video/3gp");
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Video");
+        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(feedVideo.video));
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Enjoy the Video");
+        startActivity(Intent.createChooser(sendIntent, "Email:"));
     }
 
     private void shareLinkWithFriends() {

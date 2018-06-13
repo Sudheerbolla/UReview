@@ -27,19 +27,15 @@
         <com.ureview.utils.views.CustomRecyclerView
             android:id="@+id/rvNewsFeed"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/pad_15"
             android:layout_marginRight="@dimen/pad_15"
             android:layout_marginTop="@dimen/pad_10"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:is_not_parent="true"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rvCategories"
-            app:list_orientation="vertical"
-            app:list_type="list"
-            app:loadmore_type="bottom"
-            app:loadmore_visibility="true"
             app:pagination="true" />
 
         <com.ureview.utils.views.CustomTextView

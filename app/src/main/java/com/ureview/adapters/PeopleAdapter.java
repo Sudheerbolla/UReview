@@ -43,6 +43,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         this.showViewCount = showViewCount;
     }
 
+    public void addVideos(ArrayList<PeopleModel> arrList) {
+        int lastPosition = peopleArrayList.size() > 0 ? peopleArrayList.size() - 1 : 0;
+        peopleArrayList.addAll(arrList);
+        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
+    }
+
     @NonNull
     @Override
     public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

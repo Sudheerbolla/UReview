@@ -44,6 +44,10 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private String userId;
     private int selectedPosition;
 
+    //Search People Pagination
+    private boolean isLoading, hasLoadedAllItems;
+    private int startFrom = 0, count = 10;
+
     public static FollowersFragment newInstance(boolean showFollowers, String userId) {
         FollowersFragment followersFragment = new FollowersFragment();
         Bundle bundle = new Bundle();
