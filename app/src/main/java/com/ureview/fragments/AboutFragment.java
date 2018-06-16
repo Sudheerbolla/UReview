@@ -21,7 +21,7 @@ public class AboutFragment extends BaseFragment {
     private View rootView;
     private MainActivity mainActivity;
     private UserInfoModel userInfoModel;
-    private CustomTextView txtEmail, txtAge, txtPhone, txtAboutMe;
+    private CustomTextView txtEmail, txtAge, txtPhone, txtAboutMe, txtAbout;
     private String userId;
     private LinearLayout linPersonal;
 
@@ -65,6 +65,7 @@ public class AboutFragment extends BaseFragment {
     boolean hideSensitiveData;
 
     private void initComponents() {
+        txtAbout = rootView.findViewById(R.id.txtAbout);
         txtAboutMe = rootView.findViewById(R.id.txtAboutMe);
         txtAge = rootView.findViewById(R.id.txtAge);
         txtEmail = rootView.findViewById(R.id.txtEmail);
@@ -88,8 +89,12 @@ public class AboutFragment extends BaseFragment {
                     txtAboutMe.setText(userInfoModel.user_description);
                 linPersonal.setVisibility(View.GONE);
             }
+            txtAbout.setText("Description");
             return;
-        } else linPersonal.setVisibility(View.VISIBLE);
+        } else {
+            txtAbout.setText("About Me");
+            linPersonal.setVisibility(View.VISIBLE);
+        }
         if (userInfoModel != null) {
             if (txtPhone != null) txtPhone.setText(userInfoModel.mobile);
             if (txtEmail != null) txtEmail.setText(userInfoModel.email);

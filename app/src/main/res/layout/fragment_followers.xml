@@ -26,6 +26,7 @@
         android:paddingTop="@dimen/pad_8"
         android:text="No data found"
         android:textColor="@color/app_text_color"
-        android:textSize="@dimen/txt_size_18sp" />
+        android:textSize="@dimen/txt_size_18sp"
+        android:visibility="gone" />
 
 </RelativeLayout>

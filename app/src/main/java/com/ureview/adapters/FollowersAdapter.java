@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.FollowModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CircleImageView;
 import com.ureview.utils.views.CustomTextView;
 
@@ -50,25 +51,30 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         holder.imgClear.setVisibility(View.GONE);
         FollowModel followModel = followModelArrayList.get(position);
 
-        if (!TextUtils.isEmpty(followModel.follow_status) && followModel.follow_status.equalsIgnoreCase("follow")) {
-            holder.txtFollowStatus.setText("Unfollow");
-            holder.txtFollowStatus.setSelected(true);
-            holder.imgClear.setVisibility(View.GONE);
+        if (LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, "").equalsIgnoreCase(followModel.user_id)) {
+            holder.txtFollowStatus.setVisibility(View.GONE);
         } else {
-            if (isFollowers) {
-                if (followModel.status.equalsIgnoreCase("1")) {
+            holder.txtFollowStatus.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(followModel.follow_status) && followModel.follow_status.equalsIgnoreCase("unfollow")) {
+                holder.txtFollowStatus.setText("Unfollow");
+                holder.txtFollowStatus.setSelected(true);
+                holder.imgClear.setVisibility(View.GONE);
+            } else {
+                if (isFollowers) {
+                    if (followModel.status.equalsIgnoreCase("1")) {
+                        holder.txtFollowStatus.setText("Follow");
+                        holder.txtFollowStatus.setSelected(false);
+                        holder.imgClear.setVisibility(View.VISIBLE);
+                    } else if (followModel.status.equalsIgnoreCase("2")) {
+                        holder.txtFollowStatus.setText("Unfollow");
+                        holder.txtFollowStatus.setSelected(true);
+                        holder.imgClear.setVisibility(View.GONE);
+                    }
+                } else {
                     holder.txtFollowStatus.setText("Follow");
                     holder.txtFollowStatus.setSelected(false);
                     holder.imgClear.setVisibility(View.VISIBLE);
-                } else if (followModel.status.equalsIgnoreCase("2")) {
-                    holder.txtFollowStatus.setText("Unfollow");
-                    holder.txtFollowStatus.setSelected(true);
-                    holder.imgClear.setVisibility(View.GONE);
                 }
-            } else {
-                holder.txtFollowStatus.setText("Follow");
-                holder.txtFollowStatus.setSelected(false);
-                holder.imgClear.setVisibility(View.VISIBLE);
             }
         }
 

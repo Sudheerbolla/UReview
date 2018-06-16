@@ -232,17 +232,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onClick(View view) {
-        clearBackStackCompletely();
         switch (view.getId()) {
             case R.id.llHome:
+                clearBackStackCompletely();
                 if (!imgHome.isSelected())
                     setHomeFragment();
                 break;
             case R.id.llSearch:
+                clearBackStackCompletely();
                 if (!imgSearchB.isSelected())
                     setSearchFragment();
                 break;
             case R.id.llVideo:
+                clearBackStackCompletely();
 //                if (!imgVideo.isSelected()) {
 //                    setSelectedTab(imgVideo, null);
 //                setUploadVideoFragment();
@@ -268,10 +270,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
                 break;
             case R.id.llProfile:
+                clearBackStackCompletely();
                 if (!imgProfile.isSelected())
                     setProfileFragment();
                 break;
             case R.id.llSettings:
+                clearBackStackCompletely();
                 if (!imgSettings.isSelected())
                     setSettingsFragment();
                 break;

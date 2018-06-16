@@ -287,7 +287,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             case R.id.imgProfile:
             case R.id.txtName:
             case R.id.txtLoc:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId,
+                        feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)),
+                        true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
                 //        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);

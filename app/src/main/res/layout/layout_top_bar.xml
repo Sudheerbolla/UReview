@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="@dimen/pad_10"
+                android:padding="@dimen/pad_5"
                 android:src="@drawable/back_copy"
                 android:visibility="invisible" />
 
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="@dimen/pad_7"
+                android:layout_marginStart="@dimen/pad_3"
                 android:padding="@dimen/pad_10"
                 android:src="@drawable/location_copy"
                 android:visibility="gone" />
@@ -58,7 +58,7 @@
             android:gravity="center"
             android:inputType="text"
             android:marqueeRepeatLimit="marquee_forever"
-            android:padding="@dimen/pad_6"
+            android:padding="@dimen/pad_2"
             android:singleLine="true"
             android:textColor="@color/color_vvDarkGrey"
             android:textSize="@dimen/txt_size_18sp"

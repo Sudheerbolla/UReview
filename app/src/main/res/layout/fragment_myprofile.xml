@@ -155,7 +155,8 @@
             android:background="@color/color_white"
             android:tag="sticky-nonconstant"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            app:tabMode="fixed"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
 
         <View
             android:id="@+id/viewDivider"

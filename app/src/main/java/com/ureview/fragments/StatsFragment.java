@@ -250,7 +250,8 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(videoViewsModelArrayList.get(position).user_id), true, R.id.mainContainer);
+//                mainActivity.replaceFragment(ProfileFragment.newInstance(videoViewsModelArrayList.get(position).user_id,
+//                        videoViewsModelArrayList.get(position).name), true, R.id.mainContainer);
                 break;
             default:
                 break;

@@ -505,8 +505,13 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         Glide.with(this).load(feedVideo.userImage).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
         txtUserLoc.setText(feedVideo.userLocation);
+        if (userId.equalsIgnoreCase(feedVideo.userId)) {
+            txtFollowStatus.setVisibility(View.GONE);
+        } else {
+            txtFollowStatus.setVisibility(View.VISIBLE);
+        }
         txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ||
-                feedVideo.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
+                feedVideo.followStatus.equalsIgnoreCase("follow") ? "Follow" : "Unfollow");
         txtFollowStatus.setOnClickListener(this);
         txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus));
         if (feedVideoList.size() > 0) {
@@ -603,7 +608,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
-                    requestForUnFollowUser();
+                    askConfirmationAndProceed();
                 } else {
                     requestForFollowUser();
                 }
@@ -621,6 +626,16 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 mainActivity.replaceFragment(ReportVideoFragment.newInstance(), true, R.id.mainContainer);
                 break;
         }
+    }
+
+    private void askConfirmationAndProceed() {
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, feedVideo.firstName.concat(" ").concat(feedVideo.lastName),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestForUnFollowUser();
+                    }
+                });
     }
 
     private void showDirectionMaps() {

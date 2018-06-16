@@ -17,7 +17,10 @@ import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder> {
 
@@ -59,11 +62,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             RequestOptions options = new RequestOptions()
                     .placeholder(R.drawable.ic_profile)
                     .fitCenter()
+                    .transform(new RoundedCornersTransformation(20, 0))
                     .error(R.drawable.ic_profile);
 
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
-                    .apply(options)
+                    .apply(RequestOptions.signatureOf(new RoundedCornersTransformation(50,0)))
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
 
@@ -81,7 +85,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
 
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);
-        holder.txtViewCount.setText(videoModel.videoWatchedCount);
+        String count = videoModel.videoWatchedCount;
+        DecimalFormat df = new DecimalFormat("0.0");
+        if (Integer.parseInt(count) > 1000) {
+            count = df.format((Double.valueOf(count) / 1000)).concat("k");
+        }
+        holder.txtViewCount.setText(count);
         holder.txtDistance.setText(videoModel.distance);
         holder.txtDuration.setText(videoModel.videoDuration);
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));

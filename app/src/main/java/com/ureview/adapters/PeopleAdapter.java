@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.PeopleModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CircleImageView;
 import com.ureview.utils.views.CustomTextView;
 
@@ -86,10 +87,15 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
             holder.txtViews.setText(Integer.parseInt(peopleModel.videoViews) == 1 ? "View" : "Views");
         }
 //        holder.txtReviewCount.setVisibility(View.GONE);
-        holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ||
-                peopleModel.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
-        holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(peopleModel.followStatus) ||
-                peopleModel.followStatus.equalsIgnoreCase("Unfollow")));
+        if (peopleModel.userId.equalsIgnoreCase(LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, ""))) {
+            holder.txtFollowStatus.setVisibility(View.GONE);
+        } else {
+            holder.txtFollowStatus.setVisibility(View.VISIBLE);
+            holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ||
+                    peopleModel.followStatus.equalsIgnoreCase("follow") ? "Follow" : "Unfollow");
+            holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(peopleModel.followStatus) ||
+                    peopleModel.followStatus.equalsIgnoreCase("follow")));
+        }
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

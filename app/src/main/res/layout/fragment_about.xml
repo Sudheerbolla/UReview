@@ -70,6 +70,7 @@
         </LinearLayout>
 
         <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtAbout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pad_12"

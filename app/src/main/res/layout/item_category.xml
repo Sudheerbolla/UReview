@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ureview.utils.views.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/txtCategory"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llCat"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
     android:layout_margin="@dimen/pad_3"
     android:background="@drawable/selector_app_pink_btn"
-    android:drawablePadding="@dimen/pad_10"
-    android:drawableStart="@drawable/edit_copy"
-    android:ellipsize="end"
-    android:gravity="center"
-    android:padding="@dimen/pad_8"
-    android:text="News Feed"
-    android:textColor="@color/selector_txt_color"
-    android:textSize="@dimen/txt_size_16sp" />
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/pad_8">
+
+    <ImageView
+        android:id="@+id/imgCat"
+        android:layout_width="@dimen/pad_15"
+        android:layout_height="@dimen/pad_15"
+        android:src="@drawable/home_copy" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/pad_5"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:text="News Feed"
+        android:textColor="@color/selector_txt_color"
+        android:textSize="@dimen/txt_size_16sp" />
+</LinearLayout>

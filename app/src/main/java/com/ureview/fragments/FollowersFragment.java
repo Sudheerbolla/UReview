@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.ureview.adapters.FollowersAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.FollowModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -242,14 +244,16 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+                String followText = ((CustomTextView) view).getText().toString().trim();
+                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Follow")) {
+                    askConfirmationAndProceed(position);
+                } else {
                     requestForFollowUser(followModelArrayList.get(position).user_id);
-                } else if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Unfollow")) {
-                    requestForUnFollowUser(followModelArrayList.get(position).user_id);
                 }
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id,
+                        followModelArrayList.get(position).first_name.concat(" ").concat(followModelArrayList.get(position).last_name)), true, R.id.mainContainer);
                 break;
             case R.id.imgClear:
                 requestForBlockUser(followModelArrayList.get(position).user_id);
@@ -257,6 +261,17 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
             default:
                 break;
         }
+    }
+
+    private void askConfirmationAndProceed(final int position) {
+        final FollowModel followModel = followModelArrayList.get(position);
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, followModel.first_name.concat(" ").concat(followModel.last_name),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestForUnFollowUser(followModel.user_id);
+                    }
+                });
     }
 
     @Override

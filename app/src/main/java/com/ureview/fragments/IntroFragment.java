@@ -120,7 +120,7 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
                 case 2:
                     txtTitle.setText("Share on Social Network");
                     txtDesc.setText("Share your reviews with your friends or on other social sites");
-                    btnNext.setText("Next");
+                    btnNext.setText("Skip");
                     break;
             }
         }

@@ -192,7 +192,9 @@ public class VideoViewedPeopleFragmentBc extends BaseFragment implements IParser
                 }
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
+                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
+                        true, R.id.mainContainer);
                 break;
             default:
                 break;

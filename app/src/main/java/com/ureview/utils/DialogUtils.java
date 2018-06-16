@@ -68,6 +68,61 @@ public class DialogUtils {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
 
+    public static void showUnFollowConfirmationPopup(final Context mContext, final String userName,
+                                                     final View.OnClickListener positiveClick) {
+        try {
+            CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
+
+            final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
+            alertDialog.setCancelable(false);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_dialog);
+            txtHeading = alertDialog.findViewById(R.id.txtHeading);
+            txtMessage = alertDialog.findViewById(R.id.txtMessage);
+            txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
+            txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            txtHeading.setText(mContext.getString(R.string.app_name));
+            txtMessage.setText("Do you want to Unfollow ".concat(userName).concat("?"));
+
+            txtPositiveButton.setText("Yes");
+
+            txtNegativeButton.setText("No");
+
+            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (positiveClick != null) {
+                        positiveClick.onClick(v);
+                    }
+                }
+            });
+
+            txtNegativeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void showSimpleDialog(final Context mContext, final String heading, final String message, final String positiveText, final String negativeText, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick, final boolean singleButton, final boolean isCancelable) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
@@ -167,8 +222,8 @@ public class DialogUtils {
                 }
             });
 
-            alertDialog.setCancelable(false);
-            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(true);
+            alertDialog.setCanceledOnTouchOutside(true);
             alertDialog.show();
         } catch (Exception e) {
             e.printStackTrace();

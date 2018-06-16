@@ -41,7 +41,7 @@
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_8"
                 android:singleLine="true"
-                android:text="Rank"
+                android:text="Your Rank"
                 android:textColor="@color/color_vDarkGrey"
                 android:textSize="@dimen/txt_size_15sp" />
 

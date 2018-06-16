@@ -26,6 +26,7 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
@@ -54,7 +55,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     public UserInfoModel userInfoModel;
     private ImageView imgProfile;
     private ViewPagerAdapter adapter;
-    private String userId, otherUserId;
+    private String userId, otherUserId, otherUserName = "";
     private boolean isDiffUser;
     public static UserInfoModel otherInfoModel;
 
@@ -70,6 +71,15 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         return followersFragment;
     }
 
+    public static ProfileFragment newInstance(String userId, String userName) {
+        ProfileFragment followersFragment = new ProfileFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("otherUserId", userId);
+        bundle.putString("otherUserName", userName);
+        followersFragment.setArguments(bundle);
+        return followersFragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +89,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         Bundle bundle = getArguments();
         if (bundle != null) {
             otherUserId = bundle.getString("otherUserId");
+            if (bundle.containsKey("otherUserName"))
+                otherUserName = bundle.getString("otherUserName");
             isDiffUser = !TextUtils.isEmpty(otherUserId) && !otherUserId.equalsIgnoreCase(userId);
         }
     }
@@ -191,7 +203,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.txtFollowStatus:
                 if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
-                    requestForUnFollowUser(otherUserId);
+                    askConfirmationAndProceed();
                 } else {
                     requestForFollowUser(otherUserId);
                 }
@@ -207,6 +219,17 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 break;
         }
 
+    }
+
+
+    private void askConfirmationAndProceed() {
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, otherUserName,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestForUnFollowUser(otherUserId);
+                    }
+                });
     }
 
     private void requestForFollowUser(String followId) {

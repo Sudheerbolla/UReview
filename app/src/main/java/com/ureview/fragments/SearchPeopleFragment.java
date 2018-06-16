@@ -215,7 +215,9 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                 }
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
+                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
+                        true, R.id.mainContainer);
                 break;
             default:
                 break;

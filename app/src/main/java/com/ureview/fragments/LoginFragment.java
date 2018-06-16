@@ -1,6 +1,8 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,7 +30,6 @@ import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.LocalStorage;
-import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
@@ -43,7 +44,7 @@ import retrofit2.Call;
 public class LoginFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
     private View rootView;
-    private CustomTextView txtTwitterLogin, txtFbLogin, txtInstagramLogin;
+    private CustomTextView txtTwitterLogin, txtFbLogin, txtInstagramLogin, txtVersion;
     private SplashActivity splashActivity;
     CallbackManager mFacebookCallbackManager;
     private String email, firstName, lastName, id;
@@ -75,12 +76,23 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         txtTwitterLogin = rootView.findViewById(R.id.txtTwitterLogin);
         txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
         txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
+        txtVersion = rootView.findViewById(R.id.txtVersion);
 
         txtTwitterLogin.setOnClickListener(this);
         txtFbLogin.setOnClickListener(this);
         txtInstagramLogin.setOnClickListener(this);
-
+        getVersion();
         return rootView;
+    }
+
+    private void getVersion() {
+        try {
+            PackageInfo pInfo = splashActivity.getPackageManager().getPackageInfo(splashActivity.getPackageName(), 0);
+            String version = pInfo.versionName;
+            txtVersion.setText("Version ".concat(version));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -193,9 +205,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 splashActivity.replaceFragment(Signup1Fragment.newInstance(bundle), true, R.id.splashContainer);
             } else if (response.get("status").getAsString().equalsIgnoreCase("success")) {
 //login
-                if (response.has("message")) {
-                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
-                }
+//                if (response.has("message")) {
+//                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
+//                }
                 if (response.has("user_info")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
                     try {

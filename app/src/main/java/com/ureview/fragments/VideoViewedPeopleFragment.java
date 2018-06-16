@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import com.ureview.adapters.PeopleAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.PeopleModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
@@ -245,18 +247,32 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
-                    requestForFollowUser(peopleArrList.get(position).userId);
+                String followText = ((CustomTextView) view).getText().toString().trim();
+                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Follow")) {
+                    askConfirmationAndProceed(position);
                 } else {
-                    requestForUnFollowUser(peopleArrList.get(position).userId);
+                    requestForFollowUser(peopleArrList.get(position).userId);
                 }
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
+                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
+                        true, R.id.mainContainer);
                 break;
             default:
                 break;
         }
+    }
+
+    private void askConfirmationAndProceed(int position) {
+        final PeopleModel peopleModel = peopleArrList.get(position);
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestForUnFollowUser(peopleModel.userId);
+                    }
+                });
     }
 
     @Override

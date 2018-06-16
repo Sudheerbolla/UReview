@@ -72,6 +72,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         rootView = inflater.inflate(R.layout.fragment_videos, container, false);
         rvVideos = rootView.findViewById(R.id.rvVideos);
         txtNoDatafound = rootView.findViewById(R.id.txtNoDatafound);
+        txtNoDatafound.setText("No videos uploaded");
 
         videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this, userId.equalsIgnoreCase(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "")));
         rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
