@@ -59,9 +59,9 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        if (mainActivity.mLastLocation != null) {
-            currLat = String.valueOf(mainActivity.mLastLocation.getLatitude());
-            currLng = String.valueOf(mainActivity.mLastLocation.getLongitude());
+        if (MainActivity.mLastLocation != null) {
+            currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+            currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
         }
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
@@ -129,8 +129,6 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
-                txtNoData.setVisibility(View.GONE);
-                rvSearchVideo.setVisibility(View.VISIBLE);
                 if (jsonObject.has("search_videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("search_videos");
                     tempVideosArrList.clear();
@@ -146,6 +144,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                         isLoading = false;
                     }
                     searchVideosAdapter.addVideos(tempVideosArrList);
+                    txtNoData.setVisibility(View.GONE);
+                    rvSearchVideo.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (startFrom == 0) {

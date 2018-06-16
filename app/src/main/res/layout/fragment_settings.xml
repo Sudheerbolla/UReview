@@ -133,6 +133,16 @@
             android:layout_height="0.9dp"
             android:background="@color/colorLightGrey" />
 
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/pad_15"
+            android:padding="@dimen/pad_15"
+            android:textColor="@color/color_vvvDarkGrey"
+            android:textSize="@dimen/txt_size_13sp" />
+
     </LinearLayout>
 
 </ScrollView>

@@ -25,11 +25,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
-import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.LocalStorage;
+import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
@@ -99,19 +99,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtInstagramLogin:
-                requestForCheckUserWS("179833959388215");
+                StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtTwitterLogin:
-                startActivity(new Intent(splashActivity, MainActivity.class));
-                splashActivity.finishAffinity();
+                StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtFbLogin:
-//                if (!LocalStorage.getInstance(splashActivity).getBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true)) {
-//                    splashActivity.replaceFragment(Signup1Fragment.newInstance(), true, R.id.splashContainer);
-//                } else {
-//                    startActivity(new Intent(splashActivity, MainActivity.class));
-//                    splashActivity.finishAffinity();
-//                }
                 handleFacebookLogin();
                 break;
             default:

@@ -61,7 +61,7 @@
             android:padding="@dimen/pad_2"
             android:singleLine="true"
             android:textColor="@color/color_vvDarkGrey"
-            android:textSize="@dimen/txt_size_18sp"
+            android:textSize="@dimen/txt_size_16sp"
             android:visibility="visible" />
 
         <com.ureview.utils.views.CustomTextView
@@ -78,10 +78,10 @@
             android:gravity="center_vertical"
             android:inputType="text"
             android:marqueeRepeatLimit="marquee_forever"
-            android:paddingEnd="@dimen/pad_3"
+            android:paddingEnd="@dimen/pad_10"
             android:singleLine="true"
             android:textColor="@color/color_vvDarkGrey"
-            android:textSize="@dimen/txt_size_18sp"
+            android:textSize="@dimen/txt_size_15sp"
             android:visibility="visible" />
 
         <RelativeLayout
@@ -130,13 +130,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/pad_10"
-                    android:src="@drawable/edit_copy"
+                    android:src="@drawable/edit_active_copy"
                     android:visibility="gone" />
 
             </LinearLayout>
 
         </RelativeLayout>
-
 
     </RelativeLayout>
 
@@ -164,7 +163,7 @@
             android:id="@+id/imgClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/pad_8"
             android:src="@drawable/cancel_copy" />
@@ -174,14 +173,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imgClose"
-            android:layout_toRightOf="@+id/imgSearch"
+            android:layout_toEndOf="@+id/imgSearch"
+            android:layout_toStartOf="@+id/imgClose"
             android:background="@android:color/transparent"
             android:hint="Search"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:padding="@dimen/pad_8"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textColor="@color/color_vvDarkGrey"
+            android:textColorHint="@color/color_vvDarkGrey"
+            android:textSize="@dimen/txt_size_15sp" />
 
     </RelativeLayout>
 

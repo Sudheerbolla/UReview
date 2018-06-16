@@ -77,7 +77,7 @@ public interface WSInterface {
     Call<JsonElement> getStaticPagesContent(@Query("slug_name") String userId);
 
     @GET("/follow_you_follow_list")
-    Call<JsonElement> getFollowList(@Query("user_id") String userId);
+    Call<JsonElement> getFollowList(@Query("user_id") String userId, @Query("login_user_id") String loginUserId);
 
     @POST("/follow-request")
     Call<JsonElement> followUser(@Body RequestBody params);

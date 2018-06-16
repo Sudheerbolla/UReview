@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="No new updates"
-        android:textColor="@color/colorBlack"
+        android:text="No new updates!"
+        android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_18sp" />
 </RelativeLayout>

@@ -189,7 +189,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (!isDiffUser)
             adapter.addFragment(StatsFragment.newInstance(isDiffUser ? otherUserId : userId), "Stats");
         viewPager.setAdapter(adapter);
-        viewPager.setPagingEnabled(true);
+        viewPager.setPagingEnabled(false);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.FollowModel;
 import com.ureview.utils.DialogUtils;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -43,12 +44,8 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private boolean showFollowers;
     private ArrayList<FollowModel> followModelArrayList;
     private CustomTextView txtNoData;
-    private String userId;
+    private String userId, loggedInUserId;
     private int selectedPosition;
-
-    //Search People Pagination
-    private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0, count = 10;
 
     public static FollowersFragment newInstance(boolean showFollowers, String userId) {
         FollowersFragment followersFragment = new FollowersFragment();
@@ -78,8 +75,9 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         Bundle bundle = getArguments();
         if (bundle != null) {
             showFollowers = bundle.getBoolean("showFollowers");
-            userId = bundle.getString("userId");
+            loggedInUserId = bundle.getString("userId");
         }
+        userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Nullable
@@ -89,7 +87,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
         rvFollowers = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
-
+        txtNoData.setText("No Data Found");
         setAdapter();
 
         requestForGetFollowListWS();
@@ -104,7 +102,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     }
 
     private void requestForGetFollowListWS() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getFollowList(userId);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getFollowList(userId, loggedInUserId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_FOLLOW_LIST, call, this);
     }
 

@@ -30,19 +30,19 @@ public class CustomEditText extends AppCompatEditText {
         int font_val = typedArray.getInteger(R.styleable.CustomTextView_txt_font_type, 1);
         switch (font_val) {
             case 0:
-                fontPath = "light.otf";
+                fontPath = "AvenirLTStd-Light.otf";
                 break;
             case 1:
-                fontPath = "regular.otf";
+                fontPath = "AvenirLTStd-Book.otf";
                 break;
             case 2:
-                fontPath = "bold.otf";
+                fontPath = "AvenirLTStd-Roman.otf";
                 break;
             case 3:
-                fontPath = "italic.ttf";
+                fontPath = "AvenirLTStd-Book.otf";
                 break;
             default:
-                fontPath = "regular.otf";
+                fontPath = "AvenirLTStd-Book.otf";
                 break;
         }
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), fontPath);

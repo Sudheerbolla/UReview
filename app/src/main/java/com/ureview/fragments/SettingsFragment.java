@@ -1,6 +1,8 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +35,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
     private View rootView;
     private CustomTextView txtShare, txtPrivacy, txtTerms,
-            txtHelp, txtContactUs, txtLogout, txtDelAcc;
+            txtHelp, txtContactUs, txtLogout, txtDelAcc, txtVersion;
     private MainActivity mainActivity;
     private String baseUrl = "";
 
@@ -64,6 +66,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         txtHelp = rootView.findViewById(R.id.txtHelp);
         txtLogout = rootView.findViewById(R.id.txtLogout);
         txtContactUs = rootView.findViewById(R.id.txtContactUs);
+        txtVersion = rootView.findViewById(R.id.txtVersion);
 
         txtShare.setOnClickListener(this);
         txtLogout.setOnClickListener(this);
@@ -72,6 +75,17 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         txtTerms.setOnClickListener(this);
         txtPrivacy.setOnClickListener(this);
         txtContactUs.setOnClickListener(this);
+        getVersion();
+    }
+
+    private void getVersion() {
+        try {
+            PackageInfo pInfo = mainActivity.getPackageManager().getPackageInfo(mainActivity.getPackageName(), 0);
+            String version = pInfo.versionName;
+            txtVersion.setText("Version ".concat(version));
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

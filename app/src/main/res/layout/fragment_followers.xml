@@ -24,9 +24,9 @@
         android:paddingLeft="@dimen/pad_20"
         android:paddingRight="@dimen/pad_20"
         android:paddingTop="@dimen/pad_8"
-        android:text="No data found"
-        android:textColor="@color/app_text_color"
-        android:textSize="@dimen/txt_size_18sp"
-        android:visibility="gone" />
+        android:text="Search for people"
+        android:textColor="@color/color_vvDarkGrey"
+        android:textSize="@dimen/txt_size_16sp"
+        android:visibility="visible" />
 
 </RelativeLayout>

@@ -55,7 +55,7 @@ public class SplashFragment extends BaseFragment {
             public void run() {
                 navigateToLogin();
             }
-        }, 2000);
+        }, 1200);
     }
 
     private void navigateToLogin() {
