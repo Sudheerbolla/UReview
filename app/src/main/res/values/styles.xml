@@ -54,6 +54,12 @@
         <item name="android:maxHeight">25dip</item>
     </style>
 
+    <style name="ProfileRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_profile_rating</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+
     <style name="CustomRatingBarM" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/selector_star_m</item>
         <item name="android:minHeight">@dimen/pad_15</item>

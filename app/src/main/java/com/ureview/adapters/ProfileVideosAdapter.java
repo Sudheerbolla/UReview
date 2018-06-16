@@ -51,7 +51,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = new RequestOptions()
                     .placeholder(R.drawable.ic_profile)
-                    .bitmapTransform(new RoundedCorners(7))
+                    .bitmapTransform(new RoundedCorners(20))
                     .fitCenter()
                     .error(R.drawable.ic_profile);
 

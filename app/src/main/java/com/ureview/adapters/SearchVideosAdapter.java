@@ -39,10 +39,9 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = videoArrList.get(position);
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-            RequestOptions options = new RequestOptions()
+            RequestOptions options = RequestOptions
+                    .bitmapTransform(new RoundedCorners(20))
                     .placeholder(R.drawable.ic_profile)
-                    .bitmapTransform(new RoundedCorners(10))
-                    .fitCenter()
                     .error(R.drawable.ic_profile);
 
             Glide.with(context)
@@ -54,8 +53,6 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
             RequestOptions options = new RequestOptions()
                     .placeholder(R.drawable.ic_profile)
-                    .bitmapTransform(new RoundedCorners(10))
-                    .fitCenter()
                     .error(R.drawable.ic_profile);
 
             Glide.with(context)

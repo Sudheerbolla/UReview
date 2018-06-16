@@ -13,6 +13,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IVideosClickListener;
@@ -59,11 +60,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         if (position < 10) {
             final VideoModel videoModel = videoList.get(position);
             if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-                RequestOptions options = new RequestOptions()
-                        .placeholder(R.drawable.ic_profile)
-                        .fitCenter()
-                        .error(R.drawable.ic_profile);
-
+                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(25));
+                options.error(R.drawable.ic_profile);
+                options.placeholder(R.drawable.ic_profile);
                 Glide.with(context)
                         .load(videoModel.videoPosterImage)
                         .apply(options)
