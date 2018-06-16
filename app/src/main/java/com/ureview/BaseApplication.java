@@ -11,6 +11,7 @@ import com.ureview.models.LocationModel;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
+import com.ureview.utils.StaticUtils;
 import com.ureview.wsutils.WSInterface;
 import com.ureview.wsutils.WSUtils;
 
@@ -41,6 +42,7 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         initRetrofit();
+        StaticUtils.setWindowDimensions(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         getUserDataIfAvailable();
         getLocationIfAvailable();

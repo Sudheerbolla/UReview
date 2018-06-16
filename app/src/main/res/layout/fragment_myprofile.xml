@@ -50,7 +50,7 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                style="@style/CustomRatingBarL"
+                style="@style/ProfileRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtLoc"

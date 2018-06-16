@@ -11,16 +11,16 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFeedViewHolder> {
 
@@ -57,17 +57,16 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
 
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
         holder.txtLoc.setText(videoModel.city);
-
+        int width = StaticUtils.SCREEN_WIDTH;
+        holder.imgLocation.getLayoutParams().height = width / 2;
+        holder.imgLocation.getLayoutParams().width = width;
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .fitCenter()
-                    .transform(new RoundedCornersTransformation(20, 0))
-                    .error(R.drawable.ic_profile);
-
+            RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(25));
+//            requestOptions.placeholder(R.drawable.ic_profile);
+//            requestOptions.error(R.drawable.ic_profile);
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
-                    .apply(RequestOptions.signatureOf(new RoundedCornersTransformation(50,0)))
+                    .apply(requestOptions)
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
 

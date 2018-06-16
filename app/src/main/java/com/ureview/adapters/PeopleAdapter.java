@@ -74,9 +74,9 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
 
         if (peopleModel.firstName != null && peopleModel.lastName != null)
             holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
-//        if (!TextUtils.isEmpty(peopleModel.userRating))
-//            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
-        holder.ratingBar.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(peopleModel.userRating))
+            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
+        holder.ratingBar.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
 //        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.llViewCount.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
 //        holder.ratingBar.setVisibility(View.GONE);

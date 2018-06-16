@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.media.ExifInterface;
@@ -26,6 +27,7 @@ import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -70,6 +72,7 @@ public class StaticUtils {
     public static final int VIDEO_TRIMMING_RESULT = 1004;
     public static final String FILEPATH = "filepath";
     public static final String FILEURI = "fileuri";
+    public static int SCREEN_HEIGHT, SCREEN_WIDTH;
 
     public static boolean checkInternetConnection(Context context) {
         NetworkInfo _activeNetwork = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -592,6 +595,15 @@ public class StaticUtils {
 
     public static String getFileUploadKey(String key, File file) {
         return "" + key + "\"; filename=\"" + file.getName();
+    }
+
+    public static void setWindowDimensions(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        SCREEN_WIDTH = size.x;
+        SCREEN_HEIGHT = size.y;
     }
 }
 
