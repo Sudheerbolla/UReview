@@ -341,8 +341,15 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 if (response.has("userid")) {
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, response.get("userid").getAsString());
                 }
-                customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
-                customDialog.show();
+//                customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
+//                customDialog.show();
+                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with UReview!", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(splashActivity, MainActivity.class));
+                        splashActivity.finishAffinity();
+                    }
+                }, null, true);
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());
             }

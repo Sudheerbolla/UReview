@@ -240,8 +240,10 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
                 if (response.has("userid")) {
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, response.get("userid").getAsString());
                 }
-                customDialog = new CustomDialog(splashActivity, SignupVerificationFragment.this);
-                customDialog.show();
+//                customDialog = new CustomDialog(splashActivity, SignupVerificationFragment.this);
+//                customDialog.show();
+                startActivity(new Intent(splashActivity, MainActivity.class));
+                splashActivity.finishAffinity();
 
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());

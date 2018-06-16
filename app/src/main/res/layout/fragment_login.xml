@@ -103,7 +103,7 @@
                     android:drawableStart="@drawable/ic_insta"
                     android:gravity="center_vertical"
                     android:padding="@dimen/pad_10"
-                    android:text="Log in with Instagram"
+                    android:text="Log in with GPlus"
                     android:textColor="@color/color_white"
                     android:textSize="@dimen/txt_size_14sp" />
 
