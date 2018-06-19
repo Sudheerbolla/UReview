@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:drawablePadding="@dimen/pad_10"
         android:drawableTop="@mipmap/ic_launcher"
-        android:text="UReview"
+        android:text="YouReview"
         android:textColor="@color/color_white"
         android:textSize="@dimen/txt_size_22sp" />
 

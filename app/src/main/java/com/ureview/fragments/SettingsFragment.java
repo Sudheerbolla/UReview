@@ -122,7 +122,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }, null);
                 break;
             case R.id.txtShare:
-                shareViaIntent("UReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
+                shareViaIntent("YouReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
                 break;
             case R.id.txtPrivacy:
                 mainActivity.replaceFragment(StaticPagesFragment.newInstance("privacy-policy"), true, R.id.mainContainer);
@@ -137,7 +137,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         intent2.setAction(Intent.ACTION_SEND);
         intent2.setType("message/rfc822");
         intent2.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@ureview.com"});
-        intent2.putExtra(Intent.EXTRA_SUBJECT, "Contact UReview");
+        intent2.putExtra(Intent.EXTRA_SUBJECT, "Contact YouReview");
         intent2.putExtra(Intent.EXTRA_TEXT, "Write your message for us.");
         startActivity(intent2);
     }

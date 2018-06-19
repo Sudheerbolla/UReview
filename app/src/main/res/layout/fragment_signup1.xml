@@ -39,7 +39,7 @@
                     android:layout_marginTop="@dimen/pad_5"
                     android:drawablePadding="@dimen/pad_8"
                     android:drawableTop="@drawable/logo_main_onboarding"
-                    android:text="UReview"
+                    android:text="YouReview"
                     android:textColor="@color/app_text_color"
                     android:textSize="@dimen/txt_size_20sp" />
 

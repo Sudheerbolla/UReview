@@ -314,7 +314,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                         e.printStackTrace();
                     }
                 }
-                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with UReview!", new View.OnClickListener() {
+                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         startActivity(new Intent(splashActivity, MainActivity.class));
@@ -347,7 +347,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 }
 //                customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
 //                customDialog.show();
-                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with UReview!", new View.OnClickListener() {
+                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         startActivity(new Intent(splashActivity, MainActivity.class));

@@ -30,7 +30,7 @@
                 android:layout_marginTop="@dimen/pad_5"
                 android:drawablePadding="@dimen/pad_8"
                 android:drawableTop="@drawable/logo_main_onboarding"
-                android:text="UReview"
+                android:text="YouReview"
                 android:textColor="@color/app_text_color"
                 android:textSize="@dimen/txt_size_20sp" />
 
@@ -42,7 +42,7 @@
                 android:layout_marginTop="@dimen/pad_20"
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
-                android:text="Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with UReview!"
+                android:text="Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!"
                 android:textColor="@color/color_vDarkGrey"
                 android:textSize="@dimen/txt_size_13sp" />
 
