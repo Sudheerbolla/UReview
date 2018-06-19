@@ -18,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,10 +76,10 @@ import retrofit2.Call;
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
         AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
-    private ImageView imgCatBg, imgProfile;
+    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtRatingno, txtLocation,
             txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData;
-    private RatingBar ratingBar;
+    //    private RatingBar ratingBar;
     private LinearLayout llRate, llShare, llDirection, llReport;
     private CustomRecyclerView rvRelatedVideos;
     private VideosAdapter videosAdapter;
@@ -447,7 +446,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         if (bundle != null) {
             if (bundle.containsKey("news_feed")) {
                 feedVideoList = bundle.getParcelableArrayList("news_feed");
-                if (bundle.containsKey("position")) {
+                if (bundle.containsKey("position") && feedVideoList.size() > bundle.getInt("position")) {
                     feedVideo = feedVideoList.get(bundle.getInt("position"));
                     feedVideoList.remove(feedVideo);
                 }
@@ -462,7 +461,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         txtViewCount = rootView.findViewById(R.id.txtViewCount);
-        ratingBar = rootView.findViewById(R.id.ratingBar);
+//        ratingBar = rootView.findViewById(R.id.ratingBar);
+        imgStar1 = rootView.findViewById(R.id.imgStar1);
+        imgStar2 = rootView.findViewById(R.id.imgStar2);
+        imgStar3 = rootView.findViewById(R.id.imgStar3);
+        imgStar4 = rootView.findViewById(R.id.imgStar4);
+        imgStar5 = rootView.findViewById(R.id.imgStar5);
         txtRatingno = rootView.findViewById(R.id.txtRatingno);
         llRate = rootView.findViewById(R.id.llRate);
         llShare = rootView.findViewById(R.id.llShare);
@@ -492,11 +496,42 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             setVideoDetails();
     }
 
+    private void setProfileRating(float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        imgStar1.setSelected(b);
+        imgStar2.setSelected(b1);
+        imgStar3.setSelected(b2);
+        imgStar4.setSelected(b3);
+        imgStar5.setSelected(b4);
+    }
+
     private void setVideoDetails() {
         txtVideoTitle.setText(feedVideo.videoTitle);
         txtViewCount.setText(feedVideo.videoWatchedCount);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
-            ratingBar.setRating(Float.parseFloat(feedVideo.videoRating));
+            setProfileRating(Float.parseFloat(feedVideo.videoRating));
         txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven).concat(")")));
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
@@ -586,7 +621,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     @Override
-    public void onClick(View view, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
         VideoModel toBeAdded = feedVideo;
         feedVideo = feedVideoList.get(position);
         feedVideoList.remove(position);
@@ -607,7 +642,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
+                String followStatus = txtFollowStatus.getText().toString().trim();
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser();

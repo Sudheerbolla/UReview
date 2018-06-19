@@ -32,6 +32,21 @@
         <attr name="civ_border_overlay" format="boolean" />
         <attr name="civ_fill_color" format="color" />
     </declare-styleable>
+    <declare-styleable name="RoundedImageView">
+        <attr name="android_scaleType" format="integer" />
+        <attr name="riv_corner_radius" format="dimension" />
+        <attr name="riv_corner_radius_top_left" format="dimension" />
+        <attr name="riv_corner_radius_top_right" format="dimension" />
+        <attr name="riv_corner_radius_bottom_right" format="dimension" />
+        <attr name="riv_corner_radius_bottom_left" format="dimension" />
+        <attr name="riv_border_width" format="dimension" />
+        <attr name="riv_border_color" format="color" />
+        <attr name="riv_mutate_background" format="boolean" />
+        <attr name="riv_oval" format="boolean" />
+        <attr name="riv_tile_mode" format="integer" />
+        <attr name="riv_tile_mode_x" format="integer" />
+        <attr name="riv_tile_mode_y" format="integer" />
+    </declare-styleable>
     <declare-styleable name="SyncViewPager">
         <attr name="velocity" format="integer" />
     </declare-styleable>

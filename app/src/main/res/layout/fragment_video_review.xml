@@ -75,7 +75,7 @@
                 android:layout_marginTop="@dimen/pad_5"
                 android:text="Synth polaroid biology"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_18sp" />
+                android:textSize="@dimen/txt_size_16sp" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtLocType"
@@ -97,8 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtSynth"
                 android:layout_marginTop="@dimen/pad_5"
-                android:drawableLeft="@drawable/view_small_copy"
-                android:drawablePadding="@dimen/pad_8"
+                android:drawableLeft="@drawable/vector_eye"
+                android:drawablePadding="@dimen/pad_3"
                 android:text="408121"
                 android:textColor="@color/color_vvvDarkGrey"
                 android:textSize="@dimen/txt_size_12sp" />
@@ -149,11 +149,11 @@
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                style="@style/CustomRatingBarL"
+                style="@style/CustomRatingBarM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtRate"
-                android:layout_marginTop="@dimen/pad_6"
+                android:layout_marginTop="@dimen/pad_3"
                 android:isIndicator="true" />
 
             <com.ureview.utils.views.CustomTextView

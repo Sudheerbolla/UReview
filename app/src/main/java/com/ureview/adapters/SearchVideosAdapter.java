@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -16,6 +15,7 @@ import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.views.CustomTextView;
+import com.ureview.wsutils.WSUtils;
 
 import java.util.ArrayList;
 
@@ -49,26 +49,26 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                     .apply(options)
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
-
+        holder.txtCategory.setText(videoModel.categoryName);
         if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
             RequestOptions options = new RequestOptions()
                     .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
                     .error(R.drawable.ic_profile);
 
             Glide.with(context)
-                    .load("http://18.216.101.112/uploads/category_images/".concat(videoModel.categoryBgImage))
+                    .load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage))
                     .apply(options)
                     .into(holder.imgCatBg);
         } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
 
 
-        holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
 //        holder.txtDuration.setText(videoModel.videoDuration);
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
-        holder.ratingBarVideo.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+        setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtLocBtm.setText(videoModel.city);
 
         if (position == videoArrList.size() - 1) {
@@ -114,10 +114,10 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
 
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imgLocation, imgCatBg;
+        private ImageView imgLocation, imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
         private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance,
                 txtViewCount, txtRatingsNo;
-        private RatingBar ratingBarVideo;
+        //        private RatingBar ratingBarVideo;
         private View dividerView;
 
         public NewsFeedViewHolder(View itemView) {
@@ -130,8 +130,44 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
             txtLocBtm = itemView.findViewById(R.id.txtLocBtm);
             imgCatBg = itemView.findViewById(R.id.imgCatBg);
             txtDistance = itemView.findViewById(R.id.txtDistance);
-            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
+//            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
+            imgStar1 = itemView.findViewById(R.id.imgStar1);
+            imgStar2 = itemView.findViewById(R.id.imgStar2);
+            imgStar3 = itemView.findViewById(R.id.imgStar3);
+            imgStar4 = itemView.findViewById(R.id.imgStar4);
+            imgStar5 = itemView.findViewById(R.id.imgStar5);
             dividerView = itemView.findViewById(R.id.dividerView);
         }
+    }
+
+    private void setProfileRating(NewsFeedViewHolder holder, float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(holder, false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(holder, true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(holder, true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(holder, true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(holder, true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(holder, true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(NewsFeedViewHolder holder, boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        holder.imgStar1.setSelected(b);
+        holder.imgStar2.setSelected(b1);
+        holder.imgStar3.setSelected(b2);
+        holder.imgStar4.setSelected(b3);
+        holder.imgStar5.setSelected(b4);
     }
 }

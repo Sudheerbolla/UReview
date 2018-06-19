@@ -117,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_20"
                 android:layout_marginRight="@dimen/pad_20"
+                android:visibility="gone"
                 android:layout_marginTop="@dimen/pad_8"
                 android:orientation="horizontal">
 

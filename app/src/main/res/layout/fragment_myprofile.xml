@@ -43,14 +43,25 @@
                 android:layout_marginLeft="@dimen/pad_10"
                 android:layout_marginTop="@dimen/pad_3"
                 android:layout_toRightOf="@+id/imgProfile"
-                android:drawableLeft="@drawable/location_small_copy"
-                android:drawablePadding="@dimen/pad_5"
+                android:drawableLeft="@drawable/vector_location"
+                android:drawablePadding="@dimen/pad_3"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_11sp" />
 
-            <RatingBar
+            <!--<RatingBar
                 android:id="@+id/ratingBar"
                 style="@style/ProfileRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_below="@+id/txtLoc"
+                android:layout_marginLeft="@dimen/pad_10"
+                android:layout_marginTop="@dimen/pad_5"
+                android:layout_toRightOf="@+id/imgProfile"
+                android:numStars="5" />-->
+
+            <include
+                android:id="@+id/llRatingBar"
+                layout="@layout/layout_rating_bar_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/txtLoc"
@@ -62,8 +73,9 @@
                 android:id="@+id/relFollow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ratingBar"
+                android:layout_below="@+id/llRatingBar"
                 android:layout_marginStart="@dimen/pad_10"
+                android:layout_marginTop="@dimen/pad_5"
                 android:layout_toEndOf="@+id/imgProfile">
 
                 <LinearLayout

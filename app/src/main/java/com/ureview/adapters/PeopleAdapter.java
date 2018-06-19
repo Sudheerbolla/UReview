@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -75,8 +74,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         if (peopleModel.firstName != null && peopleModel.lastName != null)
             holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
         if (!TextUtils.isEmpty(peopleModel.userRating))
-            holder.ratingBar.setRating(Float.parseFloat(peopleModel.userRating));
-        holder.ratingBar.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
+            setProfileRating(holder, Float.parseFloat(peopleModel.userRating));
+//        holder.ratingBar.setVisibility(/*showViewCount ?*/ View.VISIBLE/* : View.GONE*/);
 //        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.llViewCount.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
 //        holder.ratingBar.setVisibility(View.GONE);
@@ -116,18 +115,19 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
     }
 
     public void addItems(ArrayList<PeopleModel> arrList) {
-        peopleArrayList = arrList;
-        notifyDataSetChanged();
+        int lastPosition = this.peopleArrayList.size() > 0 ? this.peopleArrayList.size() - 1 : 0;
+        this.peopleArrayList.addAll(arrList);
+        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
     }
 
     public class PeopleViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextView txtFollowStatus, txtName, txtReviewCount, txtViewNo, txtViews;
-        private RatingBar ratingBar;
+        //        private RatingBar ratingBar;
         private CircleImageView imgProfile;
         private RelativeLayout relBody;
         private LinearLayout llViewCount;
-        private ImageView imgClear;
+        private ImageView imgClear, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
 
         public PeopleViewHolder(View itemView) {
             super(itemView);
@@ -135,12 +135,48 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
             txtName = itemView.findViewById(R.id.txtName);
             llViewCount = itemView.findViewById(R.id.llViewCount);
             txtReviewCount = itemView.findViewById(R.id.txtReviewCount);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+//            ratingBar = itemView.findViewById(R.id.ratingBar);
+            imgStar1 = itemView.findViewById(R.id.imgStar1);
+            imgStar2 = itemView.findViewById(R.id.imgStar2);
+            imgStar3 = itemView.findViewById(R.id.imgStar3);
+            imgStar4 = itemView.findViewById(R.id.imgStar4);
+            imgStar5 = itemView.findViewById(R.id.imgStar5);
             imgProfile = itemView.findViewById(R.id.imgProfile);
             imgClear = itemView.findViewById(R.id.imgClear);
             relBody = itemView.findViewById(R.id.relBody);
             txtViewNo = itemView.findViewById(R.id.txtViewNo);
             txtViews = itemView.findViewById(R.id.txtViews);
         }
+    }
+
+    private void setProfileRating(PeopleViewHolder holder, float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(holder, false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(holder, true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(holder, true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(holder, true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(holder, true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(holder, true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(PeopleViewHolder holder, boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        holder.imgStar1.setSelected(b);
+        holder.imgStar2.setSelected(b1);
+        holder.imgStar3.setSelected(b2);
+        holder.imgStar4.setSelected(b3);
+        holder.imgStar5.setSelected(b4);
     }
 }

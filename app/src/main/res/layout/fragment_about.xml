@@ -12,8 +12,8 @@
         android:padding="@dimen/pad_15">
 
         <LinearLayout
-            android:layout_width="match_parent"
             android:id="@+id/linPersonal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -57,7 +57,8 @@
                 android:layout_marginTop="@dimen/pad_12"
                 android:text="Phone"
                 android:textColor="@color/colorDarkGrey"
-                android:textSize="@dimen/txt_size_12sp" />
+                android:textSize="@dimen/txt_size_12sp"
+                android:visibility="gone" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtPhone"
@@ -65,7 +66,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad_7"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_15sp" />
+                android:textSize="@dimen/txt_size_15sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 

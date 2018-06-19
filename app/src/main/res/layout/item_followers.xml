@@ -81,22 +81,30 @@
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_15sp" />
 
-    <RatingBar
+   <!-- <RatingBar
         android:id="@+id/ratingBar"
-        style="@style/CustomRatingBarL"
+        style="@style/CustomRatingBarM"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtName"
         android:layout_marginLeft="@dimen/pad_10"
-        android:layout_marginTop="@dimen/pad_3"
         android:layout_toRightOf="@+id/imgProfile"
-        android:isIndicator="true" />
+        android:isIndicator="true" />-->
+
+    <include
+        android:id="@+id/llRatingBar"
+        layout="@layout/layout_rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtName"
+        android:layout_marginLeft="@dimen/pad_10"
+        android:layout_toRightOf="@+id/imgProfile" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtReviewCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ratingBar"
+        android:layout_below="@id/llRatingBar"
         android:layout_marginLeft="@dimen/pad_10"
         android:layout_marginRight="@dimen/pad_5"
         android:layout_toRightOf="@+id/imgProfile"

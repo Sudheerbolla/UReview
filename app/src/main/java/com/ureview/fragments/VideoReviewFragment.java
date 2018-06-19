@@ -14,6 +14,8 @@ import com.ureview.adapters.VideosAdapter;
 import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 
+import java.util.ArrayList;
+
 public class VideoReviewFragment extends BaseFragment implements IVideosClickListener {
     private View rootView;
     private RecyclerView rvTopVideos;
@@ -36,7 +38,7 @@ public class VideoReviewFragment extends BaseFragment implements IVideosClickLis
     }
 
     @Override
-    public void onClick(View view, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
 
     }
 

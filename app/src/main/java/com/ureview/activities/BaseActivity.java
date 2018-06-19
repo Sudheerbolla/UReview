@@ -38,6 +38,14 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void changeStatusBarColorToWhite() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.color_white));
+        }
+    }
+
     public void changeStatusBarColorToAppColorLight() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();

@@ -56,8 +56,8 @@
                     android:layout_marginLeft="@dimen/pad_10"
                     android:layout_marginTop="@dimen/pad_3"
                     android:layout_toRightOf="@+id/imgProfile"
-                    android:drawableLeft="@drawable/location_small_copy"
-                    android:drawablePadding="@dimen/pad_5"
+                    android:drawableLeft="@drawable/vector_location"
+                    android:drawablePadding="@dimen/pad_3"
                     android:text="Dhaka, Bangladesh"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/txt_size_11sp" />

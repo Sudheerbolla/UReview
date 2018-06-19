@@ -25,9 +25,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
+import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
@@ -81,6 +83,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         txtTwitterLogin.setOnClickListener(this);
         txtFbLogin.setOnClickListener(this);
         txtInstagramLogin.setOnClickListener(this);
+        splashActivity.changeStatusBarColorToWhite();
         getVersion();
         return rootView;
     }
@@ -135,14 +138,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                             lastName = response.getJSONObject().getString("last_name");
                             id = response.getJSONObject().getString("id");
                             Profile profile = Profile.getCurrentProfile();
-                            id = profile.getId();
                             if (Profile.getCurrentProfile() != null) {
                                 Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
+                                id = profile.getId();
+                                if (!TextUtils.isEmpty(id))
+                                    requestForCheckUserWS(id, Constants.FACEBOOK);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if (!TextUtils.isEmpty(id)) requestForCheckUserWS(id);
                     }
                 });
         Bundle parameters = new Bundle();
@@ -169,8 +173,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
-    private void requestForCheckUserWS(String id) {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(id);
+    private void requestForCheckUserWS(String id, String authType) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(id, authType);
         new WSCallBacksListener().requestForJsonObject(splashActivity, WSUtils.REQ_FOR_CHECK_USER, call, this);
     }
 
@@ -212,8 +216,9 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
                 }
 
-                splashActivity.replaceFragment(SignupVerificationFragment.newInstance(id), true, R.id.splashContainer);
-
+//                splashActivity.replaceFragment(SignupVerificationFragment.newInstance(id), true, R.id.splashContainer);
+                startActivity(new Intent(splashActivity, MainActivity.class));
+                splashActivity.finishAffinity();
             }
         }
     }

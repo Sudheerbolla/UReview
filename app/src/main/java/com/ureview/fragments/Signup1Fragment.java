@@ -45,13 +45,13 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
 
     private View rootView;
     private SplashActivity splashActivity;
-    private CustomTextView txtNext, txtCountryCode, txtDob;
+    private CustomTextView txtNext, /*txtCountryCode,*/ txtDob;
     private CountriesModel currentCountriesModel;
     private RadioGroup rgGender;
     private DatePickerDialog mDatePickerDialog;
     private Calendar myCalendar = Calendar.getInstance();
     private String firstName, lastName, email, token, gender, deviceToken;
-    private CustomEditText edtFirstName, edtLastName, edtEmail, edtMobileNumber, edtLocation;
+    private CustomEditText edtFirstName, edtLastName, edtEmail, /*edtMobileNumber,*/ edtLocation;
     public static final int DIALOG_FRAGMENT = 1;
     private CustomDialog customDialog;
 
@@ -89,8 +89,9 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     }
 
     private void initComponents() {
+        splashActivity.changeStatusBarColorToWhite();
         txtNext = rootView.findViewById(R.id.txtNext);
-        txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
+//        txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
         txtDob = rootView.findViewById(R.id.txtDob);
 
         rgGender = rootView.findViewById(R.id.rgGender);
@@ -109,14 +110,14 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
         edtEmail = rootView.findViewById(R.id.edtEmail);
-        edtMobileNumber = rootView.findViewById(R.id.edtMobileNumber);
+//        edtMobileNumber = rootView.findViewById(R.id.edtMobileNumber);
 
-        txtCountryCode.setOnClickListener(this);
+//        txtCountryCode.setOnClickListener(this);
         txtDob.setOnClickListener(this);
         txtNext.setOnClickListener(this);
-        if (currentCountriesModel != null) {
-            txtCountryCode.setText("+" + currentCountriesModel.countryCode);
-        }
+//        if (currentCountriesModel != null) {
+//            txtCountryCode.setText("+" + currentCountriesModel.countryCode);
+//        }
         initDatePicker();
         if (!TextUtils.isEmpty(firstName)) {
             edtFirstName.setText(firstName);
@@ -126,6 +127,9 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         }
         if (!TextUtils.isEmpty(email)) {
             edtEmail.setText(email);
+            edtEmail.setEnabled(false);
+        } else {
+            edtEmail.setEnabled(true);
         }
     }
 
@@ -188,14 +192,14 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
             jsonObjectReq.put("first_name", firstName);
             jsonObjectReq.put("last_name", lastName);
             jsonObjectReq.put("gender", gender);
-            jsonObjectReq.put("mobile", edtMobileNumber.getText().toString().trim());
+//            jsonObjectReq.put("mobile", edtMobileNumber.getText().toString().trim());
             jsonObjectReq.put("email", email);
             jsonObjectReq.put("auth_id", token);
             jsonObjectReq.put("auth_type", "facebook");
             jsonObjectReq.put("date_of_birth", txtDob.getText().toString().trim());
             jsonObjectReq.put("platform", "android");
             jsonObjectReq.put("device_token", deviceToken);
-            jsonObjectReq.put("country_code", txtCountryCode.getText().toString().trim());
+//            jsonObjectReq.put("country_code", txtCountryCode.getText().toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -229,15 +233,15 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
             return "Please enter a valid email address";
         }
 
-        String mobileNumber = edtMobileNumber.getText().toString().trim();
-        if (TextUtils.isEmpty(mobileNumber)) {
-            edtMobileNumber.requestFocus();
-            return "Please enter mobile number";
-        }
-        if (mobileNumber.length() < 10) {
-            edtMobileNumber.requestFocus();
-            return "Please enter a valid mobile number";
-        }
+//        String mobileNumber = edtMobileNumber.getText().toString().trim();
+//        if (TextUtils.isEmpty(mobileNumber)) {
+//            edtMobileNumber.requestFocus();
+//            return "Please enter mobile number";
+//        }
+//        if (mobileNumber.length() < 10) {
+//            edtMobileNumber.requestFocus();
+//            return "Please enter a valid mobile number";
+//        }
 
         if (TextUtils.isEmpty(edtLocation.getText().toString().trim())) {
             edtLocation.requestFocus();
@@ -260,7 +264,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
             case DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     currentCountriesModel = data.getParcelableExtra("countriesModel");
-                    txtCountryCode.setText("+" + currentCountriesModel.countryCode);
+//                    txtCountryCode.setText("+" + currentCountriesModel.countryCode);
                 }
                 break;
         }

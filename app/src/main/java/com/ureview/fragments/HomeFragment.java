@@ -157,19 +157,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         nestedScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (v.getChildAt(v.getChildCount() - 1) != null) {
-//                    if ((scrollY >= (v.getChildAt(v.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
-//                            scrollY > oldScrollY) {
-//                        visibleItemCount = linearLayoutManager.getChildCount();
-//                        totalItemCount = linearLayoutManager.getItemCount();
-//                        pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-//
-//                        if (!isLoading()) {
-//                            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-//                                onLoadMore();
-//                            }
-//                        }
-//                    }
+                if (v.getChildAt(v.getChildCount() - 1) != null &&
+                        categoryList.get(lastUpdatedPos).categoryName.equalsIgnoreCase("New Feed")) {
                     View view = (View) nestedScroll.getChildAt(nestedScroll.getChildCount() - 1);
                     int diff = (view.getBottom() - (nestedScroll.getHeight() + nestedScroll
                             .getScrollY()));
@@ -279,10 +268,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     @Override
-    public void onClick(View view, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
         switch (view.getId()) {
             case R.id.relItem:
-                mainActivity.replaceFragment(VideoDetailFragment.newInstance(feedVideoList, position), true, R.id.mainContainer);
+                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
                 break;
             case R.id.imgProfile:
             case R.id.txtName:

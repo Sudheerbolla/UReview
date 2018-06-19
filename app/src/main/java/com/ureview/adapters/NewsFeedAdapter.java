@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -93,7 +92,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.txtDistance.setText(videoModel.distance);
         holder.txtDuration.setText(videoModel.videoDuration);
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
-        holder.ratingBarVideo.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+        setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
 
         if (position == feedVideoList.size() - 1) {
             holder.dividerView.setVisibility(View.GONE);
@@ -102,42 +101,42 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.relItem, videoModel, position);
+                    iClickListener.onClick(holder.relItem, feedVideoList, videoModel, position);
             }
         });
         holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.txtViewCount, videoModel, position);
+                    iClickListener.onClick(holder.txtViewCount, feedVideoList, videoModel, position);
             }
         });
         holder.txtDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.txtDistance, videoModel, position);
+                    iClickListener.onClick(holder.txtDistance, feedVideoList, videoModel, position);
             }
         });
         holder.imgProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.imgProfile, videoModel, position);
+                    iClickListener.onClick(holder.imgProfile, feedVideoList, videoModel, position);
             }
         });
         holder.txtName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.txtName, videoModel, position);
+                    iClickListener.onClick(holder.txtName, feedVideoList, videoModel, position);
             }
         });
         holder.txtLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (iClickListener != null)
-                    iClickListener.onClick(holder.txtLoc, videoModel, position);
+                    iClickListener.onClick(holder.txtLoc, feedVideoList, videoModel, position);
             }
         });
     }
@@ -163,10 +162,10 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         private ImageView imgProfile, imgLocation;
         private CustomTextView txtName, txtLoc, txtSynth, txtDuration,
                 txtViewCount, txtDistance, txtRatingsNo, txtCategory;
-        private ImageView imgCatBg;
+        private ImageView imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
         private View dividerView;
         private RelativeLayout relItem;
-        private RatingBar ratingBarVideo;
+//        private RatingBar ratingBarVideo;
 
         public NewsFeedViewHolder(View itemView) {
             super(itemView);
@@ -183,7 +182,43 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             txtViewCount = itemView.findViewById(R.id.txtViewCount);
             txtDistance = itemView.findViewById(R.id.txtDistance);
             dividerView = itemView.findViewById(R.id.dividerView);
-            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
+//            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
+            imgStar1 = itemView.findViewById(R.id.imgStar1);
+            imgStar2 = itemView.findViewById(R.id.imgStar2);
+            imgStar3 = itemView.findViewById(R.id.imgStar3);
+            imgStar4 = itemView.findViewById(R.id.imgStar4);
+            imgStar5 = itemView.findViewById(R.id.imgStar5);
         }
+    }
+
+    private void setProfileRating(NewsFeedViewHolder holder, float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(holder, false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(holder, true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(holder, true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(holder, true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(holder, true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(holder, true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(NewsFeedViewHolder holder, boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        holder.imgStar1.setSelected(b);
+        holder.imgStar2.setSelected(b1);
+        holder.imgStar3.setSelected(b2);
+        holder.imgStar4.setSelected(b3);
+        holder.imgStar5.setSelected(b4);
     }
 }

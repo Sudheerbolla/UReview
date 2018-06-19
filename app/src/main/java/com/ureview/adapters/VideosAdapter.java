@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -54,7 +54,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         holder.txtTags.setVisibility(val ? View.GONE : View.VISIBLE);
         holder.txtViewCount.setVisibility(val ? View.GONE : View.VISIBLE);
         holder.txtDistance.setVisibility(val ? View.GONE : View.VISIBLE);
-        holder.ratingBar.setVisibility(val ? View.GONE : View.VISIBLE);
+        holder.llRatingBar.setVisibility(val ? View.GONE : View.VISIBLE);
         holder.txtRatingsNo.setVisibility(val ? View.GONE : View.VISIBLE);
 
         if (position < 10) {
@@ -74,10 +74,10 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             holder.txtViewCount.setText(videoModel.videoWatchedCount);
             holder.txtDistance.setText(videoModel.distance);
             try {
-                holder.ratingBar.setRating(Float.intBitsToFloat(videoModel.ratingGiven));
+                setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
             } catch (Exception e) {
                 e.printStackTrace();
-                holder.ratingBar.setRating(0f);
+                setProfileRating(holder, 0f);
             }
             holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
             holder.txtDuration.setText(videoModel.videoDuration);
@@ -85,7 +85,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
                 @Override
                 public void onClick(View view) {
                     if (iClickListener != null) {
-                        iClickListener.onClick(holder.relItem, videoModel, holder.getAdapterPosition());
+                        iClickListener.onClick(holder.relItem, videoList, videoModel, holder.getAdapterPosition());
                     }
                 }
             });
@@ -93,14 +93,14 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
                 @Override
                 public void onClick(View view) {
                     if (iClickListener != null)
-                        iClickListener.onClick(holder.txtViewCount, videoModel, holder.getAdapterPosition());
+                        iClickListener.onClick(holder.txtViewCount, videoList, videoModel, holder.getAdapterPosition());
                 }
             });
             holder.txtDistance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (iClickListener != null)
-                        iClickListener.onClick(holder.txtDistance, videoModel, holder.getAdapterPosition());
+                        iClickListener.onClick(holder.txtDistance, videoList, videoModel, holder.getAdapterPosition());
                 }
             });
         }
@@ -117,10 +117,11 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     }
 
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgVideo;
+        private ImageView imgVideo, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
         private CustomTextView txtName, txtTags, txtViewCount, txtDistance, txtRatingsNo, txtDuration;
-        private RatingBar ratingBar;
+        //        private RatingBar ratingBar;
         private CardView cvMore;
+        private LinearLayout llRatingBar;
         private RelativeLayout relItem;
 
         public CategoryViewHolder(View itemView) {
@@ -132,9 +133,46 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             txtDistance = itemView.findViewById(R.id.txtDistance);
             txtDuration = itemView.findViewById(R.id.txtDuration);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+//            ratingBar = itemView.findViewById(R.id.ratingBar);
+            llRatingBar = itemView.findViewById(R.id.llRatingBar);
+            imgStar1 = itemView.findViewById(R.id.imgStar1);
+            imgStar2 = itemView.findViewById(R.id.imgStar2);
+            imgStar3 = itemView.findViewById(R.id.imgStar3);
+            imgStar4 = itemView.findViewById(R.id.imgStar4);
+            imgStar5 = itemView.findViewById(R.id.imgStar5);
             cvMore = itemView.findViewById(R.id.cvMore);
             relItem = itemView.findViewById(R.id.relItem);
         }
+    }
+
+    private void setProfileRating(CategoryViewHolder holder, float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(holder, false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(holder, true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(holder, true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(holder, true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(holder, true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(holder, true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(CategoryViewHolder holder, boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        holder.imgStar1.setSelected(b);
+        holder.imgStar2.setSelected(b1);
+        holder.imgStar3.setSelected(b2);
+        holder.imgStar4.setSelected(b3);
+        holder.imgStar5.setSelected(b4);
     }
 }

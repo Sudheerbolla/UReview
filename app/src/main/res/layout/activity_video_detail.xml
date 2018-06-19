@@ -52,7 +52,7 @@
                     android:layout_marginTop="@dimen/pad_5"
                     android:layout_toStartOf="@+id/consCat"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/txt_size_18sp" />
+                    android:textSize="@dimen/txt_size_16sp" />
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/consCat"
@@ -92,12 +92,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:drawablePadding="@dimen/pad_8"
-                    android:drawableStart="@drawable/view_small_copy"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:drawableStart="@drawable/vector_eye"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_12sp" />
 
-                <RatingBar
+                <!--<RatingBar
                     android:id="@+id/ratingBar"
                     style="@style/CustomRatingBarM"
                     android:layout_width="wrap_content"
@@ -106,7 +106,18 @@
                     android:layout_marginStart="@dimen/pad_10"
                     android:layout_marginTop="@dimen/pad_6"
                     android:layout_toEndOf="@+id/txtViewCount"
-                    android:isIndicator="true" />
+                    android:isIndicator="true" />-->
+
+                <include
+                    android:id="@+id/llRatingBar"
+                    layout="@layout/layout_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_3"
+                    android:layout_toEndOf="@+id/txtViewCount" />
+
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtRatingno"
@@ -115,7 +126,7 @@
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_marginStart="@dimen/pad_3"
                     android:layout_marginTop="@dimen/pad_5"
-                    android:layout_toEndOf="@+id/ratingBar"
+                    android:layout_toEndOf="@+id/llRatingBar"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_12sp" />
 
@@ -123,7 +134,7 @@
                     android:id="@+id/llOptions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/ratingBar"
+                    android:layout_below="@+id/llRatingBar"
                     android:layout_marginTop="@dimen/pad_8"
                     android:orientation="horizontal">
 
@@ -226,8 +237,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/llOptions"
                     android:layout_marginTop="@dimen/pad_8"
-                    android:drawablePadding="@dimen/pad_5"
-                    android:drawableStart="@drawable/location_small_copy"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:drawableStart="@drawable/vector_location"
                     android:text="Location"
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />

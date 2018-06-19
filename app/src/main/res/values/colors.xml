@@ -56,6 +56,7 @@
 
     <color name="seperatorColor">#F4F4F4</color>
 
+    <color name="rating_yellow_color">#FFCA73</color>
 
     <color name="dot_light_screen1">#929292</color>
     <color name="dot_dark_screen1">#DEDEDE</color>

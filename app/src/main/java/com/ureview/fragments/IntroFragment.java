@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
     }
 
     private void initComponents() {
+        splashActivity.changeStatusBarColorToWhite();
         setReferences();
         setViewPager();
         addBottomDots(0);
@@ -101,38 +103,66 @@ public class IntroFragment extends BaseFragment implements View.OnClickListener 
         splashActivity.replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
     }
 
+    private int currPos;
+    private int count = 0;
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageSelected(int position) {
             addBottomDots(position);
+            currPos = position;
             switch (position) {
                 case 0:
+                    txtTitle.setVisibility(View.VISIBLE);
+                    txtDesc.setVisibility(View.VISIBLE);
+                    btnNext.setVisibility(View.VISIBLE);
                     txtTitle.setText("What you say, matters!");
                     txtDesc.setText("Record your moment, #caption it and upload");
                     btnNext.setText("Skip");
                     break;
                 case 1:
+                    txtTitle.setVisibility(View.VISIBLE);
+                    txtDesc.setVisibility(View.VISIBLE);
+                    btnNext.setVisibility(View.VISIBLE);
                     txtTitle.setText("Browse Reviews");
-                    txtDesc.setText("View unique visual experience. Search videos. Use #tags to find match");
+                    txtDesc.setText("Watch unique visual experiences. Use #tags for custom searches.");
                     btnNext.setText("Skip");
                     break;
                 case 2:
+                    txtTitle.setVisibility(View.VISIBLE);
+                    txtDesc.setVisibility(View.VISIBLE);
+                    btnNext.setVisibility(View.VISIBLE);
                     txtTitle.setText("Share on Social Network");
                     txtDesc.setText("Share your reviews with your friends or on other social sites");
                     btnNext.setText("Skip");
                     break;
+//                case 3:
+//                    txtTitle.setVisibility(View.GONE);
+//                    txtDesc.setVisibility(View.GONE);
+//                    btnNext.setVisibility(View.GONE);
+//                    break;
             }
         }
 
         @Override
         public void onPageScrolled(int arg0, float arg1, int arg2) {
+            if (currPos == 2 && arg0 == 2 && arg2 == 0) {
+                count++;
+                if (count == 2) {
+                    count = 0;
+                    launchHomeScreen();
+                }
+            } else {
+                count = 0;
+            }
 
+            Log.e("Page Scrolled", arg0 + "/" + arg1 + "/" +
+                    "" + arg2);
         }
 
         @Override
         public void onPageScrollStateChanged(int arg0) {
-
+            Log.e("scroll state changed", arg0 + "");
         }
     };
 

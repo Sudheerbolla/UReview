@@ -21,4 +21,9 @@ public class Constants {
     public static final String COUNTRY_CODE = "countryCode";
 
     public static final String INSTA_CLIENT_ID = "fcd93ed62dd54e9f8ba1e317fa2bfec4";
+
+    public static final String FACEBOOK = "facebook";
+    public static final String TWITTER = "twitter";
+    public static final String GOOGLE = "google ";
+    public static final String INSTAGRAM = "instagram ";
 }

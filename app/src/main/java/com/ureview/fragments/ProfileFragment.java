@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -50,10 +49,10 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private TabLayout tabLayout;
     private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc, txtFollowStatus;
     private LinearLayout linFollowing, linFollowers;
-    private RatingBar ratingBar;
+    //    private RatingBar ratingBar;
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
-    private ImageView imgProfile;
+    private ImageView imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
     private ViewPagerAdapter adapter;
     private String userId, otherUserId, otherUserName = "";
     private boolean isDiffUser;
@@ -127,8 +126,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
         txtLoc = rootView.findViewById(R.id.txtLoc);
 
-        ratingBar = rootView.findViewById(R.id.ratingBar);
+//        ratingBar = rootView.findViewById(R.id.ratingBar);
         imgProfile = rootView.findViewById(R.id.imgProfile);
+        imgStar1 = rootView.findViewById(R.id.imgStar1);
+        imgStar2 = rootView.findViewById(R.id.imgStar2);
+        imgStar3 = rootView.findViewById(R.id.imgStar3);
+        imgStar4 = rootView.findViewById(R.id.imgStar4);
+        imgStar5 = rootView.findViewById(R.id.imgStar5);
 
         setData();
         setListeners();
@@ -142,7 +146,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         if (userInfoModel != null) {
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
             txtLoc.setText(userInfoModel.city + ", " + userInfoModel.address);
-            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
+            setProfileRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
+//            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
@@ -161,6 +166,37 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                         .into(imgProfile);
             } else imgProfile.setImageResource(R.drawable.ic_profile);
         }
+    }
+
+    private void setProfileRating(float v) {
+        switch ((int) v) {
+            case 0:
+                setSelectedStar(false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        imgStar1.setSelected(b);
+        imgStar2.setSelected(b1);
+        imgStar3.setSelected(b2);
+        imgStar4.setSelected(b3);
+        imgStar5.setSelected(b4);
     }
 
     private void setFollowTextAndBg() {
