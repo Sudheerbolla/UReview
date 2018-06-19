@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/app_name"
-            android:textColor="@color/color_vvvDarkGrey"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_18sp"
             app:txt_font_type="bold" />
 
@@ -41,10 +41,9 @@
             android:textSize="@dimen/txt_size_16sp"
             app:txt_font_type="regular" />
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/CustomRatingBarXL"
-            android:stepSize="1"
+        <include
+            android:id="@+id/llRatingBar"
+            layout="@layout/layout_edt_rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

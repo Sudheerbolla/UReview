@@ -60,7 +60,6 @@
             android:id="@+id/relVideos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/pad_10"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/rvCategories">
 
@@ -68,6 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:text="Nearby"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp"
@@ -103,7 +103,6 @@
             android:id="@+id/relTopRated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/pad_10"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/rvNearByVideos">
 
@@ -111,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:text="Top Rated"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp"
@@ -146,7 +146,6 @@
             android:id="@+id/relPopularSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/pad_10"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/rvTopRated">
 
@@ -154,18 +153,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
                 android:text="Popular Search"
-                app:txt_font_type="bold"
                 android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_15sp" />
+                android:textSize="@dimen/txt_size_15sp"
+                app:txt_font_type="bold" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtSeeAllPopularSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:text="More"
                 android:padding="@dimen/pad_8"
+                android:text="More"
                 android:textColor="@color/app_color_dark"
                 android:textSize="@dimen/txt_size_13sp" />
 

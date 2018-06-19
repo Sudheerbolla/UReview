@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -539,7 +540,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
         txtTags.setText(feedVideo.videoTags);
-        Glide.with(this).load(feedVideo.userImage).into(imgProfile);
+        RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_profile).error(R.drawable.ic_profile);
+        Glide.with(this).load(feedVideo.userImage).apply(requestOptions).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
         txtUserLoc.setText(feedVideo.userLocation);
         if (userId.equalsIgnoreCase(feedVideo.userId)) {
@@ -548,9 +550,10 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             txtFollowStatus.setVisibility(View.VISIBLE);
         }
         txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ||
-                feedVideo.followStatus.equalsIgnoreCase("follow") ? "Follow" : "Unfollow");
+                feedVideo.followStatus.equalsIgnoreCase("unfollow") ? "Follow" : "Unfollow");
         txtFollowStatus.setOnClickListener(this);
-        txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus));
+        txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus) &&
+                feedVideo.followStatus.equalsIgnoreCase("follow"));
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
             rvRelatedVideos.setVisibility(View.VISIBLE);
@@ -661,7 +664,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 showDirectionMaps();
                 break;
             case R.id.llReport:
-                mainActivity.replaceFragment(ReportVideoFragment.newInstance(), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
                 break;
         }
     }
@@ -685,8 +688,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void showShareDialog() {
         DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Share on your profile",
-                "Share Video with your friends",
-                "Share Link with your friends",
+                "Share with your friends",
+                "Share Link",
                 "Cancel"}, rootView.findViewById(R.id.llShare), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -694,10 +697,10 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                     case "Share on your profile":
                         requestForShareVideo();
                         break;
-                    case "Share Video with your friends":
+                    case "Share with your friends":
                         shareVideoWithFriends();
                         break;
-                    case "Share Link with your friends":
+                    case "Share Link":
                         shareLinkWithFriends();
                         break;
                     case "Cancel":
@@ -731,7 +734,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void showRatingDialog() {
         final TextView textView = new TextView(mainActivity);
-        DialogUtils.showRatingDialog(mainActivity, new View.OnClickListener() {
+        DialogUtils dialogUtils = new DialogUtils();
+        dialogUtils.showRatingDialog(mainActivity, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 requestForGiveRating(textView.getText().toString().trim());

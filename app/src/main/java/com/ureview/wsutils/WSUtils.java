@@ -43,4 +43,5 @@ public class WSUtils {
     public static final int REQ_FOR_UPLOAD_VIDEO = 128;
     public static final int REQ_FOR_DELETE_VIDEO = 129;
     public static final int REQ_FOR_SHARE_VIDEO = 130;
+    public static final int REQ_FOR_REPORT_VIDEO = 131;
 }

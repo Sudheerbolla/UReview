@@ -4,10 +4,10 @@
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/pad_3" />
             <padding
-                android:bottom="@dimen/pad_2"
-                android:left="@dimen/pad_2"
-                android:right="@dimen/pad_2"
-                android:top="@dimen/pad_2" />
+                android:bottom="@dimen/pad_1"
+                android:left="@dimen/pad_1"
+                android:right="@dimen/pad_1"
+                android:top="@dimen/pad_1" />
             <gradient
                 android:angle="135"
                 android:centerColor="#FE9D96"

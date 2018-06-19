@@ -28,7 +28,7 @@
     </style>
 
     <style name="AppButtonStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">@dimen/txt_size_17sp</item>
+        <item name="android:textSize">@dimen/txt_size_14sp</item>
         <item name="android:background">@drawable/bg_custom_btn_app_color</item>
         <item name="android:textColor">@color/color_white</item>
         <item name="android:gravity">center</item>

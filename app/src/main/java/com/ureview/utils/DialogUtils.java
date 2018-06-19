@@ -8,15 +8,17 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RatingBar;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ureview.R;
 import com.ureview.utils.views.CustomTextView;
 
-public class DialogUtils {
+public class DialogUtils implements View.OnClickListener {
 
     private static AlertDialog alert;
+    private ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
 
     public static void showDropDownListStrings(String title, Context context, final TextView textView, final String[] categoryNames, final View.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -184,20 +186,30 @@ public class DialogUtils {
         }
     }
 
-    public static void showRatingDialog(final Context mContext, final View.OnClickListener positiveClick, final TextView givenRating) {
+    public void showRatingDialog(final Context mContext, final View.OnClickListener positiveClick, final TextView givenRating) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
-
             final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
             alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             alertDialog.setContentView(R.layout.layout_dialog);
             txtHeading = alertDialog.findViewById(R.id.txtHeading);
             txtMessage = alertDialog.findViewById(R.id.txtMessage);
-            final RatingBar ratingBar = alertDialog.findViewById(R.id.ratingBar);
-            ratingBar.setVisibility(View.VISIBLE);
+            final LinearLayout llRatingBar = alertDialog.findViewById(R.id.llRatingBar);
+            llRatingBar.setVisibility(View.VISIBLE);
             txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
             txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
             txtNegativeButton.setVisibility(View.GONE);
+
+            imgStar1 = alertDialog.findViewById(R.id.imgStar1);
+            imgStar2 = alertDialog.findViewById(R.id.imgStar2);
+            imgStar3 = alertDialog.findViewById(R.id.imgStar3);
+            imgStar4 = alertDialog.findViewById(R.id.imgStar4);
+            imgStar5 = alertDialog.findViewById(R.id.imgStar5);
+            imgStar1.setOnClickListener(this);
+            imgStar2.setOnClickListener(this);
+            imgStar3.setOnClickListener(this);
+            imgStar4.setOnClickListener(this);
+            imgStar5.setOnClickListener(this);
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -216,7 +228,7 @@ public class DialogUtils {
                 public void onClick(View v) {
                     alertDialog.dismiss();
                     if (positiveClick != null) {
-                        givenRating.setText(String.valueOf(ratingBar.getRating()));
+                        givenRating.setText(String.valueOf(getRating()));
                         positiveClick.onClick(v);
                     }
                 }
@@ -292,4 +304,72 @@ public class DialogUtils {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imgStar1:
+                setRating(1);
+                break;
+            case R.id.imgStar2:
+                setRating(2);
+                break;
+            case R.id.imgStar3:
+                setRating(3);
+                break;
+            case R.id.imgStar4:
+                setRating(4);
+                break;
+            case R.id.imgStar5:
+                setRating(5);
+                break;
+        }
+    }
+
+    private int getRating() {
+        int rating = 0;
+        if (imgStar5.isSelected())
+            rating = 5;
+        else if (!imgStar5.isSelected() && imgStar4.isSelected())
+            rating = 4;
+        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && imgStar3.isSelected())
+            rating = 3;
+        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && !imgStar3.isSelected()
+                && imgStar2.isSelected())
+            rating = 2;
+        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && !imgStar3.isSelected()
+                && !imgStar2.isSelected() && imgStar1.isSelected())
+            rating = 4;
+        return rating;
+    }
+
+    private void setRating(int v) {
+        switch (v) {
+            case 0:
+                setSelectedStar(false, false, false, false, false);
+                break;
+            case 1:
+                setSelectedStar(true, false, false, false, false);
+                break;
+            case 2:
+                setSelectedStar(true, true, false, false, false);
+                break;
+            case 3:
+                setSelectedStar(true, true, true, false, false);
+                break;
+            case 4:
+                setSelectedStar(true, true, true, true, false);
+                break;
+            case 5:
+                setSelectedStar(true, true, true, true, true);
+                break;
+        }
+    }
+
+    private void setSelectedStar(boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
+        imgStar1.setSelected(b);
+        imgStar2.setSelected(b1);
+        imgStar3.setSelected(b2);
+        imgStar4.setSelected(b3);
+        imgStar5.setSelected(b4);
+    }
 }
