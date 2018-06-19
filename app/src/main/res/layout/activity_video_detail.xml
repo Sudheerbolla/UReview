@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/pad_10">
 
     <FrameLayout
         android:id="@+id/player_frame_layout"
@@ -41,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/pad_15"
                 android:paddingRight="@dimen/pad_15"
-                android:paddingTop="@dimen/pad_20">
+                android:paddingTop="@dimen/pad_10">
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtVideoTitle"
@@ -52,7 +53,8 @@
                     android:layout_marginTop="@dimen/pad_5"
                     android:layout_toStartOf="@+id/consCat"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/txt_size_16sp" />
+                    android:textSize="@dimen/txt_size_14sp"
+                    app:txt_font_type="bold" />
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/consCat"
@@ -77,10 +79,10 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:gravity="center"
-                        android:paddingBottom="@dimen/pad_6"
-                        android:paddingLeft="@dimen/pad_17"
-                        android:paddingRight="@dimen/pad_17"
-                        android:paddingTop="@dimen/pad_6"
+                        android:paddingBottom="@dimen/pad_3"
+                        android:paddingLeft="@dimen/pad_10"
+                        android:paddingRight="@dimen/pad_10"
+                        android:paddingTop="@dimen/pad_3"
                         android:textColor="@color/selector_txt_color"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -95,7 +97,19 @@
                     android:drawablePadding="@dimen/pad_3"
                     android:drawableStart="@drawable/vector_eye"
                     android:textColor="@color/color_vvvDarkGrey"
-                    android:textSize="@dimen/txt_size_12sp" />
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_toRightOf="@+id/txtViewCount"
+                    android:drawableLeft="@drawable/vector_location"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:padding="@dimen/pad_5"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
 
                 <!--<RatingBar
                     android:id="@+id/ratingBar"
@@ -115,8 +129,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_marginStart="@dimen/pad_10"
-                    android:layout_marginTop="@dimen/pad_3"
-                    android:layout_toEndOf="@+id/txtViewCount" />
+                    android:layout_marginTop="@dimen/pad_2"
+                    android:layout_toEndOf="@+id/txtDistance" />
 
 
                 <com.ureview.utils.views.CustomTextView
@@ -128,7 +142,7 @@
                     android:layout_marginTop="@dimen/pad_5"
                     android:layout_toEndOf="@+id/llRatingBar"
                     android:textColor="@color/color_vvvDarkGrey"
-                    android:textSize="@dimen/txt_size_12sp" />
+                    android:textSize="@dimen/txt_size_11sp" />
 
                 <LinearLayout
                     android:id="@+id/llOptions"
@@ -148,8 +162,8 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_32"
-                            android:layout_height="@dimen/pad_32"
+                            android:layout_width="@dimen/pad_30"
+                            android:layout_height="@dimen/pad_30"
                             android:src="@drawable/icon_rate" />
 
                         <com.ureview.utils.views.CustomTextView
@@ -158,7 +172,7 @@
                             android:layout_marginTop="@dimen/pad_2"
                             android:text="Rate"
                             android:textColor="@color/color_vvvDarkGrey"
-                            android:textSize="@dimen/txt_size_11sp" />
+                            android:textSize="@dimen/txt_size_10sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -181,7 +195,7 @@
                             android:layout_marginTop="@dimen/pad_2"
                             android:text="Share"
                             android:textColor="@color/color_vvvDarkGrey"
-                            android:textSize="@dimen/txt_size_11sp" />
+                            android:textSize="@dimen/txt_size_10sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -194,8 +208,8 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_32"
-                            android:layout_height="@dimen/pad_32"
+                            android:layout_width="@dimen/pad_30"
+                            android:layout_height="@dimen/pad_30"
                             android:src="@drawable/icon_direction" />
 
                         <com.ureview.utils.views.CustomTextView
@@ -204,7 +218,7 @@
                             android:layout_marginTop="@dimen/pad_2"
                             android:text="Direction"
                             android:textColor="@color/color_vvvDarkGrey"
-                            android:textSize="@dimen/txt_size_11sp" />
+                            android:textSize="@dimen/txt_size_10sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -217,8 +231,8 @@
                         android:orientation="vertical">
 
                         <com.ureview.utils.views.CircleImageView
-                            android:layout_width="@dimen/pad_32"
-                            android:layout_height="@dimen/pad_32"
+                            android:layout_width="@dimen/pad_30"
+                            android:layout_height="@dimen/pad_30"
                             android:src="@drawable/icon_report" />
 
                         <com.ureview.utils.views.CustomTextView
@@ -227,7 +241,7 @@
                             android:layout_marginTop="@dimen/pad_2"
                             android:text="Report"
                             android:textColor="@color/color_vvvDarkGrey"
-                            android:textSize="@dimen/txt_size_11sp" />
+                            android:textSize="@dimen/txt_size_10sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -241,7 +255,7 @@
                     android:drawableStart="@drawable/vector_location"
                     android:text="Location"
                     android:textColor="@color/colorDarkGrey"
-                    android:textSize="@dimen/txt_size_11sp" />
+                    android:textSize="@dimen/txt_size_10sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtLocation"
@@ -250,17 +264,17 @@
                     android:layout_below="@+id/txtLoc"
                     android:layout_marginTop="@dimen/pad_5"
                     android:textColor="@color/color_vvvDarkGrey"
-                    android:textSize="@dimen/txt_size_15sp" />
+                    android:textSize="@dimen/txt_size_13sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtTagsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtLocation"
-                    android:layout_marginTop="@dimen/pad_15"
+                    android:layout_marginTop="@dimen/pad_10"
                     android:text="Tags"
                     android:textColor="@color/colorDarkGrey"
-                    android:textSize="@dimen/txt_size_11sp" />
+                    android:textSize="@dimen/txt_size_10sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtTags"
@@ -269,17 +283,17 @@
                     android:layout_below="@+id/txtTagsTitle"
                     android:layout_marginTop="@dimen/pad_5"
                     android:textColor="@color/color_vvvDarkGrey"
-                    android:textSize="@dimen/txt_size_15sp" />
+                    android:textSize="@dimen/txt_size_13sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtUploadedBy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtTags"
-                    android:layout_marginTop="@dimen/pad_15"
+                    android:layout_marginTop="@dimen/pad_10"
                     android:text="Uploaded by"
                     android:textColor="@color/colorDarkGrey"
-                    android:textSize="@dimen/txt_size_11sp" />
+                    android:textSize="@dimen/txt_size_10sp" />
 
                 <RelativeLayout
                     android:id="@+id/rlUploadedBy"
@@ -298,11 +312,15 @@
                     <com.ureview.utils.views.CustomTextView
                         android:id="@+id/txtFollowStatus"
                         android:layout_width="wrap_content"
-                        android:layout_height="@dimen/item_feed_btn_height"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/selector_app_pink_btn"
+                        android:background="@drawable/selector_custom_app_btn"
                         android:gravity="center"
+                        android:paddingBottom="@dimen/pad_5"
+                        android:paddingLeft="@dimen/pad_12"
+                        android:paddingRight="@dimen/pad_12"
+                        android:paddingTop="@dimen/pad_5"
                         android:textColor="@color/selector_txt_color"
                         android:textSize="@dimen/txt_size_15sp" />
 
@@ -316,7 +334,7 @@
                         android:layout_toEndOf="@+id/imgProfile"
                         android:layout_toStartOf="@+id/txtFollowStatus"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/txt_size_15sp" />
+                        android:textSize="@dimen/txt_size_13sp" />
 
                     <com.ureview.utils.views.CustomTextView
                         android:id="@+id/txtUserLoc"
@@ -329,7 +347,7 @@
                         android:layout_toEndOf="@+id/imgProfile"
                         android:layout_toStartOf="@+id/txtFollowStatus"
                         android:textColor="@color/color_vvvDarkGrey"
-                        android:textSize="@dimen/txt_size_12sp" />
+                        android:textSize="@dimen/txt_size_11sp" />
                 </RelativeLayout>
 
                 <View
@@ -348,7 +366,7 @@
                     android:layout_marginTop="@dimen/pad_8"
                     android:text="Related Videos"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/txt_size_13sp" />
+                    android:textSize="@dimen/txt_size_12sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtSeeAll"
@@ -358,9 +376,9 @@
                     android:layout_below="@+id/dividerView"
                     android:layout_marginTop="@dimen/pad_3"
                     android:padding="@dimen/pad_8"
-                    android:text="See all"
+                    android:text="More"
                     android:textColor="@color/app_text_color"
-                    android:textSize="@dimen/txt_size_15sp"
+                    android:textSize="@dimen/txt_size_13sp"
                     android:visibility="gone" />
 
             </RelativeLayout>

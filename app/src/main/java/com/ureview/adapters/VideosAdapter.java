@@ -43,9 +43,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
-        boolean val = only10Items && position >= 10;
+        boolean val = only10Items && position >= 5;
         if (val) {
-            holder.cvMore.setVisibility(position > 10 ? View.GONE : View.VISIBLE);
+            holder.cvMore.setVisibility(position > 5 ? View.GONE : View.VISIBLE);
         } else {
             holder.cvMore.setVisibility(View.GONE);
         }

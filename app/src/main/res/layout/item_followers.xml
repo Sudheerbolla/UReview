@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="59"
                 android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
+                android:textSize="@dimen/txt_size_12sp" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtViews"
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="Views"
                 android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
+                android:textSize="@dimen/txt_size_12sp" />
         </LinearLayout>
 
         <com.ureview.utils.views.CustomTextView
@@ -61,8 +61,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/selector_app_pink_btn"
+            android:background="@drawable/selector_custom_app_btn"
             android:gravity="center"
+            android:paddingBottom="@dimen/pad_5"
+            android:paddingLeft="@dimen/pad_12"
+            android:paddingRight="@dimen/pad_12"
+            android:paddingTop="@dimen/pad_5"
             android:textColor="@color/selector_txt_color"
             android:textSize="@dimen/txt_size_15sp" />
 
@@ -79,17 +83,17 @@
         android:layout_toRightOf="@+id/imgProfile"
         android:singleLine="true"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:textSize="@dimen/txt_size_13sp" />
 
-   <!-- <RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/CustomRatingBarM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtName"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_toRightOf="@+id/imgProfile"
-        android:isIndicator="true" />-->
+    <!-- <RatingBar
+         android:id="@+id/ratingBar"
+         style="@style/CustomRatingBarM"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/txtName"
+         android:layout_marginLeft="@dimen/pad_10"
+         android:layout_toRightOf="@+id/imgProfile"
+         android:isIndicator="true" />-->
 
     <include
         android:id="@+id/llRatingBar"

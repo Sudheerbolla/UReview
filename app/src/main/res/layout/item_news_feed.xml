@@ -23,7 +23,7 @@
         android:layout_toRightOf="@+id/imgProfile"
         android:text="Terry Rodriguez"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:textSize="@dimen/txt_size_13sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtLoc"
@@ -37,7 +37,7 @@
         android:maxLines="2"
         android:text="Mirpur 10, Dhaka"
         android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_10sp" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cvLocation"
@@ -90,6 +90,7 @@
                     android:paddingTop="@dimen/pad_6"
                     android:text="News Feed"
                     android:textColor="@color/selector_txt_color"
+                    android:textSize="@dimen/txt_size_12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toRightOf="@+id/imgCat"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -107,7 +108,7 @@
         android:layout_marginLeft="@dimen/pad_10"
         android:text="(405)"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_10sp" />
 
     <!--<com.ureview.utils.views.CustomTextView
         android:id="@+id/txtLocType"
@@ -129,9 +130,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cvLocation"
         android:layout_marginTop="@dimen/pad_12"
-        android:text="Synth polaroid biology"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_16sp" />
+        android:textSize="@dimen/txt_size_14sp"
+        app:txt_font_type="bold" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtViewCount"
@@ -140,24 +141,26 @@
         android:layout_below="@+id/txtSynth"
         android:drawableLeft="@drawable/vector_eye"
         android:drawablePadding="@dimen/pad_3"
+        android:gravity="center"
         android:padding="@dimen/pad_5"
         android:text="408121"
         android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_10sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtDistance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSynth"
-        android:layout_marginLeft="@dimen/pad_5"
+        android:layout_marginLeft="@dimen/pad_2"
         android:layout_toRightOf="@+id/txtViewCount"
         android:drawableLeft="@drawable/vector_location"
         android:drawablePadding="@dimen/pad_3"
+        android:gravity="center"
         android:padding="@dimen/pad_5"
         android:text="232"
         android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_10sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtRatingsNo"
@@ -168,7 +171,7 @@
         android:layout_marginTop="@dimen/pad_2"
         android:text="(405)"
         android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_10sp" />
 
     <!-- <RatingBar
          android:id="@+id/ratingBarVideo"
@@ -192,7 +195,7 @@
     <View
         android:id="@+id/dividerView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/pad_15"
+        android:layout_height="@dimen/pad_10"
         android:layout_below="@id/txtViewCount" />
 
 </RelativeLayout>

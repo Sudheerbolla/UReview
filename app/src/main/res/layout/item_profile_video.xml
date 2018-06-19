@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/relImageVideo"
         android:layout_width="140dp"
-        android:layout_height="120dp">
+        android:layout_height="125dp">
 
         <com.ureview.utils.views.customimageview.RoundedImageView
             android:id="@+id/imgVideo"
@@ -20,10 +20,10 @@
 
         <ImageView
             android:id="@+id/imgDeleteVideo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/pad_25"
+            android:layout_height="@dimen/pad_25"
             android:layout_alignParentEnd="true"
-            android:padding="@dimen/pad_6"
+            android:padding="@dimen/pad_4"
             android:src="@drawable/delete_account_copy"
             android:visibility="gone" />
 
@@ -65,7 +65,8 @@
         android:layout_below="@+id/relImageVideo"
         android:layout_marginTop="@dimen/pad_5"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_13sp" />
+        android:textSize="@dimen/txt_size_13sp"
+        app:txt_font_type="bold" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtTags"

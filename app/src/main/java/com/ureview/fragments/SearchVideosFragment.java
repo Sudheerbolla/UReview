@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
@@ -19,6 +21,7 @@ import com.ureview.adapters.SearchVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
@@ -33,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 public class SearchVideosFragment extends BaseFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener {
@@ -50,6 +54,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private boolean isLoading = false, hasLoadedAllItems;
     private int startFrom = 0, count = 5;
     protected String searchText = "";
+    private int follPos = -1;
 
     public static SearchVideosFragment newInstance() {
         return new SearchVideosFragment();
@@ -120,6 +125,12 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         switch (requestCode) {
             case WSUtils.REQ_FOR_SEARCH_VIDEOS:
                 parseNewsFeedVideo(response);
+                break;
+            case WSUtils.REQ_FOR_FOLLOW_USER:
+                parseFollowUserResponse((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_UN_FOLLOW_USER:
+                parseUnFollowUserResponse((JsonObject) response);
                 break;
         }
     }
@@ -203,7 +214,26 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;
+            case R.id.txtFollowStatus:
+                follPos = position;
+                VideoModel vid = videosArrList.get(position);
+                if (!TextUtils.isEmpty(vid.followStatus) && vid.followStatus.equalsIgnoreCase("unfollow")) {
+                    askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
+                } else {
+                    requestForFollowUser(vid.videoOwnerId);
+                }
+                break;
         }
+    }
+
+    private void askConfirmationAndProceed(String name, final String id) {
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, name,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestForUnFollowUser(id);
+                    }
+                });
     }
 
     @Override
@@ -211,50 +241,58 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
 
     }
 
-}
-/*http://18.216.101.112/search-videos
+    private void requestForFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
+    }
 
-{
-    "status": "success",
-    "message": "Search videos data",
-    "search_videos": [
-        {
-            "id": "2",
-            "video_owner_id": "1",
-            "video_title": "Club Lounge",
-            "video": "http://18.216.101.112/uploads/videos/1200196517.mp4",
-            "video_poster_image": "http://18.216.101.112/uploads/video_thumbnails/970873236.png",
-            "video_duration": "0:15",
-            "category_id": "6",
-            "video_description": "",
-            "video_tags": "Club#Lounge#Awesome#Brew#music#Dj",
-            "video_rating": "0",
-            "user_latitude": "17.489945721446",
-            "user_longitude": "78.371963853256",
-            "user_location": "",
-            "video_latitude": "17.431286",
-            "video_longitude": "78.406967",
-            "video_location": "Amnesia Lounge Bar, Road Number 36, CBI Colony, Jubilee Hills, Hyderabad, Telangana, India",
-            "video_watched_count": "11",
-            "video_status": "A",
-            "video_privacy": "public",
-            "created_date": "2018-06-06 08:48:10",
-            "user_id": "1",
-            "first_name": "Madhu",
-            "last_name": "Sudhan",
-            "user_image": "",
-            "user_rating": "2",
-            "city": "Hyderabad",
-            "category_name": "Pubs/Clubs",
-            "category_image": "pubs_clubs.png",
-            "category_active_image": "pubs_clubs_active.png",
-            "category_bg_image": "pubs_clubs_bg.png",
-            "category_active_bg_image": "pubs_clubs_active_bg.png",
-            "distance": "3.99 kms",
-            "follow_status": "",
-            "rating_given": 0,
-            "customer_rating": 0
+    private void requestForUnFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
+    }
+
+    private RequestBody getRequestBodyObject(String followId) {
+        JSONObject jsonObjectReq = new JSONObject();
+        try {
+            jsonObjectReq.put("id", Integer.parseInt(userId));
+            jsonObjectReq.put("follow_id", Integer.parseInt(followId));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-    ]
+        return StaticUtils.getRequestBody(jsonObjectReq);
+    }
+
+    private void parseUnFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    if (follPos != -1) {
+                        videosArrList.get(follPos).followStatus = "follow";
+                        searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
+                    }
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseFollowUserResponse(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    if (follPos != -1) {
+                        videosArrList.get(follPos).followStatus = "unfollow";
+                        searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
+                    }
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
-*/

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSUtils;
 
@@ -24,10 +25,12 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     private final IClickListener iClickListener;
     private Context context;
     private ArrayList<VideoModel> videoArrList = new ArrayList<>();
+    private String currUserId;
 
     public SearchVideosAdapter(Context context, IClickListener iClickListener) {
         this.context = context;
         this.iClickListener = iClickListener;
+        currUserId = LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Override
@@ -38,6 +41,21 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     @Override
     public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = videoArrList.get(position);
+        if (!TextUtils.isEmpty(videoModel.userImage)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(context)
+                    .load(videoModel.userImage)
+                    .apply(options)
+                    .into(holder.imgProfile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+
+        holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
+        holder.txtLoc.setText(videoModel.city);
+
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = RequestOptions
                     .bitmapTransform(new RoundedCorners(20))
@@ -71,6 +89,12 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtLocBtm.setText(videoModel.city);
 
+        holder.txtFollowStatus.setVisibility(currUserId.equalsIgnoreCase(videoModel.videoOwnerId) ? View.GONE : View.VISIBLE);
+        holder.txtFollowStatus.setText(TextUtils.isEmpty(videoModel.followStatus) ||
+                videoModel.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
+        holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(videoModel.followStatus) ||
+                videoModel.followStatus.equalsIgnoreCase("Unfollow")));
+
         if (position == videoArrList.size() - 1) {
             holder.dividerView.setVisibility(View.GONE);
         }
@@ -99,6 +123,14 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                 }
             }
         });
+        holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.txtFollowStatus, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -112,16 +144,25 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
     }
 
+    public void updateItem(VideoModel videoModel, int follPos) {
+        notifyItemChanged(follPos, videoModel);
+    }
+
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imgLocation, imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
+        private ImageView imgLocation, imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5,
+                imgProfile;
         private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance,
-                txtViewCount, txtRatingsNo;
+                txtViewCount, txtRatingsNo, txtLoc, txtName, txtFollowStatus;
         //        private RatingBar ratingBarVideo;
         private View dividerView;
 
         public NewsFeedViewHolder(View itemView) {
             super(itemView);
+            imgProfile = itemView.findViewById(R.id.imgProfile);
+            txtLoc = itemView.findViewById(R.id.txtLoc);
+            txtFollowStatus = itemView.findViewById(R.id.txtFollowStatus);
+            txtName = itemView.findViewById(R.id.txtName);
             imgLocation = itemView.findViewById(R.id.imgLocation);
             txtCategory = itemView.findViewById(R.id.txtCategory);
             txtSynth = itemView.findViewById(R.id.txtSynth);

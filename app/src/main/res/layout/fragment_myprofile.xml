@@ -19,7 +19,7 @@
             android:layout_marginTop="@dimen/pad_8"
             android:padding="@dimen/pad_8">
 
-            <ImageView
+            <com.ureview.utils.views.CircleImageView
                 android:id="@+id/imgProfile"
                 android:layout_width="120dp"
                 android:layout_height="120dp"

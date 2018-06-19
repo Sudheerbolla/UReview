@@ -117,9 +117,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_20"
                 android:layout_marginRight="@dimen/pad_20"
-                android:visibility="gone"
                 android:layout_marginTop="@dimen/pad_8"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtCountryCode"
@@ -199,15 +199,17 @@
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtUpdate"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/pad_20"
                 android:layout_marginRight="@dimen/pad_20"
                 android:layout_marginTop="@dimen/pad_20"
                 android:background="@drawable/bg_custom_btn_app_color"
                 android:gravity="center"
-                android:paddingBottom="@dimen/pad_13"
-                android:paddingTop="@dimen/pad_13"
+                android:paddingBottom="@dimen/pad_10"
+                android:paddingLeft="@dimen/pad_35"
+                android:paddingRight="@dimen/pad_35"
+                android:paddingTop="@dimen/pad_10"
                 android:text="Update"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/txt_size_14sp" />

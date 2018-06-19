@@ -75,7 +75,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         txtNoDatafound.setText("No videos uploaded");
 
         videosAdapter = new ProfileVideosAdapter(mainActivity, userVideosModelArrayList, this, userId.equalsIgnoreCase(LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "")));
-        rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        rvVideos.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         rvVideos.setAdapter(videosAdapter);
 
         ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);

@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
     private IClickListener iClickListener;
     private ArrayList<VideoModel> videoList;
     private boolean isOwner;
+    private String currUserId;
 
     public ProfileVideosAdapter(Context context) {
         this.context = context;
@@ -36,6 +38,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         this.isOwner = isOwner;
         this.iClickListener = iClickListener;
         this.videoList = videoList;
+        currUserId = LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @NonNull
@@ -67,7 +70,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         setProfileRating(holder, Float.parseFloat(videoModel.videoRating));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         holder.txtDuration.setText(videoModel.videoDuration);
-        if (videoModel.videoOwnerId.equalsIgnoreCase(videoModel.userId))
+        if (videoModel.videoOwnerId.equalsIgnoreCase(currUserId))
             holder.imgDeleteVideo.setVisibility(View.VISIBLE);
         else holder.imgDeleteVideo.setVisibility(View.GONE);
         holder.imgDeleteVideo.setOnClickListener(new View.OnClickListener() {

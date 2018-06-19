@@ -77,7 +77,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
-    private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtRatingno, txtLocation,
+    private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
             txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData;
     //    private RatingBar ratingBar;
     private LinearLayout llRate, llShare, llDirection, llReport;
@@ -461,6 +461,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         txtViewCount = rootView.findViewById(R.id.txtViewCount);
+        txtDistance = rootView.findViewById(R.id.txtDistance);
 //        ratingBar = rootView.findViewById(R.id.ratingBar);
         imgStar1 = rootView.findViewById(R.id.imgStar1);
         imgStar2 = rootView.findViewById(R.id.imgStar2);
@@ -530,6 +531,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     private void setVideoDetails() {
         txtVideoTitle.setText(feedVideo.videoTitle);
         txtViewCount.setText(feedVideo.videoWatchedCount);
+        txtDistance.setText(feedVideo.distance);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
             setProfileRating(Float.parseFloat(feedVideo.videoRating));
         txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven).concat(")")));
