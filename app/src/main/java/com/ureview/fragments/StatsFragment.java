@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -52,6 +53,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     private ArrayList<VideoViewsModel> videoViewsModelArrayList;
     private VideoViewRankingAdapter videoViewRankingAdapter;
     private String userId;
+    private RelativeLayout relRanking;
 
     public static StatsFragment newInstance(String userId) {
         StatsFragment followersFragment = new StatsFragment();
@@ -88,7 +90,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     private void initComponents() {
         chart = rootView.findViewById(R.id.chart);
         rvRankings = rootView.findViewById(R.id.rvRankings);
-
+        relRanking = rootView.findViewById(R.id.relRanking);
         requestForGetRankingsWS();
 
         ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);
@@ -191,17 +193,18 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
                                 for (int i = 0; i < videoViewsArray.size(); i++) {
                                     videoViewsModelArrayList.add(new VideoViewsModel(videoViewsArray.get(i).getAsJsonObject()));
                                 }
-                            }
+                                relRanking.setVisibility(View.VISIBLE);
+                            } else relRanking.setVisibility(View.GONE);
                             rvRankings.setLayoutManager(new LinearLayoutManager(mainActivity));
                             videoViewRankingAdapter = new VideoViewRankingAdapter(mainActivity, videoViewsModelArrayList, this);
                             rvRankings.setAdapter(videoViewRankingAdapter);
-                            //notify
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                    relRanking.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {

@@ -12,32 +12,31 @@
         android:orientation="vertical"
         android:padding="@dimen/pad_5">
 
-        <!--<com.jjoe64.graphview.GraphView-->
-        <!--android:id="@+id/graph"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="250dp" />-->
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
 
-        <com.ureview.utils.views.CustomTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad_8"
-            android:singleLine="true"
-            android:text="Ranking"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/txt_size_22sp" />
-
         <RelativeLayout
+            android:id="@+id/relRanking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtRanking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad_8"
+                android:singleLine="true"
+                android:text="Ranking"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_22sp" />
 
             <com.ureview.utils.views.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
+                android:layout_below="@id/txtRanking"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_8"
                 android:singleLine="true"
@@ -49,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_below="@id/txtRanking"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_8"
                 android:singleLine="true"
