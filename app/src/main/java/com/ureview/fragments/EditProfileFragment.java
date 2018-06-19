@@ -23,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -56,12 +55,15 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private View rootView;
     private MainActivity mainActivity;
-    private CustomTextView txtUpdate, /*txtCountryCode,*/ txtDob;
+    private CustomTextView txtUpdate, /*txtCountryCode,*/
+            txtDob;
     private CountriesModel currentCountriesModel;
     private DatePickerDialog mDatePickerDialog;
     private Calendar myCalendar = Calendar.getInstance();
-    private String firstName, lastName, email, userId, dob, /*mobile,*/ address, about, countryCode, imagePath;
-    private CustomEditText edtFirstName, edtLastName, edtEmail, /*edtMobileNumber,*/ edtLocation, edtAbout;
+    private String firstName, lastName, email, userId, dob, /*mobile,*/
+            address, about, countryCode, imagePath;
+    private CustomEditText edtFirstName, edtLastName, edtEmail, /*edtMobileNumber,*/
+            edtLocation, edtAbout;
     public static final int DIALOG_FRAGMENT = 1;
     private UserInfoModel userInfoModel;
     private CircleImageView imgProfile;
@@ -163,9 +165,17 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             edtAbout.setText(about);
         }
 
-        RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(7));
-        Glide.with(this).load(imagePath).apply(requestOptions).into(imgProfile);
-//
+        if (!TextUtils.isEmpty(imagePath)) {
+            RequestOptions options = new RequestOptions()
+                    .placeholder(R.drawable.ic_profile)
+                    .fitCenter()
+                    .error(R.drawable.ic_profile);
+
+            Glide.with(this)
+                    .load(imagePath)
+                    .apply(options)
+                    .into(imgProfile);
+        } else imgProfile.setImageResource(R.drawable.ic_profile);
     }
 
     private void initDatePicker() {

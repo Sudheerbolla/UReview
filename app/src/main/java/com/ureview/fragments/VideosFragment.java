@@ -164,7 +164,7 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
                         }
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+//                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
             }
         } catch (Exception e) {

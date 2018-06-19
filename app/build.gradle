@@ -37,19 +37,16 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
-    implementation 'com.yahoo.mobile.client.android.util.rangeseekbar:rangeseekbar-library:0.1.0'
-
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
-
-    implementation 'com.google.maps.android:android-maps-utils:0.4'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
     implementation 'com.facebook.android:facebook-login:4.33.0'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    implementation 'com.github.pedrovgs:draggablepanel:1.9'
+//    implementation 'com.github.pedrovgs:draggablepanel:1.9'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
