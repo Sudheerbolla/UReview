@@ -1,3 +1,4 @@
+/*
 package com.ureview.activities;
 
 import android.app.Activity;
@@ -376,3 +377,4 @@ public class VideoMP4Activity extends Activity implements AdaptiveMediaSourceEve
 
     }
 }
+*/

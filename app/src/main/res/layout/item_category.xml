@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/pad_3"
-    android:background="@drawable/selector_app_pink_btn"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/pad_8">
@@ -13,18 +12,18 @@
     <ImageView
         android:id="@+id/imgCat"
         android:layout_width="@dimen/pad_15"
-        android:layout_height="@dimen/pad_15"
-        android:src="@drawable/home_copy" />
+        android:layout_height="@dimen/pad_15" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/pad_5"
+        android:layout_marginStart="@dimen/pad_5"
         android:ellipsize="end"
         android:gravity="center"
-        android:text="News Feed"
+        android:padding="@dimen/pad_3"
         android:textColor="@color/selector_txt_color"
         android:textSize="@dimen/txt_size_13sp"
-        app:txt_font_type="bold" />
+        app:txt_font_type="regular" />
+
 </LinearLayout>

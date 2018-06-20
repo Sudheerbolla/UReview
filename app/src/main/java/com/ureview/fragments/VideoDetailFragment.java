@@ -15,9 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +31,6 @@ import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -77,38 +76,25 @@ import retrofit2.Call;
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
         AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
-    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
+    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
-            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData;
-    //    private RatingBar ratingBar;
+            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
     private LinearLayout llRate, llShare, llDirection, llReport;
     private CustomRecyclerView rvRelatedVideos;
     private VideosAdapter videosAdapter;
     private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
     private VideoModel feedVideo;
     private NestedScrollView nestedScrollView;
-    //    private SimpleExoPlayer player;
-    LoopingMediaSource loopingSource;
     private View rootView;
     private MainActivity mainActivity;
 
-    //video player
-    SurfaceView svPlayer;
-    ImageButton prev;
-    ImageButton rew;
-    ImageView btnPlay;
-    ImageButton ffwd, next;
-    TextView timeCurrent;
-    SeekBar mediacontrollerProgress;
-    TextView playerEndTime;
-    ImageButton fullscreen;
-    LinearLayout linMediaController;
-    FrameLayout playerFrameLayout;
+    private SurfaceView svPlayer;
+    private SeekBar mediacontrollerProgress;
+    private RelativeLayout linMediaController;
+    private FrameLayout playerFrameLayout;
 
     private SimpleExoPlayer exoPlayer;
-    private boolean bAutoplay = true;
-    private boolean bIsPlaying = false;
-    private boolean bControlsActive = true;
+    private boolean bAutoplay = true, bIsPlaying = false, bControlsActive = true;
 
     private Handler handler;
     private StringBuilder mFormatBuilder;
@@ -133,7 +119,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -147,19 +132,15 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void initVideoPlayer2() {
         svPlayer = rootView.findViewById(R.id.sv_player);
-        prev = rootView.findViewById(R.id.prev);
-        rew = rootView.findViewById(R.id.rew);
         btnPlay = rootView.findViewById(R.id.btnPlay);
-        ffwd = rootView.findViewById(R.id.ffwd);
-        next = rootView.findViewById(R.id.next);
         timeCurrent = rootView.findViewById(R.id.time_current);
         mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
         playerEndTime = rootView.findViewById(R.id.player_end_time);
-        fullscreen = rootView.findViewById(R.id.fullscreen);
         linMediaController = rootView.findViewById(R.id.lin_media_controller);
         playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
 
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         handler = new Handler();
         initDataSource();
         initMp4Player();
@@ -184,56 +165,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         initSurfaceView();
         initPlayButton();
         initSeekBar();
-        initFwd();
-        initPrev();
-        initRew();
-        initNext();
     }
-
-    private void initNext() {
-        next.requestFocus();
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(exoPlayer.getDuration());
-                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
-            }
-        });
-    }
-
-    private void initRew() {
-        rew.requestFocus();
-        rew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(exoPlayer.getCurrentPosition() - 10000);
-                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
-            }
-        });
-    }
-
-    private void initPrev() {
-        prev.requestFocus();
-        prev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(0);
-                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
-            }
-        });
-    }
-
-    private void initFwd() {
-        ffwd.requestFocus();
-        ffwd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(exoPlayer.getCurrentPosition() + 10000);
-                timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
-            }
-        });
-    }
-
 
     private void initSurfaceView() {
         svPlayer.setOnClickListener(new View.OnClickListener() {
@@ -456,14 +388,13 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void initComponents() {
-        mainActivity.setToolBar("", "", "", false, true, false, false, false);
-//        playerView = findViewById(R.id.playerView);
+        mainActivity.hideTopbar();
         txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
+        imgback = rootView.findViewById(R.id.imgback);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         txtViewCount = rootView.findViewById(R.id.txtViewCount);
         txtDistance = rootView.findViewById(R.id.txtDistance);
-//        ratingBar = rootView.findViewById(R.id.ratingBar);
         imgStar1 = rootView.findViewById(R.id.imgStar1);
         imgStar2 = rootView.findViewById(R.id.imgStar2);
         imgStar3 = rootView.findViewById(R.id.imgStar3);
@@ -489,6 +420,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         llDirection.setOnClickListener(this);
         llReport.setOnClickListener(this);
         llShare.setOnClickListener(this);
+        imgback.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false);
@@ -539,11 +471,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
+//        txtLocation.setText(feedVideo.city);
         txtTags.setText(feedVideo.videoTags);
-        RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_profile).error(R.drawable.ic_profile);
+        RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_user_placeholder).error(R.drawable.ic_user_placeholder);
         Glide.with(this).load(feedVideo.userImage).apply(requestOptions).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
-        txtUserLoc.setText(feedVideo.userLocation);
+        txtUserLoc.setText(feedVideo.city);
         if (userId.equalsIgnoreCase(feedVideo.userId)) {
             txtFollowStatus.setVisibility(View.GONE);
         } else {
@@ -579,6 +512,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     public void onStop() {
         super.onStop();
         exoPlayer.stop();
+        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
@@ -670,6 +605,9 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 break;
             case R.id.llReport:
                 mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
+                break;
+            case R.id.imgback:
+                mainActivity.popBackStack();
                 break;
         }
     }
@@ -873,4 +811,5 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     public void noInternetConnection(int requestCode) {
 
     }
+
 }

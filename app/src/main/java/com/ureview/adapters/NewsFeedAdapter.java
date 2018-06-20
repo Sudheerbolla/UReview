@@ -1,6 +1,8 @@
 package com.ureview.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -10,8 +12,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
@@ -43,15 +46,15 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
 
         if (!TextUtils.isEmpty(videoModel.userImage)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(videoModel.userImage)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 
 
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
@@ -60,26 +63,19 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.imgLocation.getLayoutParams().height = width / 2;
         holder.imgLocation.getLayoutParams().width = width;
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-            RequestOptions requestOptions = RequestOptions.bitmapTransform(new RoundedCorners(25));
-//            requestOptions.placeholder(R.drawable.ic_profile);
-//            requestOptions.error(R.drawable.ic_profile);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_user_placeholder).error(R.drawable.ic_user_placeholder);
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(requestOptions)
                     .into(holder.imgLocation);
-        } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
+        } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
 
-        if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .fitCenter()
-                    .error(R.drawable.ic_profile);
-
-            Glide.with(context)
-                    .load(videoModel.categoryBgImage)
-                    .apply(options)
-                    .into(holder.imgCatBg);
-        } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
+        Glide.with(context).load(videoModel.categoryBgImage).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
+                holder.txtCategory.setBackground(resource);
+            }
+        });
 
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);
@@ -162,7 +158,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         private ImageView imgProfile, imgLocation;
         private CustomTextView txtName, txtLoc, txtSynth, txtDuration,
                 txtViewCount, txtDistance, txtRatingsNo, txtCategory;
-        private ImageView imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
+        private ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
         private View dividerView;
         private RelativeLayout relItem;
 //        private RatingBar ratingBarVideo;
@@ -178,7 +174,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
             txtCategory = itemView.findViewById(R.id.txtCategory);
             txtSynth = itemView.findViewById(R.id.txtSynth);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
-            imgCatBg = itemView.findViewById(R.id.imgCatBg);
             txtViewCount = itemView.findViewById(R.id.txtViewCount);
             txtDistance = itemView.findViewById(R.id.txtDistance);
             dividerView = itemView.findViewById(R.id.dividerView);

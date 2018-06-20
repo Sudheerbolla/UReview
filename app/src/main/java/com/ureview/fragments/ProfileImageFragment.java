@@ -61,14 +61,14 @@ public class ProfileImageFragment extends DialogFragment implements View.OnClick
         setListeners();
         if (!TextUtils.isEmpty(url)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
             Glide.with(this)
                     .load(url)
                     .apply(options)
                     .into(imgView);
-        } else imgView.setImageResource(R.drawable.ic_profile);
+        } else imgView.setImageResource(R.drawable.ic_user_placeholder);
 
     }
 

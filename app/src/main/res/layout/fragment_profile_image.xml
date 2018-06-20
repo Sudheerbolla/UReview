@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/pad_10"
-        android:src="@drawable/back_copy" />
+        android:src="@drawable/ic_back" />
 
     <com.ureview.utils.views.CustomImageVIew
         android:id="@+id/imgView"

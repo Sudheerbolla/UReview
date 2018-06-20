@@ -8,8 +8,8 @@
 
     <RelativeLayout
         android:id="@+id/relImageVideo"
-        android:layout_width="match_parent"
-        android:layout_height="160dp">
+        android:layout_width="140dp"
+        android:layout_height="125dp">
 
         <com.ureview.utils.views.customimageview.RoundedImageView
             android:id="@+id/imgVideo"
@@ -64,6 +64,9 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/relImageVideo"
         android:layout_marginTop="@dimen/pad_5"
+        android:ellipsize="end"
+        android:inputType="text"
+        android:singleLine="true"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_13sp"
         app:txt_font_type="bold" />
@@ -76,9 +79,9 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/txtName"
         android:layout_marginTop="@dimen/pad_2"
+        android:ellipsize="end"
         android:inputType="text"
         android:singleLine="true"
-        android:ellipsize="end"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_9sp" />
 
@@ -92,8 +95,8 @@
         android:layout_marginTop="-3dp"
         android:drawablePadding="@dimen/pad_3"
         android:drawableStart="@drawable/ic_view"
-        android:padding="@dimen/pad_5"
         android:gravity="center"
+        android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_10sp" />
 

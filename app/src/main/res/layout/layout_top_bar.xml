@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relMainTopBar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/color_white">
@@ -23,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_5"
-                android:src="@drawable/back_copy"
+                android:src="@drawable/ic_back"
                 android:visibility="invisible" />
 
             <ImageView
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="@dimen/pad_10"
-                android:src="@drawable/back_copy"
+                android:src="@drawable/ic_back"
                 android:visibility="gone" />
 
             <ImageView
@@ -60,7 +61,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:padding="@dimen/pad_2"
             android:singleLine="true"
-            android:textColor="@color/color_vvDarkGrey"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_16sp"
             android:visibility="visible" />
 
@@ -72,7 +73,7 @@
             android:layout_marginStart="-6dp"
             android:layout_toEndOf="@id/relLeft"
             android:layout_toStartOf="@+id/relRight"
-            android:drawableEnd="@drawable/drop_down_copy"
+            android:drawableEnd="@drawable/ic_down"
             android:drawablePadding="@dimen/pad_5"
             android:ellipsize="marquee"
             android:gravity="center_vertical"
@@ -80,7 +81,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:paddingEnd="@dimen/pad_10"
             android:singleLine="true"
-            android:textColor="@color/color_vvDarkGrey"
+            android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_15sp"
             android:visibility="visible" />
 

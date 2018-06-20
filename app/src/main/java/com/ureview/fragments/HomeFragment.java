@@ -72,7 +72,6 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
     private int lastUpdatedPos = -1;
-    private int visibleItemCount, totalItemCount, pastVisiblesItems;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();

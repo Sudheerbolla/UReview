@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
@@ -53,16 +52,15 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         VideoModel videoModel = videoList.get(position);
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .bitmapTransform(new RoundedCorners(20))
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(options)
                     .into(holder.imgVideo);
-        } else holder.imgVideo.setImageResource(R.drawable.ic_profile);
+        } else holder.imgVideo.setImageResource(R.drawable.ic_user_placeholder);
 
         holder.txtName.setText(videoModel.videoTitle);
         holder.txtTags.setText(videoModel.videoTags);
