@@ -54,11 +54,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
             holder.txtFollowStatus.setVisibility(View.GONE);
         } else {
             holder.txtFollowStatus.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(followModel.follow_status) && followModel.follow_status.equalsIgnoreCase("unfollow")) {
-                holder.txtFollowStatus.setText("Unfollow");
-                holder.txtFollowStatus.setSelected(true);
-                holder.imgClear.setVisibility(View.GONE);
-            } else {
+            if (TextUtils.isEmpty(followModel.follow_status)) {
                 if (isFollowers) {
                     if (followModel.status.equalsIgnoreCase("1")) {
                         holder.txtFollowStatus.setText("Follow");
@@ -74,6 +70,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
                     holder.txtFollowStatus.setSelected(false);
                     holder.imgClear.setVisibility(View.VISIBLE);
                 }
+            } else {
+                holder.txtFollowStatus.setText("Unfollow");
+                holder.txtFollowStatus.setSelected(true);
+                holder.imgClear.setVisibility(View.GONE);
             }
         }
 

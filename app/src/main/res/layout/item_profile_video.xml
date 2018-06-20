@@ -4,12 +4,12 @@
     android:id="@+id/relItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/pad_6">
+    android:padding="@dimen/pad_5">
 
     <RelativeLayout
         android:id="@+id/relImageVideo"
-        android:layout_width="140dp"
-        android:layout_height="125dp">
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
 
         <com.ureview.utils.views.customimageview.RoundedImageView
             android:id="@+id/imgVideo"
@@ -50,9 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/relImageVideo"
-        android:layout_alignLeft="@+id/relImageVideo"
+        android:layout_alignStart="@+id/relImageVideo"
         android:layout_marginBottom="@dimen/pad_8"
-        android:layout_marginLeft="@dimen/pad_10"
+        android:layout_marginStart="@dimen/pad_10"
         android:textColor="@color/color_white"
         android:textSize="@dimen/txt_size_12sp" />
 
@@ -78,14 +78,14 @@
         android:layout_marginTop="@dimen/pad_2"
         android:maxLines="2"
         android:textColor="@color/color_vvvDarkGrey"
-        android:textSize="@dimen/txt_size_11sp" />
+        android:textSize="@dimen/txt_size_9sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtViewCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:drawableLeft="@drawable/vector_eye"
+        android:drawableStart="@drawable/ic_view"
         android:drawablePadding="@dimen/pad_3"
         android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
@@ -96,8 +96,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:layout_toRightOf="@+id/txtViewCount"
-        android:drawableLeft="@drawable/vector_location"
+        android:layout_toEndOf="@+id/txtViewCount"
+        android:drawableStart="@drawable/vector_location"
         android:drawablePadding="@dimen/pad_3"
         android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
@@ -109,20 +109,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtDistance"
         android:layout_marginTop="@dimen/pad_2"
-        android:layout_toRightOf="@+id/llRatingBar"
+        android:layout_toEndOf="@+id/llRatingBar"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
-
-    <!--<RatingBar
-        android:id="@+id/ratingBar"
-        style="@style/CustomRatingBarM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtDistance"
-        android:layout_marginRight="@dimen/pad_5"
-        android:layout_marginTop="@dimen/pad_4"
-        android:isIndicator="true"
-        android:numStars="5" />-->
 
     <include
         android:id="@+id/llRatingBar"
@@ -130,6 +119,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtDistance"
-        android:layout_marginRight="@dimen/pad_2" />
+        android:layout_marginEnd="@dimen/pad_2" />
 
 </RelativeLayout>

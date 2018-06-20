@@ -12,12 +12,9 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.ureview.R;
@@ -89,11 +86,13 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 0) {
-                    if (tabLayout.getSelectedTabPosition() == 0) {
-                        // videos
-                    } else {
-                        //people
+                if (tabLayout.getSelectedTabPosition() == 0) {
+                    if (searchVideosFragment != null) {
+                        searchVideosFragment.searchVideo(charSequence.toString());
+                    }
+                } else {
+                    if (searchPeopleFragment != null) {
+                        searchPeopleFragment.searchUser(charSequence.toString());
                     }
                 }
             }
@@ -101,21 +100,6 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void afterTextChanged(Editable editable) {
 
-            }
-        });
-
-        mainActivity.edtText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH) {
-                    StaticUtils.hideSoftKeyboard(mainActivity);
-                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
-                        searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
-                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
-                        searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim());
-                    }
-                }
-                return false;
             }
         });
 

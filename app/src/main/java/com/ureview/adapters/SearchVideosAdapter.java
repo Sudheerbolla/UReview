@@ -1,6 +1,8 @@
 package com.ureview.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,6 +13,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
@@ -68,32 +72,43 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
         holder.txtCategory.setText(videoModel.categoryName);
-        if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .fitCenter()
-                    .error(R.drawable.ic_profile);
 
-            Glide.with(context)
-                    .load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage))
-                    .apply(options)
-                    .into(holder.imgCatBg);
-        } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
+//        if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
+//            RequestOptions options = new RequestOptions()
+//                    .placeholder(R.drawable.ic_profile)
+//                    .fitCenter()
+//                    .error(R.drawable.ic_profile);
+//
+//            Glide.with(context)
+//                    .load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage))
+//                    .apply(options)
+//                    .into(holder.imgCatBg);
+//        } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
 
+        Glide.with(context).load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage)).into(new SimpleTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
+                holder.txtCategory.setBackground(resource);
+            }
+        });
 
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
-//        holder.txtDuration.setText(videoModel.videoDuration);
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
         setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtLocBtm.setText(videoModel.city);
 
+        holder.txtLength.setText(videoModel.videoDuration);
+
         holder.txtFollowStatus.setVisibility(currUserId.equalsIgnoreCase(videoModel.videoOwnerId) ? View.GONE : View.VISIBLE);
-        holder.txtFollowStatus.setText(TextUtils.isEmpty(videoModel.followStatus) ||
-                videoModel.followStatus.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
-        holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(videoModel.followStatus) ||
-                videoModel.followStatus.equalsIgnoreCase("Unfollow")));
+        if (TextUtils.isEmpty(videoModel.followStatus)) {
+            holder.txtFollowStatus.setText("Follow");
+            holder.txtFollowStatus.setSelected(false);
+        } else {
+            holder.txtFollowStatus.setText("Unfollow");
+            holder.txtFollowStatus.setSelected(true);
+        }
 
         if (position == videoArrList.size() - 1) {
             holder.dividerView.setVisibility(View.GONE);
@@ -149,10 +164,10 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     }
 
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView imgLocation, imgCatBg, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5,
+        //imgCatBg
+        private ImageView imgLocation, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5,
                 imgProfile;
-        private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance,
+        private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance, txtLength,
                 txtViewCount, txtRatingsNo, txtLoc, txtName, txtFollowStatus;
         //        private RatingBar ratingBarVideo;
         private View dividerView;
@@ -169,9 +184,9 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
             txtViewCount = itemView.findViewById(R.id.txtViewCount);
             txtRatingsNo = itemView.findViewById(R.id.txtRatingsNo);
             txtLocBtm = itemView.findViewById(R.id.txtLocBtm);
-            imgCatBg = itemView.findViewById(R.id.imgCatBg);
+//            imgCatBg = itemView.findViewById(R.id.imgCatBg);
             txtDistance = itemView.findViewById(R.id.txtDistance);
-//            ratingBarVideo = itemView.findViewById(R.id.ratingBarVideo);
+            txtLength = itemView.findViewById(R.id.txtLength);
             imgStar1 = itemView.findViewById(R.id.imgStar1);
             imgStar2 = itemView.findViewById(R.id.imgStar2);
             imgStar3 = itemView.findViewById(R.id.imgStar3);

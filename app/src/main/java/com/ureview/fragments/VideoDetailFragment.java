@@ -549,11 +549,16 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         } else {
             txtFollowStatus.setVisibility(View.VISIBLE);
         }
-        txtFollowStatus.setText(TextUtils.isEmpty(feedVideo.followStatus) ||
-                feedVideo.followStatus.equalsIgnoreCase("unfollow") ? "Follow" : "Unfollow");
+
+        if (TextUtils.isEmpty(feedVideo.followStatus)) {
+            txtFollowStatus.setText("Follow");
+            txtFollowStatus.setSelected(false);
+        } else {
+            txtFollowStatus.setText("Unfollow");
+            txtFollowStatus.setSelected(true);
+        }
         txtFollowStatus.setOnClickListener(this);
-        txtFollowStatus.setSelected(!TextUtils.isEmpty(feedVideo.followStatus) &&
-                feedVideo.followStatus.equalsIgnoreCase("follow"));
+
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
             rvRelatedVideos.setVisibility(View.VISIBLE);
