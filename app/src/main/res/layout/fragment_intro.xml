@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -7,24 +8,58 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.25" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/pad_120" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/relBottom"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/pad_20"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_marginRight="@dimen/pad_10"
-        android:layout_weight="0.75">
+        android:layout_marginLeft="@dimen/pad_15"
+        android:layout_marginRight="@dimen/pad_15"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/layoutDots"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dots_height"
+            android:gravity="center"
+            android:orientation="horizontal" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_10"
+            android:text="What you say, matters!"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_19sp"
+            app:txt_font_type="bold" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txt_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pad_10"
+            android:layout_marginEnd="@dimen/pad_30"
+            android:layout_marginStart="@dimen/pad_30"
+            android:layout_marginTop="@dimen/pad_5"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.1"
+            android:text="Record your moment, #caption it and upload"
+            android:textSize="@dimen/txt_size_14sp" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/btn_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/pad_8"
+            android:layout_marginBottom="@dimen/pad_13"
+            android:layout_marginTop="@dimen/pad_12"
             android:drawableEnd="@drawable/ic_next"
             android:drawablePadding="@dimen/pad_5"
             android:gravity="center"
@@ -32,43 +67,7 @@
             android:textColor="@color/app_color_medium"
             android:textSize="@dimen/txt_size_19sp" />
 
-        <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txt_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/btn_next"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/pad_10"
-            android:layout_marginEnd="@dimen/pad_25"
-            android:layout_marginStart="@dimen/pad_25"
-            android:gravity="center"
-            android:lineSpacingMultiplier="0.9"
-            android:text="Record your moment, #caption it and upload"
-            android:textSize="@dimen/txt_size_14sp"
-            android:visibility="visible" />
+    </LinearLayout>
 
-        <com.ureview.utils.views.CustomTextView
-            android:id="@+id/txt_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/txt_desc"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/pad_15"
-            android:layout_marginTop="@dimen/pad_15"
-            android:text="What you say, matters!"
-            android:textSize="@dimen/txt_size_22sp"
-            android:visibility="visible" />
-
-        <LinearLayout
-            android:id="@+id/layoutDots"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dots_height"
-            android:layout_above="@id/txt_title"
-            android:layout_margin="@dimen/pad_10"
-            android:gravity="center"
-            android:orientation="horizontal" />
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
 

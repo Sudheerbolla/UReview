@@ -1,5 +1,6 @@
 package com.ureview.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +49,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         VideoModel videoModel = videoList.get(position);
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = new RequestOptions()

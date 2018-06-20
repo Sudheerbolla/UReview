@@ -24,8 +24,8 @@
         android:paddingLeft="@dimen/pad_12"
         android:paddingRight="@dimen/pad_12"
         android:paddingTop="@dimen/pad_5"
-        android:textColor="@color/selector_txt_color"
-        android:textSize="@dimen/txt_size_15sp" />
+        android:textColor="@color/selector_txt_color_app"
+        android:textSize="@dimen/txt_size_12sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtName"
@@ -75,38 +75,38 @@
                 android:src="@drawable/ic_launcher_background"
                 app:riv_corner_radius="@dimen/pad_6" />
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/imgLocation"
-                android:layout_alignEnd="@+id/imgLocation"
-                android:layout_marginBottom="@dimen/pad_10"
-                android:layout_marginEnd="@dimen/pad_10">
-
-                <ImageView
-                    android:id="@+id/imgCatBg"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:src="@drawable/selector_app_pink_btn"
-                    app:layout_constraintBottom_toBottomOf="@+id/txtCategory"
-                    app:layout_constraintLeft_toLeftOf="@+id/txtCategory"
-                    app:layout_constraintRight_toRightOf="@+id/txtCategory"
-                    app:layout_constraintTop_toTopOf="@+id/txtCategory" />
-
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="@dimen/pad_6"
-                    android:paddingLeft="@dimen/pad_17"
-                    android:paddingRight="@dimen/pad_17"
-                    android:paddingTop="@dimen/pad_6"
+                    android:layout_alignBottom="@+id/imgLocation"
+                    android:layout_alignEnd="@+id/imgLocation"
+                    android:layout_marginBottom="@dimen/pad_10"
+                    android:layout_marginEnd="@dimen/pad_10"
+                    android:paddingBottom="@dimen/pad_3"
+                    android:paddingLeft="@dimen/pad_8"
+                    android:paddingRight="@dimen/pad_8"
+                    android:paddingTop="@dimen/pad_3"
                     android:textColor="@color/selector_txt_color"
-                    android:textSize="@dimen/txt_size_12sp" />
-            </android.support.constraint.ConstraintLayout>
+                    android:textSize="@dimen/txt_size_10sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtLength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/pad_6"
+                android:layout_marginStart="@dimen/pad_8"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/txt_size_11sp" />
+
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
 
     <com.ureview.utils.views.CustomTextView
@@ -127,8 +127,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSynth"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="-3dp"
+        android:layout_marginTop="-3dp"
         android:drawablePadding="@dimen/pad_3"
-        android:drawableStart="@drawable/vector_eye"
+        android:drawableStart="@drawable/ic_view"
         android:gravity="center"
         android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
@@ -139,6 +142,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtSynth"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/txtViewCount"
         android:drawablePadding="@dimen/pad_3"
         android:drawableStart="@drawable/vector_location"
@@ -170,25 +174,14 @@
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_10sp" />
 
-    <!--<RatingBar
-        android:id="@+id/ratingBarVideo"
-        style="@style/CustomRatingBarM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtLocBtm"
-        android:layout_marginRight="@dimen/pad_5"
-        android:layout_marginTop="@dimen/pad_1"
-        android:layout_toLeftOf="@+id/txtRatingsNo"
-        android:isIndicator="true" />-->
-
     <include
         android:id="@+id/llRatingBar"
         layout="@layout/layout_rating_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtLocBtm"
-        android:layout_marginRight="@dimen/pad_5"
-        android:layout_toLeftOf="@+id/txtRatingsNo" />
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_toStartOf="@+id/txtRatingsNo" />
 
     <View
         android:id="@+id/dividerView"

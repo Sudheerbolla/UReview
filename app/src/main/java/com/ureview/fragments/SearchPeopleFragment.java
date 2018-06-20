@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,22 +72,14 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
 
         rvPeople = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
-        txtNoData.setVisibility(View.GONE);
+        txtNoData.setVisibility(View.VISIBLE);
         setAdapter();
         rvPeople.setListPagination(this);
         return rootView;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (mainActivity.edtText != null && !TextUtils.isEmpty(mainActivity.edtText.getText().toString())) {
-//            searchUser(mainActivity.edtText.getText().toString());
-//        }
-//    }
-
     private void setAdapter() {
-        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this);
+        peopleAdapter = new PeopleAdapter(mainActivity, new ArrayList<PeopleModel>(), this);
         rvPeople.setLayoutManager(new LinearLayoutManager(mainActivity));
         rvPeople.setAdapter(peopleAdapter);
     }
@@ -96,7 +89,13 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         peopleArrList.clear();
         startFrom = 0;
         hasLoadedAllItems = false;
-        requestForSearchPeopleListWS();
+        if (TextUtils.isEmpty(searchUser)) {
+            tempPeopleArrList.clear();
+            if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
+        } else {
+            requestForSearchPeopleListWS();
+        }
+
     }
 
     protected void requestForSearchPeopleListWS() {
@@ -140,12 +139,15 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void parseGetSearchPeopleResponse(JsonObject response) {
+        if (!isLoading) {
+            tempPeopleArrList.clear();
+        }
         isLoading = false;
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     JsonArray usersData = response.get("users_data").getAsJsonArray();
-                    tempPeopleArrList.clear();
+
                     if (usersData.size() > 0) {
                         for (int i = 0; i < usersData.size(); i++) {
                             Gson gson = new Gson();

@@ -1,5 +1,6 @@
 package com.ureview.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -35,28 +36,21 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
         this.peopleArrayList = peopleArrayList;
     }
 
-    public PeopleAdapter(Context context, ArrayList<PeopleModel> peopleArrayList,
-                         IClickListener iClickListener, boolean showViewCount) {
+    public PeopleAdapter(Context context, ArrayList<PeopleModel> peopleArrayList, IClickListener iClickListener, boolean showViewCount) {
         this.context = context;
         this.iClickListener = iClickListener;
         this.peopleArrayList = peopleArrayList;
         this.showViewCount = showViewCount;
     }
 
-    public void addVideos(ArrayList<PeopleModel> arrList) {
-        int lastPosition = peopleArrayList.size() > 0 ? peopleArrayList.size() - 1 : 0;
-        peopleArrayList.addAll(arrList);
-        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
-    }
-
     @NonNull
     @Override
     public PeopleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new PeopleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_followers, parent, false));
+        return new PeopleViewHolder(LayoutInflater.from(context).inflate(R.layout.item_people, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PeopleViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final PeopleViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         PeopleModel peopleModel = peopleArrayList.get(position);
 
         if (!TextUtils.isEmpty(peopleModel.userImage)) {
@@ -75,25 +69,24 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
             holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));
         if (!TextUtils.isEmpty(peopleModel.userRating))
             setProfileRating(holder, Float.parseFloat(peopleModel.userRating));
-//        holder.ratingBar.setVisibility(/*showViewCount ?*/ View.VISIBLE/* : View.GONE*/);
-//        holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.llViewCount.setVisibility(showViewCount ? View.VISIBLE : View.GONE);
-//        holder.ratingBar.setVisibility(View.GONE);
         holder.txtReviewCount.setText("Review Upload : ".concat(String.valueOf(peopleModel.uploadedVideosCount)));
         holder.imgClear.setVisibility(View.GONE);
         if (peopleModel.videoViews != null) {
             holder.txtViewNo.setText(peopleModel.videoViews);
             holder.txtViews.setText(Integer.parseInt(peopleModel.videoViews) == 1 ? "View" : "Views");
         }
-//        holder.txtReviewCount.setVisibility(View.GONE);
         if (peopleModel.userId.equalsIgnoreCase(LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, ""))) {
             holder.txtFollowStatus.setVisibility(View.GONE);
         } else {
             holder.txtFollowStatus.setVisibility(View.VISIBLE);
-            holder.txtFollowStatus.setText(TextUtils.isEmpty(peopleModel.followStatus) ||
-                    peopleModel.followStatus.equalsIgnoreCase("follow") ? "Follow" : "Unfollow");
-            holder.txtFollowStatus.setSelected(!(TextUtils.isEmpty(peopleModel.followStatus) ||
-                    peopleModel.followStatus.equalsIgnoreCase("follow")));
+            if (TextUtils.isEmpty(peopleModel.followStatus)) {
+                holder.txtFollowStatus.setText("Follow");
+                holder.txtFollowStatus.setSelected(false);
+            } else {
+                holder.txtFollowStatus.setText("Unfollow");
+                holder.txtFollowStatus.setSelected(true);
+            }
         }
         holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,27 +108,25 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
     }
 
     public void addItems(ArrayList<PeopleModel> arrList) {
-        int lastPosition = this.peopleArrayList.size() > 0 ? this.peopleArrayList.size() - 1 : 0;
+        this.peopleArrayList.clear();
         this.peopleArrayList.addAll(arrList);
-        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
+        notifyDataSetChanged();
     }
 
-    public class PeopleViewHolder extends RecyclerView.ViewHolder {
+    class PeopleViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextView txtFollowStatus, txtName, txtReviewCount, txtViewNo, txtViews;
-        //        private RatingBar ratingBar;
         private CircleImageView imgProfile;
         private RelativeLayout relBody;
         private LinearLayout llViewCount;
         private ImageView imgClear, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
 
-        public PeopleViewHolder(View itemView) {
+        PeopleViewHolder(View itemView) {
             super(itemView);
             txtFollowStatus = itemView.findViewById(R.id.txtFollowStatus);
             txtName = itemView.findViewById(R.id.txtName);
             llViewCount = itemView.findViewById(R.id.llViewCount);
             txtReviewCount = itemView.findViewById(R.id.txtReviewCount);
-//            ratingBar = itemView.findViewById(R.id.ratingBar);
             imgStar1 = itemView.findViewById(R.id.imgStar1);
             imgStar2 = itemView.findViewById(R.id.imgStar2);
             imgStar3 = itemView.findViewById(R.id.imgStar3);

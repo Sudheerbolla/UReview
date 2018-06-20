@@ -145,7 +145,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         UserInfoModel userInfoModel = isDiffUser ? otherInfoModel : this.userInfoModel;
         if (userInfoModel != null) {
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
-            txtLoc.setText(userInfoModel.city + ", " + userInfoModel.address);
+            txtLoc.setText(TextUtils.isEmpty(userInfoModel.city + ", " + userInfoModel.address) ? " Location not available" : "");
             setProfileRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
 //            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
@@ -200,10 +200,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void setFollowTextAndBg() {
-        txtFollowStatus.setText(TextUtils.isEmpty(userInfoModel.follow_status) ||
-                userInfoModel.follow_status.equalsIgnoreCase("Unfollow") ? "Follow" : "Unfollow");
-        txtFollowStatus.setSelected(!(TextUtils.isEmpty(userInfoModel.follow_status) ||
-                userInfoModel.follow_status.equalsIgnoreCase("Unfollow")));
+        if (TextUtils.isEmpty(userInfoModel.follow_status)) {
+            txtFollowStatus.setText("Follow");
+            txtFollowStatus.setSelected(false);
+        } else {
+            txtFollowStatus.setText("Unfollow");
+            txtFollowStatus.setSelected(true);
+        }
     }
 
     private void setListeners() {

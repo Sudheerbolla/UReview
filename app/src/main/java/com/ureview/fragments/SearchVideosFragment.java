@@ -85,21 +85,18 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         return rootView;
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (mainActivity.edtText != null && !TextUtils.isEmpty(mainActivity.edtText.getText().toString())) {
-//            searchVideo(mainActivity.edtText.getText().toString());
-//        }
-//    }
-
     protected void searchVideo(String searchVideo) {
         searchText = searchVideo;
         videosArrList.clear();
         startFrom = 0;
         isLoading = false;
         hasLoadedAllItems = false;
-        requestForSearchVideos();
+        if (TextUtils.isEmpty(searchVideo)) {
+            tempVideosArrList.clear();
+            if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
+        } else {
+            requestForSearchVideos();
+        }
     }
 
     private void requestForSearchVideos() {
