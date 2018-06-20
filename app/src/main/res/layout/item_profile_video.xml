@@ -50,9 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/relImageVideo"
-        android:layout_alignLeft="@+id/relImageVideo"
+        android:layout_alignStart="@+id/relImageVideo"
         android:layout_marginBottom="@dimen/pad_8"
-        android:layout_marginLeft="@dimen/pad_10"
+        android:layout_marginStart="@dimen/pad_10"
         android:textColor="@color/color_white"
         android:textSize="@dimen/txt_size_12sp" />
 
@@ -85,7 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:drawableLeft="@drawable/ic_view"
+        android:drawableStart="@drawable/ic_view"
         android:drawablePadding="@dimen/pad_3"
         android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
@@ -96,8 +96,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
-        android:layout_toRightOf="@+id/txtViewCount"
-        android:drawableLeft="@drawable/vector_location"
+        android:layout_toEndOf="@+id/txtViewCount"
+        android:drawableStart="@drawable/vector_location"
         android:drawablePadding="@dimen/pad_3"
         android:padding="@dimen/pad_5"
         android:textColor="@color/color_vvvDarkGrey"
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtDistance"
         android:layout_marginTop="@dimen/pad_2"
-        android:layout_toRightOf="@+id/llRatingBar"
+        android:layout_toEndOf="@+id/llRatingBar"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />
 
@@ -119,6 +119,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtDistance"
-        android:layout_marginRight="@dimen/pad_2" />
+        android:layout_marginEnd="@dimen/pad_2" />
 
 </RelativeLayout>
