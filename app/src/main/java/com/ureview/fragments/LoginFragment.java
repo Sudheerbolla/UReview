@@ -3,6 +3,7 @@ package com.ureview.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,6 +22,8 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -50,6 +53,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private SplashActivity splashActivity;
     CallbackManager mFacebookCallbackManager;
     private String email, firstName, lastName, id;
+    private FirebaseAuth mAuth;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -61,6 +65,82 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         splashActivity = (SplashActivity) getActivity();
         splashActivity.setTopBar(LoginFragment.class.getSimpleName());
         mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        mAuth = FirebaseAuth.getInstance();
+
+//        TwitterLoginButton mLoginButton = rootView.findViewById(R.id.login_button);
+//        mLoginButton.setCallback(new Callback<TwitterSession>() {
+//            @Override
+//            public void success(Result<TwitterSession> result) {
+//                Log.d("twitter", "twitterLogin:success" + result);
+//                handleTwitterSession(result.data);
+//            }
+//
+//            @Override
+//            public void failure(TwitterException exception) {
+//                Log.w("twitter", "twitterLogin:failure", exception);
+//                updateUI(null);
+//            }
+//        });
+    }
+
+//    private void handleTwitterSession(TwitterSession session) {
+//        Log.d("twitter login", "handleTwitterSession:" + session);
+//
+//        AuthCredential credential = TwitterAuthProvider.getCredential(
+//                session.getAuthToken().token,
+//                session.getAuthToken().secret);
+//
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(splashActivity, new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            // Sign in success, update UI with the signed-in user's information
+//                            Log.d("twitter login", "signInWithCredential:success");
+//                            FirebaseUser user = mAuth.getCurrentUser();
+//                            updateUI(user);
+//                        } else {
+//                            // If sign in fails, display a message to the user.
+//                            Log.w("twitter login", "signInWithCredential:failure", task.getException());
+//                            Toast.makeText(splashActivity, "Authentication failed.",
+//                                    Toast.LENGTH_SHORT).show();
+//                            updateUI(null);
+//                        }
+//
+//                        // ...
+//                    }
+//                });
+//    }
+
+    private void updateUI(FirebaseUser user) {
+        Log.e("user", user.getEmail() + " n " + user.getDisplayName());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        updateUI(currentUser);
+    }
+
+    private void onTwitterBtnClicked() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+        }
     }
 
     @Override

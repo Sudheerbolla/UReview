@@ -29,6 +29,10 @@
                 android:layout_marginTop="@dimen/pad_30"
                 android:gravity="center"
                 android:orientation="vertical">
+                <!--<com.twitter.sdk.android.core.identity.TwitterLoginButton-->
+                    <!--android:id="@+id/login_button"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content" />-->
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/uireview"
