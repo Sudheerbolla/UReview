@@ -3,6 +3,7 @@ package com.ureview.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,8 +22,29 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
@@ -45,11 +67,18 @@ import retrofit2.Call;
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
+    private static final int GOOGLE_SIGN_IN = 300;
+    private static final int FACEBOOK_SIGN_IN = 301;
+    private static final int TWITTER_SIGN_IN = 302;
     private View rootView;
     private CustomTextView txtTwitterLogin, txtFbLogin, txtInstagramLogin, txtVersion;
     private SplashActivity splashActivity;
     CallbackManager mFacebookCallbackManager;
     private String email, firstName, lastName, id;
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    private int loginType;
+//    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -61,6 +90,85 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         splashActivity = (SplashActivity) getActivity();
         splashActivity.setTopBar(LoginFragment.class.getSimpleName());
         mFacebookCallbackManager = CallbackManager.Factory.create();
+
+        initiateTwitterIntegration();
+        initiateGoogleIntegration();
+    }
+
+    private void initiateTwitterIntegration() {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("MXIAuVVgwoijQj4ZJtY9RSj4Y", "aQlWXNlMGdjuwk2kIKdbSYgKqdADNfGvqg3padj2ngIkLPMQFJ");
+
+        TwitterConfig twitterConfig = new TwitterConfig.Builder(splashActivity)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(authConfig)
+                .debug(true)
+                .build();
+
+        Twitter.initialize(twitterConfig);
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    private void initiateGoogleIntegration() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(splashActivity, gso);
+    }
+
+    private void handleTwitterSession(TwitterSession session) {
+        Log.d("twitter login", "handleTwitterSession:" + session);
+
+        AuthCredential credential = TwitterAuthProvider.getCredential(
+                session.getAuthToken().token,
+                session.getAuthToken().secret);
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(splashActivity, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("twitter login", "signInWithCredential:success");
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("twitter login", "signInWithCredential:failure", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void updateUI(FirebaseUser user) {
+        Log.e("user", user.getEmail() + " n " + user.getDisplayName());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+//        mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+//        mAuth.removeAuthStateListener(mAuthStateListener);
+    }
+
+    private void onTwitterBtnClicked() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            Uri photoUrl = user.getPhotoUrl();
+
+            // Check if user's email is verified
+            boolean emailVerified = user.isEmailVerified();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+        }
     }
 
     @Override
@@ -71,10 +179,40 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    TwitterLoginButton mLoginButton;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
+
+        mLoginButton = rootView.findViewById(R.id.login_button);
+        mLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Log.d("twitter", "twitterLogin:success" + result);
+                handleTwitterSession(result.data);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.w("twitter", "twitterLogin:failure", exception);
+                updateUI(null);
+            }
+        });
+
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (user != null) {
+//                    Log.e("Twitter", user.getEmail() + ", " + user.getDisplayName() + ", " + user.getPhoneNumber() + ", " + user.getProviderId() + ", " + user.getUid());
+//                } else {
+//                    Log.e("Twitter", "user is null");
+//                }
+//            }
+//        };
+
         txtTwitterLogin = rootView.findViewById(R.id.txtTwitterLogin);
         txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
         txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
@@ -102,9 +240,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtInstagramLogin:
+                signIn();
                 StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtTwitterLogin:
+                onTwitterBtnClicked();
                 StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtFbLogin:
@@ -115,7 +255,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+    private void signIn() {
+        loginType = GOOGLE_SIGN_IN;
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
+    }
+
     private void handleFacebookLogin() {
+        loginType = FACEBOOK_SIGN_IN;
         LoginManager.getInstance().logOut();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
     }
@@ -123,8 +270,32 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
-        setFacebookData();
+        switch (loginType) {
+            case FACEBOOK_SIGN_IN:
+                mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+                setFacebookData();
+                break;
+            case GOOGLE_SIGN_IN:
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+                break;
+            case TWITTER_SIGN_IN:
+                mLoginButton.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            email = account.getEmail();
+            firstName = account.getGivenName();
+            lastName = account.getFamilyName();
+            id = account.getId();
+            requestForCheckUserWS(id, Constants.GOOGLE);
+        } catch (ApiException e) {
+            Log.w("G+", "signInResult:failed code=" + e.getStatusCode());
+        }
     }
 
     private void setFacebookData() {
@@ -234,3 +405,4 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
 }
+//twitterkit-MXIAuVVgwoijQj4ZJtY9RSj4Y://
