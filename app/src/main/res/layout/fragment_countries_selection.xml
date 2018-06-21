@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:background="@color/colorGrey"
+        android:background="@color/colorLightGrey"
         android:gravity="center_vertical"
         android:padding="@dimen/pad_5">
 
@@ -22,7 +22,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/pad_3"
             android:padding="@dimen/pad_4"
-            android:src="@drawable/back_copy" />
+            android:src="@drawable/ic_back" />
 
         <com.ureview.utils.views.CustomEditText
             android:id="@+id/edtSearch"

@@ -69,8 +69,7 @@ public class ReportVideoFragment extends BaseFragment implements IParserListener
     }
 
     private void initComponents() {
-        mainActivity.setToolBar("Report Video", "", "", false,
-                false, false, false, false);
+        mainActivity.setToolBar("Report Video", "", "", false, false, false, false, false);
         edtDesc = rootView.findViewById(R.id.edtDesc);
         txtNegative = rootView.findViewById(R.id.txtNegative);
         txtPositive = rootView.findViewById(R.id.txtPositive);

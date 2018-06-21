@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:padding="@dimen/pad_10"
-            android:src="@drawable/back_copy"
+            android:src="@drawable/ic_back"
             android:visibility="gone" />
 
     </RelativeLayout>

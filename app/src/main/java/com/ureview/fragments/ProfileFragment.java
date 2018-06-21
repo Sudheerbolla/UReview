@@ -145,7 +145,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         UserInfoModel userInfoModel = isDiffUser ? otherInfoModel : this.userInfoModel;
         if (userInfoModel != null) {
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
-            txtLoc.setText(TextUtils.isEmpty(userInfoModel.city + ", " + userInfoModel.address) ? " Location not available" : "");
+            txtLoc.setText(TextUtils.isEmpty(userInfoModel.city) ? " Location not available" : userInfoModel.city);
             setProfileRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
 //            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
@@ -157,14 +157,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
                 RequestOptions options = new RequestOptions()
-                        .placeholder(R.drawable.ic_profile)
+                        .placeholder(R.drawable.ic_user_placeholder)
                         .fitCenter()
-                        .error(R.drawable.ic_profile);
+                        .error(R.drawable.ic_user_placeholder);
                 Glide.with(this)
                         .load(userInfoModel.user_image)
                         .apply(options)
                         .into(imgProfile);
-            } else imgProfile.setImageResource(R.drawable.ic_profile);
+            } else imgProfile.setImageResource(R.drawable.ic_user_placeholder);
         }
     }
 

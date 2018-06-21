@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="Description"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_16sp"
+        android:textSize="@dimen/txt_size_13sp"
         app:txt_font_type="regular" />
 
     <com.ureview.utils.views.CustomEditText
@@ -34,17 +34,19 @@
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtNegative"
             style="@style/AppButtonStyle"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/news_feed_active_bg"
+            android:background="@drawable/bg_white_grey_border_small"
+            android:minWidth="@dimen/pad_100"
             android:text="Cancel"
             android:textColor="@color/color_vvvDarkGrey" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtPositive"
             style="@style/AppButtonStyle"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/pad_100"
             android:text="Send" />
 
     </LinearLayout>

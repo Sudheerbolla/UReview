@@ -54,15 +54,15 @@ public class VideoViewRankingAdapter extends RecyclerView.Adapter<VideoViewRanki
         });
         if (!TextUtils.isEmpty(videoViewsModel.user_image)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(videoViewsModel.user_image)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
     }
 
     @Override

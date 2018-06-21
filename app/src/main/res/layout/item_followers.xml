@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relBody"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,10 +9,10 @@
 
     <com.ureview.utils.views.CircleImageView
         android:id="@+id/imgProfile"
-        android:layout_width="@dimen/pad_50"
-        android:layout_height="@dimen/pad_50"
+        android:layout_width="@dimen/pad_45"
+        android:layout_height="@dimen/pad_45"
         android:layout_centerVertical="true"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/ic_user_placeholder" />
 
     <LinearLayout
         android:id="@+id/linEnd"
@@ -43,7 +44,6 @@
                 android:id="@+id/txtViewNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="59"
                 android:textColor="@color/color_vvvDarkGrey"
                 android:textSize="@dimen/txt_size_12sp" />
 
@@ -64,11 +64,11 @@
             android:background="@drawable/selector_custom_app_btn"
             android:gravity="center"
             android:paddingBottom="@dimen/pad_5"
-            android:paddingLeft="@dimen/pad_12"
-            android:paddingRight="@dimen/pad_12"
+            android:paddingLeft="@dimen/pad_15"
+            android:paddingRight="@dimen/pad_15"
             android:paddingTop="@dimen/pad_5"
-            android:textColor="@color/selector_txt_color"
-            android:textSize="@dimen/txt_size_15sp" />
+            android:textColor="@color/selector_txt_color_app"
+            android:textSize="@dimen/txt_size_13sp" />
 
     </LinearLayout>
 
@@ -76,24 +76,15 @@
         android:id="@+id/txtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_marginRight="@dimen/pad_5"
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_marginStart="@dimen/pad_10"
         android:layout_marginTop="@dimen/pad_3"
-        android:layout_toLeftOf="@+id/linEnd"
-        android:layout_toRightOf="@+id/imgProfile"
+        android:layout_toEndOf="@+id/imgProfile"
+        android:layout_toStartOf="@+id/linEnd"
         android:singleLine="true"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_13sp" />
-
-    <!-- <RatingBar
-         android:id="@+id/ratingBar"
-         style="@style/CustomRatingBarM"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_below="@+id/txtName"
-         android:layout_marginLeft="@dimen/pad_10"
-         android:layout_toRightOf="@+id/imgProfile"
-         android:isIndicator="true" />-->
+        android:textSize="@dimen/txt_size_13sp"
+        app:txt_font_type="bold" />
 
     <include
         android:id="@+id/llRatingBar"
@@ -101,18 +92,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtName"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_toRightOf="@+id/imgProfile" />
+        android:layout_marginStart="@dimen/pad_10"
+        android:layout_toEndOf="@+id/imgProfile" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtReviewCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/llRatingBar"
-        android:layout_marginLeft="@dimen/pad_10"
-        android:layout_marginRight="@dimen/pad_5"
-        android:layout_toRightOf="@+id/imgProfile"
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_marginStart="@dimen/pad_10"
+        android:layout_toEndOf="@+id/imgProfile"
         android:textColor="@color/color_vDarkGrey"
-        android:textSize="@dimen/txt_size_12sp" />
+        android:textSize="@dimen/txt_size_11sp" />
 
 </RelativeLayout>

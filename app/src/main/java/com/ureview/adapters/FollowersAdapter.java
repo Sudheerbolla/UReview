@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
@@ -45,8 +44,6 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
 
     @Override
     public void onBindViewHolder(@NonNull FollowersViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-//        holder.txtFollowStatus.setSelected(true);
-//        holder.txtFollowStatus.setText("Following");
         holder.imgClear.setVisibility(View.GONE);
         FollowModel followModel = followModelArrayList.get(position);
 
@@ -104,15 +101,14 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
 
         if (!TextUtils.isEmpty(followModel.user_image)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
-                    .bitmapTransform(new RoundedCorners(7))
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
             Glide.with(context)
                     .load(followModel.user_image)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 
     }
 

@@ -36,7 +36,7 @@ public class CustomEditText extends AppCompatEditText {
                 fontPath = "AvenirLTStd-Book.otf";
                 break;
             case 2:
-                fontPath = "AvenirLTStd-Roman.otf";
+                fontPath = "AvenirLTStd-Roman.ttf";
                 break;
             case 3:
                 fontPath = "AvenirLTStd-Book.otf";

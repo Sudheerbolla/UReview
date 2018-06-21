@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public CustomTextView txtTitle, txtRight, txtLeft;
     public ImageView imgBack, imgLoc, imgNotf, imgEdit, imgSearch, imgClose;
     public EditText edtText;
-    public RelativeLayout rlEditView, relGenTopBar;
+    public RelativeLayout rlEditView, relGenTopBar, topBar;
     public ImageView imgHome, imgSearchB, imgVideo, imgProfile, imgSettings,
             imgHomeView, imgSearchView, imgProfileView, imgSettingsView;
     public static Location mLastLocation;
@@ -67,6 +67,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private final int PERMISSION_FOR_STORAGE = 103;
     private Uri selectedVideoUri;
     public static ArrayList<CategoryModel> categoryListStatic = new ArrayList<>();
+//    private RelativeLayout relMainTopBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +172,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragmentWithoutAnimation(HomeFragment.newInstance(), R.id.mainContainer, false);
     }
 
-    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {
+    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf,
+                           boolean showEdtView, boolean showEdt) {
+//        if (relMainTopBar != null) relMainTopBar.setVisibility(View.VISIBLE);
+        topBar.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         txtTitle.setText(title);
         txtTitle.setSelected(true);
@@ -188,6 +192,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         imgEdit.setVisibility(showEdt ? View.VISIBLE : View.GONE);
     }
 
+    public void hideTopbar() {
+        topBar.setVisibility(View.GONE);
+    }
+
     public void initTopBar() {
         txtTitle = findViewById(R.id.txtTitle);
         txtRight = findViewById(R.id.txtRight);
@@ -201,6 +209,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         edtText = findViewById(R.id.edtText);
         relGenTopBar = findViewById(R.id.relGenTopBar);
         rlEditView = findViewById(R.id.rlEditView);
+        topBar = findViewById(R.id.topBar);
 
         imgNotf.setOnClickListener(this);
         txtLeft.setOnClickListener(this);

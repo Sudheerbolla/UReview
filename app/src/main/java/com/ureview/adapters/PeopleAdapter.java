@@ -55,15 +55,15 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
 
         if (!TextUtils.isEmpty(peopleModel.userImage)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(peopleModel.userImage)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 
         if (peopleModel.firstName != null && peopleModel.lastName != null)
             holder.txtName.setText(peopleModel.firstName.concat(" ").concat(peopleModel.lastName));

@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IVideosClickListener;
@@ -38,7 +37,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CategoryViewHolder(LayoutInflater.from(context).inflate(R.layout.item_profile_video, parent, false));
+        return new CategoryViewHolder(LayoutInflater.from(context).inflate(R.layout.item_video, parent, false));
     }
 
     @Override
@@ -60,14 +59,13 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         if (position < 10) {
             final VideoModel videoModel = videoList.get(position);
             if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-                RequestOptions options = RequestOptions.bitmapTransform(new RoundedCorners(25));
-                options.error(R.drawable.ic_profile);
-                options.placeholder(R.drawable.ic_profile);
+                RequestOptions options = new RequestOptions().
+                        error(R.drawable.ic_user_placeholder).placeholder(R.drawable.ic_user_placeholder);
                 Glide.with(context)
                         .load(videoModel.videoPosterImage)
                         .apply(options)
                         .into(holder.imgVideo);
-            } else holder.imgVideo.setImageResource(R.drawable.ic_profile);
+            } else holder.imgVideo.setImageResource(R.drawable.ic_user_placeholder);
 
             holder.txtName.setText(videoModel.videoTitle);
             holder.txtTags.setText(videoModel.videoTags);

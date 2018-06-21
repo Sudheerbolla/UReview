@@ -167,15 +167,15 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
         if (!TextUtils.isEmpty(imagePath)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(this)
                     .load(imagePath)
                     .apply(options)
                     .into(imgProfile);
-        } else imgProfile.setImageResource(R.drawable.ic_profile);
+        } else imgProfile.setImageResource(R.drawable.ic_user_placeholder);
     }
 
     private void initDatePicker() {
@@ -247,7 +247,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                                 }
                                 break;
                             case "Remove Picture":
-                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
+                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
+//                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
                                 setImageAttachment(uri);
 //                                try {
 //                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
@@ -458,9 +459,9 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void setImageAttachment(Uri cameraFile) {
         RequestOptions options = new RequestOptions()
-                .placeholder(R.drawable.ic_profile)
+                .placeholder(R.drawable.ic_user_placeholder)
                 .fitCenter()
-                .error(R.drawable.ic_profile);
+                .error(R.drawable.ic_user_placeholder);
 
         Glide.with(this)
                 .load(cameraFile)

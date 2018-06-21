@@ -37,25 +37,26 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         currUserId = LocalStorage.getInstance(context).getString(LocalStorage.PREF_USER_ID, "");
     }
 
+    @NonNull
     @Override
-    public NewsFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsFeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new NewsFeedViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_video, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final NewsFeedViewHolder holder, final int position) {
         VideoModel videoModel = videoArrList.get(position);
         if (!TextUtils.isEmpty(videoModel.userImage)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_profile)
+                    .placeholder(R.drawable.ic_user_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_profile);
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(videoModel.userImage)
                     .apply(options)
                     .into(holder.imgProfile);
-        } else holder.imgProfile.setImageResource(R.drawable.ic_profile);
+        } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
         holder.txtLoc.setText(videoModel.city);
@@ -63,27 +64,15 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = RequestOptions
                     .bitmapTransform(new RoundedCorners(20))
-                    .placeholder(R.drawable.ic_profile)
-                    .error(R.drawable.ic_profile);
+                    .placeholder(R.drawable.ic_user_placeholder)
+                    .error(R.drawable.ic_user_placeholder);
 
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(options)
                     .into(holder.imgLocation);
-        } else holder.imgLocation.setImageResource(R.drawable.ic_profile);
+        } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
         holder.txtCategory.setText(videoModel.categoryName);
-
-//        if (!TextUtils.isEmpty(videoModel.categoryBgImage)) {
-//            RequestOptions options = new RequestOptions()
-//                    .placeholder(R.drawable.ic_profile)
-//                    .fitCenter()
-//                    .error(R.drawable.ic_profile);
-//
-//            Glide.with(context)
-//                    .load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage))
-//                    .apply(options)
-//                    .into(holder.imgCatBg);
-//        } else holder.imgCatBg.setImageResource(R.drawable.ic_profile);
 
         Glide.with(context).load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage)).into(new SimpleTarget<Drawable>() {
             @Override
