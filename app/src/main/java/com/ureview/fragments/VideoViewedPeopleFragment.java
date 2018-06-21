@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -48,6 +49,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
     private ArrayList<PeopleModel> peopleArrList;
     private CustomTextView txtNoData;
     private String userId;
+    private ImageView imgClose;
 
     private int selectedPosition;
     private BottomSheetDialog dialog;
@@ -79,38 +81,20 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("Views List", "", "", false, true, false, false, false);
-    }
-
-//    @Nullable
-//    @Override
-//    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        rootView = inflater.inflate(R.layout.fragment_followers, container, false);
-//
-//        rvPeople = rootView.findViewById(R.id.rvFollowers);
-//        txtNoData = rootView.findViewById(R.id.txtNoData);
-//
-//        setAdapter();
-//        requestForVideoViewedPeopleListWS();
-//
-//        return rootView;
-//    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
         try {
             if (rootView == null) {
-                rootView = View.inflate(getContext(), R.layout.fragment_followers, null);
+                rootView = View.inflate(getContext(), R.layout.fragment_video_viewed_list, null);
             }
             dialog.setContentView(rootView);
+
             rvPeople = rootView.findViewById(R.id.rvFollowers);
             txtNoData = rootView.findViewById(R.id.txtNoData);
+            imgClose = rootView.findViewById(R.id.imgClose);
+            imgClose.setOnClickListener(view -> dismiss());
             setAdapter();
             requestForVideoViewedPeopleListWS();
 
@@ -122,8 +106,8 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
 
 
     private void setAdapter() {
-        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this, true);
         rvPeople.setLayoutManager(new LinearLayoutManager(mainActivity));
+        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this, true);
         rvPeople.setAdapter(peopleAdapter);
     }
 
@@ -185,7 +169,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
                             PeopleModel peopleModel = gson.fromJson(usersData.get(i).getAsJsonObject(), PeopleModel.class);
                             peopleArrList.add(peopleModel);
                         }
-                        peopleAdapter.addItems(peopleArrList);
+//                        peopleAdapter.addItems(peopleArrList);
                         txtNoData.setVisibility(View.GONE);
                         rvPeople.setVisibility(View.VISIBLE);
                     } else {
@@ -196,6 +180,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
                     txtNoData.setVisibility(View.VISIBLE);
                     rvPeople.setVisibility(View.GONE);
                 }
+                if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,7 +192,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     peopleArrList.get(selectedPosition).followStatus = "follow";
-                    peopleAdapter.notifyDataSetChanged();
+                    peopleAdapter.notifyItemChanged(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -222,7 +207,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     peopleArrList.get(selectedPosition).followStatus = "Unfollow";
-                    peopleAdapter.notifyDataSetChanged();
+                    peopleAdapter.notifyItemChanged(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -267,12 +252,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
     private void askConfirmationAndProceed(int position) {
         final PeopleModel peopleModel = peopleArrList.get(position);
         DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        requestForUnFollowUser(peopleModel.userId);
-                    }
-                });
+                view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override

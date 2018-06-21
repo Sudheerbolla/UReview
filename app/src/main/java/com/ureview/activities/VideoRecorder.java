@@ -90,6 +90,13 @@ public class VideoRecorder extends BaseActivity {
                         finish();
                     } else {
                         proceedWithVideoOperation();
+                        try {
+                            if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
+                                StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
+                            } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else
                     Snackbar.make(mainlayout, "Please upload a video", 4000).show();

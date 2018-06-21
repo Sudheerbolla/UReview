@@ -254,19 +254,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.llVideo:
                 clearBackStackCompletely();
-//                if (!imgVideo.isSelected()) {
-//                    setSelectedTab(imgVideo, null);
-//                setUploadVideoFragment();
-//                openVideoIntent();
-//                }
-                DialogUtils.showDropDownListStrings(this, new String[]{"Camera", "Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
+                DialogUtils.showDropDownListStrings(this, new String[]{"Record", "Upload From Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch ((String) view.getTag()) {
-                            case "Camera":
+                            case "Record":
                                 checkAndRequestPermissionCamera();
                                 break;
-                            case "Gallery":
+                            case "Upload From Gallery":
                                 checkAndRequestPermissionGallery();
                                 break;
                             case "Cancel":
@@ -276,7 +271,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 });
-
                 break;
             case R.id.llProfile:
                 clearBackStackCompletely();

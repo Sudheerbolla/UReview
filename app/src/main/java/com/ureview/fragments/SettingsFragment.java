@@ -99,7 +99,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtTerms:
-                mainActivity.replaceFragment(StaticPagesFragment.newInstance("terms-conditions", "Terms & Conditions"), true, R.id.mainContainer);
+                mainActivity.replaceFragment(StaticPagesFragment.newInstance("Terms & Conditions", "terms-conditions"), true, R.id.mainContainer);
                 break;
             case R.id.txtDelAcc:
                 DialogUtils.showLogoutDialog(mainActivity, "Delete Account", "Are you sure you want to delete the account? This is a permanent action and cannot be reverted.", "Delete", "Cancel", new View.OnClickListener() {
@@ -125,7 +125,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 shareViaIntent("YouReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
                 break;
             case R.id.txtPrivacy:
-                mainActivity.replaceFragment(StaticPagesFragment.newInstance("privacy-policy", "Privacy Policies"), true, R.id.mainContainer);
+                mainActivity.replaceFragment(StaticPagesFragment.newInstance("Privacy Policies", "privacy-policy"), true, R.id.mainContainer);
                 break;
             default:
                 break;

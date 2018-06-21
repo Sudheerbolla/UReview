@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -157,7 +158,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void initDataSource() {
         dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
-                Util.getUserAgent(mainActivity, "yourApplicationName"),
+                Util.getUserAgent(mainActivity, mainActivity.getPackageName()),
                 new DefaultBandwidthMeter());
     }
 
@@ -168,12 +169,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void initSurfaceView() {
-        svPlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleMediaControls();
-            }
-        });
+        svPlayer.setOnClickListener(view -> toggleMediaControls());
     }
 
     private String stringForTime(int timeMs) {
@@ -291,14 +287,10 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void initMp4Player() {
         if (feedVideo.video != null) {
-            MediaSource sampleSource =
-                    new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
-                            handler, new ExtractorMediaSource.EventListener() {
-                        @Override
-                        public void onLoadError(IOException error) {
+            MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
+                    handler, error -> {
 
-                        }
-                    });
+            });
 
             initExoPlayer(sampleSource);
         }
@@ -306,11 +298,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void initExoPlayer(MediaSource sampleSource) {
         if (exoPlayer == null) {
-            TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
+            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
             TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-
-            // 2. Create the player
             exoPlayer = ExoPlayerFactory.newSimpleInstance(mainActivity, trackSelector);
         }
         initMediaControls();
@@ -321,6 +310,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         exoPlayer.prepare(sampleSource);
 
         exoPlayer.setVideoSurfaceView(svPlayer);
+        exoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT);
 
         exoPlayer.setPlayWhenReady(true);
     }
@@ -549,7 +539,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
+//        if (!mRatioAlreadyCalculated && mVideoWidthHeightRatio != (float) width / height) {
+//            mVideoWidthHeightRatio = ((float) width / height) * pixelRatio;
+//            mRatioAlreadyCalculated = true;
+//        }
+//        updateVideoRatio();
+//        med.setVideoWidthHeightRatio(height == 0 ? 1 : (pixelWidthHeightRatio * width) / height);
     }
 
     @Override

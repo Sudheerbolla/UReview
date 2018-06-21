@@ -66,16 +66,6 @@
                 android:textSize="@dimen/txt_size_16sp"
                 android:textStyle="bold" />
 
-            <!--  <com.yahoo.mobile.client.android.util.rangeseekbar.RangeSeekBar
-                  android:id="@+id/rangeSeekbar"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginEnd="@dimen/pad_8"
-                  android:layout_marginStart="@dimen/pad_8"
-                  android:layout_marginTop="@dimen/pad_10"
-                  rsb:absoluteMaxValue="100"
-                  rsb:absoluteMinValue="0" />-->
-
             <org.florescu.android.rangeseekbar.RangeSeekBar
                 android:id="@+id/rangeSeekbar"
                 android:layout_width="match_parent"
@@ -97,7 +87,7 @@
                     android:layout_centerVertical="true"
                     android:text="1 km"
                     android:textColor="@color/color_vvDarkGrey"
-                    android:textSize="@dimen/txt_size_13sp" />
+                    android:textSize="@dimen/txt_size_11sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:layout_width="wrap_content"
@@ -106,7 +96,7 @@
                     android:layout_centerVertical="true"
                     android:text="100 km"
                     android:textColor="@color/color_vvDarkGrey"
-                    android:textSize="@dimen/txt_size_13sp" />
+                    android:textSize="@dimen/txt_size_11sp" />
 
             </RelativeLayout>
 
@@ -132,12 +122,12 @@
                         android:background="@null"
                         android:hint="Select Location, Area in India"
                         android:imeOptions="actionSearch"
-                        android:paddingBottom="@dimen/pad_6"
-                        android:paddingEnd="@dimen/pad_10"
-                        android:paddingStart="@dimen/pad_10"
-                        android:paddingTop="@dimen/pad_6"
+                        android:paddingBottom="@dimen/pad_8"
+                        android:paddingEnd="@dimen/pad_12"
+                        android:paddingStart="@dimen/pad_12"
+                        android:paddingTop="@dimen/pad_8"
                         android:singleLine="true"
-                        android:textSize="@dimen/txt_size_14sp" />
+                        android:textSize="@dimen/txt_size_13sp" />
 
                     <ImageView
                         android:id="@+id/clear"
@@ -156,7 +146,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/pad_10"
-                    android:background="@drawable/bg_white_grey_border"
+                    android:background="@drawable/bg_grey_black_line"
                     android:drawablePadding="@dimen/pad_10"
                     android:drawableStart="@drawable/ic_current_location"
                     android:gravity="center_vertical"
@@ -170,12 +160,14 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/linSearchResults"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/pad_10"
                     android:background="@drawable/bg_grey_curved"
                     android:orientation="vertical"
-                    android:padding="@dimen/pad_3">
+                    android:padding="@dimen/pad_3"
+                    android:visibility="gone">
 
                     <com.ureview.utils.views.CustomTextView
                         android:layout_width="match_parent"

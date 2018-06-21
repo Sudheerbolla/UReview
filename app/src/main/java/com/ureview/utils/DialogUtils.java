@@ -43,13 +43,11 @@ public class DialogUtils implements View.OnClickListener {
     public static void showDropDownListStrings(Context context, final String[] categoryNames, final View view, final View.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getString(R.string.app_name));
-        builder.setItems(categoryNames, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                alert.dismiss();
-                if (view != null) view.setTag(categoryNames[item]);
-                if (clickListener != null) {
-                    clickListener.onClick(view);
-                }
+        builder.setItems(categoryNames, (dialog, item) -> {
+            alert.dismiss();
+            if (view != null) view.setTag(categoryNames[item]);
+            if (clickListener != null) {
+                clickListener.onClick(view);
             }
         });
         alert = builder.create();

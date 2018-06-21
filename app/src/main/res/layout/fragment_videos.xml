@@ -22,11 +22,13 @@
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtNoDatafound"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_50"
             android:gravity="center"
+            android:paddingTop="@dimen/pad_25"
             android:text="No videos uploaded"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/txt_size_20sp" />
+            android:textColor="@color/color_vvDarkGrey"
+            android:textSize="@dimen/txt_size_15sp" />
 
     </RelativeLayout>
 

@@ -223,33 +223,40 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 showDOBDialog();
                 break;
             case R.id.relImage:
-                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "View Picture", "Remove Picture", "Cancel"}, relImage, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch ((String) view.getTag()) {
-                            case "Camera":
-                                checkAndRequestPermissionCamera();
-                                break;
-                            case "Gallery":
-                                checkAndRequestPermissionGallery();
-                                break;
-                            case "View Picture":
-                                if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
-                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
-                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
-                                    return;
-                                }
-                                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
-                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
-                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
-                                }
-                                break;
-                            case "Remove Picture":
-                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
+                DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+                        "Upload From Camera",
+                        "Upload From Gallery",
+                        "View Photo",
+                        "Remove Photo",
+                        "Cancel"
+                }, relImage, view1 -> {
+                    switch ((String) view1.getTag()) {
+                        case "Upload From Camera":
+                            checkAndRequestPermissionCamera();
+                            break;
+                        case "Upload From Gallery":
+                            checkAndRequestPermissionGallery();
+                            break;
+                        case "View Photo":
+                            if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
+                                ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
+                                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                return;
+                            }
+                            if (!TextUtils.isEmpty(userInfoModel.user_image)) {
+                                ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                            }
+                            break;
+                        case "Remove Photo":
+//                            Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
 //                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
-                                setImageAttachment(uri);
+//                            setImageAttachment(uri);
+                            profileImage = "null";
+                            profilePicBitmap = null;
+                            imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 //                                try {
 //                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
 //                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
@@ -258,12 +265,11 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 //                                    e.printStackTrace();
 //                                }
 //                                imgProfile.setImageResource(R.drawable.ic_profile);
-                                break;
-                            case "Cancel":
-                                break;
-                            default:
-                                break;
-                        }
+                            break;
+                        case "Cancel":
+                            break;
+                        default:
+                            break;
                     }
                 });
                 break;

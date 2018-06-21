@@ -94,6 +94,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         if (TextUtils.isEmpty(searchVideo)) {
             tempVideosArrList.clear();
             if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
+            txtNoData.setVisibility(View.VISIBLE);
+            rvSearchVideo.setVisibility(View.GONE);
         } else {
             requestForSearchVideos();
         }

@@ -167,17 +167,17 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     }
 
     private void initComponents() {
-        seekBar = rootView.findViewById(R.id.seekBar);
+        seekBar = rootView.findViewById(R.id.mediacontroller_progress);
         videoView = rootView.findViewById(R.id.VideoView);
         txtCompleteVideo = rootView.findViewById(R.id.txtCompleteVideo);
         txtLocation = rootView.findViewById(R.id.txtLocation);
-        tvLeft = rootView.findViewById(R.id.txtLeft);
-        tvRight = rootView.findViewById(R.id.txtRight);
+        tvLeft = rootView.findViewById(R.id.time_current);
+        tvRight = rootView.findViewById(R.id.player_end_time);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         edtVideoTitle = rootView.findViewById(R.id.edtVideoTitle);
         edtTags = rootView.findViewById(R.id.edtTags);
         imgPlay = rootView.findViewById(R.id.imgPlay);
-        imgPlayPause = rootView.findViewById(R.id.imgPlayPause);
+        imgPlayPause = rootView.findViewById(R.id.btnPlay);
         imgPlay.setVisibility(View.GONE);
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -19,14 +19,15 @@
         android:id="@+id/txtNoData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/pad_60"
         android:paddingBottom="@dimen/pad_8"
         android:paddingLeft="@dimen/pad_20"
         android:paddingRight="@dimen/pad_20"
-        android:paddingTop="@dimen/pad_8"
+        android:paddingTop="@dimen/pad_20"
         android:text="Search for people"
         android:textColor="@color/color_vvDarkGrey"
-        android:textSize="@dimen/txt_size_16sp"
+        android:textSize="@dimen/txt_size_15sp"
         android:visibility="visible" />
 
 </RelativeLayout>

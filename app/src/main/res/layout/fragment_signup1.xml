@@ -8,11 +8,12 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/pad_35"
+        android:layout_marginBottom="@dimen/pad_20"
         android:layout_marginLeft="@dimen/pad_20"
         android:layout_marginRight="@dimen/pad_20"
-        android:layout_marginTop="@dimen/pad_35"
+        android:layout_marginTop="@dimen/pad_20"
         app:cardCornerRadius="@dimen/pad_4"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -27,8 +28,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/pad_20"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -41,7 +40,8 @@
                     android:drawableTop="@drawable/logo_main_onboarding"
                     android:text="YouReview"
                     android:textColor="@color/app_text_color"
-                    android:textSize="@dimen/txt_size_20sp" />
+                    android:textSize="@dimen/txt_size_17sp"
+                    app:txt_font_type="bold" />
 
                 <RadioGroup
                     android:id="@+id/rgGender"
@@ -59,9 +59,9 @@
                         android:background="@drawable/selector_gender"
                         android:button="@drawable/ic_male"
                         android:checked="true"
+                        android:gravity="center_vertical"
                         android:paddingEnd="@dimen/pad_10"
-                        android:paddingStart="@dimen/pad_25"
-                        android:paddingTop="@dimen/pad_25"
+                        android:paddingStart="@dimen/pad_10"
                         android:text="Male"
                         android:textColor="@color/color_vvvDarkGrey" />
 
@@ -69,12 +69,14 @@
                         android:id="@+id/rbFeMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/pad_15"
+                        android:layout_marginStart="@dimen/pad_15"
                         android:background="@drawable/selector_gender"
                         android:button="@drawable/ic_female"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="@dimen/pad_5"
                         android:paddingEnd="@dimen/pad_10"
-                        android:paddingStart="@dimen/pad_25"
-                        android:paddingTop="@dimen/pad_25"
+                        android:paddingStart="@dimen/pad_10"
+                        android:paddingTop="@dimen/pad_5"
                         android:text="Female"
                         android:textColor="@color/color_vvvDarkGrey" />
 
@@ -214,22 +216,22 @@
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtNext"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/pad_20"
-                    android:layout_marginRight="@dimen/pad_20"
-                    android:layout_marginTop="@dimen/pad_20"
+                    android:layout_margin="@dimen/pad_15"
                     android:background="@drawable/bg_custom_btn_app_color"
                     android:gravity="center"
-                    android:paddingBottom="@dimen/pad_13"
-                    android:paddingTop="@dimen/pad_13"
+                    android:paddingBottom="@dimen/pad_10"
+                    android:paddingEnd="@dimen/pad_35"
+                    android:paddingStart="@dimen/pad_35"
+                    android:paddingTop="@dimen/pad_10"
                     android:text="Submit"
                     android:textColor="@color/color_white"
                     android:textSize="@dimen/txt_size_14sp" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/pad_60" />
+                    android:layout_height="@dimen/pad_30" />
 
             </LinearLayout>
 

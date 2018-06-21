@@ -92,6 +92,8 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         if (TextUtils.isEmpty(searchUser)) {
             tempPeopleArrList.clear();
             if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
+            txtNoData.setVisibility(View.VISIBLE);
+            rvPeople.setVisibility(View.GONE);
         } else {
             requestForSearchPeopleListWS();
         }

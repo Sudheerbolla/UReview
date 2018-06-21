@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +45,7 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
     private View rootView;
     private RecyclerView recyclerViewAutoComplete;
     private static final int GOOGLE_API_CLIENT_ID = 0;
+    private LinearLayout linSearchResults;
     private CustomEditText mAutocompleteTextView;
     private GoogleApiClient mGoogleApiClient;
     private PlacesAutoCompleteAdapter mAutoCompleteAdapter;
@@ -51,19 +53,6 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
     private CustomTextView txtDone, txtUseCurrentLocation;
     private RangeSeekBar<Integer> rangeSeekbar;
     private String selLat, selLong, addressLine;
-
-//    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        Dialog dialog = getDialog();
-//        if (dialog != null) {
-//            int width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-//            dialog.getWindow().setLayout(width, height);
-//        }
-//    }
 
     private OnLocationFilterOptionSelected mListener;
 
@@ -120,6 +109,7 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
     private void setReferences() {
         imgClear = rootView.findViewById(R.id.clear);
         rangeSeekbar = rootView.findViewById(R.id.rangeSeekbar);
+        linSearchResults = rootView.findViewById(R.id.linSearchResults);
         mAutocompleteTextView = rootView.findViewById(R.id.edtAutoCompleteSearch);
         recyclerViewAutoComplete = rootView.findViewById(R.id.recyclerViewAutoComplete);
         imgBack = rootView.findViewById(R.id.imgBack);
@@ -132,6 +122,7 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 imgClear.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                linSearchResults.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 if (!s.toString().equals("") && mGoogleApiClient.isConnected()) {
                     mAutoCompleteAdapter.getFilter().filter(s.toString());
                 } else if (!mGoogleApiClient.isConnected()) {

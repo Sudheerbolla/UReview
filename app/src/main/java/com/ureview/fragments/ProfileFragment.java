@@ -147,7 +147,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
             txtLoc.setText(TextUtils.isEmpty(userInfoModel.city) ? " Location not available" : userInfoModel.city);
             setProfileRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
-//            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
