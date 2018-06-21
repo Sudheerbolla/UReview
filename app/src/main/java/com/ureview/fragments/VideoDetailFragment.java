@@ -76,7 +76,7 @@ import retrofit2.Call;
 public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
         AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
-    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback;
+    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
             txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
     private LinearLayout llRate, llShare, llDirection, llReport;
@@ -392,6 +392,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         imgback = rootView.findViewById(R.id.imgback);
+        imgFullScreen = rootView.findViewById(R.id.imgFullScreen);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         txtViewCount = rootView.findViewById(R.id.txtViewCount);
         txtDistance = rootView.findViewById(R.id.txtDistance);
@@ -421,6 +422,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         llReport.setOnClickListener(this);
         llShare.setOnClickListener(this);
         imgback.setOnClickListener(this);
+        imgFullScreen.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false);
@@ -608,6 +610,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 break;
             case R.id.imgback:
                 mainActivity.popBackStack();
+                break;
+            case R.id.imgFullScreen:
                 break;
         }
     }
