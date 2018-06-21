@@ -11,6 +11,10 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        }
     buildTypes {
         release {
             minifyEnabled false
@@ -49,6 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 //    implementation 'com.github.pedrovgs:draggablepanel:1.9'
     // Twitter Android SDK (only required for Twitter Login)

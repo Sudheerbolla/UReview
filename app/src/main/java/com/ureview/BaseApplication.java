@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.facebook.FacebookSdk;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.twitter.sdk.android.core.Twitter;
 import com.ureview.models.LocationModel;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
@@ -44,6 +45,7 @@ public class BaseApplication extends MultiDexApplication {
         initRetrofit();
         StaticUtils.setWindowDimensions(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
+        Twitter.initialize(this);
         getUserDataIfAvailable();
         getLocationIfAvailable();
     }

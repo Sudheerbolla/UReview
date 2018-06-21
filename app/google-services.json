@@ -8,71 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:721643315488:android:d64f39f4de9fb3c4",
-        "android_client_info": {
-          "package_name": "com.ureview"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "721643315488-ugimn5tnp0eojm7kgp95gqqur7ddqvh6.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.ureview",
-            "certificate_hash": "6527b299af947218c46059c855e8f9cfb5307504"
-          }
-        },
-        {
-          "client_id": "721643315488-1asbs3ihjr7gmgnsmsh3scl46qfu1tb6.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "721643315488-0746eh9qmaeodd4apbc911s0970m889n.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "721643315488-0746eh9qmaeodd4apbc911s0970m889n.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCuScmoRAFJV7q77V07w5m8OCvYe1bwuBA"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "721643315488-1asbs3ihjr7gmgnsmsh3scl46qfu1tb6.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "721643315488-hncpnbdjsmrr78obar47bmqrngrtm10p.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.venbi.UReview"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:721643315488:android:077a26caedc1b95a",
         "android_client_info": {
           "package_name": "com.venbi.UReview"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "721643315488-diemg3fm83slk62vjcgaffeioem5gg9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.venbi.UReview",
+            "certificate_hash": "6527b299af947218c46059c855e8f9cfb5307504"
+          }
+        },
         {
           "client_id": "721643315488-1asbs3ihjr7gmgnsmsh3scl46qfu1tb6.apps.googleusercontent.com",
           "client_type": 3
