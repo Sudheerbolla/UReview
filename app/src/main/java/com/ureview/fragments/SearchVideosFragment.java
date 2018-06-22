@@ -266,7 +266,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "follow";
+                        videosArrList.get(follPos).followStatus = "";
                         searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
@@ -283,7 +283,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "unfollow";
+                        videosArrList.get(follPos).followStatus = "follow";
                         searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {

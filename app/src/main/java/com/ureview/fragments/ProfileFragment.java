@@ -241,7 +241,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 mainActivity.replaceFragment(FollowersFragment.newInstance(false, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
                 break;
             case R.id.txtFollowStatus:
-                if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
+                if (txtFollowStatus.getText().toString().equalsIgnoreCase("unfollow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser(otherUserId);
@@ -313,7 +313,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Follow";
+                    userInfoModel.follow_status = "";
                     setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -328,7 +328,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Unfollow";
+                    userInfoModel.follow_status = "follow";
                     setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

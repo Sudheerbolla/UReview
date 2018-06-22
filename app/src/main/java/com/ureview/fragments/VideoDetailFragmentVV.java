@@ -568,7 +568,7 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     txtFollowStatus.setText("Follow");
-                    feedVideo.followStatus = "Unfollow";
+                    feedVideo.followStatus = "follow";
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

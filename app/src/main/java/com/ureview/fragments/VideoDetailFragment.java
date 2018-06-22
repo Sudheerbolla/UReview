@@ -780,7 +780,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     txtFollowStatus.setText("Follow");
-                    feedVideo.followStatus = "Unfollow";
+                    feedVideo.followStatus = "";
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

@@ -206,7 +206,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    peopleArrList.get(selectedPosition).followStatus = "Unfollow";
+                    peopleArrList.get(selectedPosition).followStatus = "";
                     peopleAdapter.notifyItemChanged(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -233,7 +233,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 String followText = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Follow")) {
+                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Unfollow")) {
                     askConfirmationAndProceed(position);
                 } else {
                     requestForFollowUser(peopleArrList.get(position).userId);
