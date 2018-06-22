@@ -28,7 +28,6 @@ import com.ureview.models.UserInfoModel;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
-import com.ureview.utils.views.CustomDialog;
 import com.ureview.utils.views.CustomEditText;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -45,15 +44,15 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
 
     private View rootView;
     private SplashActivity splashActivity;
-    private CustomTextView txtNext, /*txtCountryCode,*/ txtDob;
+    private CustomTextView txtNext, txtDob;
     private CountriesModel currentCountriesModel;
     private RadioGroup rgGender;
     private DatePickerDialog mDatePickerDialog;
     private Calendar myCalendar = Calendar.getInstance();
     private String firstName, lastName, email, token, gender, deviceToken;
-    private CustomEditText edtFirstName, edtLastName, edtEmail, /*edtMobileNumber,*/ edtLocation;
+    private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation;
     public static final int DIALOG_FRAGMENT = 1;
-    private CustomDialog customDialog;
+//    private CustomDialog customDialog;
 
     public static Signup1Fragment newInstance() {
         return new Signup1Fragment();
@@ -91,33 +90,23 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private void initComponents() {
         splashActivity.changeStatusBarColorToWhite();
         txtNext = rootView.findViewById(R.id.txtNext);
-//        txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
         txtDob = rootView.findViewById(R.id.txtDob);
 
         rgGender = rootView.findViewById(R.id.rgGender);
 
-        rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                if (i == R.id.rbMale) {
-                    gender = "M";
-                } else if (i == R.id.rbFeMale) {
-                    gender = "F";
-                }
+        rgGender.setOnCheckedChangeListener((radioGroup, i) -> {
+            if (i == R.id.rbMale) {
+                gender = "M";
+            } else if (i == R.id.rbFeMale) {
+                gender = "F";
             }
         });
         edtFirstName = rootView.findViewById(R.id.edtFirstName);
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
         edtEmail = rootView.findViewById(R.id.edtEmail);
-//        edtMobileNumber = rootView.findViewById(R.id.edtMobileNumber);
-
-//        txtCountryCode.setOnClickListener(this);
         txtDob.setOnClickListener(this);
         txtNext.setOnClickListener(this);
-//        if (currentCountriesModel != null) {
-//            txtCountryCode.setText("+" + currentCountriesModel.countryCode);
-//        }
         initDatePicker();
         if (!TextUtils.isEmpty(firstName)) {
             edtFirstName.setText(firstName);
@@ -189,17 +178,15 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private void requestForRegistrationWS() {
         JSONObject jsonObjectReq = new JSONObject();
         try {
-            jsonObjectReq.put("first_name", firstName);
-            jsonObjectReq.put("last_name", lastName);
+            jsonObjectReq.put("first_name", edtFirstName.getText().toString().trim());
+            jsonObjectReq.put("last_name", edtLastName.getText().toString().trim());
             jsonObjectReq.put("gender", gender);
-//            jsonObjectReq.put("mobile", edtMobileNumber.getText().toString().trim());
-            jsonObjectReq.put("email", email);
+            jsonObjectReq.put("email", edtEmail.getText().toString().trim());
             jsonObjectReq.put("auth_id", token);
             jsonObjectReq.put("auth_type", "facebook");
             jsonObjectReq.put("date_of_birth", txtDob.getText().toString().trim());
             jsonObjectReq.put("platform", "android");
             jsonObjectReq.put("device_token", deviceToken);
-//            jsonObjectReq.put("country_code", txtCountryCode.getText().toString().trim());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -272,7 +259,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
 
     @Override
     public void onClick(String text) {
-        customDialog.dismiss();
+//        customDialog.dismiss();
         if (BaseApplication.userInfoModel != null)
             if (text.equalsIgnoreCase(BaseApplication.userInfoModel.otp)) {
                 requestForVerifyOtpWS(text);

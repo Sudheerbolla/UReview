@@ -58,6 +58,7 @@ import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -297,10 +298,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private void setFacebookData() {
         GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), (object, response) -> {
             try {
-                email = response.getJSONObject().getString("email");
-                firstName = response.getJSONObject().getString("first_name");
-                lastName = response.getJSONObject().getString("last_name");
-                id = response.getJSONObject().getString("id");
+                JSONObject res = response.getJSONObject();
+                if (res != null) {
+                    if (res.has("email")) email = res.getString("email");
+                    if (res.has("email"))
+                        firstName = response.getJSONObject().getString("first_name");
+                    if (res.has("email"))
+                        lastName = response.getJSONObject().getString("last_name");
+                    if (res.has("email")) id = response.getJSONObject().getString("id");
+                }
                 Profile profile = Profile.getCurrentProfile();
                 if (Profile.getCurrentProfile() != null) {
                     Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
@@ -397,4 +403,3 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
 }
-//twitterkit-MXIAuVVgwoijQj4ZJtY9RSj4Y://

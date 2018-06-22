@@ -439,7 +439,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mLastLocation != null && !isLocationAlreadyFetched) {
             setTextToAddress();
             clearBackStackCompletely();
-            proceedWithFlow();
+//            proceedWithFlow();
         }
     }
 
