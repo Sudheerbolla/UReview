@@ -41,7 +41,6 @@ import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -106,7 +105,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     private FrameLayout playerFrameLayout;
 
     private SimpleExoPlayer exoPlayer;
-    private boolean bAutoplay = true, bIsPlaying = false, bControlsActive = true;
+    private boolean bAutoplay = true;
 
     private Handler handler;
     private StringBuilder mFormatBuilder;
@@ -139,22 +138,11 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         rootView = inflater.inflate(R.layout.fragment_video_detail_old, container, false);
         getBundleData();
         initComponents();
-//        initVideoPlayer();
         initVideoPlayer2();
         return rootView;
     }
 
     private void initVideoPlayer2() {
-        svPlayer = rootView.findViewById(R.id.sv_player);
-        btnPlay = rootView.findViewById(R.id.btnPlay);
-        timeCurrent = rootView.findViewById(R.id.time_current);
-        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
-        playerEndTime = rootView.findViewById(R.id.player_end_time);
-        linMediaController = rootView.findViewById(R.id.lin_media_controller);
-        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
-//        aspRatio = rootView.findViewById(R.id.aspRatio);
-        innerFrame = rootView.findViewById(R.id.innerFrame);
-
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         handler = new Handler();
@@ -165,19 +153,13 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(true);
                 btnPlay.setSelected(true);
-                bIsPlaying = true;
                 setProgress();
             }
         }
-
-//        aspRatio.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
-
     }
 
     private void initDataSource() {
-        dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
-                Util.getUserAgent(mainActivity, mainActivity.getPackageName()),
-                new DefaultBandwidthMeter());
+        dataSourceFactory = new DefaultDataSourceFactory(mainActivity, Util.getUserAgent(mainActivity, mainActivity.getPackageName()), new DefaultBandwidthMeter());
     }
 
     private void initMediaControls() {
@@ -218,15 +200,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
             @Override
             public void run() {
-                if (exoPlayer != null && bIsPlaying) {
-                    btnPlay.setSelected(bIsPlaying);
-                    mediacontrollerProgress.setMax(0);
+                if (exoPlayer != null && btnPlay.isSelected()) {
                     mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
                     int mCurrentPosition = (int) exoPlayer.getCurrentPosition() / 1000;
                     mediacontrollerProgress.setProgress(mCurrentPosition);
                     timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
                     playerEndTime.setText(stringForTime((int) exoPlayer.getDuration()));
-
                     handler.postDelayed(this, 1000);
                 }
             }
@@ -264,52 +243,32 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void toggleMediaControls() {
-
-        if (bControlsActive) {
-            hideMediaController();
-            bControlsActive = false;
-        } else {
-            showController();
-            bControlsActive = true;
+        if (linMediaController.getVisibility() == View.VISIBLE)
+            linMediaController.setVisibility(View.GONE);
+        else {
+            linMediaController.setVisibility(View.VISIBLE);
             setProgress();
         }
     }
 
-    private void showController() {
-        linMediaController.setVisibility(View.VISIBLE);
-        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    private void hideMediaController() {
-        linMediaController.setVisibility(View.GONE);
-        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
     private void initPlayButton() {
         btnPlay.requestFocus();
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bIsPlaying) {
-                    exoPlayer.setPlayWhenReady(false);
-                    bIsPlaying = false;
-                } else {
-                    exoPlayer.setPlayWhenReady(true);
-                    bIsPlaying = true;
-                    setProgress();
-                }
-                btnPlay.setSelected(bIsPlaying);
+        btnPlay.setOnClickListener(view -> {
+            if (btnPlay.isSelected()) {
+                exoPlayer.setPlayWhenReady(false);
+            } else {
+                exoPlayer.setPlayWhenReady(true);
+                setProgress();
             }
+            btnPlay.setSelected(!btnPlay.isSelected());
         });
     }
 
     private void initMp4Player() {
         if (feedVideo.video != null) {
-            MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
-                    handler, error -> {
+            MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(), handler, error -> {
 
             });
-
             initExoPlayer(sampleSource);
         }
     }
@@ -330,15 +289,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         exoPlayer.setPlayWhenReady(true);
     }
 
-    private void initHLSPlayer(String dashUrl) {
-
-        MediaSource sampleSource = new HlsMediaSource(Uri.parse(dashUrl), dataSourceFactory, handler,
-                this);
-
-
-        initExoPlayer(sampleSource);
-    }
-
     private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
         float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -349,7 +299,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.setLayoutParams(params);
         } else if (videoRatio > displayRatio) {
-            container.getLayoutParams().width = Math.round((container.getMeasuredWidth() - 75) * videoRatio);
+            container.getLayoutParams().width = Math.round(container.getMeasuredWidth() * videoRatio) - 40;
             container.requestLayout();
         } else {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
@@ -448,6 +398,15 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         rvRelatedVideos = rootView.findViewById(R.id.rvRelatedVideos);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
+        svPlayer = rootView.findViewById(R.id.sv_player);
+        btnPlay = rootView.findViewById(R.id.btnPlay);
+        timeCurrent = rootView.findViewById(R.id.time_current);
+        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
+        playerEndTime = rootView.findViewById(R.id.player_end_time);
+        linMediaController = rootView.findViewById(R.id.lin_media_controller);
+        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
+        innerFrame = rootView.findViewById(R.id.innerFrame);
+
         nestedScrollView.smoothScrollTo(0, 0);
 
         llRate.setOnClickListener(this);

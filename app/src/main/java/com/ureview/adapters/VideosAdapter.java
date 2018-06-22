@@ -110,7 +110,13 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     }
 
     public void addVideos(ArrayList<VideoModel> list) {
-        this.videoList = list;
+        videoList.clear();
+        videoList.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void clearList() {
+        videoList.clear();
         notifyDataSetChanged();
     }
 

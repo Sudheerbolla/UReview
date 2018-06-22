@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -104,8 +105,15 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        MediaController mediaController = new MediaController(mainActivity);
+        mediaController.setAnchorView(svPlayer);
+
         Uri uri = Uri.parse(feedVideo.video);
+        svPlayer.setMediaController(mediaController);
+        mediaController.hide();
+
         svPlayer.setVideoURI(uri);
+
         svPlayer.requestFocus();
 
         initSeekBar();

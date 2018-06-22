@@ -273,12 +273,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         switch (view.getId()) {
             case R.id.relItem:
                 mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
+//                mainActivity.replaceFragment(VideoDetailFragmentVV.newInstance(videoModels, position), true, R.id.mainContainer);
                 break;
             case R.id.imgProfile:
             case R.id.txtName:
             case R.id.txtLoc:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId, feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)),
-                        true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId, feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
@@ -431,10 +431,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         loadedDataCount++;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    nearByVideoList.clear();
                     relVideos.setVisibility(View.VISIBLE);
                     rvNearByVideos.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -474,10 +474,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         loadedDataCount++;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            topRatedVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    topRatedVideoList.clear();
                     relTopRated.setVisibility(View.VISIBLE);
                     rvTopRated.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -517,10 +517,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         loadedDataCount++;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    popularVideoList.clear();
                     relPopularSearch.setVisibility(View.VISIBLE);
                     rvPopularsearch.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);

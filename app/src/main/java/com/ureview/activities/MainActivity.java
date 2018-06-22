@@ -32,9 +32,7 @@ import com.ureview.fragments.ProfileFragment;
 import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
-import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
-import com.ureview.fragments.VideoReviewFragment;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
@@ -73,10 +71,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkPermissions();
+
         initTopBar();
         initBottomBar();
-        proceedWithFlow();
+//        proceedWithFlow();
+        checkPermissions();
+
         fragmentManager = getSupportFragmentManager();
         try {
             if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, ""))) {
@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (mLastLocation != null && !isLocationAlreadyFetched) {
             setTextToAddress();
             clearBackStackCompletely();
-//            proceedWithFlow();
+            proceedWithFlow();
         }
     }
 
@@ -380,15 +380,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragment(UploadVideoFragment.newInstance(selectedVideoUri), R.id.mainContainer);
     }
 
-    public void setUploadVideoCompletedFragment() {
-        replaceFragment(UploadVideoCompletedFragment.newInstance(), R.id.mainContainer);
-    }
-
-    public void setVideoReviewFragment() {
-        setToolBar("Video Review", "", "", false, true, true, false, false);
-        replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
-    }
-
     private void setSelectedTab(ImageView selectedView, ImageView imgH) {
         imgHome.setSelected(false);
         imgSearchB.setSelected(false);
@@ -447,6 +438,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mLastLocation = location;
         if (mLastLocation != null && !isLocationAlreadyFetched) {
             setTextToAddress();
+            clearBackStackCompletely();
+            proceedWithFlow();
         }
     }
 

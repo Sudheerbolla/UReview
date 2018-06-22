@@ -49,7 +49,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private TabLayout tabLayout;
     private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc, txtFollowStatus;
     private LinearLayout linFollowing, linFollowers;
-    //    private RatingBar ratingBar;
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
     private ImageView imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
@@ -385,6 +384,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -406,6 +406,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
+        //        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            return super.instantiateItem(container, position);
+//            Object obj = super.instantiateItem(container, position);
+//            viewPager.setObjectForPosition(obj, position);
+//            return obj;
+//        }
+//        @Override
+//        public boolean isViewFromObject(View view, Object object) {
+//            return object != null && ((Fragment) object).getView() == view;
+//        }
 
         @Override
         public CharSequence getPageTitle(int position) {

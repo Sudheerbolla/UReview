@@ -22,8 +22,7 @@ public class UploadVideoCompletedFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("Uploading video", "", "", false, true, true, false, false);
-
+        mainActivity.setToolBar("Uploading video", "", "", false, false, false, false, false);
     }
 
     @Override

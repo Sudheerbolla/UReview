@@ -197,8 +197,9 @@
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="@dimen/pad_27"
-                                android:layout_height="@dimen/pad_27"
+                                android:layout_width="@dimen/pad_29"
+                                android:layout_height="@dimen/pad_29"
+                                android:padding="@dimen/pad_3"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/ic_rating" />
 
@@ -226,12 +227,13 @@
                         <LinearLayout
                             android:layout_width="@dimen/pad_35"
                             android:layout_height="@dimen/pad_35"
-                            android:background="@drawable/app_medium_circle"
+                            android:background="@drawable/blue_circle"
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="@dimen/pad_27"
-                                android:layout_height="@dimen/pad_27"
+                                android:layout_width="@dimen/pad_28"
+                                android:layout_height="@dimen/pad_28"
+                                android:padding="@dimen/pad_3"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/ic_share_new" />
 
@@ -275,6 +277,7 @@
                             android:text="Direction"
                             android:textColor="@color/color_vvvDarkGrey"
                             android:textSize="@dimen/txt_size_10sp" />
+
                     </LinearLayout>
 
                     <LinearLayout

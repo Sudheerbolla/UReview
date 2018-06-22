@@ -33,7 +33,7 @@ import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.io.File;
 
-public class VideoRecorder extends BaseActivity {
+public class VideoRecorderWorking extends BaseActivity {
 
     private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
     private VideoView videoView;
@@ -53,7 +53,6 @@ public class VideoRecorder extends BaseActivity {
     private int duration;
     private Context mContext;
     private int option = 0;
-    private String cutPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,16 +78,9 @@ public class VideoRecorder extends BaseActivity {
         cutVideo.setOnClickListener(v -> {
             if (selectedVideoUri != null) {
                 if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 59) {
-                    StaticUtils.showToast(VideoRecorder.this, "Video cannot be more than 60 seconds in duration");
+                    StaticUtils.showToast(VideoRecorderWorking.this, "Video cannot be more than 60 seconds in duration");
                 } else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
                         && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
-                    try {
-                        if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
-                            StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
-                        } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     Intent intent = new Intent();
                     intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
                     setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
@@ -97,8 +89,8 @@ public class VideoRecorder extends BaseActivity {
                     proceedWithVideoOperation();
                     try {
                         if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
-                            StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
-                        } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
+                            StaticUtils.showToast(VideoRecorderWorking.this, "above 5 mb");
+                        } else StaticUtils.showToast(VideoRecorderWorking.this, "below 5 mb");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -247,20 +239,19 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] cutCommand = {"-ss", "" + startMs, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs), "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
-//        String[] compressCommand = {"-y", "-i", yourRealPath, "-s", "480x320", "-r", "25", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
-//        String[] complexCommand = combine(cutCommand, compressCommand);
-        execFFmpegBinary(cutCommand);
+//        String[] complexCommand = {"-ss", "" + startMs / 1000, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs) / 1000, "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
+        String[] complexCommand = {"-ss", "" + startMs, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs), "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
+        execFFmpegBinary(complexCommand);
 
     }
 
     private void executeCompressVideoCommand() {
-        cutPath = "file://" + filePath;
         option = 1;
         File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
         String filePrefix = "compress_video";
         String fileExtn = ".mp4";
-        String yourRealPath = getPath(this, Uri.parse(cutPath));
+        String path = "file://" + filePath;
+        String yourRealPath = getPath(this, Uri.parse(path));
         File dest = new File(moviesDir, filePrefix + fileExtn);
         int fileNo = 0;
         while (dest.exists()) {
@@ -268,15 +259,9 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x320", "-r", "25", "-vcodec", "mpeg4", "-b:v", "300k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+//        ffmpeg -y -i path -s 480x320 -r 20 -c:v libx264 -preset ultrafast -c:a copy -me_method zero -tune fastdecode -tune zerolatency -strict -2 -b:v 1000k -pix_fmt yuv420p /storage/emulated/0/output.mp4
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x320", "-r", "25", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
         execFFmpegBinary(complexCommand);
-    }
-
-    public static String[] combine(String[] arg1, String[] arg2) {
-        String[] result = new String[arg1.length + arg2.length];
-        System.arraycopy(arg1, 0, result, 0, arg1.length);
-        System.arraycopy(arg2, 0, result, arg1.length, arg2.length);
-        return result;
     }
 
     public static String[] combine(String[] arg1, String[] arg2, String[] arg3) {
@@ -302,18 +287,9 @@ public class VideoRecorder extends BaseActivity {
                 public void onSuccess(String s) {
                     Log.d(TAG, "SUCCESS with output : " + s);
                     if (option == 0) {
-//                        progressDialog.hide();
                         executeCompressVideoCommand();
-                        progressDialog.setMessage("Compressing...");
                         progressDialog.show();
                     } else if (option == 1) {
-                        try {
-                            File cutFile = new File(cutPath);
-                            if (cutFile.exists()) cutFile.delete();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        progressDialog.hide();
                         Intent intent = new Intent();
                         intent.putExtra(StaticUtils.FILEPATH, filePath);
                         setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
@@ -324,6 +300,7 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onProgress(String s) {
                     Log.d(TAG, "Started command : ffmpeg " + command);
+//                    progressDialog.setMessage("progress : " + s);
                     progressDialog.setMessage("Processing...");
                     Log.d(TAG, "progress : " + s);
                 }
@@ -338,7 +315,7 @@ public class VideoRecorder extends BaseActivity {
                 @Override
                 public void onFinish() {
                     Log.d(TAG, "Finished command : ffmpeg " + command);
-//                    progressDialog.hide();
+                    progressDialog.hide();
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
