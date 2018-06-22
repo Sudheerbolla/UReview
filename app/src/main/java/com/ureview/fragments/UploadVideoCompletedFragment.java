@@ -22,7 +22,7 @@ public class UploadVideoCompletedFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("Upload video", "", "", false, true, true, false, false);
+        mainActivity.setToolBar("Uploading video", "", "", false, true, true, false, false);
 
     }
 
@@ -36,12 +36,9 @@ public class UploadVideoCompletedFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_upload_video_completed, container, false);
-        rootView.findViewById(R.id.txtDone).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mainActivity.clearBackStackCompletely();
-                mainActivity.setHomeFragment();
-            }
+        rootView.findViewById(R.id.txtDone).setOnClickListener(view -> {
+            mainActivity.clearBackStackCompletely();
+            mainActivity.setHomeFragment();
         });
         return rootView;
     }

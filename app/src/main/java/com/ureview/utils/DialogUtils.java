@@ -68,8 +68,7 @@ public class DialogUtils implements View.OnClickListener {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
 
-    public static void showUnFollowConfirmationPopup(final Context mContext, final String userName,
-                                                     final View.OnClickListener positiveClick) {
+    public static void showUnFollowConfirmationPopup(final Context mContext, final String userName, final View.OnClickListener positiveClick) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
 

@@ -21,7 +21,7 @@ public class AboutFragment extends BaseFragment {
     private View rootView;
     private MainActivity mainActivity;
     private UserInfoModel userInfoModel;
-    private CustomTextView txtEmail, txtAge, /*txtPhone,*/ txtAboutMe, txtAbout;
+    private CustomTextView txtEmail, txtAge, txtAboutMe, txtAbout;
     private String userId;
     private LinearLayout linPersonal;
 
@@ -69,7 +69,6 @@ public class AboutFragment extends BaseFragment {
         txtAboutMe = rootView.findViewById(R.id.txtAboutMe);
         txtAge = rootView.findViewById(R.id.txtAge);
         txtEmail = rootView.findViewById(R.id.txtEmail);
-//        txtPhone = rootView.findViewById(R.id.txtPhone);
         linPersonal = rootView.findViewById(R.id.linPersonal);
 
         if (getArguments().getString("userId").equalsIgnoreCase(userId)) {
@@ -92,11 +91,10 @@ public class AboutFragment extends BaseFragment {
             txtAbout.setText("Description");
             return;
         } else {
-            txtAbout.setText("About Me");
+            if (txtAbout != null) txtAbout.setText("About Me");
             linPersonal.setVisibility(View.VISIBLE);
         }
         if (userInfoModel != null) {
-//            if (txtPhone != null) txtPhone.setText(userInfoModel.mobile);
             if (txtEmail != null) txtEmail.setText(userInfoModel.email);
             if (txtAge != null) txtAge.setText(userInfoModel.age);
             if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))

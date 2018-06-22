@@ -1,7 +1,7 @@
 package com.ureview.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,8 +13,6 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
@@ -35,13 +33,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         this.iClickListener = iClickListener;
     }
 
+    @NonNull
     @Override
-    public NewsFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public NewsFeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new NewsFeedViewHolder(LayoutInflater.from(context).inflate(R.layout.item_news_feed, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final NewsFeedViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final NewsFeedViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final VideoModel videoModel = feedVideoList.get(position);
 
         if (!TextUtils.isEmpty(videoModel.userImage)) {
@@ -70,12 +69,14 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
 
-        Glide.with(context).load(videoModel.categoryBgImage).into(new SimpleTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
-                holder.txtCategory.setBackground(resource);
-            }
-        });
+//        Glide.with(context).load(videoModel.categoryBgImage).into(new SimpleTarget<Drawable>() {
+//            @Override
+//            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
+//                holder.txtCategory.setBackground(resource);
+//            }
+//        });
+
+//        holder.txtCategory.setBackgroundResource(R.drawable.blue_bg);
 
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtSynth.setText(videoModel.videoTitle);

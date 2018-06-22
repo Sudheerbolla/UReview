@@ -440,7 +440,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                         StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                     }
                     mainActivity.clearBackStackCompletely();
-                    mainActivity.setProfileFragment();
+//                    mainActivity.setProfileFragment();
+                    mainActivity.replaceFragment(UploadVideoCompletedFragment.newInstance(), true, R.id.mainContainer);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

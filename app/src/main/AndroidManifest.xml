@@ -118,7 +118,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.VideoPlayerActivity" />
-        <activity android:name=".activities.VideoMP4Activity" />
         <activity android:name=".activities.PreviewActivity" />
 
         <!-- FCM related -->
@@ -146,6 +145,10 @@
         <!--<meta-data-->
         <!--android:name="com.google.firebase.messaging.default_notification_channel_id"-->
         <!--android:value="@string/default_notification_channel_id" />-->
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b24c8064b323599d2127dcddca295bbf000d3b48" />
 
     </application>
 

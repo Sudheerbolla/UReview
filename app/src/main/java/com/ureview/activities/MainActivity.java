@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.fragments.BaseFragment;
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         fragmentManager = getSupportFragmentManager();
         try {
             if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, ""))) {
@@ -80,12 +82,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     String json = BaseApplication.userInfoModel.serialize();
                     LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
                 }
+                setUserDataForCrash();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
         checkPermissions();
+    }
+
+    private void setUserDataForCrash() {
+        Crashlytics.setUserIdentifier(BaseApplication.userInfoModel.userid);
+        Crashlytics.setUserEmail(BaseApplication.userInfoModel.email);
+        Crashlytics.setUserName(BaseApplication.userInfoModel.user_name);
     }
 
     private void checkPermissions() {

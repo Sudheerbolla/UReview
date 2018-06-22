@@ -180,12 +180,19 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <com.ureview.utils.views.CircleImageView
+                        <LinearLayout
                             android:layout_width="@dimen/pad_35"
                             android:layout_height="@dimen/pad_35"
                             android:background="@drawable/app_medium_circle"
-                            android:padding="@dimen/pad_4"
-                            android:src="@drawable/ic_rate" />
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_27"
+                                android:layout_height="@dimen/pad_27"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_rating" />
+
+                        </LinearLayout>
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -206,11 +213,19 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <com.ureview.utils.views.CircleImageView
+                        <LinearLayout
                             android:layout_width="@dimen/pad_35"
                             android:layout_height="@dimen/pad_35"
-                            android:padding="@dimen/pad_4"
-                            android:src="@drawable/ic_share" />
+                            android:background="@drawable/app_medium_circle"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_27"
+                                android:layout_height="@dimen/pad_27"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_share_new" />
+
+                        </LinearLayout>
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"
@@ -255,13 +270,19 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <com.ureview.utils.views.CircleImageView
+                        <LinearLayout
                             android:layout_width="@dimen/pad_35"
                             android:layout_height="@dimen/pad_35"
-                            android:rotation="180"
-                            android:src="@drawable/ic_report"
-                            app:civ_border_color="@color/colorDarkRed"
-                            app:civ_border_width="@dimen/pad_4" />
+                            android:background="@drawable/red_circle"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_27"
+                                android:layout_height="@dimen/pad_27"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_report" />
+
+                        </LinearLayout>
 
                         <com.ureview.utils.views.CustomTextView
                             android:layout_width="wrap_content"

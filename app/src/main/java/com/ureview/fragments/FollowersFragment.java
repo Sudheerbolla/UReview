@@ -3,6 +3,7 @@ package com.ureview.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -40,6 +41,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     private View rootView;
     private RecyclerView rvFollowers;
     private FollowersAdapter followersAdapter;
+    private SwipeRefreshLayout swipeLayout;
     private MainActivity mainActivity;
     private boolean showFollowers;
     private ArrayList<FollowModel> followModelArrayList;
@@ -87,9 +89,10 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
         rvFollowers = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
+        swipeLayout = rootView.findViewById(R.id.swipeLayout);
         txtNoData.setText("No Data Found");
         setAdapter();
-
+        swipeLayout.setOnRefreshListener(this::requestForGetFollowListWS);
         requestForGetFollowListWS();
 
         return rootView;
@@ -150,9 +153,9 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
             default:
                 break;
         }
+        if (swipeLayout != null && swipeLayout.isRefreshing()) swipeLayout.setRefreshing(false);
     }
 
-    //{"status":"success","message":"You are following this user!...","follow_you_count":1,"you_follow_count":2}
     private void parseFollowUser(JsonObject response) {
         try {
             if (response.has("status")) {
@@ -229,12 +232,12 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
     @Override
     public void errorResponse(int requestCode, String error) {
-
+        if (swipeLayout != null && swipeLayout.isRefreshing()) swipeLayout.setRefreshing(false);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-
+        if (swipeLayout != null && swipeLayout.isRefreshing()) swipeLayout.setRefreshing(false);
     }
 
     @Override
@@ -243,7 +246,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 String followText = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Follow")) {
+                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Unfollow")) {
                     askConfirmationAndProceed(position);
                 } else {
                     requestForFollowUser(followModelArrayList.get(position).user_id);
@@ -263,13 +266,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
     private void askConfirmationAndProceed(final int position) {
         final FollowModel followModel = followModelArrayList.get(position);
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, followModel.first_name.concat(" ").concat(followModel.last_name),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        requestForUnFollowUser(followModel.user_id);
-                    }
-                });
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, followModel.first_name.concat(" ").concat(followModel.last_name), view -> requestForUnFollowUser(followModel.user_id));
     }
 
     @Override
@@ -278,11 +275,3 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
     }
 
 }
-
-/*http://18.216.101.112/follow-request
-http://18.216.101.112/un-follow-user
-http://18.216.101.112/block-user
-
-{"id":1,"follow_id":2}
-
-*/

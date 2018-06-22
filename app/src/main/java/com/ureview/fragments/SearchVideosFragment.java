@@ -94,8 +94,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         if (TextUtils.isEmpty(searchVideo)) {
             tempVideosArrList.clear();
             if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
-            txtNoData.setVisibility(View.VISIBLE);
-            rvSearchVideo.setVisibility(View.GONE);
+            if (txtNoData != null) txtNoData.setVisibility(View.VISIBLE);
+            if (rvSearchVideo != null) rvSearchVideo.setVisibility(View.GONE);
         } else {
             requestForSearchVideos();
         }
@@ -106,8 +106,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         try {
             jsonObjectReq.put("user_id", userId);
             jsonObjectReq.put("video_name", searchText);
-            jsonObjectReq.put("latitude", "17.325400");
-            jsonObjectReq.put("longitude", "78.362000");
+            jsonObjectReq.put("latitude", String.valueOf(MainActivity.mLastLocation.getLatitude()));
+            jsonObjectReq.put("longitude", String.valueOf(MainActivity.mLastLocation.getLongitude()));
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
             jsonObjectReq.put("count", String.valueOf(count));
             jsonObjectReq.put("current_latitude", currLat);
