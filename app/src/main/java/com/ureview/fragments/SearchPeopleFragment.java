@@ -68,7 +68,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_followers, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search_people, container, false);
 
         rvPeople = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);

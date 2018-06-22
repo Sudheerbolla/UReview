@@ -87,11 +87,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
         Bundle bundle = getArguments();
         if (bundle != null) {
-            otherUserId = bundle.getString("otherUserId");
+            if (bundle.containsKey("otherUserId"))
+                otherUserId = bundle.getString("otherUserId");
             if (bundle.containsKey("otherUserName"))
                 otherUserName = bundle.getString("otherUserName");
             isDiffUser = !TextUtils.isEmpty(otherUserId) && !otherUserId.equalsIgnoreCase(userId);
         }
+        if (TextUtils.isEmpty(otherUserId)) otherUserId = userId;
     }
 
     @Nullable
@@ -151,7 +153,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
             if (isDiffUser) {
-                setFollowTextAndBg();
+                setFollowTextAndBg(userInfoModel);
             }
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
@@ -198,7 +200,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         imgStar5.setSelected(b4);
     }
 
-    private void setFollowTextAndBg() {
+    private void setFollowTextAndBg(UserInfoModel userInfoModel) {
         if (TextUtils.isEmpty(userInfoModel.follow_status)) {
             txtFollowStatus.setText("Follow");
             txtFollowStatus.setSelected(false);
@@ -216,7 +218,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void requestForGetProfileDataWS() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(isDiffUser ? otherUserId : userId);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(otherUserId, userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
@@ -313,7 +315,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     userInfoModel.follow_status = "Follow";
-                    setFollowTextAndBg();
+                    setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -328,7 +330,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     userInfoModel.follow_status = "Unfollow";
-                    setFollowTextAndBg();
+                    setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

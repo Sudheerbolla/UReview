@@ -24,6 +24,7 @@ public class AboutFragment extends BaseFragment {
     private CustomTextView txtEmail, txtAge, txtAboutMe, txtAbout;
     private String userId;
     private LinearLayout linPersonal;
+    boolean hideSensitiveData;
 
     public static AboutFragment newInstance(String userId) {
         AboutFragment followersFragment = new AboutFragment();
@@ -57,12 +58,10 @@ public class AboutFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_about, container, false);
+        if (isAdded()) rootView = inflater.inflate(R.layout.fragment_about, container, false);
         initComponents();
         return rootView;
     }
-
-    boolean hideSensitiveData;
 
     private void initComponents() {
         txtAbout = rootView.findViewById(R.id.txtAbout);
@@ -82,23 +81,25 @@ public class AboutFragment extends BaseFragment {
     }
 
     public void updateData(UserInfoModel userInfoModel) {
-        if (hideSensitiveData) {
+        if (isAdded()) {
+            if (hideSensitiveData) {
+                if (userInfoModel != null) {
+                    if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
+                        txtAboutMe.setText(userInfoModel.user_description);
+                    linPersonal.setVisibility(View.GONE);
+                }
+                txtAbout.setText("Description");
+                return;
+            } else {
+                if (txtAbout != null) txtAbout.setText("About Me");
+                linPersonal.setVisibility(View.VISIBLE);
+            }
             if (userInfoModel != null) {
+                if (txtEmail != null) txtEmail.setText(userInfoModel.email);
+                if (txtAge != null) txtAge.setText(userInfoModel.age);
                 if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
                     txtAboutMe.setText(userInfoModel.user_description);
-                linPersonal.setVisibility(View.GONE);
             }
-            txtAbout.setText("Description");
-            return;
-        } else {
-            if (txtAbout != null) txtAbout.setText("About Me");
-            linPersonal.setVisibility(View.VISIBLE);
-        }
-        if (userInfoModel != null) {
-            if (txtEmail != null) txtEmail.setText(userInfoModel.email);
-            if (txtAge != null) txtAge.setText(userInfoModel.age);
-            if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
-                txtAboutMe.setText(userInfoModel.user_description);
         }
     }
 }

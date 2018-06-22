@@ -1,7 +1,6 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,11 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -23,36 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -74,7 +43,6 @@ import com.ureview.wsutils.WSUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -83,46 +51,35 @@ import java.util.Locale;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-import static android.view.Gravity.CENTER;
+public class VideoDetailFragmentVV extends BaseFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
 
-public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
-        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
-
+    private View rootView;
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
-    private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
-            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
+    private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation, txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
     private LinearLayout llRate, llShare, llDirection, llReport;
     private CustomRecyclerView rvRelatedVideos;
     private VideosAdapter videosAdapter;
     private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
     private VideoModel feedVideo;
     private NestedScrollView nestedScrollView;
-    private View rootView;
     private MainActivity mainActivity;
-
-    private SurfaceView svPlayer;
-    private SeekBar mediacontrollerProgress;
+    private VideoView svPlayer;
+    private SeekBar seekBar;
     private RelativeLayout linMediaController;
     private FrameLayout playerFrameLayout;
 
-    private SimpleExoPlayer exoPlayer;
-    private boolean bAutoplay = true, bIsPlaying = false, bControlsActive = true;
-
-    private Handler handler;
     private StringBuilder mFormatBuilder;
     private Formatter mFormatter;
-    private DataSource.Factory dataSourceFactory;
     private String userId;
+    private Handler handler;
 
-    private FrameLayout innerFrame;
-
-    public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position) {
-        VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
+    public static VideoDetailFragmentVV newInstance(ArrayList<VideoModel> feedVideoList, int position) {
+        VideoDetailFragmentVV videoDetailFragmentVV = new VideoDetailFragmentVV();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("news_feed", feedVideoList);
         bundle.putInt("position", position);
-        videoDetailFragment.setArguments(bundle);
-        return videoDetailFragment;
+        videoDetailFragmentVV.setArguments(bundle);
+        return videoDetailFragmentVV;
 
     }
 
@@ -130,64 +87,31 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        getBundleData();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_video_detail_old, container, false);
-        getBundleData();
+        rootView = inflater.inflate(R.layout.activity_video_detail, container, false);
         initComponents();
-//        initVideoPlayer();
-        initVideoPlayer2();
         return rootView;
     }
 
-    private void initVideoPlayer2() {
-        svPlayer = rootView.findViewById(R.id.sv_player);
-        btnPlay = rootView.findViewById(R.id.btnPlay);
-        timeCurrent = rootView.findViewById(R.id.time_current);
-        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
-        playerEndTime = rootView.findViewById(R.id.player_end_time);
-        linMediaController = rootView.findViewById(R.id.lin_media_controller);
-        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
-//        aspRatio = rootView.findViewById(R.id.aspRatio);
-        innerFrame = rootView.findViewById(R.id.innerFrame);
+    private void initVideoPlayer() {
 
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        handler = new Handler();
-        initDataSource();
-        initMp4Player();
-        exoPlayer.addListener(this);
-        if (bAutoplay) {
-            if (exoPlayer != null) {
-                exoPlayer.setPlayWhenReady(true);
-                btnPlay.setSelected(true);
-                bIsPlaying = true;
-                setProgress();
-            }
-        }
 
-//        aspRatio.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT);
+        Uri uri = Uri.parse(feedVideo.video);
+        svPlayer.setVideoURI(uri);
+        svPlayer.requestFocus();
 
-    }
-
-    private void initDataSource() {
-        dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
-                Util.getUserAgent(mainActivity, mainActivity.getPackageName()),
-                new DefaultBandwidthMeter());
-    }
-
-    private void initMediaControls() {
-        initSurfaceView();
-        initPlayButton();
         initSeekBar();
-    }
-
-    private void initSurfaceView() {
-        svPlayer.setOnClickListener(view -> toggleMediaControls());
+        svPlayer.start();
+        btnPlay.setSelected(true);
+        setProgress();
     }
 
     private String stringForTime(int timeMs) {
@@ -208,25 +132,19 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void setProgress() {
-        mediacontrollerProgress.setProgress(0);
-        mediacontrollerProgress.setMax(0);
-        mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
-
+        seekBar.setProgress(0);
+        seekBar.setMax(svPlayer.getDuration() / 1000);
         handler = new Handler();
-        //Make sure you update Seekbar on UI thread
         handler.post(new Runnable() {
 
             @Override
             public void run() {
-                if (exoPlayer != null && bIsPlaying) {
-                    btnPlay.setSelected(bIsPlaying);
-                    mediacontrollerProgress.setMax(0);
-                    mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
-                    int mCurrentPosition = (int) exoPlayer.getCurrentPosition() / 1000;
-                    mediacontrollerProgress.setProgress(mCurrentPosition);
-                    timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
-                    playerEndTime.setText(stringForTime((int) exoPlayer.getDuration()));
-
+                if (svPlayer != null && btnPlay.isSelected()) {
+                    seekBar.setMax(svPlayer.getDuration() / 1000);
+                    int mCurrentPosition = svPlayer.getCurrentPosition() / 1000;
+                    seekBar.setProgress(mCurrentPosition);
+                    timeCurrent.setText(stringForTime(svPlayer.getCurrentPosition()));
+                    playerEndTime.setText(stringForTime(svPlayer.getDuration()));
                     handler.postDelayed(this, 1000);
                 }
             }
@@ -234,18 +152,14 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void initSeekBar() {
-        mediacontrollerProgress.requestFocus();
-
-        mediacontrollerProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        seekBar.requestFocus();
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (!fromUser) {
-                    // We're not interested in programmatically generated changes to
-                    // the progress bar's position.
                     return;
                 }
-
-                exoPlayer.seekTo(progress * 1000);
+                svPlayer.seekTo(progress * 1000);
             }
 
             @Override
@@ -258,153 +172,17 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
             }
         });
-
-        mediacontrollerProgress.setMax(0);
-        mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
+        seekBar.setMax(0);
+        seekBar.setMax(svPlayer.getDuration() / 1000);
     }
 
     private void toggleMediaControls() {
-
-        if (bControlsActive) {
-            hideMediaController();
-            bControlsActive = false;
+        if (linMediaController.getVisibility() == View.VISIBLE) {
+            linMediaController.setVisibility(View.GONE);
         } else {
-            showController();
-            bControlsActive = true;
+            linMediaController.setVisibility(View.VISIBLE);
             setProgress();
         }
-    }
-
-    private void showController() {
-        linMediaController.setVisibility(View.VISIBLE);
-        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    private void hideMediaController() {
-        linMediaController.setVisibility(View.GONE);
-        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    private void initPlayButton() {
-        btnPlay.requestFocus();
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bIsPlaying) {
-                    exoPlayer.setPlayWhenReady(false);
-                    bIsPlaying = false;
-                } else {
-                    exoPlayer.setPlayWhenReady(true);
-                    bIsPlaying = true;
-                    setProgress();
-                }
-                btnPlay.setSelected(bIsPlaying);
-            }
-        });
-    }
-
-    private void initMp4Player() {
-        if (feedVideo.video != null) {
-            MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
-                    handler, error -> {
-
-            });
-
-            initExoPlayer(sampleSource);
-        }
-    }
-
-    private void initExoPlayer(MediaSource sampleSource) {
-        if (exoPlayer == null) {
-            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
-            TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-            exoPlayer = ExoPlayerFactory.newSimpleInstance(mainActivity, trackSelector);
-        }
-        initMediaControls();
-        startVideoPlaying(sampleSource);
-    }
-
-    private void startVideoPlaying(MediaSource sampleSource) {
-        exoPlayer.prepare(sampleSource);
-        exoPlayer.setVideoSurfaceView(svPlayer);
-        exoPlayer.setPlayWhenReady(true);
-    }
-
-    private void initHLSPlayer(String dashUrl) {
-
-        MediaSource sampleSource = new HlsMediaSource(Uri.parse(dashUrl), dataSourceFactory, handler,
-                this);
-
-
-        initExoPlayer(sampleSource);
-    }
-
-    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        float displayRatio = (float) size.x / 220;
-        if (videoRatio > 1) {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            container.setLayoutParams(params);
-        } else if (videoRatio > displayRatio) {
-            container.getLayoutParams().width = Math.round((container.getMeasuredWidth() - 75) * videoRatio);
-            container.requestLayout();
-        } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
-            params.gravity = CENTER;
-            container.setLayoutParams(params);
-        }
-    }
-
-    //    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
-//        Display display = getActivity().getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        float displayRatio = (float) size.x / size.y;
-//        if (videoRatio > 1) {
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            container.setLayoutParams(params);
-//        } else if (videoRatio > displayRatio) {
-//            container.getLayoutParams().width = Math.round(size.x * videoRatio);
-//            container.requestLayout();
-//        } else {
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(size.x * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
-//            params.gravity = CENTER;
-//            container.setLayoutParams(params);
-//        }
-//    }
-    @Override
-    public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs) {
-        Toast.makeText(mainActivity, "on load started", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-        Toast.makeText(mainActivity, "on load completed", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-        Toast.makeText(mainActivity, "on load cancelled", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded,
-                            IOException error, boolean wasCanceled) {
-        Toast.makeText(mainActivity, "on load error", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onUpstreamDiscarded(int trackType, long mediaStartTimeMs, long mediaEndTimeMs) {
-
-    }
-
-    @Override
-    public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaTimeMs) {
-
     }
 
     private void getBundleData() {
@@ -449,6 +227,25 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtNoData = rootView.findViewById(R.id.txtNoData);
         nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
         nestedScrollView.smoothScrollTo(0, 0);
+        svPlayer = rootView.findViewById(R.id.sv_player);
+        btnPlay = rootView.findViewById(R.id.btnPlay);
+        timeCurrent = rootView.findViewById(R.id.time_current);
+        seekBar = rootView.findViewById(R.id.mediacontroller_progress);
+        playerEndTime = rootView.findViewById(R.id.player_end_time);
+        linMediaController = rootView.findViewById(R.id.lin_media_controller);
+        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
+
+        svPlayer.setOnClickListener(view -> toggleMediaControls());
+        btnPlay.setOnClickListener(view -> {
+            if (btnPlay.isSelected()) {
+                if (svPlayer.canPause()) svPlayer.pause();
+            } else {
+                svPlayer.start();
+//                svPlayer.resume();
+                setProgress();
+            }
+            btnPlay.setSelected(!btnPlay.isSelected());
+        });
 
         llRate.setOnClickListener(this);
         llDirection.setOnClickListener(this);
@@ -456,6 +253,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         llShare.setOnClickListener(this);
         imgback.setOnClickListener(this);
         imgFullScreen.setOnClickListener(this);
+        txtFollowStatus.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false);
@@ -506,17 +304,13 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
-//        txtLocation.setText(feedVideo.city);
         txtTags.setText(feedVideo.videoTags);
         RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_user_placeholder).error(R.drawable.ic_user_placeholder);
         Glide.with(this).load(feedVideo.userImage).apply(requestOptions).into(imgProfile);
         txtUserName.setText(feedVideo.firstName.concat(" ").concat(feedVideo.lastName));
         txtUserLoc.setText(feedVideo.city);
-        if (userId.equalsIgnoreCase(feedVideo.userId)) {
-            txtFollowStatus.setVisibility(View.GONE);
-        } else {
-            txtFollowStatus.setVisibility(View.VISIBLE);
-        }
+
+        txtFollowStatus.setVisibility(userId.equalsIgnoreCase(feedVideo.userId) ? View.GONE : View.VISIBLE);
 
         if (TextUtils.isEmpty(feedVideo.followStatus)) {
             txtFollowStatus.setText("Follow");
@@ -525,7 +319,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             txtFollowStatus.setText("Unfollow");
             txtFollowStatus.setSelected(true);
         }
-        txtFollowStatus.setOnClickListener(this);
 
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
@@ -535,70 +328,16 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             rvRelatedVideos.setVisibility(View.GONE);
             txtNoData.setVisibility(View.VISIBLE);
         }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        exoPlayer.release();
+        initVideoPlayer();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        exoPlayer.stop();
+        svPlayer.stopPlayback();
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-//        if (player != null) {
-//            if (loopingSource != null) player.prepare(loopingSource);
-//            player.setPlayWhenReady(true);
-//        }
-    }
-
-    @Override
-    public void onVideoEnabled(DecoderCounters counters) {
-
-    }
-
-    @Override
-    public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
-
-    }
-
-    @Override
-    public void onVideoInputFormatChanged(Format format) {
-
-    }
-
-    @Override
-    public void onDroppedFrames(int count, long elapsedMs) {
-
-    }
-
-    @Override
-    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-        Log.e("size", "changed");
-//        if (!mRatioAlreadyCalculated && mVideoWidthHeightRatio != (float) width / height) {
-//            mVideoWidthHeightRatio = ((float) width / height) * pixelRatio;
-//            mRatioAlreadyCalculated = true;
-//        }
-//        updateVideoRatio();
-//        med.setVideoWidthHeightRatio(height == 0 ? 1 : (pixelWidthHeightRatio * width) / height);
-    }
-
-    @Override
-    public void onRenderedFirstFrame(Surface surface) {
-        Log.e("afsgd", "onRenderedFirstFrame");
-    }
-
-    @Override
-    public void onVideoDisabled(DecoderCounters counters) {
-
     }
 
     @Override
@@ -615,7 +354,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         videosAdapter.addVideos(feedVideoList);
         if (feedVideo != null) {
             setVideoDetails();
-            initMp4Player();
+//            initMp4Player();
         }
     }
 
@@ -629,7 +368,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("Unfollow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser();
@@ -709,9 +448,9 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void shareLinkWithFriends() {
         try {
-            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(Intent.EXTRA_TEXT, feedVideo.video);
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedVideo.video);
             startActivity(Intent.createChooser(sharingIntent, "share video"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -852,56 +591,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void noInternetConnection(int requestCode) {
-
-    }
-
-    @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState == ExoPlayer.STATE_READY) applyAspectRatio(innerFrame, exoPlayer);
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity(int reason) {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
-
-    @Override
-    public void onSeekProcessed() {
 
     }
 

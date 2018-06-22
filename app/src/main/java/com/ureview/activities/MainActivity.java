@@ -68,13 +68,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private final int PERMISSION_FOR_STORAGE = 103;
     private Uri selectedVideoUri;
     public static ArrayList<CategoryModel> categoryListStatic = new ArrayList<>();
-//    private RelativeLayout relMainTopBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        checkPermissions();
+        initTopBar();
+        initBottomBar();
+        proceedWithFlow();
         fragmentManager = getSupportFragmentManager();
         try {
             if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, ""))) {
@@ -88,7 +90,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             e.printStackTrace();
         }
         LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
-        checkPermissions();
     }
 
     private void setUserDataForCrash() {
@@ -101,9 +102,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             RuntimePermissionUtils.requestForPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, Constants.LOCATION_PERMISSION);
         } else {
-            initBottomBar();
-            initTopBar();
-            proceedWithFlow();
             getCurrentLocation();
         }
     }
@@ -141,13 +139,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         if (mLastLocation != null && !isLocationAlreadyFetched) {
             setTextToAddress();
+            clearBackStackCompletely();
+//            proceedWithFlow();
         }
     }
 
     public void setTextToAddress() {
         if (mLastLocation != null) {
-            txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-            txtLeft.setSelected(true);
+            if (txtLeft != null)
+                txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
         }
     }
 
@@ -181,9 +181,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragmentWithoutAnimation(HomeFragment.newInstance(), R.id.mainContainer, false);
     }
 
-    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf,
-                           boolean showEdtView, boolean showEdt) {
-//        if (relMainTopBar != null) relMainTopBar.setVisibility(View.VISIBLE);
+    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {
         topBar.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         txtTitle.setText(title);
@@ -514,9 +512,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             clickOnGalary();
         } else {
             if (StaticUtils.isAllPermissionsGranted(grantResults)) {
-                initBottomBar();
-                initTopBar();
-                proceedWithFlow();
                 getCurrentLocation();
             } else {
                 StaticUtils.showToast(this, "Location permission is mandatory to access your location");

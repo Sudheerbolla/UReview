@@ -60,7 +60,9 @@ public class VideoRecorder extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_recorder);
+
         this.setFinishOnTouchOutside(false);
+
         mContext = this;
 
         cutVideo = findViewById(R.id.cropVideo);
@@ -75,40 +77,31 @@ public class VideoRecorder extends BaseActivity {
         progressDialog.setCancelable(false);
         rangeSeekBar.setEnabled(false);
         loadFFMpegBinary();
-        cutVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedVideoUri != null) {
-                    if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 59) {
-                        StaticUtils.showToast(VideoRecorder.this, "Video cannot be more than 60 seconds in duration");
-                    } else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
-                            && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
-//                        StaticUtils.showToast(VideoRecorder.this, "Original video is same as the trimmed video");
-                        Intent intent = new Intent();
-                        intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
-                        setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
-                        finish();
-                    } else {
-                        proceedWithVideoOperation();
-                        try {
-                            if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
-                                StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
-                            } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+        cutVideo.setOnClickListener(v -> {
+            if (selectedVideoUri != null) {
+                if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 59) {
+                    StaticUtils.showToast(VideoRecorder.this, "Video cannot be more than 60 seconds in duration");
+                } else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
+                        && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
+                    Intent intent = new Intent();
+                    intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
+                    setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
+                    finish();
+                } else {
+                    proceedWithVideoOperation();
+                    try {
+                        if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
+                            StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
+                        } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else
-                    Snackbar.make(mainlayout, "Please upload a video", 4000).show();
-            }
+                }
+            } else
+                Snackbar.make(mainlayout, "Please upload a video", 4000).show();
         });
 
-        findViewById(R.id.imgClose).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        findViewById(R.id.imgClose).setOnClickListener(view -> finish());
         Bundle bundle = getIntent().getExtras();
         if (bundle != null && bundle.containsKey("selectedVideoUri")) {
             selectedVideoUri = bundle.getParcelable("selectedVideoUri");
@@ -116,49 +109,45 @@ public class VideoRecorder extends BaseActivity {
             videoView.setVideoURI(selectedVideoUri);
             videoView.start();
 
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            videoView.setOnPreparedListener(mp -> {
+                duration = mp.getDuration() / 1000;
+                tvLeft.setText("00:00:01");
 
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    duration = mp.getDuration() / 1000;
-                    tvLeft.setText("00:00:01");
-
-                    tvRight.setText(getTime(mp.getDuration() / 1000));
-                    mp.setLooping(true);
-                    rangeSeekBar.setRangeValues(0, duration);
-                    rangeSeekBar.setSelectedMinValue(1);
-                    rangeSeekBar.setSelectedMaxValue(duration);
-                    rangeSeekBar.setEnabled(true);
-                    if (duration > 60) {
-                        cutVideo.setText("Trim Video and continue");
-                    } else {
-                        cutVideo.setText("Upload Video");
-                    }
-                    rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
-                        @Override
-                        public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                            videoView.seekTo((int) minValue * 1000);
-                            tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
-                            tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
-                            if (bar.getSelectedMaxValue().intValue() - bar.getSelectedMinValue().intValue() > 60) {
-                                cutVideo.setText("Trim Video and continue");
-                            } else {
-                                cutVideo.setText("Upload Video");
-                            }
-                        }
-                    });
-
-                    final Handler handler = new Handler();
-                    handler.postDelayed(r = new Runnable() {
-                        @Override
-                        public void run() {
-                            if (videoView.getCurrentPosition() >= rangeSeekBar.getSelectedMaxValue().intValue() * 1000)
-                                videoView.seekTo(rangeSeekBar.getSelectedMinValue().intValue() * 1000);
-                            handler.postDelayed(r, 1000);
-                        }
-                    }, 1000);
-
+                tvRight.setText(getTime(mp.getDuration() / 1000));
+                mp.setLooping(true);
+                rangeSeekBar.setRangeValues(0, duration);
+                rangeSeekBar.setSelectedMinValue(1);
+                rangeSeekBar.setSelectedMaxValue(duration);
+                rangeSeekBar.setEnabled(true);
+                if (duration > 60) {
+                    cutVideo.setText("Trim Video and continue");
+                } else {
+                    cutVideo.setText("Upload Video");
                 }
+                rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+                    @Override
+                    public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                        videoView.seekTo((int) minValue * 1000);
+                        tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
+                        tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
+                        if (bar.getSelectedMaxValue().intValue() - bar.getSelectedMinValue().intValue() > 60) {
+                            cutVideo.setText("Trim Video and continue");
+                        } else {
+                            cutVideo.setText("Upload Video");
+                        }
+                    }
+                });
+
+                final Handler handler = new Handler();
+                handler.postDelayed(r = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (videoView.getCurrentPosition() >= rangeSeekBar.getSelectedMaxValue().intValue() * 1000)
+                            videoView.seekTo(rangeSeekBar.getSelectedMinValue().intValue() * 1000);
+                        handler.postDelayed(r, 1000);
+                    }
+                }, 1000);
+
             });
         }
     }

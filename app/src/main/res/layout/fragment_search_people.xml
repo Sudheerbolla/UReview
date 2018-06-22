@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <com.ureview.utils.views.CustomRecyclerView
+        android:id="@+id/rvFollowers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/pad_7"
+        android:paddingRight="@dimen/pad_7"
+        android:visibility="gone"
+        app:is_not_parent="false"
+        app:pagination="true" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/pad_60"
+        android:paddingBottom="@dimen/pad_8"
+        android:paddingLeft="@dimen/pad_20"
+        android:paddingRight="@dimen/pad_20"
+        android:paddingTop="@dimen/pad_20"
+        android:text="Search for people"
+        android:textColor="@color/color_vvDarkGrey"
+        android:textSize="@dimen/txt_size_15sp"
+        android:visibility="visible" />
+
+</RelativeLayout>
+

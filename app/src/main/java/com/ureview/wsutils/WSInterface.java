@@ -70,8 +70,9 @@ public interface WSInterface {
     Call<JsonElement> readNotification(@Body RequestBody params);
 
     @GET("get-userdata-by-id")
-    Call<JsonElement> getUserData(@Query("user_id") String userId);
+    Call<JsonElement> getUserData(@Query("user_id") String userId, @Query("follower_id") String follower_id);
 
+    //user_id=3&login_user_id=4
     @GET("pages")
     Call<JsonElement> getStaticPagesContent(@Query("slug_name") String userId);
 

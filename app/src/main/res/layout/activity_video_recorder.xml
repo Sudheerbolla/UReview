@@ -17,9 +17,11 @@
 
     <VideoView
         android:id="@+id/VideoView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:layout_below="@id/imgClose" />
+        android:layout_below="@id/imgClose"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center" />
 
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekBar"

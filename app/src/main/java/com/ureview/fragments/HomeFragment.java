@@ -144,8 +144,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         txtSeeAllVideos.setOnClickListener(this);
         txtSeeAllPopularSearch.setOnClickListener(this);
 
-        lat = String.valueOf(MainActivity.mLastLocation.getLatitude());
-        lng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        if (MainActivity.mLastLocation != null) {
+            lat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+            lng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        }
 
         requestForCategoryList();
 
@@ -275,18 +277,15 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             case R.id.imgProfile:
             case R.id.txtName:
             case R.id.txtLoc:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId,
-                        feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)),
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId, feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)),
                         true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                //        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
-                        + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;

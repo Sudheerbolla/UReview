@@ -12,11 +12,19 @@
         android:layout_height="220dp"
         android:background="@color/colorBlack">
 
-        <VideoView
-            android:id="@+id/sv_player"
+        <FrameLayout
+            android:id="@+id/innerFrame"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center">
+
+            <SurfaceView
+                android:id="@+id/sv_player"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/imgback"
@@ -189,9 +197,8 @@
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="@dimen/pad_29"
-                                android:layout_height="@dimen/pad_29"
-                                android:padding="@dimen/pad_3"
+                                android:layout_width="@dimen/pad_27"
+                                android:layout_height="@dimen/pad_27"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/ic_rating" />
 
@@ -219,13 +226,12 @@
                         <LinearLayout
                             android:layout_width="@dimen/pad_35"
                             android:layout_height="@dimen/pad_35"
-                            android:background="@drawable/blue_circle"
+                            android:background="@drawable/app_medium_circle"
                             android:gravity="center">
 
                             <ImageView
-                                android:layout_width="@dimen/pad_28"
-                                android:layout_height="@dimen/pad_28"
-                                android:padding="@dimen/pad_3"
+                                android:layout_width="@dimen/pad_27"
+                                android:layout_height="@dimen/pad_27"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/ic_share_new" />
 
@@ -269,7 +275,6 @@
                             android:text="Direction"
                             android:textColor="@color/color_vvvDarkGrey"
                             android:textSize="@dimen/txt_size_10sp" />
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -480,9 +485,6 @@
                 android:textColor="@color/app_text_color"
                 android:textSize="@dimen/txt_size_15sp"
                 android:visibility="gone" />
-
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
-
 </LinearLayout>
