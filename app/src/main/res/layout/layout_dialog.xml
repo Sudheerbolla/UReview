@@ -50,6 +50,17 @@
             android:layout_marginTop="@dimen/pad_10"
             android:visibility="gone" />
 
+        <com.ureview.utils.views.ColorRatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:rating="3.5"
+            android:visibility="gone"
+            app:empty_color="#909090"
+            app:layout_constraintTop_toTopOf="parent"
+            app:progress_color="#FFCA73" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
