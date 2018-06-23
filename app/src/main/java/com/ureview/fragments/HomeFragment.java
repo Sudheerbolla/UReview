@@ -432,7 +432,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parseNearByVideoList(JsonElement response) {
         loadedDataCount++;
         try {
-            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             JSONObject jsonObject = new JSONObject(response.toString());
             nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
@@ -478,7 +478,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             topRatedVideoList.clear();
-            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
@@ -520,7 +520,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parsePopularVideoList(JsonElement response) {
         loadedDataCount++;
         try {
-            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             JSONObject jsonObject = new JSONObject(response.toString());
             popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
