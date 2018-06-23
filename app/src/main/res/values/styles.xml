@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="SeekBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_vvvDarkGrey</item>
+        <item name="colorPrimaryDark">@color/color_vvvDarkGrey</item>
+        <item name="colorAccent">@color/colorDarkGrey</item>
+    </style>
+
 
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowDisablePreview">true</item>

@@ -605,6 +605,7 @@ public class StaticUtils {
         SCREEN_WIDTH = size.x;
         SCREEN_HEIGHT = size.y;
     }
+
 }
 
 

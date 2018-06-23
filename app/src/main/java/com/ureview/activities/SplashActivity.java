@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -20,6 +21,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.fragments.IntroFragment;
@@ -35,7 +43,8 @@ import com.ureview.utils.views.CustomTextView;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SplashActivity extends BaseActivity implements LocationListener, View.OnClickListener {
+public class SplashActivity extends BaseActivity implements LocationListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     private RelativeLayout relTopBar;
     public CustomTextView txtTitle, txtRight;
     private ImageView imgBack;
@@ -43,12 +52,20 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     public LocationManager mLocationManager;
     private int counter = 0;
 
+    private static final long INTERVAL = 1000 * 10;
+    private static final long FASTEST_INTERVAL = 1000 * 5;
+    LocationRequest mLocationRequest;
+    GoogleApiClient mGoogleApiClient;
+    private FusedLocationProviderClient mFusedLocationClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         changeStatusBarColorToAppColorLight();
         setContentView(R.layout.activity_splash);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         findViewById(R.id.relSplash).setVisibility(View.VISIBLE);
         StaticUtils.getHeightAndWidth(this);
         initComps();
@@ -61,6 +78,7 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     }
 
     private void initComps() {
+//        mLocationManager.
         relTopBar = findViewById(R.id.relTopBar);
         txtTitle = findViewById(R.id.txtTitle);
         txtRight = findViewById(R.id.txtRight);
@@ -201,15 +219,50 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
             }
         }
         if (mLastLocation != null) {
-            new Handler().postDelayed(this::proceedWithFlow, 1500);
+            new Handler().postDelayed(this::proceedWithFlow, 400);
         } else {
             counter += 1;
-            if (counter < 4) getCurrentLocation();
-            else {
-                counter = 0;
+            if (counter < 3) getCurrentLocation();
+            else if (counter < 5) {
+                getLocationFromGoogle();
+            } else {
                 StaticUtils.showToast(this, "Error Fetching Location.Please retry");
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocationFromGoogle() {
+        createLocationRequest();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        @SuppressLint("MissingPermission") PendingResult<Status> pendingResult =
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
+                        (com.google.android.gms.location.LocationListener) this);
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    if (location != null) {
+                        mLastLocation = location;
+                    }
+                });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        if (mGoogleApiClient.isConnected()) {
+//            startLocationUpdates();
+//        }
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     @Override
@@ -220,10 +273,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-//        if (mLastLocation != null) {
-//            clearBackStackCompletely();
-//            proceedWithFlow();
-//        }
     }
 
     @Override
@@ -245,6 +294,21 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     protected void onStop() {
         super.onStop();
         if (mLocationManager != null) mLocationManager.removeUpdates(this);
+        if (mGoogleApiClient != null) mGoogleApiClient.disconnect();
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+//        mCurrentLocation = location;
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

@@ -57,7 +57,7 @@ import retrofit2.Call;
 public class UploadVideoFragment extends BaseFragment implements IParserListener {
     private View rootView;
     private CustomTextView txtCompleteVideo, txtLocation, tvLeft, tvRight, txtCategory;
-    private ImageView imgPlay, imgPlayPause;
+    private ImageView imgPlay, imgPlayPause, imgHashTag;
     private CustomEditText edtVideoTitle, edtTags;
     private MainActivity mainActivity;
     private Uri selectedVideoUri;
@@ -178,6 +178,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         edtTags = rootView.findViewById(R.id.edtTags);
         imgPlay = rootView.findViewById(R.id.imgPlay);
         imgPlayPause = rootView.findViewById(R.id.btnPlay);
+        imgHashTag = rootView.findViewById(R.id.imgHashTag);
         imgPlay.setVisibility(View.GONE);
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,6 +234,17 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                         setSelectedCategoryid(category);
                     }
                 });
+            }
+        });
+        imgHashTag.setOnClickListener(view -> {
+            String text = edtTags.getText().toString().trim();
+            if (!text.endsWith("#")) {
+//                edtTags.setText(text + "#");
+//                int start = Math.max(myEditText.getSelectionStart(), 0);
+//                int end = Math.max(myEditText.getSelectionEnd(), 0);
+//                myEditText.getText().replace(Math.min(start, end), Math.max(start, end),
+//                        textToInsert, 0, textToInsert.length());
+                edtTags.getText().insert(edtTags.getSelectionStart(), "#");
             }
         });
         progressDialog = new ProgressDialog(mainActivity);
@@ -358,13 +370,13 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             if (thumbnail != null) {
                 videoThumb = StaticUtils.imageBytes(thumbnail);
             } else {
-                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
                 videoThumb = StaticUtils.imageBytes(bMap);
             }
         } catch (Exception e) {
             e.printStackTrace();
             try {
-                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
                 videoThumb = StaticUtils.imageBytes(bMap);
             } catch (Exception e1) {
                 e1.printStackTrace();

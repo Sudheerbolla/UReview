@@ -195,9 +195,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
 
         handler = new Handler();
-        //Make sure you update Seekbar on UI thread
         handler.post(new Runnable() {
-
             @Override
             public void run() {
                 if (exoPlayer != null && btnPlay.isSelected()) {
@@ -290,25 +288,29 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        int videoWidth = exoPlayer.getVideoFormat().width;
+        int videoHeight = exoPlayer.getVideoFormat().height;
+        float videoProportion;
+        if (videoWidth > videoHeight) {
+            videoProportion = (float) videoHeight / (float) videoWidth;
+        } else {
+            videoProportion = (float) videoWidth / (float) videoHeight;
+        }
+
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        float displayRatio = (float) size.x / size.y;
-//        float videoRatio = (float) exoPlayer.getVideoFormat().width / size.y;
-        int height = 220;
-        int width = 0;
-//        size.y/220
-        float videoRatio = (float) exoPlayer.getVideoFormat().width / 220;
-        if (videoRatio > 1) {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            container.setLayoutParams(params);
-        } else if (videoRatio > displayRatio) {
-            container.getLayoutParams().width = Math.round(container.getMeasuredWidth() * videoRatio);
+
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        if (videoProportion > screenProportion) {
+            container.getLayoutParams().width = Math.round(videoWidth / screenProportion);
             container.requestLayout();
         } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio),
-                    ViewGroup.LayoutParams.MATCH_PARENT);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.width = (int) (videoProportion * (float) screenWidth);
             params.gravity = CENTER;
             container.setLayoutParams(params);
         }
@@ -631,8 +633,10 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void showDirectionMaps() {
-        String url = "http://maps.google.com/maps?saddr=" + feedVideo.userLatitude + "," + feedVideo.userLongitude
-                + "&daddr=" + feedVideo.videoLatitude + "," + feedVideo.videoLongitude;
+        String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," + feedVideo.videoLongitude;
+//        String url = "http://maps.google.com/maps?saddr=" + feedVideo.userLatitude + "," + feedVideo.userLongitude
+//                + "&daddr=" + feedVideo.videoLatitude + "," + feedVideo.videoLongitude;
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(mapIntent);
     }
