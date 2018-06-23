@@ -133,7 +133,7 @@ public class VideoRecorderBc extends BaseActivity {
 
                     rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
                         @Override
-                        public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                        public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Number minValue, Number maxValue) {
                             videoView.seekTo((int) minValue * 1000);
                             tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
                             tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
@@ -254,14 +254,14 @@ public class VideoRecorderBc extends BaseActivity {
 
                         rangeSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
                             @Override
-                            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Number minValue, Number maxValue) {
                                 videoView.seekTo((int) minValue * 1000);
 
                                 tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
 
                                 tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
-
                             }
+
                         });
 
                         final Handler handler = new Handler();

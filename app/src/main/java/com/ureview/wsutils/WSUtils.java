@@ -9,8 +9,11 @@ public class WSUtils {
     //    public static final String BASE_URL = "http://127.0.0.1:8000/";
 
     //    public static final String BASE_URL = "http://18.216.101.112";
-    public static final String BASE_URL = "http://18.220.82.61";
-//    public static final String BASE_URL = "http://vrs.amelglobalitsolutions.com";
+    public static final String BASE_DEV_URL = "http://ur-review.com/dev/";
+    public static final String BASE_PROD_URL = "http://ur-review.com/videos/";
+    public static final String BASE_URL = "http://ur-review.com/dev/";
+
+    //    public static final String BASE_URL = "http://vrs.amelglobalitsolutions.com";
 
     public static final int REQ_FOR_LOGIN = 100;
     public static final int REQ_FOR_USER_REGISTRATION = 101;

@@ -20,6 +20,7 @@ import com.ureview.adapters.PeopleAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.PeopleModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
@@ -68,7 +69,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_followers, container, false);
+        rootView = inflater.inflate(R.layout.fragment_search_people, container, false);
 
         rvPeople = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
@@ -90,8 +91,10 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         startFrom = 0;
         hasLoadedAllItems = false;
         if (TextUtils.isEmpty(searchUser)) {
-            tempPeopleArrList.clear();
+            if (tempPeopleArrList != null) tempPeopleArrList.clear();
             if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
+            if (txtNoData != null) txtNoData.setVisibility(View.VISIBLE);
+            if (rvPeople != null) rvPeople.setVisibility(View.GONE);
         } else {
             requestForSearchPeopleListWS();
         }
@@ -113,6 +116,12 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
     }
 
+    private void requestForUnFollowUser(String followId) {
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
+    }
+
+
     private RequestBody getRequestBodyObject(String followId) {
         JSONObject jsonObjectReq = new JSONObject();
         try {
@@ -132,6 +141,9 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                 break;
             case WSUtils.REQ_FOR_FOLLOW_USER:
                 parseFollowUserResponse((JsonObject) response);
+                break;
+            case WSUtils.REQ_FOR_UN_FOLLOW_USER:
+                parseUnFollowUser((JsonObject) response);
                 break;
             default:
                 break;
@@ -197,6 +209,21 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         }
     }
 
+    private void parseUnFollowUser(JsonObject response) {
+        try {
+            if (response.has("status")) {
+                if (response.get("status").getAsString().equalsIgnoreCase("success")) {
+                    peopleArrList.get(selectedPosition).followStatus = "";
+                    peopleAdapter.notifyDataSetChanged();
+                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void errorResponse(int requestCode, String error) {
 
@@ -212,7 +239,13 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+//                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+//                    requestForFollowUser(peopleArrList.get(position).userId);
+//                }
+                String followStatus = ((CustomTextView) view).getText().toString().trim();
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
+                    askConfirmationAndProceed(peopleArrList.get(position));
+                } else {
                     requestForFollowUser(peopleArrList.get(position).userId);
                 }
                 break;
@@ -224,6 +257,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
             default:
                 break;
         }
+    }
+
+    private void askConfirmationAndProceed(PeopleModel peopleModel) {
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
+                view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override

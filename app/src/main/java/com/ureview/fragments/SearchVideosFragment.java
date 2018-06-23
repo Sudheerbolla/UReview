@@ -94,6 +94,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         if (TextUtils.isEmpty(searchVideo)) {
             tempVideosArrList.clear();
             if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
+            if (txtNoData != null) txtNoData.setVisibility(View.VISIBLE);
+            if (rvSearchVideo != null) rvSearchVideo.setVisibility(View.GONE);
         } else {
             requestForSearchVideos();
         }
@@ -104,8 +106,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         try {
             jsonObjectReq.put("user_id", userId);
             jsonObjectReq.put("video_name", searchText);
-            jsonObjectReq.put("latitude", "17.325400");
-            jsonObjectReq.put("longitude", "78.362000");
+            jsonObjectReq.put("latitude", String.valueOf(MainActivity.mLastLocation.getLatitude()));
+            jsonObjectReq.put("longitude", String.valueOf(MainActivity.mLastLocation.getLongitude()));
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
             jsonObjectReq.put("count", String.valueOf(count));
             jsonObjectReq.put("current_latitude", currLat);
@@ -264,7 +266,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "follow";
+                        videosArrList.get(follPos).followStatus = "";
                         searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
@@ -281,7 +283,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "unfollow";
+                        videosArrList.get(follPos).followStatus = "follow";
                         searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {

@@ -13,14 +13,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -69,7 +67,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
         mainActivity = (MainActivity) getActivity();
         userStatsModelArrayList = new ArrayList<>();
         videoViewsModelArrayList = new ArrayList<>();
-//        userId = "1";
+
         if (getArguments() != null) userId = getArguments().getString("userId");
         else
             userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
@@ -117,7 +115,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
                 numMap.put(i, userStatsModelArrayList.get(i).month);
                 entries.add(new Entry(i, Float.parseFloat(userStatsModelArrayList.get(i).count)));
             }
-            LineDataSet dataSet = new LineDataSet(entries, "Video View Stats");
+            LineDataSet dataSet = new LineDataSet(entries, /*Video View Stats*/"");
             dataSet.setColor(getResources().getColor(R.color.app_color_medium));
             dataSet.setCircleColor(getResources().getColor(R.color.app_color_dark));
             dataSet.setCircleColorHole(getResources().getColor(R.color.app_color_dark));
@@ -129,13 +127,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
             lineData.setValueTextColor(getResources().getColor(R.color.app_color_dark));
             lineData.setValueTextSize(13);
             XAxis xAxis = chart.getXAxis();
-            xAxis.setValueFormatter(new IAxisValueFormatter() {
-
-                @Override
-                public String getFormattedValue(float value, AxisBase axis) {
-                    return numMap.get((int) value);
-                }
-            });
+            xAxis.setValueFormatter((value, axis) -> numMap.get((int) value));
 
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setTextSize(13f);
@@ -153,7 +145,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
             leftAxis.setDrawGridLines(false);
 
             Description description = new Description();
-            description.setText("Video View Statistics");
+            description.setText("");
 
             chart.setDescription(description);
             chart.setData(lineData);

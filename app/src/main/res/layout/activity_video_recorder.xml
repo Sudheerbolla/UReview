@@ -17,25 +17,27 @@
 
     <VideoView
         android:id="@+id/VideoView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="200dp"
-        android:layout_below="@id/imgClose" />
+        android:layout_below="@id/imgClose"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center" />
 
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/VideoView"
+        android:layout_below="@+id/VideoView"
         android:layout_marginEnd="@dimen/pad_5"
         android:layout_marginStart="@dimen/pad_5"
         android:layout_marginTop="@dimen/pad_5"
+        android:background="@color/colorDarkGrey"
         app:showLabels="false" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/tvLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/rangeSeekBar"
         android:layout_alignStart="@+id/rangeSeekBar"
         android:layout_below="@+id/rangeSeekBar"
         android:textColor="#000000" />
@@ -45,7 +47,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/rangeSeekBar"
-        android:layout_alignRight="@+id/rangeSeekBar"
         android:layout_below="@+id/rangeSeekBar"
         android:textColor="#000000" />
 

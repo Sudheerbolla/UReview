@@ -55,15 +55,12 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private View rootView;
     private MainActivity mainActivity;
-    private CustomTextView txtUpdate, /*txtCountryCode,*/
-            txtDob;
+    private CustomTextView txtUpdate, txtDob;
     private CountriesModel currentCountriesModel;
     private DatePickerDialog mDatePickerDialog;
     private Calendar myCalendar = Calendar.getInstance();
-    private String firstName, lastName, email, userId, dob, /*mobile,*/
-            address, about, countryCode, imagePath;
-    private CustomEditText edtFirstName, edtLastName, edtEmail, /*edtMobileNumber,*/
-            edtLocation, edtAbout;
+    private String firstName, lastName, email, userId, dob, address, about, countryCode, imagePath;
+    private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation, edtAbout;
     public static final int DIALOG_FRAGMENT = 1;
     private UserInfoModel userInfoModel;
     private CircleImageView imgProfile;
@@ -97,7 +94,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         lastName = userInfoModel.last_name;
         email = userInfoModel.email;
         dob = userInfoModel.date_of_birth;
-//        mobile = userInfoModel.mobile;
         address = userInfoModel.city;
         about = userInfoModel.user_description;
         countryCode = userInfoModel.country_code;
@@ -114,7 +110,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void initComponents() {
         txtUpdate = rootView.findViewById(R.id.txtUpdate);
-//        txtCountryCode = rootView.findViewById(R.id.txtCountryCode);
         txtDob = rootView.findViewById(R.id.txtDob);
 
         progressBar = rootView.findViewById(R.id.progressBar);
@@ -123,12 +118,10 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
         edtEmail = rootView.findViewById(R.id.edtEmail);
-//        edtMobileNumber = rootView.findViewById(R.id.edtMobileNumber);
         edtAbout = rootView.findViewById(R.id.edtAbout);
         imgProfile = rootView.findViewById(R.id.imgProfile);
         relImage = rootView.findViewById(R.id.relImage);
 
-//        txtCountryCode.setOnClickListener(this);
         relImage.setOnClickListener(this);
         txtDob.setOnClickListener(this);
         txtUpdate.setOnClickListener(this);
@@ -150,14 +143,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         if (!TextUtils.isEmpty(dob)) {
             txtDob.setText(dob);
         }
-//        if (!TextUtils.isEmpty(mobile)) {
-//            edtMobileNumber.setText(mobile);
-//            edtMobileNumber.setEnabled(false);
-//        }
-//        if (!TextUtils.isEmpty(countryCode)) {
-//            txtCountryCode.setText(countryCode.contains("+") ? countryCode : "+" + countryCode);
-//            txtCountryCode.setEnabled(false);
-//        }
         if (!TextUtils.isEmpty(address)) {
             edtLocation.setText(address);
         }
@@ -223,33 +208,40 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 showDOBDialog();
                 break;
             case R.id.relImage:
-                DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Camera", "Gallery", "View Picture", "Remove Picture", "Cancel"}, relImage, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch ((String) view.getTag()) {
-                            case "Camera":
-                                checkAndRequestPermissionCamera();
-                                break;
-                            case "Gallery":
-                                checkAndRequestPermissionGallery();
-                                break;
-                            case "View Picture":
-                                if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
-                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
-                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
-                                    return;
-                                }
-                                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
-                                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
-                                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
-                                }
-                                break;
-                            case "Remove Picture":
-                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
+                DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+                        "Upload From Camera",
+                        "Upload From Gallery",
+                        "View Photo",
+                        "Remove Photo",
+                        "Cancel"
+                }, relImage, view1 -> {
+                    switch ((String) view1.getTag()) {
+                        case "Upload From Camera":
+                            checkAndRequestPermissionCamera();
+                            break;
+                        case "Upload From Gallery":
+                            checkAndRequestPermissionGallery();
+                            break;
+                        case "View Photo":
+                            if (profilePicBitmap != null && !TextUtils.isEmpty(profileImage)) {
+                                ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profileImage);
+                                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                                return;
+                            }
+                            if (!TextUtils.isEmpty(userInfoModel.user_image)) {
+                                ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                            }
+                            break;
+                        case "Remove Photo":
+//                            Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
 //                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
-                                setImageAttachment(uri);
+//                            setImageAttachment(uri);
+                            profileImage = "null";
+                            profilePicBitmap = null;
+                            imgProfile.setImageResource(R.drawable.ic_user_placeholder);
 //                                try {
 //                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
 //                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
@@ -258,12 +250,11 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 //                                    e.printStackTrace();
 //                                }
 //                                imgProfile.setImageResource(R.drawable.ic_profile);
-                                break;
-                            case "Cancel":
-                                break;
-                            default:
-                                break;
-                        }
+                            break;
+                        case "Cancel":
+                            break;
+                        default:
+                            break;
                     }
                 });
                 break;
@@ -413,7 +404,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
             case DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     currentCountriesModel = data.getParcelableExtra("countriesModel");
-//                    txtCountryCode.setText("+" + currentCountriesModel.countryCode);
                 }
                 break;
             case StaticUtils.PHONE_GALLERY_CLICK:
@@ -427,7 +417,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 //                                cursor.moveToFirst();
 //                                try {
 //                                    imagePath = cursor.getString(0);
-//                                    profilePicBitmap = StaticUtils.getResizeImage(mainActivity, StaticUtils.PROFILE_IMAGE_SIZE, StaticUtils.PROFILE_IMAGE_SIZE, ScalingUtilities.ScalingLogic.CROP, true, imagePath, _uri);
+//                                    profilePicBitmap = StaticUtils.getResizeImage(mainActivity, StaticUtils.PROFILE_IMAGE_SIZE,
+//                                    StaticUtils.PROFILE_IMAGE_SIZE, ScalingUtilities.ScalingLogic.CROP, true, imagePath, _uri);
 //                                    imgProfile.setImageBitmap(profilePicBitmap);
 //                                } catch (Exception e) {
 //                                    e.getStackTrace();

@@ -9,8 +9,8 @@
 
     <com.ureview.utils.views.CircleImageView
         android:id="@+id/imgProfile"
-        android:layout_width="@dimen/pad_50"
-        android:layout_height="@dimen/pad_50"
+        android:layout_width="@dimen/pad_45"
+        android:layout_height="@dimen/pad_45"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_user_placeholder" />
 
@@ -44,9 +44,8 @@
                 android:id="@+id/txtViewNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="59"
                 android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_12sp" />
+                android:textSize="@dimen/txt_size_11sp" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtViews"
@@ -54,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="Views"
                 android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_12sp" />
+                android:textSize="@dimen/txt_size_11sp" />
         </LinearLayout>
 
         <com.ureview.utils.views.CustomTextView

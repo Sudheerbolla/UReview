@@ -18,7 +18,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -78,7 +77,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private int loginType;
-//    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private TwitterLoginButton mLoginButton;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -178,8 +177,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             splashActivity.setTopBar(LoginFragment.class.getSimpleName());
         }
     }
-
-    TwitterLoginButton mLoginButton;
 
     @Nullable
     @Override
@@ -299,27 +296,28 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void setFacebookData() {
-        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try {
-                            email = response.getJSONObject().getString("email");
-                            firstName = response.getJSONObject().getString("first_name");
-                            lastName = response.getJSONObject().getString("last_name");
-                            id = response.getJSONObject().getString("id");
-                            Profile profile = Profile.getCurrentProfile();
-                            if (Profile.getCurrentProfile() != null) {
-                                Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
-                                id = profile.getId();
-                                if (!TextUtils.isEmpty(id))
-                                    requestForCheckUserWS(id, Constants.FACEBOOK);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+        GraphRequest request = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), (object, response) -> {
+            try {
+                JSONObject res = response.getJSONObject();
+                if (res != null) {
+                    if (res.has("email")) email = res.getString("email");
+                    if (res.has("email"))
+                        firstName = response.getJSONObject().getString("first_name");
+                    if (res.has("email"))
+                        lastName = response.getJSONObject().getString("last_name");
+                    if (res.has("email")) id = response.getJSONObject().getString("id");
+                }
+                Profile profile = Profile.getCurrentProfile();
+                if (Profile.getCurrentProfile() != null) {
+                    Log.i("Login", "ProfilePic" + Profile.getCurrentProfile().getProfilePictureUri(200, 200));
+                    id = profile.getId();
+                    if (!TextUtils.isEmpty(id))
+                        requestForCheckUserWS(id, Constants.FACEBOOK);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        });
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,email,first_name,last_name");
         request.setParameters(parameters);
@@ -405,4 +403,3 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
 }
-//twitterkit-MXIAuVVgwoijQj4ZJtY9RSj4Y://

@@ -1,6 +1,7 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceView;
@@ -24,18 +27,24 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
@@ -73,10 +82,12 @@ import java.util.Locale;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
-        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener {
+import static android.view.Gravity.CENTER;
 
-    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback;
+public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
+        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
+
+    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
             txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
     private LinearLayout llRate, llShare, llDirection, llReport;
@@ -94,13 +105,15 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     private FrameLayout playerFrameLayout;
 
     private SimpleExoPlayer exoPlayer;
-    private boolean bAutoplay = true, bIsPlaying = false, bControlsActive = true;
+    private boolean bAutoplay = true;
 
     private Handler handler;
     private StringBuilder mFormatBuilder;
     private Formatter mFormatter;
     private DataSource.Factory dataSourceFactory;
     private String userId;
+
+    private FrameLayout innerFrame;
 
     public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position) {
         VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
@@ -122,43 +135,31 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.activity_video_detail, container, false);
+        rootView = inflater.inflate(R.layout.fragment_video_detail_old, container, false);
         getBundleData();
         initComponents();
-//        initVideoPlayer();
         initVideoPlayer2();
         return rootView;
     }
 
     private void initVideoPlayer2() {
-        svPlayer = rootView.findViewById(R.id.sv_player);
-        btnPlay = rootView.findViewById(R.id.btnPlay);
-        timeCurrent = rootView.findViewById(R.id.time_current);
-        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
-        playerEndTime = rootView.findViewById(R.id.player_end_time);
-        linMediaController = rootView.findViewById(R.id.lin_media_controller);
-        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
-
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         handler = new Handler();
         initDataSource();
         initMp4Player();
-
+        exoPlayer.addListener(this);
         if (bAutoplay) {
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(true);
                 btnPlay.setSelected(true);
-                bIsPlaying = true;
                 setProgress();
             }
         }
     }
 
     private void initDataSource() {
-        dataSourceFactory = new DefaultDataSourceFactory(mainActivity,
-                Util.getUserAgent(mainActivity, "yourApplicationName"),
-                new DefaultBandwidthMeter());
+        dataSourceFactory = new DefaultDataSourceFactory(mainActivity, Util.getUserAgent(mainActivity, mainActivity.getPackageName()), new DefaultBandwidthMeter());
     }
 
     private void initMediaControls() {
@@ -168,12 +169,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void initSurfaceView() {
-        svPlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleMediaControls();
-            }
-        });
+        svPlayer.setOnClickListener(view -> toggleMediaControls());
     }
 
     private String stringForTime(int timeMs) {
@@ -204,15 +200,12 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
             @Override
             public void run() {
-                if (exoPlayer != null && bIsPlaying) {
-                    btnPlay.setSelected(bIsPlaying);
-                    mediacontrollerProgress.setMax(0);
+                if (exoPlayer != null && btnPlay.isSelected()) {
                     mediacontrollerProgress.setMax((int) exoPlayer.getDuration() / 1000);
                     int mCurrentPosition = (int) exoPlayer.getCurrentPosition() / 1000;
                     mediacontrollerProgress.setProgress(mCurrentPosition);
                     timeCurrent.setText(stringForTime((int) exoPlayer.getCurrentPosition()));
                     playerEndTime.setText(stringForTime((int) exoPlayer.getDuration()));
-
                     handler.postDelayed(this, 1000);
                 }
             }
@@ -250,67 +243,40 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void toggleMediaControls() {
-
-        if (bControlsActive) {
-            hideMediaController();
-            bControlsActive = false;
-        } else {
-            showController();
-            bControlsActive = true;
+        if (linMediaController.getVisibility() == View.VISIBLE)
+            linMediaController.setVisibility(View.GONE);
+        else {
+            linMediaController.setVisibility(View.VISIBLE);
             setProgress();
         }
     }
 
-    private void showController() {
-        linMediaController.setVisibility(View.VISIBLE);
-        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    private void hideMediaController() {
-        linMediaController.setVisibility(View.GONE);
-        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
     private void initPlayButton() {
         btnPlay.requestFocus();
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bIsPlaying) {
-                    exoPlayer.setPlayWhenReady(false);
-                    bIsPlaying = false;
-                } else {
-                    exoPlayer.setPlayWhenReady(true);
-                    bIsPlaying = true;
-                    setProgress();
-                }
-                btnPlay.setSelected(bIsPlaying);
+        btnPlay.setOnClickListener(view -> {
+            if (btnPlay.isSelected()) {
+                exoPlayer.setPlayWhenReady(false);
+            } else {
+                exoPlayer.setPlayWhenReady(true);
+                setProgress();
             }
+            btnPlay.setSelected(!btnPlay.isSelected());
         });
     }
 
     private void initMp4Player() {
         if (feedVideo.video != null) {
-            MediaSource sampleSource =
-                    new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(),
-                            handler, new ExtractorMediaSource.EventListener() {
-                        @Override
-                        public void onLoadError(IOException error) {
+            MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(), handler, error -> {
 
-                        }
-                    });
-
+            });
             initExoPlayer(sampleSource);
         }
     }
 
     private void initExoPlayer(MediaSource sampleSource) {
         if (exoPlayer == null) {
-            TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
+            TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
             TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-
-            // 2. Create the player
             exoPlayer = ExoPlayerFactory.newSimpleInstance(mainActivity, trackSelector);
         }
         initMediaControls();
@@ -319,46 +285,70 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void startVideoPlaying(MediaSource sampleSource) {
         exoPlayer.prepare(sampleSource);
-
         exoPlayer.setVideoSurfaceView(svPlayer);
-
         exoPlayer.setPlayWhenReady(true);
     }
 
-    private void initHLSPlayer(String dashUrl) {
-
-        MediaSource sampleSource = new HlsMediaSource(Uri.parse(dashUrl), dataSourceFactory, handler,
-                this);
-
-
-        initExoPlayer(sampleSource);
+    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
+//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        float displayRatio = (float) size.x / size.y;
+//        float videoRatio = (float) exoPlayer.getVideoFormat().width / size.y;
+        int height = 220;
+        int width = 0;
+//        size.y/220
+        float videoRatio = (float) exoPlayer.getVideoFormat().width / 220;
+        if (videoRatio > 1) {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.setLayoutParams(params);
+        } else if (videoRatio > displayRatio) {
+            container.getLayoutParams().width = Math.round(container.getMeasuredWidth() * videoRatio);
+            container.requestLayout();
+        } else {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio),
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            params.gravity = CENTER;
+            container.setLayoutParams(params);
+        }
     }
 
+    //    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
+//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
+//        Display display = getActivity().getWindowManager().getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        float displayRatio = (float) size.x / size.y;
+//        if (videoRatio > 1) {
+//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//            container.setLayoutParams(params);
+//        } else if (videoRatio > displayRatio) {
+//            container.getLayoutParams().width = Math.round(size.x * videoRatio);
+//            container.requestLayout();
+//        } else {
+//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(size.x * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
+//            params.gravity = CENTER;
+//            container.setLayoutParams(params);
+//        }
+//    }
     @Override
-    public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
-                              int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
-                              long mediaEndTimeMs, long elapsedRealtimeMs) {
+    public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs) {
         Toast.makeText(mainActivity, "on load started", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
-                                int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
-                                long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
+    public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
         Toast.makeText(mainActivity, "on load completed", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
-                               int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
-                               long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
+    public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
         Toast.makeText(mainActivity, "on load cancelled", Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat,
-                            int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs,
-                            long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded,
+    public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded,
                             IOException error, boolean wasCanceled) {
         Toast.makeText(mainActivity, "on load error", Toast.LENGTH_LONG).show();
     }
@@ -369,8 +359,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     @Override
-    public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason,
-                                          Object trackSelectionData, long mediaTimeMs) {
+    public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaTimeMs) {
 
     }
 
@@ -392,6 +381,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         imgback = rootView.findViewById(R.id.imgback);
+        imgFullScreen = rootView.findViewById(R.id.imgFullScreen);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         txtViewCount = rootView.findViewById(R.id.txtViewCount);
         txtDistance = rootView.findViewById(R.id.txtDistance);
@@ -414,6 +404,15 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         rvRelatedVideos = rootView.findViewById(R.id.rvRelatedVideos);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
+        svPlayer = rootView.findViewById(R.id.sv_player);
+        btnPlay = rootView.findViewById(R.id.btnPlay);
+        timeCurrent = rootView.findViewById(R.id.time_current);
+        mediacontrollerProgress = rootView.findViewById(R.id.mediacontroller_progress);
+        playerEndTime = rootView.findViewById(R.id.player_end_time);
+        linMediaController = rootView.findViewById(R.id.lin_media_controller);
+        playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
+        innerFrame = rootView.findViewById(R.id.innerFrame);
+
         nestedScrollView.smoothScrollTo(0, 0);
 
         llRate.setOnClickListener(this);
@@ -421,6 +420,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         llReport.setOnClickListener(this);
         llShare.setOnClickListener(this);
         imgback.setOnClickListener(this);
+        imgFullScreen.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false);
@@ -467,7 +467,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         txtDistance.setText(feedVideo.distance);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
             setProfileRating(Float.parseFloat(feedVideo.videoRating));
-        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven).concat(")")));
+        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : feedVideo.ratingGiven).concat(")")));
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
@@ -547,12 +547,18 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-
+        Log.e("size", "changed");
+//        if (!mRatioAlreadyCalculated && mVideoWidthHeightRatio != (float) width / height) {
+//            mVideoWidthHeightRatio = ((float) width / height) * pixelRatio;
+//            mRatioAlreadyCalculated = true;
+//        }
+//        updateVideoRatio();
+//        med.setVideoWidthHeightRatio(height == 0 ? 1 : (pixelWidthHeightRatio * width) / height);
     }
 
     @Override
     public void onRenderedFirstFrame(Surface surface) {
-
+        Log.e("afsgd", "onRenderedFirstFrame");
     }
 
     @Override
@@ -609,6 +615,8 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             case R.id.imgback:
                 mainActivity.popBackStack();
                 break;
+            case R.id.imgFullScreen:
+                break;
         }
     }
 
@@ -630,27 +638,26 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void showShareDialog() {
-        DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Share on your profile",
+        DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+                "Share on your profile",
                 "Share with your friends",
                 "Share Link",
-                "Cancel"}, rootView.findViewById(R.id.llShare), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch ((String) view.getTag()) {
-                    case "Share on your profile":
-                        requestForShareVideo();
-                        break;
-                    case "Share with your friends":
-                        shareVideoWithFriends();
-                        break;
-                    case "Share Link":
-                        shareLinkWithFriends();
-                        break;
-                    case "Cancel":
-                        break;
-                    default:
-                        break;
-                }
+                "Cancel"
+        }, rootView.findViewById(R.id.llShare), view -> {
+            switch ((String) view.getTag()) {
+                case "Share on your profile":
+                    requestForShareVideo();
+                    break;
+                case "Share with your friends":
+                    shareVideoWithFriends();
+                    break;
+                case "Share Link":
+                    shareLinkWithFriends();
+                    break;
+                case "Cancel":
+                    break;
+                default:
+                    break;
             }
         });
     }
@@ -666,9 +673,9 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     private void shareLinkWithFriends() {
         try {
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            Intent sharingIntent = new Intent(Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, feedVideo.video);
+            sharingIntent.putExtra(Intent.EXTRA_TEXT, feedVideo.video);
             startActivity(Intent.createChooser(sharingIntent, "share video"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -778,7 +785,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     txtFollowStatus.setText("Follow");
-                    feedVideo.followStatus = "Unfollow";
+                    feedVideo.followStatus = "";
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -809,6 +816,56 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void noInternetConnection(int requestCode) {
+
+    }
+
+    @Override
+    public void onTimelineChanged(Timeline timeline, Object manifest) {
+
+    }
+
+    @Override
+    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+    }
+
+    @Override
+    public void onLoadingChanged(boolean isLoading) {
+
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if (playbackState == ExoPlayer.STATE_READY) applyAspectRatio(innerFrame, exoPlayer);
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+    }
+
+    @Override
+    public void onPlayerError(ExoPlaybackException error) {
+
+    }
+
+    @Override
+    public void onPositionDiscontinuity(int reason) {
+
+    }
+
+    @Override
+    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    @Override
+    public void onSeekProcessed() {
 
     }
 

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -47,6 +46,7 @@ import com.ureview.wsutils.WSUtils;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -137,7 +137,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("New Review", "", "", false, false, true, false, false);
+        mainActivity.setToolBar("New Review", "", "", false, false, false, false, false);
         videoView.seekTo(stopPosition);
         videoView.start();
     }
@@ -167,17 +167,17 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     }
 
     private void initComponents() {
-        seekBar = rootView.findViewById(R.id.seekBar);
+        seekBar = rootView.findViewById(R.id.mediacontroller_progress);
         videoView = rootView.findViewById(R.id.VideoView);
         txtCompleteVideo = rootView.findViewById(R.id.txtCompleteVideo);
         txtLocation = rootView.findViewById(R.id.txtLocation);
-        tvLeft = rootView.findViewById(R.id.txtLeft);
-        tvRight = rootView.findViewById(R.id.txtRight);
+        tvLeft = rootView.findViewById(R.id.time_current);
+        tvRight = rootView.findViewById(R.id.player_end_time);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         edtVideoTitle = rootView.findViewById(R.id.edtVideoTitle);
         edtTags = rootView.findViewById(R.id.edtTags);
         imgPlay = rootView.findViewById(R.id.imgPlay);
-        imgPlayPause = rootView.findViewById(R.id.imgPlayPause);
+        imgPlayPause = rootView.findViewById(R.id.btnPlay);
         imgPlay.setVisibility(View.GONE);
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,20 +317,15 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
         if (selectedVideoUri != null) {
             videoView.setVideoURI(selectedVideoUri);
-//            videoView.start();
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            videoView.setOnPreparedListener(mp -> {
+                duration = mp.getDuration() / 1000;
+                tvLeft.setText("00:00:00");
 
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    duration = mp.getDuration() / 1000;
-                    tvLeft.setText("00:00:00");
-
-                    tvRight.setText(StaticUtils.getTime(mp.getDuration() / 1000));
-                    mp.setLooping(true);
-                    seekBar.setMax(duration);
-                    seekBar.postDelayed(onEverySecond, 500);
-                    imgPlayPause.setSelected(true);
-                }
+                tvRight.setText(StaticUtils.getTime(mp.getDuration() / 1000));
+                mp.setLooping(true);
+                seekBar.setMax(duration);
+                seekBar.postDelayed(onEverySecond, 500);
+                imgPlayPause.setSelected(true);
             });
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -359,9 +354,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         try {
             long videoId = Long.parseLong(cameraFile.getLastPathSegment().split(":")[1]);
             Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(mainActivity.getContentResolver(),
-                    videoId,
-                    MediaStore.Images.Thumbnails.MICRO_KIND,
-                    null);
+                    videoId, MediaStore.Images.Thumbnails.MINI_KIND, null);
             if (thumbnail != null) {
                 videoThumb = StaticUtils.imageBytes(thumbnail);
             } else {
@@ -416,9 +409,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 case Activity.RESULT_OK:
                     Place place = PlaceAutocomplete.getPlace(mainActivity, data);
                     Log.e("Place: ", place.getName().toString());
-//                    if (mMarker != null) mMarker.setPosition(place.getLatLng());
                     latitude = place.getLatLng().latitude;
-                    longitude = place.getLatLng().latitude;
+                    longitude = place.getLatLng().longitude;
                     setTextToAddress(place.getName().toString());
                     break;
                 case PlaceAutocomplete.RESULT_ERROR:
@@ -436,11 +428,17 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    if (response.has("message")) {
-                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
-                    }
+//                    if (response.has("message")) {
+//                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+//                    }
                     mainActivity.clearBackStackCompletely();
-                    mainActivity.setProfileFragment();
+                    try {
+                        File cutFile = new File(filePath);
+                        if (cutFile.exists()) cutFile.delete();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    mainActivity.replaceFragment(UploadVideoCompletedFragment.newInstance(), true, R.id.mainContainer);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

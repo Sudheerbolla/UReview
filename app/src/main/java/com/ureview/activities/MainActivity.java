@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.fragments.BaseFragment;
@@ -31,9 +32,7 @@ import com.ureview.fragments.ProfileFragment;
 import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
-import com.ureview.fragments.UploadVideoCompletedFragment;
 import com.ureview.fragments.UploadVideoFragment;
-import com.ureview.fragments.VideoReviewFragment;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
@@ -46,7 +45,8 @@ import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, LocationFilterFragment.OnLocationFilterOptionSelected {
+public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener,
+        LocationFilterFragment.OnLocationFilterOptionSelected {
 
     public CustomTextView txtTitle, txtRight, txtLeft;
     public ImageView imgBack, imgLoc, imgNotf, imgEdit, imgSearch, imgClose;
@@ -67,12 +67,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private final int PERMISSION_FOR_STORAGE = 103;
     private Uri selectedVideoUri;
     public static ArrayList<CategoryModel> categoryListStatic = new ArrayList<>();
-//    private RelativeLayout relMainTopBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (SplashActivity.mLastLocation != null) mLastLocation = SplashActivity.mLastLocation;
+        initTopBar();
+        initBottomBar();
+        setTextToAddress();
+        clearBackStackCompletely();
+        proceedWithFlow();
+
         fragmentManager = getSupportFragmentManager();
         try {
             if (TextUtils.isEmpty(LocalStorage.getInstance(this).getString(LocalStorage.PREF_USER_INFO_DATA, ""))) {
@@ -80,21 +86,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     String json = BaseApplication.userInfoModel.serialize();
                     LocalStorage.getInstance(this).putString(LocalStorage.PREF_USER_INFO_DATA, json);
                 }
+                setUserDataForCrash();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         LocalStorage.getInstance(this).putBoolean(LocalStorage.IS_LOGGED_IN_ALREADY, true);
-        checkPermissions();
+    }
+
+    private void setUserDataForCrash() {
+        Crashlytics.setUserIdentifier(BaseApplication.userInfoModel.userid);
+        Crashlytics.setUserEmail(BaseApplication.userInfoModel.email);
+        Crashlytics.setUserName(BaseApplication.userInfoModel.user_name);
     }
 
     private void checkPermissions() {
         if (RuntimePermissionUtils.checkPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             RuntimePermissionUtils.requestForPermission(this, Manifest.permission.ACCESS_FINE_LOCATION, Constants.LOCATION_PERMISSION);
         } else {
-            initBottomBar();
-            initTopBar();
-            proceedWithFlow();
             getCurrentLocation();
         }
     }
@@ -130,22 +139,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 e.printStackTrace();
             }
         }
-        if (mLastLocation != null && !isLocationAlreadyFetched) {
-            setTextToAddress();
-        }
+        setTextToAddress();
     }
 
     public void setTextToAddress() {
-        if (mLastLocation != null) {
+        if (mLastLocation != null && txtLeft != null)
             txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-            txtLeft.setSelected(true);
-        }
     }
 
     public void setTextToAddress(String address) {
         if (!TextUtils.isEmpty(address)) {
             txtLeft.setText(address);
-            txtLeft.setSelected(true);
+//            txtLeft.setSelected(true);
         }
     }
 
@@ -172,9 +177,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragmentWithoutAnimation(HomeFragment.newInstance(), R.id.mainContainer, false);
     }
 
-    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf,
-                           boolean showEdtView, boolean showEdt) {
-//        if (relMainTopBar != null) relMainTopBar.setVisibility(View.VISIBLE);
+    public void setToolBar(String title, String leftText, String rightText, boolean showLoc, boolean showBack, boolean showNotf, boolean showEdtView, boolean showEdt) {
         topBar.setVisibility(View.VISIBLE);
         txtTitle.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         txtTitle.setText(title);
@@ -254,19 +257,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.llVideo:
                 clearBackStackCompletely();
-//                if (!imgVideo.isSelected()) {
-//                    setSelectedTab(imgVideo, null);
-//                setUploadVideoFragment();
-//                openVideoIntent();
-//                }
-                DialogUtils.showDropDownListStrings(this, new String[]{"Camera", "Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
+                DialogUtils.showDropDownListStrings(this, new String[]{"Record", "Upload From Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         switch ((String) view.getTag()) {
-                            case "Camera":
+                            case "Record":
                                 checkAndRequestPermissionCamera();
                                 break;
-                            case "Gallery":
+                            case "Upload From Gallery":
                                 checkAndRequestPermissionGallery();
                                 break;
                             case "Cancel":
@@ -276,7 +274,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         }
                     }
                 });
-
                 break;
             case R.id.llProfile:
                 clearBackStackCompletely();
@@ -379,15 +376,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         replaceFragment(UploadVideoFragment.newInstance(selectedVideoUri), R.id.mainContainer);
     }
 
-    public void setUploadVideoCompletedFragment() {
-        replaceFragment(UploadVideoCompletedFragment.newInstance(), R.id.mainContainer);
-    }
-
-    public void setVideoReviewFragment() {
-        setToolBar("Video Review", "", "", false, true, true, false, false);
-        replaceFragment(VideoReviewFragment.newInstance(), R.id.mainContainer);
-    }
-
     private void setSelectedTab(ImageView selectedView, ImageView imgH) {
         imgHome.setSelected(false);
         imgSearchB.setSelected(false);
@@ -444,15 +432,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if (mLastLocation != null && !isLocationAlreadyFetched) {
-            setTextToAddress();
-        }
+//        if (mLastLocation != null && !isLocationAlreadyFetched) {
+//            setTextToAddress();
+//            clearBackStackCompletely();
+//            proceedWithFlow();
+//        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mLocationManager.removeUpdates(this);
+        if (mLocationManager != null) mLocationManager.removeUpdates(this);
     }
 
     @Override
@@ -511,9 +501,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             clickOnGalary();
         } else {
             if (StaticUtils.isAllPermissionsGranted(grantResults)) {
-                initBottomBar();
-                initTopBar();
-                proceedWithFlow();
                 getCurrentLocation();
             } else {
                 StaticUtils.showToast(this, "Location permission is mandatory to access your location");

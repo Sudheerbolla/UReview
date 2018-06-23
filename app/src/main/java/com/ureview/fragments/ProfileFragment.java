@@ -49,7 +49,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private TabLayout tabLayout;
     private CustomTextView txtFollowersCount, txtFollowingCount, txtName, txtLoc, txtFollowStatus;
     private LinearLayout linFollowing, linFollowers;
-    //    private RatingBar ratingBar;
     private MainActivity mainActivity;
     public UserInfoModel userInfoModel;
     private ImageView imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
@@ -87,11 +86,13 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
         Bundle bundle = getArguments();
         if (bundle != null) {
-            otherUserId = bundle.getString("otherUserId");
+            if (bundle.containsKey("otherUserId"))
+                otherUserId = bundle.getString("otherUserId");
             if (bundle.containsKey("otherUserName"))
                 otherUserName = bundle.getString("otherUserName");
             isDiffUser = !TextUtils.isEmpty(otherUserId) && !otherUserId.equalsIgnoreCase(userId);
         }
+        if (TextUtils.isEmpty(otherUserId)) otherUserId = userId;
     }
 
     @Nullable
@@ -147,12 +148,11 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtName.setText(userInfoModel.first_name + " " + userInfoModel.last_name);
             txtLoc.setText(TextUtils.isEmpty(userInfoModel.city) ? " Location not available" : userInfoModel.city);
             setProfileRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
-//            ratingBar.setRating(TextUtils.isEmpty(userInfoModel.user_rating) ? 0f : Float.parseFloat(userInfoModel.user_rating));
             txtFollowersCount.setText(TextUtils.isEmpty(userInfoModel.follow_you_count) ? "0" : userInfoModel.follow_you_count);
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
             if (isDiffUser) {
-                setFollowTextAndBg();
+                setFollowTextAndBg(userInfoModel);
             }
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
@@ -199,7 +199,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         imgStar5.setSelected(b4);
     }
 
-    private void setFollowTextAndBg() {
+    private void setFollowTextAndBg(UserInfoModel userInfoModel) {
         if (TextUtils.isEmpty(userInfoModel.follow_status)) {
             txtFollowStatus.setText("Follow");
             txtFollowStatus.setSelected(false);
@@ -217,7 +217,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void requestForGetProfileDataWS() {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(isDiffUser ? otherUserId : userId);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getUserData(otherUserId, userId);
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
@@ -241,7 +241,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 mainActivity.replaceFragment(FollowersFragment.newInstance(false, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
                 break;
             case R.id.txtFollowStatus:
-                if (txtFollowStatus.getText().toString().equalsIgnoreCase("follow")) {
+                if (txtFollowStatus.getText().toString().equalsIgnoreCase("unfollow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser(otherUserId);
@@ -313,8 +313,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Follow";
-                    setFollowTextAndBg();
+                    userInfoModel.follow_status = "";
+                    setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -328,8 +328,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    userInfoModel.follow_status = "Unfollow";
-                    setFollowTextAndBg();
+                    userInfoModel.follow_status = "follow";
+                    setFollowTextAndBg(otherInfoModel);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -384,6 +384,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
@@ -405,6 +406,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
+        //        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            return super.instantiateItem(container, position);
+//            Object obj = super.instantiateItem(container, position);
+//            viewPager.setObjectForPosition(obj, position);
+//            return obj;
+//        }
+//        @Override
+//        public boolean isViewFromObject(View view, Object object) {
+//            return object != null && ((Fragment) object).getView() == view;
+//        }
 
         @Override
         public CharSequence getPageTitle(int position) {

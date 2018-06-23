@@ -144,8 +144,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         txtSeeAllVideos.setOnClickListener(this);
         txtSeeAllPopularSearch.setOnClickListener(this);
 
-        lat = String.valueOf(MainActivity.mLastLocation.getLatitude());
-        lng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        if (MainActivity.mLastLocation != null) {
+            lat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+            lng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        }
 
         requestForCategoryList();
 
@@ -271,22 +273,20 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         switch (view.getId()) {
             case R.id.relItem:
                 mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
+//                mainActivity.replaceFragment(VideoDetailFragmentVV.newInstance(videoModels, position), true, R.id.mainContainer);
                 break;
             case R.id.imgProfile:
             case R.id.txtName:
             case R.id.txtLoc:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId,
-                        feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)),
-                        true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId, feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                //        mainActivity.replaceFragment(VideoViewedPeopleFragment.newInstance(feedVideoList.get(position).id), true, R.id.mainContainer);
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
-                        + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude +
+                        "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;
@@ -392,6 +392,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            txtNoData.setText("No Videos");
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
                 txtNoData.setVisibility(View.GONE);
                 rvNewsFeed.setVisibility(View.VISIBLE);
@@ -431,11 +432,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parseNearByVideoList(JsonElement response) {
         loadedDataCount++;
         try {
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             JSONObject jsonObject = new JSONObject(response.toString());
+            nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    nearByVideoList.clear();
                     relVideos.setVisibility(View.VISIBLE);
                     rvNearByVideos.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -475,10 +477,11 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         loadedDataCount++;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            topRatedVideoList.clear();
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    topRatedVideoList.clear();
                     relTopRated.setVisibility(View.VISIBLE);
                     rvTopRated.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -517,11 +520,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parsePopularVideoList(JsonElement response) {
         loadedDataCount++;
         try {
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             JSONObject jsonObject = new JSONObject(response.toString());
+            popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
-                    popularVideoList.clear();
                     relPopularSearch.setVisibility(View.VISIBLE);
                     rvPopularsearch.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
