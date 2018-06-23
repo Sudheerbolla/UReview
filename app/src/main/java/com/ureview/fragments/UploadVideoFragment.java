@@ -409,9 +409,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 case Activity.RESULT_OK:
                     Place place = PlaceAutocomplete.getPlace(mainActivity, data);
                     Log.e("Place: ", place.getName().toString());
-//                    if (mMarker != null) mMarker.setPosition(place.getLatLng());
                     latitude = place.getLatLng().latitude;
-                    longitude = place.getLatLng().latitude;
+                    longitude = place.getLatLng().longitude;
                     setTextToAddress(place.getName().toString());
                     break;
                 case PlaceAutocomplete.RESULT_ERROR:
@@ -429,9 +428,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    if (response.has("message")) {
-                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
-                    }
+//                    if (response.has("message")) {
+//                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+//                    }
                     mainActivity.clearBackStackCompletely();
                     try {
                         File cutFile = new File(filePath);

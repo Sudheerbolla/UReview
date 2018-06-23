@@ -38,12 +38,12 @@ public class RangeSeekBar<T extends Number> extends android.support.v7.widget.Ap
     public static final int HEIGHT_IN_DP = 30;
     public static final int TEXT_LATERAL_PADDING_IN_DP = 3;
 
-    private static final int INITIAL_PADDING_IN_DP = 5;
+    private static final int INITIAL_PADDING_IN_DP = 8;
     private static final int DEFAULT_TEXT_SIZE_IN_DP = 14;
     private static final int DEFAULT_TEXT_DISTANCE_TO_BUTTON_IN_DP = 8;
     private static final int DEFAULT_TEXT_DISTANCE_TO_TOP_IN_DP = 8;
 
-    private static final int LINE_HEIGHT_IN_DP = 20;
+    private static final int LINE_HEIGHT_IN_DP = 15;
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint shadowPaint = new Paint();
 

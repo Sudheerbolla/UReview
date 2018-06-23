@@ -45,7 +45,8 @@ import com.ureview.utils.views.CustomTextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener, LocationFilterFragment.OnLocationFilterOptionSelected {
+public class MainActivity extends BaseActivity implements View.OnClickListener, LocationListener,
+        LocationFilterFragment.OnLocationFilterOptionSelected {
 
     public CustomTextView txtTitle, txtRight, txtLeft;
     public ImageView imgBack, imgLoc, imgNotf, imgEdit, imgSearch, imgClose;
@@ -71,11 +72,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if (SplashActivity.mLastLocation != null) mLastLocation = SplashActivity.mLastLocation;
         initTopBar();
         initBottomBar();
-//        proceedWithFlow();
-        checkPermissions();
+        setTextToAddress();
+        clearBackStackCompletely();
+        proceedWithFlow();
 
         fragmentManager = getSupportFragmentManager();
         try {
@@ -137,24 +139,18 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 e.printStackTrace();
             }
         }
-        if (mLastLocation != null && !isLocationAlreadyFetched) {
-            setTextToAddress();
-            clearBackStackCompletely();
-            proceedWithFlow();
-        }
+        setTextToAddress();
     }
 
     public void setTextToAddress() {
-        if (mLastLocation != null) {
-            if (txtLeft != null)
-                txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-        }
+        if (mLastLocation != null && txtLeft != null)
+            txtLeft.setText(StaticUtils.getAddress(this, mLastLocation.getLatitude(), mLastLocation.getLongitude()));
     }
 
     public void setTextToAddress(String address) {
         if (!TextUtils.isEmpty(address)) {
             txtLeft.setText(address);
-            txtLeft.setSelected(true);
+//            txtLeft.setSelected(true);
         }
     }
 
@@ -436,17 +432,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if (mLastLocation != null && !isLocationAlreadyFetched) {
-            setTextToAddress();
-            clearBackStackCompletely();
+//        if (mLastLocation != null && !isLocationAlreadyFetched) {
+//            setTextToAddress();
+//            clearBackStackCompletely();
 //            proceedWithFlow();
-        }
+//        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mLocationManager.removeUpdates(this);
+        if (mLocationManager != null) mLocationManager.removeUpdates(this);
     }
 
     @Override

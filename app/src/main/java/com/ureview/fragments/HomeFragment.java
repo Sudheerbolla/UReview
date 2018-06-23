@@ -285,7 +285,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude +
+                        "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;
@@ -391,6 +392,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
+            txtNoData.setText("No Videos");
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
                 txtNoData.setVisibility(View.GONE);
                 rvNewsFeed.setVisibility(View.VISIBLE);
@@ -430,6 +432,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parseNearByVideoList(JsonElement response) {
         loadedDataCount++;
         try {
+            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
             JSONObject jsonObject = new JSONObject(response.toString());
             nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
@@ -475,6 +478,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             topRatedVideoList.clear();
+            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
@@ -516,6 +520,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parsePopularVideoList(JsonElement response) {
         loadedDataCount++;
         try {
+            txtNoData.setText("No Reviews Available for this Category.Try changing location or choose another category");
             JSONObject jsonObject = new JSONObject(response.toString());
             popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {

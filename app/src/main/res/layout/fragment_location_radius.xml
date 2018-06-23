@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="@dimen/pad_8"
+                android:padding="@dimen/pad_6"
                 android:src="@drawable/ic_back" />
 
             <com.ureview.utils.views.CustomTextView

@@ -300,7 +300,7 @@
                                 android:layout_height="@dimen/pad_31"
                                 android:rotation="180"
                                 android:scaleType="fitCenter"
-                                android:src="@drawable/ic_report" />
+                                android:src="@drawable/ic_report_x" />
 
                         </LinearLayout>
 

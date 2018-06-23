@@ -290,19 +290,25 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
+//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
-        float displayRatio = (float) size.x / 220;
+        float displayRatio = (float) size.x / size.y;
+//        float videoRatio = (float) exoPlayer.getVideoFormat().width / size.y;
+        int height = 220;
+        int width = 0;
+//        size.y/220
+        float videoRatio = (float) exoPlayer.getVideoFormat().width / 220;
         if (videoRatio > 1) {
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.setLayoutParams(params);
         } else if (videoRatio > displayRatio) {
-            container.getLayoutParams().width = Math.round(container.getMeasuredWidth() * videoRatio) - 40;
+            container.getLayoutParams().width = Math.round(container.getMeasuredWidth() * videoRatio);
             container.requestLayout();
         } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(container.getMeasuredWidth() * videoRatio),
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = CENTER;
             container.setLayoutParams(params);
         }
@@ -632,27 +638,26 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     private void showShareDialog() {
-        DialogUtils.showDropDownListStrings(mainActivity, new String[]{"Share on your profile",
+        DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+                "Share on your profile",
                 "Share with your friends",
                 "Share Link",
-                "Cancel"}, rootView.findViewById(R.id.llShare), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch ((String) view.getTag()) {
-                    case "Share on your profile":
-                        requestForShareVideo();
-                        break;
-                    case "Share with your friends":
-                        shareVideoWithFriends();
-                        break;
-                    case "Share Link":
-                        shareLinkWithFriends();
-                        break;
-                    case "Cancel":
-                        break;
-                    default:
-                        break;
-                }
+                "Cancel"
+        }, rootView.findViewById(R.id.llShare), view -> {
+            switch ((String) view.getTag()) {
+                case "Share on your profile":
+                    requestForShareVideo();
+                    break;
+                case "Share with your friends":
+                    shareVideoWithFriends();
+                    break;
+                case "Share Link":
+                    shareLinkWithFriends();
+                    break;
+                case "Cancel":
+                    break;
+                default:
+                    break;
             }
         });
     }
