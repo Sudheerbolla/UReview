@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -160,6 +161,15 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
             replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
             findViewById(R.id.relSplash).setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        FragmentManager fragment = getSupportFragmentManager();
+        if (fragment != null) {
+            fragment.findFragmentByTag(LoginFragment.class.getSimpleName()).onActivityResult(requestCode, resultCode, data);
+        } else Log.e("Twitter", "fragment is null");
     }
 
     @Override

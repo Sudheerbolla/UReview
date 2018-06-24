@@ -7,50 +7,62 @@
     android:paddingBottom="@dimen/pad_10">
 
     <FrameLayout
-        android:id="@+id/player_frame_layout"
+        android:id="@+id/fl_player"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/colorBlack">
 
         <FrameLayout
-            android:id="@+id/innerFrame"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:id="@+id/player_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@color/colorBlack">
 
-            <SurfaceView
-                android:id="@+id/sv_player"
+            <FrameLayout
+                android:id="@+id/innerFrame"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center" />
+                android:layout_gravity="center">
+
+                <SurfaceView
+                    android:id="@+id/sv_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/imgback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/ic_back_white" />
+
+            <ImageView
+                android:id="@+id/imgFullScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="@dimen/pad_10"
+                android:src="@drawable/ic_full_screen" />
+
+            <include
+                layout="@layout/player_media_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/pad_6"
+                android:layout_marginEnd="@dimen/pad_10"
+                android:layout_marginStart="@dimen/pad_10"
+                android:layout_marginTop="@dimen/pad_6" />
 
         </FrameLayout>
-
-        <ImageView
-            android:id="@+id/imgback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/ic_back_white" />
-
-        <ImageView
-            android:id="@+id/imgFullScreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:padding="@dimen/pad_10"
-            android:src="@drawable/ic_full_screen" />
-
-        <include
-            layout="@layout/player_media_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="@dimen/pad_6"
-            android:layout_marginEnd="@dimen/pad_10"
-            android:layout_marginStart="@dimen/pad_10"
-            android:layout_marginTop="@dimen/pad_6" />
-
     </FrameLayout>
 
     <android.support.v4.widget.NestedScrollView

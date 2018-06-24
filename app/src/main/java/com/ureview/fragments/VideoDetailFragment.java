@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -7,6 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -84,8 +90,12 @@ import retrofit2.Call;
 
 import static android.view.Gravity.CENTER;
 
-public class VideoDetailFragment extends BaseFragment implements VideoRendererEventListener,
-        AdaptiveMediaSourceEventListener, IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
+public class VideoDetailFragment extends BaseFragment implements IClickListener, View.OnClickListener,
+        IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
+    private static final String TAG = VideoDetailFragment.class.getSimpleName();
+    private final String STATE_RESUME_WINDOW = "resumeWindow";
+    private final String STATE_RESUME_POSITION = "resumePosition";
+    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
@@ -100,6 +110,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     private MainActivity mainActivity;
 
     private SurfaceView svPlayer;
+    private ProgressBar progressBar;
     private SeekBar mediacontrollerProgress;
     private RelativeLayout linMediaController;
     private FrameLayout playerFrameLayout;
@@ -130,6 +141,11 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        if (savedInstanceState != null) {
+            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
+            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
+            mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
+        }
     }
 
     @Nullable
@@ -287,6 +303,63 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         exoPlayer.setPlayWhenReady(true);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
+        outState.putLong(STATE_RESUME_POSITION, mResumePosition);
+        outState.putBoolean(STATE_PLAYER_FULLSCREEN, mExoPlayerFullscreen);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    private Dialog mFullScreenDialog;
+    private boolean mExoPlayerFullscreen = false;
+    private int mResumeWindow;
+    private long mResumePosition;
+
+    private void initFullscreenDialog() {
+
+        mFullScreenDialog = new Dialog(mainActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+            public void onBackPressed() {
+                if (mExoPlayerFullscreen)
+                    closeFullscreenDialog();
+                super.onBackPressed();
+            }
+        };
+    }
+
+    private void openFullscreenDialog() {
+        ((ViewGroup) playerFrameLayout.getParent()).removeView(playerFrameLayout);
+        mFullScreenDialog.addContentView(playerFrameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        imgFullScreen.setImageDrawable(ContextCompat.getDrawable(mainActivity, R.drawable.ic_fullscreen_skrink));
+        mExoPlayerFullscreen = true;
+        mFullScreenDialog.show();
+        imgback.setVisibility(View.GONE);
+    }
+
+
+    private void closeFullscreenDialog() {
+        ((ViewGroup) playerFrameLayout.getParent()).removeView(playerFrameLayout);
+        ((FrameLayout) rootView.findViewById(R.id.fl_player)).addView(playerFrameLayout);
+        mExoPlayerFullscreen = false;
+        mFullScreenDialog.dismiss();
+        imgFullScreen.setImageDrawable(ContextCompat.getDrawable(mainActivity, R.drawable.ic_full_screen));
+        imgback.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initFullscreenDialog();
+        if (mExoPlayerFullscreen) {
+            ((ViewGroup) svPlayer.getParent()).removeView(svPlayer);
+            mFullScreenDialog.addContentView(svPlayer, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            imgFullScreen.setImageDrawable(ContextCompat.getDrawable(mainActivity, R.drawable.ic_fullscreen_skrink));
+            mFullScreenDialog.show();
+        }
+    }
+
     private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
         int videoWidth = exoPlayer.getVideoFormat().width;
         int videoHeight = exoPlayer.getVideoFormat().height;
@@ -334,37 +407,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 //            container.setLayoutParams(params);
 //        }
 //    }
-    @Override
-    public void onLoadStarted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs) {
-        Toast.makeText(mainActivity, "on load started", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadCompleted(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-        Toast.makeText(mainActivity, "on load completed", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadCanceled(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded) {
-        Toast.makeText(mainActivity, "on load cancelled", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLoadError(DataSpec dataSpec, int dataType, int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaStartTimeMs, long mediaEndTimeMs, long elapsedRealtimeMs, long loadDurationMs, long bytesLoaded,
-                            IOException error, boolean wasCanceled) {
-        Toast.makeText(mainActivity, "on load error", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onUpstreamDiscarded(int trackType, long mediaStartTimeMs, long mediaEndTimeMs) {
-
-    }
-
-    @Override
-    public void onDownstreamFormatChanged(int trackType, Format trackFormat, int trackSelectionReason, Object trackSelectionData, long mediaTimeMs) {
-
-    }
-
     private void getBundleData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -414,6 +456,7 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
         linMediaController = rootView.findViewById(R.id.lin_media_controller);
         playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
         innerFrame = rootView.findViewById(R.id.innerFrame);
+        progressBar = rootView.findViewById(R.id.progressBar);
 
         nestedScrollView.smoothScrollTo(0, 0);
 
@@ -528,47 +571,6 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
     }
 
     @Override
-    public void onVideoEnabled(DecoderCounters counters) {
-
-    }
-
-    @Override
-    public void onVideoDecoderInitialized(String decoderName, long initializedTimestampMs, long initializationDurationMs) {
-
-    }
-
-    @Override
-    public void onVideoInputFormatChanged(Format format) {
-
-    }
-
-    @Override
-    public void onDroppedFrames(int count, long elapsedMs) {
-
-    }
-
-    @Override
-    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-        Log.e("size", "changed");
-//        if (!mRatioAlreadyCalculated && mVideoWidthHeightRatio != (float) width / height) {
-//            mVideoWidthHeightRatio = ((float) width / height) * pixelRatio;
-//            mRatioAlreadyCalculated = true;
-//        }
-//        updateVideoRatio();
-//        med.setVideoWidthHeightRatio(height == 0 ? 1 : (pixelWidthHeightRatio * width) / height);
-    }
-
-    @Override
-    public void onRenderedFirstFrame(Surface surface) {
-        Log.e("afsgd", "onRenderedFirstFrame");
-    }
-
-    @Override
-    public void onVideoDisabled(DecoderCounters counters) {
-
-    }
-
-    @Override
     public void onClick(View view, int position) {
 
     }
@@ -618,6 +620,10 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
                 mainActivity.popBackStack();
                 break;
             case R.id.imgFullScreen:
+                if (!mExoPlayerFullscreen)
+                    openFullscreenDialog();
+                else
+                    closeFullscreenDialog();
                 break;
         }
     }
@@ -825,52 +831,44 @@ public class VideoDetailFragment extends BaseFragment implements VideoRendererEv
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
-
     }
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
     }
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-
     }
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        Log.e(TAG, "onPlayerStateChanged: " + playbackState);
         if (playbackState == ExoPlayer.STATE_READY) applyAspectRatio(innerFrame, exoPlayer);
+        progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onRepeatModeChanged(int repeatMode) {
-
     }
 
     @Override
     public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
     }
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-
     }
 
     @Override
     public void onPositionDiscontinuity(int reason) {
-
     }
 
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
     }
 
     @Override
     public void onSeekProcessed() {
-
     }
-
 }
