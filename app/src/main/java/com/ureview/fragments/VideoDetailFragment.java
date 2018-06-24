@@ -57,6 +57,7 @@ import com.ureview.activities.MainActivity;
 import com.ureview.adapters.VideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
+import com.ureview.listeners.ISearchClickListener;
 import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.DialogUtils;
@@ -700,26 +701,28 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     }
 
     private void showShareDialog() {
-        DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+        DialogUtils.showCustomDropDownListStrings(mainActivity, new String[]{
                 "Share on your profile",
                 "Share with your friends",
                 "Share Link",
-                "Cancel"
-        }, rootView.findViewById(R.id.llShare), view -> {
-            switch ((String) view.getTag()) {
-                case "Share on your profile":
-                    requestForShareVideo();
-                    break;
-                case "Share with your friends":
-                    shareVideoWithFriends();
-                    break;
-                case "Share Link":
-                    shareLinkWithFriends();
-                    break;
-                case "Cancel":
-                    break;
-                default:
-                    break;
+        }, new ISearchClickListener() {
+            @Override
+            public void onClick(String text) {
+                switch (text) {
+                    case "Share on your profile":
+                        requestForShareVideo();
+                        break;
+                    case "Share with your friends":
+                        shareVideoWithFriends();
+                        break;
+                    case "Share Link":
+                        shareLinkWithFriends();
+                        break;
+                    case "Cancel":
+                        break;
+                    default:
+                        break;
+                }
             }
         });
     }
