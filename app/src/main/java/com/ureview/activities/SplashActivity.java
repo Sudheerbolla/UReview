@@ -43,8 +43,8 @@ import com.ureview.utils.views.CustomTextView;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class SplashActivity extends BaseActivity implements LocationListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class SplashActivity extends BaseActivity implements LocationListener, com.google.android.gms.location.LocationListener,
+        View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private RelativeLayout relTopBar;
     public CustomTextView txtTitle, txtRight;
     private ImageView imgBack;
@@ -240,22 +240,12 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
                 .addOnConnectionFailedListener(this)
                 .build();
         @SuppressLint("MissingPermission") PendingResult<Status> pendingResult =
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest,
-                        (com.google.android.gms.location.LocationListener) this);
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        mLastLocation = location;
-                    }
-                });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-//        if (mGoogleApiClient.isConnected()) {
-//            startLocationUpdates();
-//        }
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
+            if (location != null) {
+                mLastLocation = location;
+            }
+        });
     }
 
     protected void createLocationRequest() {
