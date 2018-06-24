@@ -13,6 +13,7 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.Twitter;
 import com.ureview.models.LocationModel;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;

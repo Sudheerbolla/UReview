@@ -93,6 +93,21 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         mFacebookCallbackManager = CallbackManager.Factory.create();
         mAuth = FirebaseAuth.getInstance();
         initiateGoogleIntegration();
+        initiateTwitterIntegration();
+        initiateGoogleIntegration();
+    }
+
+    private void initiateTwitterIntegration() {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("MXIAuVVgwoijQj4ZJtY9RSj4Y", "aQlWXNlMGdjuwk2kIKdbSYgKqdADNfGvqg3padj2ngIkLPMQFJ");
+
+        TwitterConfig twitterConfig = new TwitterConfig.Builder(splashActivity)
+                .logger(new DefaultLogger(Log.DEBUG))
+                .twitterAuthConfig(authConfig)
+                .debug(true)
+                .build();
+
+        Twitter.initialize(twitterConfig);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void initiateGoogleIntegration() {
@@ -119,27 +134,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 requestForCheckUserWS(id, Constants.TWITTER);
             }
         });
-        /*AuthCredential credential = TwitterAuthProvider.getCredential(
-                session.getAuthToken().token,
-                session.getAuthToken().secret);
 
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(splashActivity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.e(TAG, "signInWithCredential:success");
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.e(TAG, "signInWithCredential:failure", task.getException());
-                        }
-                    }
-                });*/
     }
 
     private void updateUI(FirebaseUser user) {
-        if (user != null) Log.e(TAG, "user" + user.getEmail() + " n " + user.getDisplayName());
+        Log.e("user", user.getEmail() + " n " + user.getDisplayName());
     }
 
     @Override
@@ -195,10 +194,29 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         txtFbLogin.setOnClickListener(this);
         txtInstagramLogin.setOnClickListener(this);
         splashActivity.changeStatusBarColorToWhite();
+
+//        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                FirebaseUser user = firebaseAuth.getCurrentUser();
+//                if (user != null) {
+//                    Log.e("Twitter", user.getEmail() + ", " + user.getDisplayName() + ", " + user.getPhoneNumber() + ", " + user.getProviderId() + ", " + user.getUid());
+//                } else {
+//                    Log.e("Twitter", "user is null");
+//                }
+//            }
+//        };
+
+        txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
+        txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
+        txtVersion = rootView.findViewById(R.id.txtVersion);
+
+        txtFbLogin.setOnClickListener(this);
+        txtInstagramLogin.setOnClickListener(this);
+        splashActivity.changeStatusBarColorToWhite();
         txtTwitterLogin.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                Log.e(TAG, "twitterLogin:success" + result);
                 handleTwitterSession(result.data);
             }
 
@@ -232,7 +250,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 break;
             case R.id.txtTwitterLogin:
                 onTwitterBtnClicked();
-//                StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtFbLogin:
                 handleFacebookLogin();

@@ -12,6 +12,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -94,7 +96,6 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
-
 
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
@@ -406,7 +407,6 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 //            container.setLayoutParams(params);
 //        }
 //    }
-
     private void getBundleData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -831,17 +831,14 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 
     @Override
     public void onTimelineChanged(Timeline timeline, Object manifest) {
-        Log.e(TAG, "onTimelineChanged");
     }
 
     @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-        Log.e(TAG, "onTracksChanged");
     }
 
     @Override
     public void onLoadingChanged(boolean isLoading) {
-        Log.e(TAG, "onLoadingChanged: " + isLoading);
     }
 
     @Override
@@ -853,31 +850,25 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 
     @Override
     public void onRepeatModeChanged(int repeatMode) {
-        Log.e(TAG, "onRepeatModeChanged: " + repeatMode);
     }
 
     @Override
     public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-        Log.e(TAG, "onShuffleModeEnabledChanged: " + shuffleModeEnabled);
     }
 
     @Override
     public void onPlayerError(ExoPlaybackException error) {
-        Log.e(TAG, "onPlayerError: " + error);
     }
 
     @Override
     public void onPositionDiscontinuity(int reason) {
-        Log.e(TAG, "onPositionDiscontinuity: " + reason);
     }
 
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-        Log.e(TAG, "onPlaybackParametersChanged");
     }
 
     @Override
     public void onSeekProcessed() {
-        Log.e(TAG, "onSeekProcessed");
     }
 }

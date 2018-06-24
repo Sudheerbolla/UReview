@@ -13,8 +13,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -166,7 +166,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("hyma", "yes getting callback");
         FragmentManager fragment = getSupportFragmentManager();
         if (fragment != null) {
             fragment.findFragmentByTag(LoginFragment.class.getSimpleName()).onActivityResult(requestCode, resultCode, data);
@@ -284,10 +283,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, Vi
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-//        if (mLastLocation != null) {
-//            clearBackStackCompletely();
-//            proceedWithFlow();
-//        }
     }
 
     @Override
