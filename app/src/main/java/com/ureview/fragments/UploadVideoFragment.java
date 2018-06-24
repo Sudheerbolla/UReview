@@ -82,9 +82,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 tvLeft.setText(StaticUtils.getTime(videoView.getCurrentPosition() / 1000));
             }
             if (videoView.isPlaying()) {
-                seekBar.postDelayed(onEverySecond, 500);
+                seekBar.postDelayed(onEverySecond, 1000);
             }
-            if (videoView.getDuration() - videoView.getCurrentPosition() <= 500) {
+            if (videoView.getDuration() - videoView.getCurrentPosition() <= 1000) {
                 videoView.pause();
                 stopPosition = 0;
                 imgPlay.setVisibility(View.VISIBLE);
