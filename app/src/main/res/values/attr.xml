@@ -90,4 +90,10 @@
         <enum name="vertical" value="0" />
         <enum name="horizontal" value="1" />
     </attr>
+
+    <declare-styleable name="ColorRatingBar">
+        <attr name="progress_color" format="color" />
+        <attr name="half_color" format="color" />
+        <attr name="empty_color" format="color" />
+    </declare-styleable>
 </resources>

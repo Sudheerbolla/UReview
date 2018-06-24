@@ -11,7 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ureview.R;
 import com.ureview.adapters.OptionsAdapter;
@@ -274,7 +276,9 @@ public class DialogUtils implements View.OnClickListener {
             txtHeading = alertDialog.findViewById(R.id.txtHeading);
             txtMessage = alertDialog.findViewById(R.id.txtMessage);
             final LinearLayout llRatingBar = alertDialog.findViewById(R.id.llRatingBar);
-            llRatingBar.setVisibility(View.VISIBLE);
+            RatingBar ratingBar = alertDialog.findViewById(R.id.ratingBar);
+            llRatingBar.setVisibility(View.GONE);
+            ratingBar.setVisibility(View.VISIBLE);
             txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
             txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
             txtNegativeButton.setVisibility(View.GONE);
@@ -307,7 +311,9 @@ public class DialogUtils implements View.OnClickListener {
                 public void onClick(View v) {
                     alertDialog.dismiss();
                     if (positiveClick != null) {
-                        givenRating.setText(String.valueOf(getRating()));
+                        Toast.makeText(mContext, ratingBar.getRating() + "", Toast.LENGTH_LONG).show();
+//                        givenRating.setText(String.valueOf(getRating()));
+                        givenRating.setText(String.valueOf(ratingBar.getRating()));
                         positiveClick.onClick(v);
                     }
                 }

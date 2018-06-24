@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -578,6 +579,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             txtFollowStatus.setSelected(true);
         }
         txtFollowStatus.setOnClickListener(this);
+        txtViewCount.setOnClickListener(this);
+        txtDistance.setOnClickListener(this);
 
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
@@ -639,6 +642,17 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.txtViewCount:
+                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(feedVideo.id);
+                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                break;
+            case R.id.txtDistance:
+                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
+                        feedVideo.videoLongitude;
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(mapIntent);
+                break;
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
                 if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
@@ -648,7 +662,11 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 }
                 break;
             case R.id.llRate:
-                showRatingDialog();
+                if (feedVideo.userRating.equalsIgnoreCase("0")) {
+                    showRatingDialog();
+                } else {
+                    Toast.makeText(mainActivity, "Rating is already submitted.", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.llShare:
                 showShareDialog();
