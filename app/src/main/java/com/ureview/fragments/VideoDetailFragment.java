@@ -8,16 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,21 +26,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -53,11 +46,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -79,7 +70,6 @@ import com.ureview.wsutils.WSUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -90,14 +80,14 @@ import retrofit2.Call;
 
 import static android.view.Gravity.CENTER;
 
-public class VideoDetailFragment extends BaseFragment implements IClickListener, View.OnClickListener,
+public class VideoDetailFragment extends DialogFragment implements IClickListener, View.OnClickListener,
         IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
     private static final String TAG = VideoDetailFragment.class.getSimpleName();
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
-    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen;
+    private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen, imgMute;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
             txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
     private LinearLayout llRate, llShare, llDirection, llReport;
@@ -140,6 +130,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
         if (savedInstanceState != null) {
             mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
@@ -160,7 +151,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 
     private void initVideoPlayer2() {
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         handler = new Handler();
         initDataSource();
         initMp4Player();
@@ -257,10 +248,14 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     }
 
     private void toggleMediaControls() {
-        if (linMediaController.getVisibility() == View.VISIBLE)
+        if (linMediaController.getVisibility() == View.VISIBLE) {
             linMediaController.setVisibility(View.GONE);
-        else {
+            imgMute.setVisibility(View.GONE);
+            imgFullScreen.setVisibility(View.GONE);
+        } else {
             linMediaController.setVisibility(View.VISIBLE);
+            imgMute.setVisibility(View.VISIBLE);
+            imgFullScreen.setVisibility(View.VISIBLE);
             setProgress();
         }
     }
@@ -319,7 +314,6 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     private long mResumePosition;
 
     private void initFullscreenDialog() {
-
         mFullScreenDialog = new Dialog(mainActivity, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
             public void onBackPressed() {
                 if (mExoPlayerFullscreen)
@@ -331,7 +325,8 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 
     private void openFullscreenDialog() {
         ((ViewGroup) playerFrameLayout.getParent()).removeView(playerFrameLayout);
-        mFullScreenDialog.addContentView(playerFrameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        applyFullScreenAspectRatio(innerFrame);
+        mFullScreenDialog.addContentView(playerFrameLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         imgFullScreen.setImageDrawable(ContextCompat.getDrawable(mainActivity, R.drawable.ic_fullscreen_skrink));
         mExoPlayerFullscreen = true;
         mFullScreenDialog.show();
@@ -341,6 +336,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 
     private void closeFullscreenDialog() {
         ((ViewGroup) playerFrameLayout.getParent()).removeView(playerFrameLayout);
+        applyAspectRatio(innerFrame, exoPlayer);
         ((FrameLayout) rootView.findViewById(R.id.fl_player)).addView(playerFrameLayout);
         mExoPlayerFullscreen = false;
         mFullScreenDialog.dismiss();
@@ -389,6 +385,44 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
         }
     }
 
+    private void applyFullScreenAspectRatio(FrameLayout container) {
+        int videoWidth = exoPlayer.getVideoFormat().width;
+        int videoHeight = exoPlayer.getVideoFormat().height;
+        float videoProportion;
+        if (videoWidth > videoHeight) {
+            videoProportion = (float) videoHeight / (float) videoWidth;
+        } else {
+            videoProportion = (float) videoWidth / (float) videoHeight;
+        }
+
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        int screenWidth = size.x;
+        int screenHeight = size.y;
+        float screenProportion = (float) screenWidth / (float) screenHeight;
+
+        if (videoProportion > screenProportion) {
+            container.getLayoutParams().width = Math.round(videoWidth / screenProportion);
+            container.requestLayout();
+        } else {
+            int finalWid;
+            int finalHei;
+            finalWid = Math.round(videoWidth / screenProportion);
+            finalHei = Math.round(videoHeight / screenProportion);
+            if (finalWid > screenWidth) {
+                finalWid = screenWidth;
+            }
+            if (finalHei > screenHeight) {
+                finalHei = screenHeight;
+            }
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(finalWid, finalHei);
+            params.gravity = CENTER;
+            container.setLayoutParams(params);
+        }
+    }
+
     //    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
 //        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
 //        Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -407,6 +441,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
 //            container.setLayoutParams(params);
 //        }
 //    }
+
     private void getBundleData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -420,8 +455,13 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
         }
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.growAnim;
+    }
+
     private void initComponents() {
-        mainActivity.hideTopbar();
+//        mainActivity.hideTopbar();
         txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         imgback = rootView.findViewById(R.id.imgback);
@@ -442,6 +482,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
         txtLocation = rootView.findViewById(R.id.txtLocation);
         txtTags = rootView.findViewById(R.id.txtTags);
         imgProfile = rootView.findViewById(R.id.imgProfile);
+        imgMute = rootView.findViewById(R.id.imgMute);
         txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
         txtUserName = rootView.findViewById(R.id.txtUserName);
         txtUserLoc = rootView.findViewById(R.id.txtUserLoc);
@@ -466,6 +507,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
         llShare.setOnClickListener(this);
         imgback.setOnClickListener(this);
         imgFullScreen.setOnClickListener(this);
+        imgMute.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false);
@@ -558,7 +600,8 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
         super.onStop();
         exoPlayer.stop();
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mainActivity.topBar.setVisibility(View.VISIBLE);
+//        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
@@ -617,13 +660,22 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
                 mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
                 break;
             case R.id.imgback:
-                mainActivity.popBackStack();
+                dismiss();
                 break;
             case R.id.imgFullScreen:
                 if (!mExoPlayerFullscreen)
                     openFullscreenDialog();
                 else
                     closeFullscreenDialog();
+                break;
+            case R.id.imgMute:
+                if (imgMute.isSelected())
+                    exoPlayer.setVolume(1f);
+                else
+                    exoPlayer.setVolume(0f);
+                imgMute.setSelected(!imgMute.isSelected());
+                break;
+            default:
                 break;
         }
     }
@@ -695,12 +747,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     private void showRatingDialog() {
         final TextView textView = new TextView(mainActivity);
         DialogUtils dialogUtils = new DialogUtils();
-        dialogUtils.showRatingDialog(mainActivity, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestForGiveRating(textView.getText().toString().trim());
-            }
-        }, textView);
+        dialogUtils.showRatingDialog(mainActivity, view -> requestForGiveRating(textView.getText().toString().trim()), textView);
     }
 
     private void requestForShareVideo() {
@@ -806,17 +853,7 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     }
 
     private void parseVideoRatingResponse() {
-        DialogUtils.showSimpleDialog(mainActivity, "Rating submitted successfully", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        }, true);
+        DialogUtils.showRatingSuccessDialog(mainActivity, "Rating submitted successfully");
     }
 
     @Override
@@ -844,7 +881,10 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         Log.e(TAG, "onPlayerStateChanged: " + playbackState);
-        if (playbackState == ExoPlayer.STATE_READY) applyAspectRatio(innerFrame, exoPlayer);
+        if (playbackState == ExoPlayer.STATE_READY) {
+            if (mExoPlayerFullscreen) applyFullScreenAspectRatio(innerFrame);
+            else applyAspectRatio(innerFrame, exoPlayer);
+        }
         progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
     }
 

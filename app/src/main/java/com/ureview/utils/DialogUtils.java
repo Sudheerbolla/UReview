@@ -120,13 +120,9 @@ public class DialogUtils implements View.OnClickListener {
             txtHeading2.setVisibility(View.VISIBLE);
             txtHeading2.setText("Video limit is 60 seconds else it will be automatically cropped");
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new OptionsAdapter(categoryNames, new ISearchClickListener() {
-                @Override
-                public void onClick(String text) {
-                    alertDialog.dismiss();
-                    if (clickListener != null) clickListener.onClick(text);
-                }
-
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, text -> {
+                alertDialog.dismiss();
+                if (clickListener != null) clickListener.onClick(text);
             }));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
@@ -455,4 +451,39 @@ public class DialogUtils implements View.OnClickListener {
         imgStar4.setSelected(b3);
         imgStar5.setSelected(b4);
     }
+
+    public static void showRatingSuccessDialog(final Context mContext, final String message) {
+        try {
+            CustomTextView txtMessage, txtPositiveButton;
+
+            final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
+            alertDialog.setCancelable(false);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_dialog_new);
+            txtMessage = alertDialog.findViewById(R.id.txtMessage);
+            txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+            txtMessage.setText(message);
+            txtMessage.setSelected(true);
+
+            txtPositiveButton.setOnClickListener(v -> {
+                alertDialog.dismiss();
+            });
+
+            alertDialog.setCancelable(false);
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

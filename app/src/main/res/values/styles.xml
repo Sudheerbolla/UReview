@@ -14,6 +14,10 @@
         <item name="colorAccent">@color/colorDarkGrey</item>
     </style>
 
+    <style name="growAnim">
+        <item name="android:windowEnterAnimation">@anim/grow_in</item>
+        <item name="android:windowExitAnimation">@anim/grow_out</item>
+    </style>
 
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowDisablePreview">true</item>

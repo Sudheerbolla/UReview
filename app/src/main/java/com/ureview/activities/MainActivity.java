@@ -33,6 +33,7 @@ import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
 import com.ureview.fragments.UploadVideoFragment;
+import com.ureview.fragments.VideoDetailFragment;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
@@ -400,9 +401,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void setLocationRadiusFragment() {
         LocationFilterFragment countrySelectionFragment = LocationFilterFragment.newInstance(0);
-//        countrySelectionFragment.setTargetFragment(this, DIALOG_FRAGMENT);
         countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         countrySelectionFragment.show(getSupportFragmentManager(), "");
+    }
+
+    public void showVideoDetails(VideoDetailFragment videoDetailFragment) {
+        videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+        videoDetailFragment.show(getSupportFragmentManager(), "VideoDetailFragment");
     }
 
     private void setSearchFragment() {

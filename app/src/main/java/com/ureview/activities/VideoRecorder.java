@@ -77,31 +77,20 @@ public class VideoRecorder extends BaseActivity {
         rangeSeekBar.setEnabled(false);
         loadFFMpegBinary();
         cutVideo.setOnClickListener(v -> {
+            if (videoView.canPause()) videoView.pause();
             if (selectedVideoUri != null) {
                 if (rangeSeekBar.getSelectedMaxValue().intValue() - rangeSeekBar.getSelectedMinValue().intValue() > 59) {
                     StaticUtils.showToast(VideoRecorder.this, "Video cannot be more than 60 seconds in duration");
-                } else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
-                        && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
-                    try {
-                        if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
-                            StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
-                        } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    Intent intent = new Intent();
-                    intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
-                    setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
-                    finish();
-                } else {
+                }
+//                else if (rangeSeekBar.getSelectedMinValue().intValue() == rangeSeekBar.getAbsoluteMinValue().intValue()
+//                        && rangeSeekBar.getSelectedMaxValue().intValue() == rangeSeekBar.getAbsoluteMaxValue().intValue()) {
+//                    Intent intent = new Intent();
+//                    intent.putExtra(StaticUtils.FILEURI, selectedVideoUri);
+//                    setResult(StaticUtils.VIDEO_TRIMMING_RESULT, intent);
+//                    finish();
+//                }
+                else {
                     proceedWithVideoOperation();
-                    try {
-                        if (new File(selectedVideoUri.getPath()).length() / (1024 * 1024) > 5) {
-                            StaticUtils.showToast(VideoRecorder.this, "above 5 mb");
-                        } else StaticUtils.showToast(VideoRecorder.this, "below 5 mb");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
             } else
                 Snackbar.make(mainlayout, "Please upload a video", 4000).show();
@@ -268,7 +257,10 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "25", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "20", "-vcodec", "libx264", "-b:v", "750k",
+                "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "20", "-vcodec", "mpeg4", "-b:v", "750k",
+//                "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
         execFFmpegBinary(complexCommand);
     }
 
@@ -370,30 +362,20 @@ public class VideoRecorder extends BaseActivity {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-        // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
-
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-
-                // TODO handle non-primary volumes
             }
-            // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
                 final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
             }
-            // MediaProvider
             else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");

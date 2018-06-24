@@ -138,8 +138,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
         mainActivity.setToolBar("New Review", "", "", false, false, false, false, false);
-        videoView.seekTo(stopPosition);
-        videoView.start();
+//        videoView.seekTo(stopPosition);
+//        videoView.start();
     }
 
     @Override
@@ -180,62 +180,38 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         imgPlayPause = rootView.findViewById(R.id.btnPlay);
         imgHashTag = rootView.findViewById(R.id.imgHashTag);
         imgPlay.setVisibility(View.GONE);
-        imgPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgPlay.setVisibility(View.GONE);
+        imgPlay.setOnClickListener(view -> imgPlay.setVisibility(View.GONE));
+
+        imgPlayPause.setOnClickListener(view -> {
+            if (videoView.isPlaying()) {
+                imgPlayPause.setSelected(false);
+                videoView.pause();
+            } else {
+                imgPlayPause.setSelected(true);
+                videoView.seekTo(stopPosition);
+                videoView.start();
             }
         });
 
-        imgPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (videoView.isPlaying()) {
-                    imgPlayPause.setSelected(false);
-                    videoView.pause();
-                } else {
-                    imgPlayPause.setSelected(true);
-                    videoView.seekTo(stopPosition);
-                    videoView.start();
-                }
-            }
-        });
+        txtLocation.setOnClickListener(view -> openSearch());
 
-        txtLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openSearch();
+        txtCompleteVideo.setOnClickListener(view -> {
+            String message = checkValidations();
+            if (TextUtils.isEmpty(message)) {
+                ConvertVideoToBytes convertVideoToBytes = new ConvertVideoToBytes();
+                convertVideoToBytes.execute();
+            } else {
+                StaticUtils.showToast(mainActivity, message);
             }
         });
-
-        txtCompleteVideo.setOnClickListener(new View.OnClickListener() {
+        txtCategory.setOnClickListener(view -> DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = checkValidations();
-                if (TextUtils.isEmpty(message)) {
-//                    performBase64Operation();
-                    ConvertVideoToBytes convertVideoToBytes = new ConvertVideoToBytes();
-                    convertVideoToBytes.execute();
-//                    mainActivity.setUploadVideoCompletedFragment();
-                } else {
-                    StaticUtils.showToast(mainActivity, message);
-                }
-                //                mainActivity.setUploadVideoCompletedFragment();
+                String category = (String) view.getTag();
+                txtCategory.setText(category);
+                setSelectedCategoryid(category);
             }
-        });
-        txtCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String category = (String) view.getTag();
-                        txtCategory.setText(category);
-                        setSelectedCategoryid(category);
-                    }
-                });
-            }
-        });
+        }));
         imgHashTag.setOnClickListener(view -> {
             String text = edtTags.getText().toString().trim();
             if (!text.endsWith("#")) {
