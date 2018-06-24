@@ -54,12 +54,11 @@
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:rating="3.5"
-            android:visibility="gone"
-            app:empty_color="#909090"
-            app:layout_constraintTop_toTopOf="parent"
-            app:progress_color="#FFCA73" />
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/pad_15"
+            android:visibility="visible"
+            app:empty_color="#fce9ca"
+            app:progress_color="#e9aa44" />
 
         <LinearLayout
             android:layout_width="wrap_content"

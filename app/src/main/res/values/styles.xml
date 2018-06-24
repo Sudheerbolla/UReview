@@ -53,6 +53,12 @@
         <item name="android:paddingBottom">@dimen/pad_7</item>
     </style>
 
+    <style name="CustomRatingBarXXL" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_star_l</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+
     <style name="CustomRatingBarXL" parent="@android:style/Widget.RatingBar">
         <item name="android:progressDrawable">@drawable/selector_star_xl</item>
         <item name="android:minHeight">@dimen/pad_23</item>
