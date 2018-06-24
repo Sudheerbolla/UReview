@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -48,6 +49,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private ArrayList<PeopleModel> tempPeopleArrList = new ArrayList<>();
     private CustomTextView txtNoData;
     private String userId;
+    private RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
@@ -74,6 +76,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         rvPeople = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         txtNoData.setVisibility(View.VISIBLE);
+        rlProgress = rootView.findViewById(R.id.rlProgress);
         setAdapter();
         rvPeople.setListPagination(this);
         return rootView;
@@ -112,11 +115,13 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void requestForFollowUser(String followId) {
+        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
     }
 
     private void requestForUnFollowUser(String followId) {
+        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
     }
@@ -195,6 +200,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void parseFollowUserResponse(JsonObject response) {
+        rlProgress.setVisibility(View.GONE);
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
@@ -210,6 +216,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void parseUnFollowUser(JsonObject response) {
+        rlProgress.setVisibility(View.GONE);
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {

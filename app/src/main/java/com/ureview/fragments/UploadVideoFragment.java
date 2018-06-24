@@ -150,7 +150,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         mainActivity.setToolBar("New Review", "", "", false, false, false, false, false);
         videoView.seekTo(stopPosition);
         if (stopPosition > 0)
-            videoView.resume();
+            videoView.start();
+        imgPlayPause.setSelected(true);
+        seekBar.postDelayed(onEverySecond, 500);
     }
 
     @Override
@@ -215,7 +217,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     if (stopPosition > 0) {
                         imgPlayPause.setSelected(true);
                         videoView.seekTo(stopPosition);
-                        videoView.resume();
+                        videoView.start();
+                        seekBar.postDelayed(onEverySecond, 500);
                     }
                 }
             }
