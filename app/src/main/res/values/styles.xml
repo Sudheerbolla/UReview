@@ -1,0 +1,100 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="SeekBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_vvvDarkGrey</item>
+        <item name="colorPrimaryDark">@color/color_vvvDarkGrey</item>
+        <item name="colorAccent">@color/colorDarkGrey</item>
+    </style>
+
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+
+    <style name="RangeBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppThemeSplash" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="Theme.AppCompat.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+    <style name="AppButtonStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/txt_size_14sp</item>
+        <item name="android:background">@drawable/bg_custom_btn_app_color</item>
+        <item name="android:textColor">@color/color_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/pad_7</item>
+        <item name="android:textColorHint">@color/color_white</item>
+        <item name="android:paddingLeft">@dimen/pad_12</item>
+        <item name="android:paddingRight">@dimen/pad_12</item>
+        <item name="android:paddingTop">@dimen/pad_7</item>
+        <item name="android:paddingBottom">@dimen/pad_7</item>
+    </style>
+
+    <style name="CustomRatingBarXL" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_star_xl</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">@dimen/pad_30</item>
+    </style>
+
+    <style name="CustomRatingBarL" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_star_l</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+
+    <style name="ProfileRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_profile_rating</item>
+        <item name="android:minHeight">@dimen/pad_23</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+
+    <style name="CustomRatingBarM" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/selector_star_m</item>
+        <item name="android:minHeight">@dimen/pad_15</item>
+        <item name="android:maxHeight">@dimen/pad_20</item>
+    </style>
+
+    <style name="countryCodeDialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!--<style name="fullScreenDialogStyle" parent="Theme.AppCompat.Dialog.">-->
+    <!--<item name="android:windowNoTitle">true</item>-->
+    <!--<item name="windowFullscreen">true</item>-->
+    <!--<item name="windowContentOverlay">@null</item>-->
+    <!--</style>-->
+
+    <!--
+    setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+    -->
+
+</resources>

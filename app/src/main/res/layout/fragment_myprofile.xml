@@ -1,0 +1,193 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/color_vvvDarkGrey" />
+
+    <com.ureview.utils.views.StickyScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlProfileTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_4"
+                android:padding="@dimen/pad_8">
+
+                <com.ureview.utils.views.CircleImageView
+                    android:id="@+id/imgProfile"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/ic_launcher" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_toEndOf="@+id/imgProfile"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_17sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtName"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_3"
+                    android:layout_toEndOf="@+id/imgProfile"
+                    android:drawablePadding="@dimen/pad_5"
+                    android:drawableStart="@drawable/location_small_copy"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <include
+                    android:id="@+id/llRatingBar"
+                    layout="@layout/layout_rating_bar_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLoc"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:layout_toEndOf="@+id/imgProfile" />
+
+                <RelativeLayout
+                    android:id="@+id/relFollow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llRatingBar"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_10"
+                    android:layout_toEndOf="@+id/imgProfile">
+
+                    <LinearLayout
+                        android:id="@+id/linFollowers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_grey_small_curved"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/pad_3"
+                        android:paddingEnd="@dimen/pad_10"
+                        android:paddingStart="@dimen/pad_10"
+                        android:paddingTop="@dimen/pad_3">
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:id="@+id/txtFollowersCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/txt_size_12sp" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:id="@+id/txtFollowers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Followers"
+                            android:textColor="@color/color_vvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/pad_10"
+                        android:layout_toEndOf="@+id/linFollowers"
+                        android:background="@drawable/bg_grey_small_curved"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/pad_3"
+                        android:paddingEnd="@dimen/pad_10"
+                        android:paddingStart="@dimen/pad_10"
+                        android:paddingTop="@dimen/pad_3">
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:id="@+id/txtFollowingCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/txt_size_12sp" />
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:id="@+id/txtFollowing"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Following"
+                            android:textColor="@color/color_vvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtFollowStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relFollow"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_12"
+                    android:layout_toEndOf="@id/imgProfile"
+                    android:background="@drawable/selector_custom_app_btn"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/pad_4"
+                    android:paddingEnd="@dimen/pad_19"
+                    android:paddingStart="@dimen/pad_19"
+                    android:paddingTop="@dimen/pad_4"
+                    android:text="Follow"
+                    android:textColor="@color/selector_txt_color"
+                    android:textSize="@dimen/txt_size_12sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/profileTabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_8"
+                android:background="@color/color_white"
+                android:tag="sticky-nonconstant"
+                app:tabGravity="fill"
+                app:tabMode="fixed"
+                app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget" />
+
+            <View
+                android:id="@+id/viewDivider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorMediumGrey" />
+
+            <com.ureview.utils.views.CustomViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginTop="@dimen/pad_5" />
+
+        </LinearLayout>
+
+    </com.ureview.utils.views.StickyScrollView>
+
+</LinearLayout>
+

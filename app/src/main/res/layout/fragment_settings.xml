@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:scrollbars="none">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtShare"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/share_app_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Share App"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/privacy_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Privacy Policies"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/terms_and_condition_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Terms &amp; Conditions"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtHelp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/help_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Help Center"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtContactUs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/contact_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Contact Us"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/logout_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Log Out"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtDelAcc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_25"
+                android:drawableStart="@drawable/delete_account_copy"
+                android:gravity="center_vertical"
+                android:padding="@dimen/pad_15"
+                android:text="Delete Account"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+        </LinearLayout>
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/pad_15"
+            android:layout_marginTop="@dimen/pad_10"
+            android:padding="@dimen/pad_10"
+            android:textColor="@color/color_vvvDarkGrey"
+            android:textSize="@dimen/txt_size_11sp" />
+
+    </RelativeLayout>
+
+</ScrollView>

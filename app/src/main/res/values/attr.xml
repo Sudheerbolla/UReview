@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTextView">
+        <attr name="txt_font_type" format="integer">
+            <enum name="light" value="0" />
+            <enum name="regular" value="1" />
+            <enum name="bold" value="2" />
+            <enum name="italic" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="customswipeview">
+        <attr name="dragEdge">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+            <flag name="top" value="4" />
+            <flag name="bottom" value="8" />
+        </attr>
+
+        <attr name="swipemode">
+            <enum name="normal" value="0" />
+            <enum name="same_level" value="1" />
+        </attr>
+
+        <attr name="flingVelocity" format="integer" />
+
+        <attr name="minDistRequestDisallowParent" format="dimension" />
+    </declare-styleable>
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="RoundedImageView">
+        <attr name="android_scaleType" format="integer" />
+        <attr name="riv_corner_radius" format="dimension" />
+        <attr name="riv_corner_radius_top_left" format="dimension" />
+        <attr name="riv_corner_radius_top_right" format="dimension" />
+        <attr name="riv_corner_radius_bottom_right" format="dimension" />
+        <attr name="riv_corner_radius_bottom_left" format="dimension" />
+        <attr name="riv_border_width" format="dimension" />
+        <attr name="riv_border_color" format="color" />
+        <attr name="riv_mutate_background" format="boolean" />
+        <attr name="riv_oval" format="boolean" />
+        <attr name="riv_tile_mode" format="integer" />
+        <attr name="riv_tile_mode_x" format="integer" />
+        <attr name="riv_tile_mode_y" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="SyncViewPager">
+        <attr name="velocity" format="integer" />
+    </declare-styleable>
+    <!--<declare-styleable name="Theme">-->
+    <!--<attr name="circularImageViewStyle" format="reference" />-->
+    <!--</declare-styleable>-->
+
+    <declare-styleable name="StickyScrollView">
+        <attr name="stuckShadowHeight" format="dimension" />
+        <attr name="stuckShadowDrawable" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="RangeSeekBar">
+        <attr name="absoluteMinValue" format="integer|float" />
+        <attr name="absoluteMaxValue" format="integer|float" />
+        <attr name="singleThumb" format="boolean" />
+    </declare-styleable>
+
+    // RecyclerView resources
+    <declare-styleable name="CustomRecyclerView">
+        <attr name="pagination" format="boolean" />
+        <attr name="loadmore_visibility" format="boolean" />
+        <attr name="is_not_parent" format="boolean" />
+        <attr name="gird_span" format="integer" />
+        <attr name="list_type" />
+        <attr name="list_orientation" />
+        <attr name="loadmore_type" />
+    </declare-styleable>
+
+    <attr name="loadmore_type">
+        <enum name="bottom" value="0" />
+        <enum name="top" value="1" />
+    </attr>
+
+    <attr name="list_type">
+        <enum name="list" value="0" />
+        <enum name="grid" value="1" />
+        <enum name="staggered" value="2" />
+    </attr>
+
+    <attr name="list_orientation">
+        <enum name="vertical" value="0" />
+        <enum name="horizontal" value="1" />
+    </attr>
+</resources>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/relUserDetails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/pad_2">
+
+        <com.ureview.utils.views.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="@dimen/pad_40"
+            android:layout_height="@dimen/pad_40"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/pad_2"
+            android:padding="@dimen/pad_2"
+            android:src="@drawable/ic_user_placeholder" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/pad_8"
+            android:layout_marginRight="@dimen/pad_8"
+            android:layout_toEndOf="@+id/imgProfile"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_13sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtLoc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:maxLines="2"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_10sp" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvLocation"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:layout_below="@+id/relUserDetails"
+        android:layout_marginTop="@dimen/pad_5"
+        app:cardCornerRadius="@dimen/pad_5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.ureview.utils.views.customimageview.RoundedImageView
+                android:id="@+id/imgLocation"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:riv_corner_radius="@dimen/pad_6" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imgLocation"
+                android:layout_alignEnd="@+id/imgLocation"
+                android:layout_marginBottom="@dimen/pad_10"
+                android:layout_marginEnd="@dimen/pad_10"
+                android:alpha="0.9"
+                android:background="@drawable/blue_bg">
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/pad_4"
+                    android:paddingEnd="@dimen/pad_7"
+                    android:paddingStart="@dimen/pad_7"
+                    android:paddingTop="@dimen/pad_4"
+                    android:text="frgtfhyjgukigtb"
+                    android:textColor="@color/selector_txt_color"
+                    android:textSize="@dimen/txt_size_10sp" />
+
+            </RelativeLayout>
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="@dimen/pad_6"
+                android:layout_marginStart="@dimen/pad_8"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:textColor="@color/color_white"
+                android:textSize="@dimen/txt_size_10sp" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtSynth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cvLocation"
+        android:layout_marginTop="@dimen/pad_12"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_14sp"
+        app:txt_font_type="bold" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSynth"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="-3dp"
+        android:layout_marginTop="-3dp"
+        android:drawablePadding="@dimen/pad_3"
+        android:drawableStart="@drawable/ic_view"
+        android:gravity="center"
+        android:padding="@dimen/pad_5"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_10sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSynth"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/pad_2"
+        android:layout_toEndOf="@+id/txtViewCount"
+        android:drawablePadding="@dimen/pad_3"
+        android:drawableStart="@drawable/vector_location"
+        android:gravity="center"
+        android:padding="@dimen/pad_5"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_10sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtRatingsNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/txtSynth"
+        android:layout_marginTop="@dimen/pad_2"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_10sp" />
+
+    <include
+        android:id="@+id/llRatingBar"
+        layout="@layout/layout_rating_bar_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtSynth"
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_toStartOf="@+id/txtRatingsNo" />
+
+    <View
+        android:id="@+id/dividerView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pad_10"
+        android:layout_below="@id/txtViewCount" />
+
+</RelativeLayout>

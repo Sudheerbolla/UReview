@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/pad_5">
+
+    <RelativeLayout
+        android:id="@+id/relImageVideo"
+        android:layout_width="match_parent"
+        android:layout_height="170dp">
+
+        <com.ureview.utils.views.customimageview.RoundedImageView
+            android:id="@+id/imgVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="@dimen/pad_7" />
+
+        <ImageView
+            android:id="@+id/imgDeleteVideo"
+            android:layout_width="@dimen/pad_25"
+            android:layout_height="@dimen/pad_25"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/pad_4"
+            android:src="@drawable/delete_account_copy"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvMore"
+        android:layout_width="130dp"
+        android:layout_height="120dp"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/pad_5">
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="More.."
+            android:textColor="@color/app_text_color"
+            android:textSize="@dimen/txt_size_15sp" />
+    </android.support.v7.widget.CardView>
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/relImageVideo"
+        android:layout_alignStart="@+id/relImageVideo"
+        android:layout_marginBottom="@dimen/pad_8"
+        android:layout_marginStart="@dimen/pad_10"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/txt_size_12sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/relImageVideo"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relImageVideo"
+        android:layout_marginTop="@dimen/pad_5"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_13sp"
+        app:txt_font_type="bold" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/relImageVideo"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/txtName"
+        android:layout_marginTop="@dimen/pad_2"
+        android:ellipsize="end"
+        android:inputType="text"
+        android:singleLine="true"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_9sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtTags"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="-3dp"
+        android:layout_marginTop="-3dp"
+        android:drawablePadding="@dimen/pad_3"
+        android:drawableStart="@drawable/ic_view"
+        android:gravity="center"
+        android:padding="@dimen/pad_5"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_10sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtTags"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/txtViewCount"
+        android:drawablePadding="@dimen/pad_3"
+        android:drawableStart="@drawable/vector_location"
+        android:padding="@dimen/pad_5"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_11sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtRatingsNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtDistance"
+        android:layout_marginTop="@dimen/pad_2"
+        android:layout_toEndOf="@+id/llRatingBar"
+        android:textColor="@color/color_vvvDarkGrey"
+        android:textSize="@dimen/txt_size_11sp" />
+
+    <include
+        android:id="@+id/llRatingBar"
+        layout="@layout/layout_rating_bar_small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtDistance"
+        android:layout_marginEnd="@dimen/pad_2" />
+
+</RelativeLayout>

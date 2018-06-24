@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/pad_30"
+    android:paddingStart="@dimen/pad_30">
+
+    <com.ureview.utils.views.CustomTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:text="Video uploaded successfully."
+        android:textColor="@color/color_vDarkGrey"
+        android:textSize="@dimen/txt_size_14sp"
+        android:textStyle="italic" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pad_30"
+        android:scaleType="centerCrop"
+        android:src="@drawable/checked" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/pad_20"
+        android:background="@drawable/bg_custom_btn_app_color"
+        android:gravity="center"
+        android:paddingBottom="@dimen/pad_13"
+        android:paddingTop="@dimen/pad_13"
+        android:text="Go to Home"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/txt_size_14sp" />
+</LinearLayout>

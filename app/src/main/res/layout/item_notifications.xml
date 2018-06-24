@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ureview.utils.swipeUtils.CustomSwipeView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_gravity="center"
+    android:layout_marginTop="@dimen/pad_1"
+    android:background="@color/color_250_250_250"
+    app:dragEdge="right"
+    app:swipemode="same_level">
+
+    <RelativeLayout
+        android:id="@+id/rlDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/color_255_88_117">
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="@dimen/pad_23"
+            android:text="Delete"
+            android:textColor="@color/color_white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/pad_10">
+
+        <com.ureview.utils.views.CircleImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="@dimen/pad_45"
+            android:layout_height="@dimen/pad_45"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_user_placeholder" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_3"
+            android:layout_toRightOf="@+id/imgProfile"
+            android:text="Terry Rodriguez"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_15sp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="@dimen/pad_5"
+            android:layout_marginRight="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_3"
+            android:text="7 minutes ago"
+            android:textColor="@color/color_vDarkGrey"
+            android:textSize="@dimen/txt_size_12sp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtName"
+            android:layout_marginLeft="@dimen/pad_5"
+            android:layout_marginRight="@dimen/pad_5"
+            android:layout_marginTop="@dimen/pad_5"
+            android:layout_toRightOf="@+id/imgProfile"
+            android:text="liked your video liked your video"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/txt_size_12sp" />
+
+
+    </RelativeLayout>
+
+</com.ureview.utils.swipeUtils.CustomSwipeView>

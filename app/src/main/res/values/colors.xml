@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FE9D96</color>
+    <color name="colorPrimaryDark">#F9789D</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="app_text_color">#FF9A9A</color>
+    <color name="app_color_light">#FEB497</color>
+    <color name="app_color_medium">#FE9D96</color>
+    <color name="app_color_dark">#F9789D</color>
+    <color name="app_purple_light">#F2A9C7</color>
+    <color name="app_purple_dark">#B983FF</color>
+    <color name="app_purple_medium">#D695E5</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="color_250_250_250">#FAFAFA</color>
+    <color name="color_227_227_227">#E3E3E3</color>
+    <color name="color_255_88_117">#FF5875</color>
+
+    <color name="bg_twitter_color">#00C6FF</color>
+    <color name="bg_fb_color">#4D77BA</color>
+    <color name="bg_instagram_color">#96358E</color>
+    <color name="bg_edt_txt">#F9F9F9</color>
+
+    <color name="textColor">#FF8000</color>
+    <color name="textColorDark">#FF8000</color>
+
+    <color name="colorLightBlue">#E7F8FF</color>
+    <color name="colorDarkBlue">#4169E1</color>
+
+    <color name="colorGreenDLight">#CF6DDC7D</color>
+
+    <color name="colorLightGreen">#176DDC7D</color>
+    <color name="colorDarkGreen">#FF6DDC7D</color>
+    <color name="colorGreen">#3CB371</color>
+
+    <color name="colorLightOrange">#1CFF8F67</color>
+    <color name="colorDarkOrange">#FFFF8F67</color>
+
+    <color name="transparent">@android:color/transparent</color>
+
+    <color name="colorLightRed">#18D23B20</color>
+    <color name="colorDarkRed">#FED23B20</color>
+
+    <color name="colorPurple">#8B008B</color>
+
+    <color name="color_vvvl_gray">#FAFAFC</color>
+    <color name="colorLightGrey">#f2f2f2</color>
+    <color name="colorNormalGrey">#e6e6e6</color>
+    <color name="colorGrey">#DEDEDE</color>
+    <color name="colorMediumGrey">#b2beb5</color>
+    <color name="colorDarkGrey">#b5b5b5</color>
+    <color name="color_vDarkGrey">#929292</color>
+    <color name="color_vvDarkGrey">#6c6f70</color>
+    <color name="color_vvvDarkGrey">#FF5D5E5E</color>
+
+    <color name="seperatorColor">#F4F4F4</color>
+
+    <color name="rating_yellow_color">#FFCA73</color>
+
+    <color name="dot_light_screen1">#929292</color>
+    <color name="dot_dark_screen1">#DEDEDE</color>
+
+    <array name="array_dot_active">
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen1</item>
+        <item>@color/dot_light_screen1</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen1</item>
+        <item>@color/dot_dark_screen1</item>
+    </array>
+
+</resources>

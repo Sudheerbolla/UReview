@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nestedScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvVideos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingLeft="@dimen/pad_5"
+            android:paddingRight="@dimen/pad_5"
+            android:scrollbars="none" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtNoDatafound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_50"
+            android:gravity="center"
+            android:paddingTop="@dimen/pad_25"
+            android:text="No videos uploaded"
+            android:textColor="@color/color_vvDarkGrey"
+            android:textSize="@dimen/txt_size_15sp" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

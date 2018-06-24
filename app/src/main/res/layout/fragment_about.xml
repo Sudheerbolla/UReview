@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/pad_15">
+
+        <LinearLayout
+            android:id="@+id/linPersonal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_12"
+                android:text="Email"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="@dimen/txt_size_12sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_7"
+                android:singleLine="true"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_12"
+                android:text="Age"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="@dimen/txt_size_12sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtAge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_7"
+                android:singleLine="true"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_12"
+                android:text="Phone"
+                android:textColor="@color/colorDarkGrey"
+                android:textSize="@dimen/txt_size_12sp"
+                android:visibility="gone" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/pad_7"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtAbout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_12"
+            android:text="About Me"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/txt_size_12sp" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtAboutMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_7"
+            android:text="Description not available"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/txt_size_15sp" />
+        <!--Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.-->
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/pad_3" />
+            <padding
+                android:bottom="@dimen/pad_1"
+                android:left="@dimen/pad_1"
+                android:right="@dimen/pad_1"
+                android:top="@dimen/pad_1" />
+            <gradient
+                android:angle="135"
+                android:centerColor="#FE9D96"
+                android:endColor="@color/app_color_light"
+                android:startColor="@color/app_color_dark" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/color_white" />
+            <corners android:radius="@dimen/pad_3" />
+        </shape>
+    </item>
+</layer-list>

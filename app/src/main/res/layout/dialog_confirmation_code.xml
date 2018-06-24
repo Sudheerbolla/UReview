@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/pad_8">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/pad_15"
+        android:paddingLeft="@dimen/pad_15"
+        android:paddingRight="@dimen/pad_15"
+        android:paddingTop="@dimen/pad_15">
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter Confirmation code"
+            android:textColor="@color/app_text_color"
+            android:textSize="@dimen/txt_size_19sp"
+            app:txt_font_type="bold" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/pad_20"
+            android:layout_marginStart="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_15"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:text="Please enter the 4 digit code that sent to your given phone number"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="@dimen/txt_size_14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_25"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="2"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/pad_7"
+                android:ems="2"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/pad_7"
+                android:ems="2"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+            <com.ureview.utils.views.CustomEditText
+                android:id="@+id/edtCode4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/pad_7"
+                android:ems="2"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1" />
+
+        </LinearLayout>
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtVerify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/pad_20"
+            android:layout_marginRight="@dimen/pad_20"
+            android:layout_marginTop="@dimen/pad_15"
+            android:background="@drawable/bg_custom_btn_app_color"
+            android:gravity="center"
+            android:minWidth="150dp"
+            android:paddingBottom="@dimen/pad_13"
+            android:paddingTop="@dimen/pad_13"
+            android:text="Verify"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/txt_size_16sp"
+            app:txt_font_type="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/pad_10"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtChangeNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_10"
+                android:text="Change Number"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtResendCodeAuto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="@dimen/pad_10"
+                android:text="Resend"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_15sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

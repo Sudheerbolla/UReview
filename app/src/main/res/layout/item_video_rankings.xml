@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relBody"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/pad_6">
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtSno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/pad_7"
+        android:text="1"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_12sp"
+        app:txt_font_type="bold" />
+
+    <com.ureview.utils.views.CircleImageView
+        android:id="@+id/imgProfile"
+        android:layout_width="@dimen/pad_40"
+        android:layout_height="@dimen/pad_40"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/txtSno"
+        android:src="@drawable/ic_user_placeholder" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtViews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="@dimen/pad_5"
+        android:textColor="@color/app_color_dark"
+        android:textSize="@dimen/txt_size_16sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_marginStart="@dimen/pad_10"
+        android:layout_marginTop="@dimen/pad_3"
+        android:layout_toEndOf="@+id/imgProfile"
+        android:layout_toStartOf="@+id/txtViews"
+        android:singleLine="true"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_16sp" />
+
+</RelativeLayout>
