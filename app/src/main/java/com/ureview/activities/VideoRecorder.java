@@ -274,7 +274,7 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "20", "-vcodec", "libx264", "-b:v", "750k",
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x720", "-r", "20", "-vcodec", "libx264", "-b:v", "750k",
                 "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "20", "-vcodec", "mpeg4", "-b:v", "750k",
 //                "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};

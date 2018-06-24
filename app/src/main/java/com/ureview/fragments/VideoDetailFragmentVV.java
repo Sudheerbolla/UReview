@@ -207,7 +207,7 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
     }
 
     private void initComponents() {
-        mainActivity.hideTopbar();
+//        mainActivity.hideTopbar();
         txtVideoTitle = rootView.findViewById(R.id.txtVideoTitle);
         imgCatBg = rootView.findViewById(R.id.imgCatBg);
         imgback = rootView.findViewById(R.id.imgback);

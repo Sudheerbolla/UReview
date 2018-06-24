@@ -194,7 +194,9 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
 //                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(userVideosModelArrayList, position);
 //                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(userVideosModelArrayList, position));
+                ArrayList<VideoModel> tempList = new ArrayList<>(userVideosModelArrayList);
+
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position));
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(userVideosModelArrayList, position), true, R.id.mainContainer);
                 break;
             default:

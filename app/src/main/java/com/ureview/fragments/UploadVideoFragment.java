@@ -152,7 +152,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         if (stopPosition > 0)
             videoView.start();
         imgPlayPause.setSelected(true);
-        seekBar.postDelayed(onEverySecond, 500);
+        seekBar.postDelayed(onEverySecond, 1000);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 videoView.seekTo(0);
                 videoView.start();
                 imgPlayPause.setSelected(true);
-                seekBar.postDelayed(onEverySecond, 500);
+                seekBar.postDelayed(onEverySecond, 1000);
             }
         });
 
@@ -218,7 +218,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                         imgPlayPause.setSelected(true);
                         videoView.seekTo(stopPosition);
                         videoView.start();
-                        seekBar.postDelayed(onEverySecond, 500);
+                        seekBar.postDelayed(onEverySecond, 1000);
                     }
                 }
             }
