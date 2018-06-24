@@ -416,6 +416,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 if (startFrom == 0) {
                     txtNoData.setVisibility(View.VISIBLE);
                     rvNewsFeed.setVisibility(View.GONE);
+                    if (categoryList.size() > 1)
+                        updateCategoryList(1, true);
                 } else {
                     hasLoadedAllItems = true;
                     isLoading = false;

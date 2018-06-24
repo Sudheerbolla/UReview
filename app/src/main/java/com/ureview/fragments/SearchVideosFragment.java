@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -49,6 +50,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private ArrayList<VideoModel> videosArrList = new ArrayList<>();
     private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
     private String currLat, currLng;
+    private RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading = false, hasLoadedAllItems;
@@ -78,6 +80,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
 
         rvSearchVideo = rootView.findViewById(R.id.rvSearchVideo);
         txtNoData = rootView.findViewById(R.id.txtNoData);
+        rlProgress = rootView.findViewById(R.id.rlProgress);
         searchVideosAdapter = new SearchVideosAdapter(getActivity(), this);
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
@@ -216,10 +219,10 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             case R.id.txtFollowStatus:
                 follPos = position;
                 VideoModel vid = videosArrList.get(position);
-                if (!TextUtils.isEmpty(vid.followStatus) && vid.followStatus.equalsIgnoreCase("unfollow")) {
-                    askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
-                } else {
+                if (TextUtils.isEmpty(vid.followStatus) || vid.followStatus.equalsIgnoreCase("follow")) {
                     requestForFollowUser(vid.videoOwnerId);
+                } else {
+                    askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
                 }
                 break;
         }
@@ -241,11 +244,13 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void requestForFollowUser(String followId) {
+        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
     }
 
     private void requestForUnFollowUser(String followId) {
+        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
     }
@@ -262,12 +267,18 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void parseUnFollowUserResponse(JsonObject response) {
+        rlProgress.setVisibility(View.GONE);
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "";
-                        searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
+                        String id = videosArrList.get(follPos).userId;
+                        for (int i = 0; i < videosArrList.size(); i++) {
+                            if (videosArrList.get(i).userId.equalsIgnoreCase(id)) {
+                                videosArrList.get(i).followStatus = "";
+                                searchVideosAdapter.updateItem(videosArrList.get(i), i);
+                            }
+                        }
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -279,12 +290,19 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void parseFollowUserResponse(JsonObject response) {
+        rlProgress.setVisibility(View.GONE);
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (follPos != -1) {
-                        videosArrList.get(follPos).followStatus = "follow";
-                        searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
+                        String id = videosArrList.get(follPos).userId;
+                        for (int i = 0; i < videosArrList.size(); i++) {
+                            if (videosArrList.get(i).userId.equalsIgnoreCase(id)) {
+                                videosArrList.get(i).followStatus = "follow";
+                                searchVideosAdapter.updateItem(videosArrList.get(i), i);
+                            }
+                        }
+//                        searchVideosAdapter.updateItem(videosArrList.get(follPos), follPos);
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

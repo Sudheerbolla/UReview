@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/pad_15"
-            android:visibility="visible"
+            android:visibility="gone"
             app:empty_color="#fce9ca"
             app:progress_color="#e9aa44" />
 

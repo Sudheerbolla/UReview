@@ -23,6 +23,18 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center" />
 
+    <ImageView
+        android:id="@+id/imgPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/VideoView"
+        android:layout_alignTop="@+id/VideoView"
+        android:layout_marginTop="@dimen/pad_50"
+        android:layout_marginBottom="@dimen/pad_50"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/pad_10"
+        android:src="@drawable/play_button_copy" />
+
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/rangeSeekBar"
         android:layout_width="match_parent"

@@ -16,6 +16,8 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -37,6 +39,7 @@ public class VideoRecorder extends BaseActivity {
 
     private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
     private VideoView videoView;
+    private ImageView imgPlay;
     private RangeSeekBar rangeSeekBar;
     private Runnable r;
     private FFmpeg ffmpeg;
@@ -66,11 +69,18 @@ public class VideoRecorder extends BaseActivity {
 
         cutVideo = findViewById(R.id.cropVideo);
         videoView = findViewById(R.id.VideoView);
+        imgPlay = findViewById(R.id.imgPlay);
         rangeSeekBar = findViewById(R.id.rangeSeekBar);
         mainlayout = findViewById(R.id.mainlayout);
         tvLeft = findViewById(R.id.tvLeft);
         tvRight = findViewById(R.id.tvRight);
-
+        imgPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                videoView.start();
+                imgPlay.setVisibility(View.GONE);
+            }
+        });
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(null);
         progressDialog.setCancelable(false);
@@ -113,8 +123,6 @@ public class VideoRecorder extends BaseActivity {
             selectedVideoUri = bundle.getParcelable("selectedVideoUri");
 
             videoView.setVideoURI(selectedVideoUri);
-            videoView.start();
-
             videoView.setOnPreparedListener(mp -> {
                 duration = mp.getDuration() / 1000;
                 tvLeft.setText("00:00:01");
@@ -126,6 +134,7 @@ public class VideoRecorder extends BaseActivity {
                 rangeSeekBar.setSelectedMaxValue(duration);
                 rangeSeekBar.setEnabled(true);
                 if (duration > 60) {
+
                     cutVideo.setText("Trim Video and continue");
                 } else {
                     cutVideo.setText("Upload Video");
@@ -134,6 +143,7 @@ public class VideoRecorder extends BaseActivity {
                     @Override
                     public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Number minValue, Number maxValue) {
                         videoView.seekTo((int) minValue * 1000);
+                        Log.e("seek on range", ((int) minValue * 1000) + "");
                         tvLeft.setText(getTime((int) bar.getSelectedMinValue()));
                         tvRight.setText(getTime((int) bar.getSelectedMaxValue()));
                         if (bar.getSelectedMaxValue().intValue() - bar.getSelectedMinValue().intValue() > 60) {
@@ -148,8 +158,13 @@ public class VideoRecorder extends BaseActivity {
                 handler.postDelayed(r = new Runnable() {
                     @Override
                     public void run() {
-                        if (videoView.getCurrentPosition() >= rangeSeekBar.getSelectedMaxValue().intValue() * 1000)
-                            videoView.seekTo(rangeSeekBar.getSelectedMinValue().intValue() * 1000);
+                        if (videoView.getCurrentPosition() >= rangeSeekBar.getSelectedMaxValue().intValue() * 1000) {
+//                            videoView.seekTo(rangeSeekBar.getSelectedMinValue().intValue() * 1000);
+                            videoView.pause();
+                            imgPlay.setVisibility(View.VISIBLE);
+                        }
+                        tvLeft.setText(getTime((int) (videoView.getCurrentPosition() / 1000)));
+                        Log.e("seek val", (videoView.getCurrentPosition()) + "");
                         handler.postDelayed(r, 1000);
                     }
                 }, 1000);
@@ -173,13 +188,15 @@ public class VideoRecorder extends BaseActivity {
         super.onPause();
         stopPosition = videoView.getCurrentPosition(); //stopPosition is an int
         videoView.pause();
+        imgPlay.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         videoView.seekTo(stopPosition);
-        videoView.start();
+//        videoView.start();
+        imgPlay.setVisibility(View.VISIBLE);
     }
 
     private String getTime(int seconds) {

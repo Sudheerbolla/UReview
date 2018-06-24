@@ -79,10 +79,20 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         public void run() {
             if (seekBar != null) {
                 seekBar.setProgress(videoView.getCurrentPosition() / 1000);
+                tvLeft.setText(StaticUtils.getTime(videoView.getCurrentPosition() / 1000));
             }
             if (videoView.isPlaying()) {
                 seekBar.postDelayed(onEverySecond, 500);
             }
+            if (videoView.getDuration() - videoView.getCurrentPosition() <= 500) {
+                videoView.pause();
+                stopPosition = 0;
+                imgPlay.setVisibility(View.VISIBLE);
+                imgPlayPause.setSelected(false);
+                seekBar.setProgress(0);
+                tvLeft.setText("00:00:00");
+            }
+            Log.e("vid time", (videoView.getCurrentPosition()) + ", " + (videoView.getDuration()));
         }
     };
 
@@ -139,7 +149,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
         mainActivity.setToolBar("New Review", "", "", false, false, false, false, false);
         videoView.seekTo(stopPosition);
-        videoView.start();
+        if (stopPosition > 0)
+            videoView.resume();
     }
 
     @Override
@@ -172,18 +183,24 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         txtCompleteVideo = rootView.findViewById(R.id.txtCompleteVideo);
         txtLocation = rootView.findViewById(R.id.txtLocation);
         tvLeft = rootView.findViewById(R.id.time_current);
+        tvLeft.setText("00:00:00");
         tvRight = rootView.findViewById(R.id.player_end_time);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         edtVideoTitle = rootView.findViewById(R.id.edtVideoTitle);
         edtTags = rootView.findViewById(R.id.edtTags);
         imgPlay = rootView.findViewById(R.id.imgPlay);
         imgPlayPause = rootView.findViewById(R.id.btnPlay);
+        imgPlayPause.setSelected(false);
         imgHashTag = rootView.findViewById(R.id.imgHashTag);
-        imgPlay.setVisibility(View.GONE);
+//        imgPlay.setVisibility(View.GONE);
         imgPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imgPlay.setVisibility(View.GONE);
+                videoView.seekTo(0);
+                videoView.start();
+                imgPlayPause.setSelected(true);
+                seekBar.postDelayed(onEverySecond, 500);
             }
         });
 
@@ -191,12 +208,15 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             @Override
             public void onClick(View view) {
                 if (videoView.isPlaying()) {
+                    stopPosition = videoView.getCurrentPosition();
                     imgPlayPause.setSelected(false);
                     videoView.pause();
                 } else {
-                    imgPlayPause.setSelected(true);
-                    videoView.seekTo(stopPosition);
-                    videoView.start();
+                    if (stopPosition > 0) {
+                        imgPlayPause.setSelected(true);
+                        videoView.seekTo(stopPosition);
+                        videoView.resume();
+                    }
                 }
             }
         });
@@ -204,6 +224,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         txtLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopPosition = videoView.getCurrentPosition();
+                videoView.pause();
+                imgPlayPause.setSelected(false);
                 openSearch();
             }
         });
@@ -331,13 +354,13 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             videoView.setVideoURI(selectedVideoUri);
             videoView.setOnPreparedListener(mp -> {
                 duration = mp.getDuration() / 1000;
-                tvLeft.setText("00:00:00");
+//                tvLeft.setText("00:00:00");
 
                 tvRight.setText(StaticUtils.getTime(mp.getDuration() / 1000));
                 mp.setLooping(true);
                 seekBar.setMax(duration);
-                seekBar.postDelayed(onEverySecond, 500);
-                imgPlayPause.setSelected(true);
+//                seekBar.postDelayed(onEverySecond, 500);
+//                imgPlayPause.setSelected(true);
             });
 
             seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -355,6 +378,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     if (fromUser) {
                         videoView.seekTo(progress * 1000);
                     }
+                    if (progress >= videoView.getDuration())
+                        videoView.pause();
                 }
             });
         }

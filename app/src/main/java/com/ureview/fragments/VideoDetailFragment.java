@@ -11,13 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.support.v4.widget.NestedScrollView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +32,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.AdaptiveMediaSourceEventListener;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -53,11 +46,9 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoRendererEventListener;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -79,7 +70,6 @@ import com.ureview.wsutils.WSUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -536,6 +526,8 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
             txtFollowStatus.setSelected(true);
         }
         txtFollowStatus.setOnClickListener(this);
+        txtViewCount.setOnClickListener(this);
+        txtDistance.setOnClickListener(this);
 
         if (feedVideoList.size() > 0) {
             videosAdapter.addVideos(feedVideoList);
@@ -596,6 +588,17 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.txtViewCount:
+                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(feedVideo.id);
+                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                break;
+            case R.id.txtDistance:
+                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
+                        feedVideo.videoLongitude;
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(mapIntent);
+                break;
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
                 if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
@@ -605,7 +608,11 @@ public class VideoDetailFragment extends BaseFragment implements IClickListener,
                 }
                 break;
             case R.id.llRate:
-                showRatingDialog();
+                if (feedVideo.userRating.equalsIgnoreCase("0")) {
+                    showRatingDialog();
+                } else {
+                    Toast.makeText(mainActivity, "Rating is already submitted.", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.llShare:
                 showShareDialog();
