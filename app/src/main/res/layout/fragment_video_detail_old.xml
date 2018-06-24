@@ -3,19 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_white"
     android:orientation="vertical"
     android:paddingBottom="@dimen/pad_10">
 
     <FrameLayout
         android:id="@+id/fl_player"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="240dp"
         android:background="@color/colorBlack">
 
         <FrameLayout
             android:id="@+id/player_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="240dp"
             android:background="@color/colorBlack">
 
             <FrameLayout
@@ -37,20 +38,38 @@
                     android:layout_gravity="center" />
             </FrameLayout>
 
-            <ImageView
-                android:id="@+id/imgback"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/pad_10"
-                android:src="@drawable/ic_back_white" />
+                android:layout_marginEnd="@dimen/pad_7">
 
-            <ImageView
-                android:id="@+id/imgFullScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:padding="@dimen/pad_10"
-                android:src="@drawable/ic_full_screen" />
+                <ImageView
+                    android:id="@+id/imgback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/pad_10"
+                    android:src="@drawable/ic_back_white" />
+
+                <ImageView
+                    android:id="@+id/imgFullScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/pad_5"
+                    android:layout_toEndOf="@id/imgback"
+                    android:padding="@dimen/pad_5"
+                    android:src="@drawable/ic_full_screen" />
+
+                <ImageView
+                    android:id="@+id/imgMute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/pad_5"
+                    android:padding="@dimen/pad_5"
+                    android:src="@drawable/sound_selector" />
+
+            </RelativeLayout>
 
             <include
                 layout="@layout/player_media_layout"

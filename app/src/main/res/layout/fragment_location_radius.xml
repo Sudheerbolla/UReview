@@ -75,28 +75,6 @@
                 app:showLabels="false"
                 app:valuesAboveThumbs="true" />
 
-            <!--
-                rsb:thumbDisabled="@drawable/custom_slider_thumb"
-                rsb:thumbNormal="@drawable/custom_slider_thumb"
-                rsb:thumbPressed="@drawable/custom_slider_thumb"
-            -->
-            <!--
-             <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
-                 android:id="@+id/rangeSeekbar"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginEnd="@dimen/pad_8"
-                 android:layout_marginStart="@dimen/pad_8"
-                 app:bar_color="@color/app_color_medium"
-                 app:bar_highlight_color="@color/colorMediumGrey"
-                 app:left_thumb_color="@color/app_color_medium"
-                 app:left_thumb_color_pressed="@color/app_color_dark"
-                 app:max_value="100"
-                 app:min_value="0"
-                 app:right_thumb_color="@color/app_color_medium"
-                 app:right_thumb_color_pressed="@color/app_color_dark" />
-             -->
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

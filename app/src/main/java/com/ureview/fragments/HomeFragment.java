@@ -272,7 +272,11 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
         switch (view.getId()) {
             case R.id.relItem:
-                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(videoModels, position));
+//                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videoModels, position);
+//                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+//                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
 //                mainActivity.replaceFragment(VideoDetailFragmentVV.newInstance(videoModels, position), true, R.id.mainContainer);
                 break;
             case R.id.imgProfile:

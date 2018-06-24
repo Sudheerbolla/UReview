@@ -10,8 +10,19 @@
         <item name="android:statusBarColor">@color/color_white</item>
     </style>
 
+    <style name="SeekBarTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_vvvDarkGrey</item>
+        <item name="colorPrimaryDark">@color/color_vvvDarkGrey</item>
+        <item name="colorAccent">@color/colorDarkGrey</item>
+    </style>
+
     <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowDisablePreview">true</item>
+    </style>
+
+    <style name="growAnim">
+        <item name="android:windowEnterAnimation">@anim/grow_in</item>
+        <item name="android:windowExitAnimation">@anim/grow_out</item>
     </style>
 
 </resources>

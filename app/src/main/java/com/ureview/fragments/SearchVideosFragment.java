@@ -203,7 +203,11 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.imgLocation:
-                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
+//                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videosArrList, position);
+//                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+//                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(videosArrList, position));
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);

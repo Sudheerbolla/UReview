@@ -231,34 +231,23 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             }
         });
 
-        txtCompleteVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String message = checkValidations();
-                if (TextUtils.isEmpty(message)) {
-//                    performBase64Operation();
-                    ConvertVideoToBytes convertVideoToBytes = new ConvertVideoToBytes();
-                    convertVideoToBytes.execute();
-//                    mainActivity.setUploadVideoCompletedFragment();
-                } else {
-                    StaticUtils.showToast(mainActivity, message);
-                }
-                //                mainActivity.setUploadVideoCompletedFragment();
+        txtCompleteVideo.setOnClickListener(view -> {
+            String message = checkValidations();
+            if (TextUtils.isEmpty(message)) {
+                ConvertVideoToBytes convertVideoToBytes = new ConvertVideoToBytes();
+                convertVideoToBytes.execute();
+            } else {
+                StaticUtils.showToast(mainActivity, message);
             }
         });
-        txtCategory.setOnClickListener(new View.OnClickListener() {
+        txtCategory.setOnClickListener(view -> DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String category = (String) view.getTag();
-                        txtCategory.setText(category);
-                        setSelectedCategoryid(category);
-                    }
-                });
+                String category = (String) view.getTag();
+                txtCategory.setText(category);
+                setSelectedCategoryid(category);
             }
-        });
+        }));
         imgHashTag.setOnClickListener(view -> {
             String text = edtTags.getText().toString().trim();
             if (!text.endsWith("#")) {
