@@ -31,15 +31,17 @@
 
     <SeekBar
         android:id="@+id/mediacontroller_progress"
-        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/pad_3"
-        android:layout_marginStart="@dimen/pad_3"
+        android:layout_marginEnd="-2dp"
+        android:layout_marginStart="-2dp"
         android:layout_toEndOf="@id/time_current"
-        android:layout_toStartOf="@+id/player_end_time" />
+        android:layout_toStartOf="@+id/player_end_time"
+        android:maxHeight="3dp"
+        android:progressDrawable="@drawable/seekbar_custom"
+        android:theme="@style/SeekBarTheme" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/player_end_time"

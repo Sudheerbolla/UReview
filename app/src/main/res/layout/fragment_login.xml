@@ -30,12 +30,6 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <com.twitter.sdk.android.core.identity.TwitterLoginButton
-                    android:id="@+id/login_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/uireview"
                     android:layout_width="wrap_content"
@@ -56,21 +50,28 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/txt_size_14sp" />
 
-                <com.ureview.utils.views.CustomTextView
+                <!--<com.ureview.utils.views.CustomTextView-->
+                <!--android:id="@+id/txtTwitterLogin"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="@dimen/pad_20"-->
+                <!--android:layout_marginRight="@dimen/pad_20"-->
+                <!--android:layout_marginTop="@dimen/pad_35"-->
+                <!--android:background="@drawable/bg_twitter"-->
+                <!--android:drawablePadding="@dimen/pad_15"-->
+                <!--android:drawableStart="@drawable/ic_twitter"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:padding="@dimen/pad_10"-->
+                <!--android:text="Login with Twitter"-->
+                <!--android:textColor="@color/color_white"-->
+                <!--android:textSize="@dimen/txt_size_14sp" />-->
+                <com.twitter.sdk.android.core.identity.TwitterLoginButton
                     android:id="@+id/txtTwitterLogin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/pad_20"
                     android:layout_marginRight="@dimen/pad_20"
-                    android:layout_marginTop="@dimen/pad_35"
-                    android:background="@drawable/bg_twitter"
-                    android:drawablePadding="@dimen/pad_15"
-                    android:drawableStart="@drawable/ic_twitter"
-                    android:gravity="center_vertical"
-                    android:padding="@dimen/pad_10"
-                    android:text="Login with Twitter"
-                    android:textColor="@color/color_white"
-                    android:textSize="@dimen/txt_size_14sp" />
+                    android:layout_marginTop="@dimen/pad_10" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtFbLogin"

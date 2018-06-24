@@ -256,22 +256,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     setSearchFragment();
                 break;
             case R.id.llVideo:
-                clearBackStackCompletely();
-                DialogUtils.showDropDownListStrings(this, new String[]{"Record", "Upload From Gallery", "Cancel"}, findViewById(R.id.llVideo), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch ((String) view.getTag()) {
-                            case "Record":
-                                checkAndRequestPermissionCamera();
-                                break;
-                            case "Upload From Gallery":
-                                checkAndRequestPermissionGallery();
-                                break;
-                            case "Cancel":
-                                break;
-                            default:
-                                break;
-                        }
+//                clearBackStackCompletely();
+                DialogUtils.showCameraDialog(this, text -> {
+                    switch (text) {
+                        case "Record":
+                            checkAndRequestPermissionCamera();
+                            break;
+                        case "Upload From Gallery":
+                            checkAndRequestPermissionGallery();
+                            break;
+                        default:
+                            break;
                     }
                 });
                 break;

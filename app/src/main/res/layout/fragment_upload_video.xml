@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -86,13 +87,37 @@
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_14sp" />
 
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/pad_8"
-                android:text="Tags (Ex: #Tag1, #Tag2)"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.ureview.utils.views.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tags "
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_15sp"
+                    app:txt_font_type="bold" />
+
+                <ImageView
+                    android:id="@+id/imgHashTag"
+                    android:layout_width="@dimen/pad_25"
+                    android:layout_height="@dimen/pad_25"
+                    android:layout_marginEnd="@dimen/pad_5"
+                    android:layout_marginStart="@dimen/pad_5"
+                    android:src="@drawable/ic_hashtag" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(Ex: #Tag1, #Tag2)"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+            </LinearLayout>
 
             <com.ureview.utils.views.CustomEditText
                 android:id="@+id/edtTags"

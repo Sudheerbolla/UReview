@@ -285,8 +285,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude +
-                        "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;

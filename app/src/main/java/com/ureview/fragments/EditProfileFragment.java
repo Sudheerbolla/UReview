@@ -208,14 +208,13 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 showDOBDialog();
                 break;
             case R.id.relImage:
-                DialogUtils.showDropDownListStrings(mainActivity, new String[]{
+                DialogUtils.showCustomDropDownListStrings(mainActivity, new String[]{
                         "Upload From Camera",
                         "Upload From Gallery",
                         "View Photo",
-                        "Remove Photo",
-                        "Cancel"
-                }, relImage, view1 -> {
-                    switch ((String) view1.getTag()) {
+                        "Remove Photo"
+                }, text -> {
+                    switch (text) {
                         case "Upload From Camera":
                             checkAndRequestPermissionCamera();
                             break;
@@ -251,11 +250,10 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 //                                }
 //                                imgProfile.setImageResource(R.drawable.ic_profile);
                             break;
-                        case "Cancel":
-                            break;
                         default:
                             break;
                     }
+
                 });
                 break;
             default:

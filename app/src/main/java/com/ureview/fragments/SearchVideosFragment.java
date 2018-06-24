@@ -208,8 +208,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 break;
             case R.id.txtDistance:
                 VideoModel videoModel = videosArrList.get(position);
-                String url = "http://maps.google.com/maps?saddr=" + videoModel.userLatitude + "," + videoModel.userLongitude
-                        + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
                 break;

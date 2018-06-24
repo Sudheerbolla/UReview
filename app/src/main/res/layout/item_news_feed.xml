@@ -81,8 +81,7 @@
                 android:layout_alignEnd="@+id/imgLocation"
                 android:layout_marginBottom="@dimen/pad_10"
                 android:layout_marginEnd="@dimen/pad_10"
-                android:alpha="0.95"
-                android:text="frgtfhyjgukigtb"
+                android:alpha="0.9"
                 android:background="@drawable/blue_bg"
                 android:ellipsize="end"
                 android:gravity="center"
@@ -90,8 +89,10 @@
                 android:paddingEnd="@dimen/pad_7"
                 android:paddingStart="@dimen/pad_7"
                 android:paddingTop="@dimen/pad_4"
+                android:text="frgtfhyjgukigtb"
                 android:textColor="@color/selector_txt_color"
                 android:textSize="@dimen/txt_size_10sp" />
+
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtDuration"

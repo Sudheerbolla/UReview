@@ -3,7 +3,8 @@ package com.ureview.utils;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ureview.R;
+import com.ureview.adapters.OptionsAdapter;
+import com.ureview.listeners.ISearchClickListener;
 import com.ureview.utils.views.CustomTextView;
 
 public class DialogUtils implements View.OnClickListener {
@@ -25,17 +28,15 @@ public class DialogUtils implements View.OnClickListener {
     public static void showDropDownListStrings(String title, Context context, final TextView textView, final String[] categoryNames, final View.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
-        builder.setItems(categoryNames, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                alert.dismiss();
-                if (textView != null) {
-                    textView.setText(categoryNames[item]);
-                    textView.setTag(categoryNames[item]);
-                }
-                if (clickListener != null) {
-                    if (textView != null)
-                        clickListener.onClick(textView);
-                }
+        builder.setItems(categoryNames, (dialog, item) -> {
+            alert.dismiss();
+            if (textView != null) {
+                textView.setText(categoryNames[item]);
+                textView.setTag(categoryNames[item]);
+            }
+            if (clickListener != null) {
+                if (textView != null)
+                    clickListener.onClick(textView);
             }
         });
         alert = builder.create();
@@ -56,6 +57,97 @@ public class DialogUtils implements View.OnClickListener {
         alert.setCancelable(true);
         alert.setCanceledOnTouchOutside(false);
         alert.show();
+    }
+
+    public static void showCustomDropDownListStrings(Context context, final String[] categoryNames, final ISearchClickListener clickListener) {
+        showCustomDropDownListStrings(context, "", categoryNames, clickListener);
+    }
+
+    public static void showCustomDropDownListStrings(Context context, String heading, final String[] categoryNames, final ISearchClickListener clickListener) {
+        try {
+            CustomTextView txtHeading, txtHeading2, txtNegativeButton;
+            RecyclerView recyclerView;
+            final Dialog alertDialog = new Dialog(context, R.style.AlertDialogCustom);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_list_dialog);
+            txtHeading = alertDialog.findViewById(R.id.txtHeading);
+            txtHeading2 = alertDialog.findViewById(R.id.txtHeading2);
+            recyclerView = alertDialog.findViewById(R.id.recyclerViewListOptions);
+            txtNegativeButton = alertDialog.findViewById(R.id.txtNegativeButton);
+
+            if (TextUtils.isEmpty(heading)) {
+                txtHeading.setText(context.getString(R.string.app_name));
+                txtHeading2.setVisibility(View.GONE);
+            } else {
+                txtHeading.setText(heading);
+                txtHeading2.setVisibility(View.VISIBLE);
+                txtHeading2.setText(TextUtils.isEmpty(heading) ? context.getString(R.string.app_name) : heading);
+            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener));
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            txtNegativeButton.setOnClickListener(v -> alertDialog.dismiss());
+
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showCameraDialog(Context context, final ISearchClickListener clickListener) {
+        try {
+            String[] categoryNames = new String[]{"Upload From Gallery", "Record"};
+            CustomTextView txtHeading, txtHeading2, txtNegativeButton;
+            RecyclerView recyclerView;
+            final Dialog alertDialog = new Dialog(context, R.style.AlertDialogCustom);
+            alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            alertDialog.setContentView(R.layout.layout_list_dialog);
+            txtHeading = alertDialog.findViewById(R.id.txtHeading);
+            txtHeading2 = alertDialog.findViewById(R.id.txtHeading2);
+            recyclerView = alertDialog.findViewById(R.id.recyclerViewListOptions);
+            txtNegativeButton = alertDialog.findViewById(R.id.txtNegativeButton);
+
+            txtHeading.setText("Upload Video");
+            txtHeading2.setVisibility(View.VISIBLE);
+            txtHeading2.setText("Video limit is 60 seconds else it will be automatically cropped");
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, new ISearchClickListener() {
+                @Override
+                public void onClick(String text) {
+                    alertDialog.dismiss();
+                    if (clickListener != null) clickListener.onClick(text);
+                }
+
+            }));
+
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = alertDialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            txtNegativeButton.setOnClickListener(v -> alertDialog.dismiss());
+
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setCancelable(false);
+            alertDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void showSimpleDialog(final Context mContext, final String message, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick) {
@@ -157,23 +249,17 @@ public class DialogUtils implements View.OnClickListener {
 
             txtNegativeButton.setText(TextUtils.isEmpty(negativeText) ? "Close" : negativeText);
 
-            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertDialog.dismiss();
-                    if (positiveClick != null) {
-                        positiveClick.onClick(v);
-                    }
+            txtPositiveButton.setOnClickListener(v -> {
+                alertDialog.dismiss();
+                if (positiveClick != null) {
+                    positiveClick.onClick(v);
                 }
             });
 
-            txtNegativeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    alertDialog.dismiss();
-                    if (negativeClick != null) {
-                        negativeClick.onClick(v);
-                    }
+            txtNegativeButton.setOnClickListener(v -> {
+                alertDialog.dismiss();
+                if (negativeClick != null) {
+                    negativeClick.onClick(v);
                 }
             });
 

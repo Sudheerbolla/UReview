@@ -43,6 +43,7 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.ureview.BaseApplication;
 import com.ureview.R;
@@ -65,19 +66,20 @@ import java.util.Arrays;
 import retrofit2.Call;
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
-
+    private static final String TAG = LoginFragment.class.getSimpleName();
     private static final int GOOGLE_SIGN_IN = 300;
     private static final int FACEBOOK_SIGN_IN = 301;
     private static final int TWITTER_SIGN_IN = 302;
     private View rootView;
-    private CustomTextView txtTwitterLogin, txtFbLogin, txtInstagramLogin, txtVersion;
+    private CustomTextView txtFbLogin, txtInstagramLogin, txtVersion;
+    private TwitterLoginButton txtTwitterLogin;
+    private TwitterAuthClient twitterAuthClient;
     private SplashActivity splashActivity;
     CallbackManager mFacebookCallbackManager;
     private String email, firstName, lastName, id;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private int loginType;
-    private TwitterLoginButton mLoginButton;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -89,7 +91,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         splashActivity = (SplashActivity) getActivity();
         splashActivity.setTopBar(LoginFragment.class.getSimpleName());
         mFacebookCallbackManager = CallbackManager.Factory.create();
-
+        mAuth = FirebaseAuth.getInstance();
+        initiateGoogleIntegration();
         initiateTwitterIntegration();
         initiateGoogleIntegration();
     }
@@ -115,25 +118,23 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void handleTwitterSession(TwitterSession session) {
-        Log.d("twitter login", "handleTwitterSession:" + session);
+        Log.e(TAG, "handleTwitterSession:" + session);
+        Log.e(TAG, "getId: " + session.getId() + "getUserId: " + session.getUserId() + "getUserName: " + session.getUserName());
+        id = String.valueOf(session.getId());
+        twitterAuthClient.requestEmail(session, new Callback<String>() {
+            @Override
+            public void success(Result<String> result) {
+                email = result.data;
+                requestForCheckUserWS(id, Constants.TWITTER);
+            }
 
-        AuthCredential credential = TwitterAuthProvider.getCredential(
-                session.getAuthToken().token,
-                session.getAuthToken().secret);
+            @Override
+            public void failure(TwitterException exception) {
+                Log.e(TAG, "email request failed: " + exception);
+                requestForCheckUserWS(id, Constants.TWITTER);
+            }
+        });
 
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(splashActivity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("twitter login", "signInWithCredential:success");
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("twitter login", "signInWithCredential:failure", task.getException());
-                        }
-                    }
-                });
     }
 
     private void updateUI(FirebaseUser user) {
@@ -153,21 +154,22 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void onTwitterBtnClicked() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getToken() instead.
-            String uid = user.getUid();
-        }
+        loginType = TWITTER_SIGN_IN;
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        if (user != null) {
+//            // Name, email address, and profile photo Url
+//            String name = user.getDisplayName();
+//            String email = user.getEmail();
+//            Uri photoUrl = user.getPhotoUrl();
+//
+//            // Check if user's email is verified
+//            boolean emailVerified = user.isEmailVerified();
+//
+//            // The user's ID, unique to the Firebase project. Do NOT use this value to
+//            // authenticate with your backend server, if you have one. Use
+//            // FirebaseUser.getToken() instead.
+//            String uid = user.getUid();
+//        }
     }
 
     @Override
@@ -183,20 +185,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
-        mLoginButton = rootView.findViewById(R.id.login_button);
-        mLoginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                Log.d("twitter", "twitterLogin:success" + result);
-                handleTwitterSession(result.data);
-            }
+        txtTwitterLogin = rootView.findViewById(R.id.txtTwitterLogin);
+        txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
+        txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
+        txtVersion = rootView.findViewById(R.id.txtVersion);
 
-            @Override
-            public void failure(TwitterException exception) {
-                Log.w("twitter", "twitterLogin:failure", exception);
-                updateUI(null);
-            }
-        });
+        txtTwitterLogin.setOnClickListener(this);
+        txtFbLogin.setOnClickListener(this);
+        txtInstagramLogin.setOnClickListener(this);
+        splashActivity.changeStatusBarColorToWhite();
 
 //        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
 //            @Override
@@ -210,15 +207,26 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 //            }
 //        };
 
-        txtTwitterLogin = rootView.findViewById(R.id.txtTwitterLogin);
         txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
         txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
         txtVersion = rootView.findViewById(R.id.txtVersion);
 
-        txtTwitterLogin.setOnClickListener(this);
         txtFbLogin.setOnClickListener(this);
         txtInstagramLogin.setOnClickListener(this);
         splashActivity.changeStatusBarColorToWhite();
+        txtTwitterLogin.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                handleTwitterSession(result.data);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.e(TAG, "twitterLogin:failure", exception);
+                updateUI(null);
+            }
+        });
+        twitterAuthClient = new TwitterAuthClient();
         getVersion();
         return rootView;
     }
@@ -242,7 +250,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 break;
             case R.id.txtTwitterLogin:
                 onTwitterBtnClicked();
-                StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtFbLogin:
                 handleFacebookLogin();
@@ -277,7 +284,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 handleSignInResult(task);
                 break;
             case TWITTER_SIGN_IN:
-                mLoginButton.onActivityResult(requestCode, resultCode, data);
+                txtTwitterLogin.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
