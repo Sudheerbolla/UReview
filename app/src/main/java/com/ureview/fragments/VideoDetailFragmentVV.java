@@ -1,6 +1,7 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -107,7 +108,7 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
 
         MediaController mediaController = new MediaController(mainActivity);
         mediaController.setAnchorView(svPlayer);
-
+        mediaController.setMediaPlayer(svPlayer);
         Uri uri = Uri.parse(feedVideo.video);
         svPlayer.setMediaController(mediaController);
         mediaController.hide();
@@ -117,7 +118,13 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
         svPlayer.requestFocus();
 
         initSeekBar();
-        svPlayer.start();
+        svPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                svPlayer.start();
+            }
+        });
+
         btnPlay.setSelected(true);
         setProgress();
     }

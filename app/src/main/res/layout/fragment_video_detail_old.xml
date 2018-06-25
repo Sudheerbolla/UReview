@@ -36,6 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center" />
+
             </FrameLayout>
 
             <RelativeLayout
@@ -359,20 +360,11 @@
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />
 
-                <View
-                    android:id="@+id/viewSep"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_below="@id/txtLoc"
-                    android:layout_marginBottom="@dimen/pad_3"
-                    android:layout_marginTop="@dimen/pad_3"
-                    android:background="@color/color_vvvDarkGrey" />
-
                 <com.ureview.utils.views.CustomTextView
                     android:id="@+id/txtLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/viewSep"
+                    android:layout_below="@+id/txtLoc"
                     android:layout_marginTop="@dimen/pad_5"
                     android:maxLines="2"
                     android:textColor="@color/colorBlack"

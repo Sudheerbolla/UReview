@@ -65,8 +65,10 @@ public class VideoPlayerActivity extends BaseActivity implements VideoRendererEv
         player.prepare(loopingSource);
 
         player.addListener(new Player.EventListener() {
+
+
             @Override
-            public void onTimelineChanged(Timeline timeline, Object manifest) {
+            public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
             }
 
