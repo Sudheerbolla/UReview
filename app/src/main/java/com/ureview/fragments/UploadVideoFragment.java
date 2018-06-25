@@ -138,8 +138,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         categoryModelArrayList.addAll(MainActivity.categoryListStatic);
         catArray = new String[categoryModelArrayList.size()];
         for (int i = 0; i < categoryModelArrayList.size(); i++) {
-//            catArray[i] = categoryModelArrayList.get(i).categoryName + "-" + categoryModelArrayList.get(i).id;
-            catArray[i] = categoryModelArrayList.get(i).categoryName;
+            if (!categoryModelArrayList.get(i).categoryName.equalsIgnoreCase("New Feed"))
+                catArray[i] = categoryModelArrayList.get(i).categoryName;
         }
     }
 
@@ -440,7 +440,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     Log.e("Place: ", place.getName().toString());
                     latitude = place.getLatLng().latitude;
                     longitude = place.getLatLng().longitude;
-                    setTextToAddress(place.getName().toString());
+                    setTextToAddress(place.getAddress().toString());
                     break;
                 case PlaceAutocomplete.RESULT_ERROR:
                     Status status = PlaceAutocomplete.getStatus(mainActivity, data);

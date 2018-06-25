@@ -74,12 +74,9 @@ public class VideoRecorder extends BaseActivity {
         mainlayout = findViewById(R.id.mainlayout);
         tvLeft = findViewById(R.id.tvLeft);
         tvRight = findViewById(R.id.tvRight);
-        imgPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                videoView.start();
-                imgPlay.setVisibility(View.GONE);
-            }
+        imgPlay.setOnClickListener(view -> {
+            videoView.start();
+            imgPlay.setVisibility(View.GONE);
         });
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle(null);
@@ -387,13 +384,11 @@ public class VideoRecorder extends BaseActivity {
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-            }
-            else if (isDownloadsDocument(uri)) {
+            } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
-            }
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];

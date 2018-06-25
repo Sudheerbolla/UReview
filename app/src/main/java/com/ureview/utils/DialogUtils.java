@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -269,30 +268,27 @@ public class DialogUtils implements View.OnClickListener {
 
     public void showRatingDialog(final Context mContext, final View.OnClickListener positiveClick, final TextView givenRating) {
         try {
-            CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
+            CustomTextView txtHeading, txtPositiveButton;
             final Dialog alertDialog = new Dialog(mContext, R.style.AlertDialogCustom);
             alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            alertDialog.setContentView(R.layout.layout_dialog);
+            alertDialog.setContentView(R.layout.layout_dialog_new);
             txtHeading = alertDialog.findViewById(R.id.txtHeading);
-            txtMessage = alertDialog.findViewById(R.id.txtMessage);
-            final LinearLayout llRatingBar = alertDialog.findViewById(R.id.llRatingBar);
             RatingBar ratingBar = alertDialog.findViewById(R.id.ratingBar);
-            llRatingBar.setVisibility(View.GONE);
             ratingBar.setVisibility(View.VISIBLE);
+            alertDialog.findViewById(R.id.txtMessage).setVisibility(View.GONE);
             txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
-            txtNegativeButton = alertDialog.findViewById(R.id.txtNegative);
-            txtNegativeButton.setVisibility(View.GONE);
 
-            imgStar1 = alertDialog.findViewById(R.id.imgStar1);
-            imgStar2 = alertDialog.findViewById(R.id.imgStar2);
-            imgStar3 = alertDialog.findViewById(R.id.imgStar3);
-            imgStar4 = alertDialog.findViewById(R.id.imgStar4);
-            imgStar5 = alertDialog.findViewById(R.id.imgStar5);
-            imgStar1.setOnClickListener(this);
-            imgStar2.setOnClickListener(this);
-            imgStar3.setOnClickListener(this);
-            imgStar4.setOnClickListener(this);
-            imgStar5.setOnClickListener(this);
+//            imgStar1 = alertDialog.findViewById(R.id.imgStar1);
+//            imgStar2 = alertDialog.findViewById(R.id.imgStar2);
+//            imgStar3 = alertDialog.findViewById(R.id.imgStar3);
+//            imgStar4 = alertDialog.findViewById(R.id.imgStar4);
+//            imgStar5 = alertDialog.findViewById(R.id.imgStar5);
+//
+//            imgStar1.setOnClickListener(this);
+//            imgStar2.setOnClickListener(this);
+//            imgStar3.setOnClickListener(this);
+//            imgStar4.setOnClickListener(this);
+//            imgStar5.setOnClickListener(this);
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -305,7 +301,6 @@ public class DialogUtils implements View.OnClickListener {
 
             txtHeading.setText("Rate this Video");
             txtPositiveButton.setText("Submit your rating");
-            txtMessage.setVisibility(View.GONE);
             txtPositiveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -327,13 +322,8 @@ public class DialogUtils implements View.OnClickListener {
         }
     }
 
-    public static void showLogoutDialog(final Context mContext,
-                                        final String heading,
-                                        final String message,
-                                        final String positiveText,
-                                        final String negativeText,
-                                        final View.OnClickListener positiveClick,
-                                        final View.OnClickListener negativeClick) {
+    public static void showLogoutDialog(final Context mContext, final String heading, final String message, final String positiveText,
+                                        final String negativeText, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
 

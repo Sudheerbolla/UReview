@@ -773,7 +773,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 }
                 break;
             case R.id.llRate:
-                if (feedVideo.userRating.equalsIgnoreCase("0")) {
+                if (feedVideo.ratingGiven == 0) {
                     showRatingDialog();
                 } else {
                     Toast.makeText(mainActivity, "Rating is already submitted.", Toast.LENGTH_LONG).show();
