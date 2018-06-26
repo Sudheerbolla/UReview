@@ -26,4 +26,7 @@ public class Constants {
     public static final String TWITTER = "twitter";
     public static final String GOOGLE = "google ";
     public static final String INSTAGRAM = "instagram ";
+
+    public static final String NOTIFICATION_CHANNEL = "You Review 0023";
+
 }

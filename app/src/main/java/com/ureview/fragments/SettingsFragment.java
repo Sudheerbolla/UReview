@@ -1,11 +1,20 @@
 package com.ureview.fragments;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +28,7 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -76,6 +86,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         txtPrivacy.setOnClickListener(this);
         txtContactUs.setOnClickListener(this);
         getVersion();
+//        sendNotification("Test");
     }
 
     private void getVersion() {
@@ -170,6 +181,11 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
 
         LoginManager.getInstance().logOut();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager = (NotificationManager) mainActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.deleteNotificationChannel(Constants.NOTIFICATION_CHANNEL);
+        }
+
         startActivity(new Intent(mainActivity, SplashActivity.class));
         mainActivity.finishAffinity();
 
@@ -210,6 +226,36 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void noInternetConnection(int requestCode) {
 
+    }
+
+    private void sendNotification(String messageBody) {
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        Intent intent = new Intent(mainActivity, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mainActivity, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        String largeText, smallText;
+
+        if (messageBody.length() > 25) {
+            smallText = messageBody.substring(0, 24);
+            largeText = messageBody;
+        } else {
+            largeText = smallText = messageBody;
+        }
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mainActivity, Constants.NOTIFICATION_CHANNEL)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(smallText)
+                .setLargeIcon(image)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(largeText))
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManager notificationManager = (NotificationManager) mainActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
 }
