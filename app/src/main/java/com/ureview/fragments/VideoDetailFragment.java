@@ -168,7 +168,6 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 
     private void initVideoPlayer2() {
         mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-//        mainActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         handler = new Handler();
         initDataSource();
         initMp4Player();
@@ -456,42 +455,51 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 //    }
 
     private void applyAspectRatio(FrameLayout container) {
-        int videoWidth = exoPlayer.getVideoFormat().width;
-        int videoHeight = exoPlayer.getVideoFormat().height;
-        double aspectRatio = (double) videoHeight / videoWidth;
-        int newWidth, newHeight;
-        if (screenWidth > (int) (screenWidth * aspectRatio)) {
-            newHeight = (int) (screenWidth * aspectRatio);
-            if (containerHeight > newHeight) {
-                newHeight = containerHeight - newHeight;
-            } else newHeight = newHeight - containerHeight;
-            if (videoWidth + newHeight > screenWidth) newWidth = videoWidth;
-            else newWidth = videoWidth + newHeight;
-        } else {
-            newWidth = (int) (containerHeight / aspectRatio);
-        }
+        if (exoPlayer != null && exoPlayer.getVideoFormat() != null) {
+            int videoWidth = exoPlayer.getVideoFormat().width;
+            int videoHeight = exoPlayer.getVideoFormat().height;
+            double aspectRatio = (double) videoHeight / videoWidth;
+            int newWidth, newHeight;
+            if (screenWidth > (int) (screenWidth * aspectRatio)) {
+                newHeight = (int) (screenWidth * aspectRatio);
+                if (containerHeight > newHeight) {
+                    newHeight = containerHeight - newHeight;
+                } else newHeight = newHeight - containerHeight;
+                if (videoWidth + newHeight > screenWidth) newWidth = videoWidth;
+                else newWidth = videoWidth + newHeight;
+            } else {
+                newWidth = (int) (containerHeight / aspectRatio);
+            }
 
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.width = newWidth;
-        params.height = containerHeight;
-        params.gravity = CENTER;
-        container.setLayoutParams(params);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.width = newWidth;
+            params.height = containerHeight;
+            params.gravity = CENTER;
+            container.setLayoutParams(params);
+        }
     }
 
     private void applyFullScreenAspectRatio(FrameLayout container) {
-        int videoWidth = exoPlayer.getVideoFormat().width;
-        int videoHeight = exoPlayer.getVideoFormat().height;
-        double aspectRatio = (double) videoHeight / videoWidth;
-        int newWidth, newHeight;
-        newWidth = (int) (screenHeight / aspectRatio);
-        if (newWidth > screenWidth) newWidth = screenWidth;
-        newHeight = (int) (screenWidth / aspectRatio);
-        if (newHeight > screenHeight) newHeight = screenHeight;
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.width = newWidth;
-        params.height = newHeight;
-        params.gravity = CENTER;
-        container.setLayoutParams(params);
+        if (exoPlayer != null && exoPlayer.getVideoFormat() != null) {
+            int videoWidth = exoPlayer.getVideoFormat().width;
+            int videoHeight = exoPlayer.getVideoFormat().height;
+            double aspectRatio = (double) videoHeight / videoWidth;
+            int newWidth, newHeight;
+            newWidth = (int) (screenHeight / aspectRatio);
+            if (newWidth > screenWidth) newWidth = screenWidth;
+            newHeight = (int) (screenWidth / aspectRatio);
+            if (newHeight > screenHeight) newHeight = screenHeight;
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            params.width = newWidth;
+            params.height = newHeight;
+            params.gravity = CENTER;
+            container.setLayoutParams(params);
+        } else {
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            params.gravity = CENTER;
+            container.setLayoutParams(params);
+        }
     }
 
 //    private void applyFullScreenAspectRatio(FrameLayout container) {
