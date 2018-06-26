@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private boolean nearByData, topRatedData, popularData;
     private int loadedDataCount;
     private String lat = "", lng = "", locMaxRange = "50", locMinRange = "0";
+    private int maxLimit = 5;
 
     //    News Feed Pagination
     private boolean isLoading, hasLoadedAllItems;
@@ -76,6 +78,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private int lastUpdatedPos = -1;
     private int selectedPosition;
     private boolean autoCall;
+    private String catId = "";
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -121,9 +124,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
         newsFeedAdapter = new NewsFeedAdapter(getActivity(), this);
         homeCategoryAdapter = new HomeCategoryAdapter(getActivity(), this);
-        nearByVideosAdapter = new VideosAdapter(getActivity(), this, true);
-        topRatedVideosAdapter = new VideosAdapter(getActivity(), this, true);
-        popularVideosAdapter = new VideosAdapter(getActivity(), this, true);
+        nearByVideosAdapter = new VideosAdapter(getActivity(), this, true, "NearBy");
+        topRatedVideosAdapter = new VideosAdapter(getActivity(), this, true, "TopRated");
+        popularVideosAdapter = new VideosAdapter(getActivity(), this, true, "Popular");
 
         rvNewsFeed.setAdapter(newsFeedAdapter);
         rvNewsFeed.setListPagination(this);
@@ -194,13 +197,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         rvNewsFeed.setVisibility(b && feedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         relVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvNearByVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllVideos.setVisibility(!b && nearByVideoList.size() > 10 ? View.VISIBLE : View.GONE);
+        txtSeeAllVideos.setVisibility(!b && nearByVideoList.size() > maxLimit ? View.VISIBLE : View.GONE);
         relTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllTopRated.setVisibility(!b && topRatedVideoList.size() > 10 ? View.VISIBLE : View.GONE);
+        txtSeeAllTopRated.setVisibility(!b && topRatedVideoList.size() > maxLimit ? View.VISIBLE : View.GONE);
         relPopularSearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvPopularsearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllPopularSearch.setVisibility(!b && popularVideoList.size() > 10 ? View.VISIBLE : View.GONE);
+        txtSeeAllPopularSearch.setVisibility(!b && popularVideoList.size() > maxLimit ? View.VISIBLE : View.GONE);
     }
 
     public void loadRelatedData(FilterModel value) {
@@ -228,7 +231,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEWS_FEED_VIDEOS, call, this);
     }
 
-    private void requestForNearByVideos(String catId) {
+    private void requestForNearByVideos() {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
@@ -242,7 +245,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEAR_BY_VIDEOS, call, this);
     }
 
-    private void requestForTopRatedVideos(String catId) {
+    private void requestForTopRatedVideos() {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
@@ -257,7 +260,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_TOP_RATED_VIDEOS, call, this);
     }
 
-    private void requestForPopularVideos(String catId) {
+    private void requestForPopularVideos() {
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
@@ -275,14 +278,21 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public static final int DIALOG_FRAGMENT = 1;
 
     @Override
-    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.relItem:
-                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position);
-                videoDetailFragment.setTargetFragment(this, DIALOG_FRAGMENT);
-                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+                if (!TextUtils.isEmpty(vidType) && position >= maxLimit) {
+                    SeeAllVideosFragment seeAllVideosFragment = SeeAllVideosFragment.newInstance(vidType, catId);
+                    seeAllVideosFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                    seeAllVideosFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                    seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
+                } else {
+                    VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position);
+                    videoDetailFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                    videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                    videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+                }
 
                 //                mainActivity.showVideoDetails();
 //                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videoModels, position);
@@ -331,9 +341,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 topRatedData = false;
                 popularData = false;
                 loadedDataCount = 0;
-                requestForNearByVideos(categoryList.get(position).id);
-                requestForTopRatedVideos(categoryList.get(position).id);
-                requestForPopularVideos(categoryList.get(position).id);
+                catId = categoryList.get(position).id;
+                requestForNearByVideos();
+                requestForTopRatedVideos();
+                requestForPopularVideos();
             }
         }
     }
@@ -357,10 +368,22 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtSeeAllVideos:
+                SeeAllVideosFragment seeAllVideosFragment = SeeAllVideosFragment.newInstance("NearBy", catId);
+                seeAllVideosFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                seeAllVideosFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
             case R.id.txtSeeAllTopRated:
+                SeeAllVideosFragment seeAll1 = SeeAllVideosFragment.newInstance("TopRated", catId);
+                seeAll1.setTargetFragment(this, DIALOG_FRAGMENT);
+                seeAll1.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                seeAll1.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
             case R.id.txtSeeAllPopularSearch:
+                SeeAllVideosFragment seeAll2 = SeeAllVideosFragment.newInstance("Popular", catId);
+                seeAll2.setTargetFragment(this, DIALOG_FRAGMENT);
+                seeAll2.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                seeAll2.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
         }
     }

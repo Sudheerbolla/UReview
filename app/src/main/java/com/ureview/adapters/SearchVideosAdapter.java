@@ -95,9 +95,9 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
             holder.txtFollowStatus.setSelected(true);
         }
 
-        if (position == videoArrList.size() - 1) {
-            holder.dividerView.setVisibility(View.GONE);
-        }
+//        if (position == videoArrList.size() - 1) {
+//            holder.dividerView.setVisibility(View.GONE);
+//        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,10 +139,9 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     }
 
     public void addVideos(ArrayList<VideoModel> arrList) {
-        this.videoArrList.clear();
+        int lastPosition = this.videoArrList.size() > 0 ? this.videoArrList.size() - 1 : 0;
         this.videoArrList.addAll(arrList);
-        notifyDataSetChanged();
-
+        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
     }
 
     public void addAllVideos(ArrayList<VideoModel> arrList) {

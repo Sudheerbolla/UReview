@@ -31,14 +31,14 @@ public class VideoReviewFragment extends BaseFragment implements IVideosClickLis
         rootView = inflater.inflate(R.layout.fragment_video_review, container, false);
         rvTopVideos = rootView.findViewById(R.id.rvTopVideos);
         rvTopVideos.setNestedScrollingEnabled(false);
-        videosAdapter = new VideosAdapter(getActivity(), this, false);
+        videosAdapter = new VideosAdapter(getActivity(), this, false, "");
         rvTopVideos.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         rvTopVideos.setAdapter(videosAdapter);
         return rootView;
     }
 
     @Override
-    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
 
     }
 

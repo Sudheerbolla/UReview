@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -40,7 +40,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     private ArrayList<NotificationsModel> notificationsModelArrayList;
     private MainActivity mainActivity;
     private CustomTextView txtNoData;
-    private ProgressBar rlProgress;
+    private RelativeLayout rlProgress;
 
     public static NotificationsFragment newInstance() {
         return new NotificationsFragment();
