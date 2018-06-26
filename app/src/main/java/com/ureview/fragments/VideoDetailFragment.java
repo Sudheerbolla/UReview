@@ -756,12 +756,9 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 startActivity(mapIntent);
                 break;
             case R.id.txtFollowStatus:
-                String followStatus = txtFollowStatus.getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("follow")) {
+                if (txtFollowStatus.isSelected()) {
                     askConfirmationAndProceed();
-                } else {
-                    requestForFollowUser();
-                }
+                } else requestForFollowUser();
                 break;
             case R.id.llRate:
                 if (feedVideo.ratingGiven == 0) {
@@ -954,6 +951,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     txtFollowStatus.setText("Unfollow");
+                    txtFollowStatus.setSelected(true);
                     feedVideo.followStatus = "follow";
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -969,6 +967,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     txtFollowStatus.setText("Follow");
+                    txtFollowStatus.setSelected(false);
                     feedVideo.followStatus = "";
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());

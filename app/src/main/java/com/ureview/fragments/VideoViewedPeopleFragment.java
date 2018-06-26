@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -104,7 +103,6 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         return dialog;
     }
 
-
     private void setAdapter() {
         rvPeople.setLayoutManager(new LinearLayoutManager(mainActivity));
         peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this, true);
@@ -169,7 +167,6 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
                             PeopleModel peopleModel = gson.fromJson(usersData.get(i).getAsJsonObject(), PeopleModel.class);
                             peopleArrList.add(peopleModel);
                         }
-//                        peopleAdapter.addItems(peopleArrList);
                         txtNoData.setVisibility(View.GONE);
                         rvPeople.setVisibility(View.VISIBLE);
                     } else {
@@ -232,17 +229,12 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                String followText = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("follow")) {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(position);
-                } else {
-                    requestForFollowUser(peopleArrList.get(position).userId);
-                }
+                } else requestForFollowUser(peopleArrList.get(position).userId);
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
-                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
-                        true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId, peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             default:
                 break;
@@ -259,4 +251,5 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
     public void onLongClick(View view, int position) {
 
     }
+
 }

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:background="@color/transparent"
+    android:baselineAligned="true"
     android:gravity="bottom"
     android:orientation="horizontal">
 
@@ -14,18 +15,18 @@
         android:layout_weight="1"
         android:background="@color/color_white"
         android:gravity="center"
-        android:paddingBottom="@dimen/pad_12"
-        android:paddingTop="@dimen/pad_12">
+        android:paddingBottom="@dimen/pad_10"
+        android:paddingTop="@dimen/pad_10">
 
         <ImageView
             android:id="@+id/imgHome"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/pad_30"
+            android:layout_height="@dimen/pad_30"
             android:src="@drawable/selector_home" />
 
         <ImageView
             android:id="@+id/imgHomeView"
-            android:layout_width="25dp"
+            android:layout_width="@dimen/pad_30"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgHome"
             android:layout_marginTop="@dimen/pad_3"
@@ -42,18 +43,18 @@
         android:layout_weight="1"
         android:background="@color/color_white"
         android:gravity="center"
-        android:paddingBottom="@dimen/pad_12"
-        android:paddingTop="@dimen/pad_12">
+        android:paddingBottom="@dimen/pad_10"
+        android:paddingTop="@dimen/pad_10">
 
         <ImageView
             android:id="@+id/imgSearchB"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/pad_30"
+            android:layout_height="@dimen/pad_30"
             android:src="@drawable/selector_search" />
 
         <ImageView
             android:id="@+id/imgSearchView"
-            android:layout_width="25dp"
+            android:layout_width="@dimen/pad_30"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgSearchB"
             android:layout_marginTop="@dimen/pad_3"
@@ -74,7 +75,6 @@
             android:id="@+id/imgVideo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-3dp"
             android:scaleType="centerCrop"
             android:src="@drawable/video_copy" />
 
@@ -87,18 +87,18 @@
         android:layout_weight="1"
         android:background="@color/color_white"
         android:gravity="center"
-        android:paddingBottom="@dimen/pad_12"
-        android:paddingTop="@dimen/pad_12">
+        android:paddingBottom="@dimen/pad_10"
+        android:paddingTop="@dimen/pad_10">
 
         <ImageView
             android:id="@+id/imgProfile"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/pad_30"
+            android:layout_height="@dimen/pad_30"
             android:src="@drawable/selector_profile" />
 
         <ImageView
             android:id="@+id/imgProfileView"
-            android:layout_width="25dp"
+            android:layout_width="@dimen/pad_30"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgProfile"
             android:layout_marginTop="@dimen/pad_3"
@@ -114,18 +114,18 @@
         android:layout_weight="1"
         android:background="@color/color_white"
         android:gravity="center"
-        android:paddingBottom="@dimen/pad_12"
-        android:paddingTop="@dimen/pad_12">
+        android:paddingBottom="@dimen/pad_10"
+        android:paddingTop="@dimen/pad_10">
 
         <ImageView
             android:id="@+id/imgSettings"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/pad_30"
+            android:layout_height="@dimen/pad_30"
             android:src="@drawable/selector_settings" />
 
         <ImageView
             android:id="@+id/imgSettingsView"
-            android:layout_width="25dp"
+            android:layout_width="@dimen/pad_30"
             android:layout_height="wrap_content"
             android:layout_below="@+id/imgSettings"
             android:layout_marginTop="@dimen/pad_3"

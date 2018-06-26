@@ -54,7 +54,6 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
     private int startFrom = 0, count = 10;
-    protected String searchText = "";
     private int selectedPosition;
 
     public static SearchPeopleFragment newInstance() {
@@ -66,11 +65,6 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     @Nullable
@@ -94,9 +88,10 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     protected void searchUser(String searchUser) {
-        searchText = searchUser;
+        SearchFragment.searchText = searchUser;
         peopleArrList.clear();
         startFrom = 0;
+        isLoading = false;
         hasLoadedAllItems = false;
         if (TextUtils.isEmpty(searchUser)) {
             if (tempPeopleArrList != null) tempPeopleArrList.clear();
@@ -111,7 +106,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
 
     protected void requestForSearchPeopleListWS() {
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("user_name", searchText);
+        hashMap.put("user_name", SearchFragment.searchText);
         hashMap.put("user_id", userId);
         hashMap.put("startFrom", String.valueOf(startFrom));
         hashMap.put("count", String.valueOf(count));
@@ -251,12 +246,9 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                String followStatus = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("follow")) {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(peopleArrList.get(position));
-                } else {
-                    requestForFollowUser(peopleArrList.get(position).userId);
-                }
+                } else requestForFollowUser(peopleArrList.get(position).userId);
                 break;
             case R.id.relBody:
                 mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId, peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)), true, R.id.mainContainer);

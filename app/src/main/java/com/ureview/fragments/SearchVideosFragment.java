@@ -89,7 +89,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     protected void searchVideo(String searchVideo) {
-        searchText = searchVideo;
+        SearchFragment.searchText = searchVideo;
         videosArrList.clear();
         startFrom = 0;
         isLoading = false;
@@ -108,7 +108,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         JSONObject jsonObjectReq = new JSONObject();
         try {
             jsonObjectReq.put("user_id", userId);
-            jsonObjectReq.put("video_name", searchText);
+            jsonObjectReq.put("video_name", SearchFragment.searchText);
             jsonObjectReq.put("latitude", String.valueOf(MainActivity.mLastLocation.getLatitude()));
             jsonObjectReq.put("longitude", String.valueOf(MainActivity.mLastLocation.getLongitude()));
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
@@ -138,27 +138,36 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void parseNewsFeedVideo(JsonElement response) {
+        if (!isLoading) {
+            tempVideosArrList.clear();
+        }
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("search_videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("search_videos");
-                    tempVideosArrList.clear();
-                    for (int i = 0; i < feedVidArr.length(); i++) {
-                        Gson gson = new Gson();
-                        VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
-                        videosArrList.add(videoModel);
-                        tempVideosArrList.add(videoModel);
+
+                    if (feedVidArr.length() > 0) {
+                        for (int i = 0; i < feedVidArr.length(); i++) {
+                            Gson gson = new Gson();
+                            VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
+                            videosArrList.add(videoModel);
+                            tempVideosArrList.add(videoModel);
+                        }
+                        startFrom += feedVidArr.length();
+                        if (startFrom % count != 0) {
+                            hasLoadedAllItems = true;
+                            isLoading = false;
+                        }
+                        txtNoData.setVisibility(View.GONE);
+                        rvSearchVideo.setVisibility(View.VISIBLE);
+                    } else {
+                        txtNoData.setVisibility(View.VISIBLE);
+                        rvSearchVideo.setVisibility(View.GONE);
                     }
-                    startFrom += feedVidArr.length();
-                    if (startFrom % count != 0) {
-                        hasLoadedAllItems = true;
-                        isLoading = false;
-                    }
+
                     searchVideosAdapter.addVideos(tempVideosArrList);
-                    txtNoData.setVisibility(View.GONE);
-                    rvSearchVideo.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (startFrom == 0) {
@@ -224,23 +233,16 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             case R.id.txtFollowStatus:
                 follPos = position;
                 VideoModel vid = videosArrList.get(position);
-                if (TextUtils.isEmpty(vid.followStatus) || vid.followStatus.equalsIgnoreCase("follow")) {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
-                } else {
-                    requestForFollowUser(vid.videoOwnerId);
-                }
+                } else requestForFollowUser(vid.videoOwnerId);
                 break;
         }
     }
 
     private void askConfirmationAndProceed(String name, final String id) {
         DialogUtils.showUnFollowConfirmationPopup(mainActivity, name,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        requestForUnFollowUser(id);
-                    }
-                });
+                view -> requestForUnFollowUser(id));
     }
 
     @Override

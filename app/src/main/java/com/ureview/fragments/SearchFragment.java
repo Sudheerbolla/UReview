@@ -33,8 +33,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private String userId;
     private SearchVideosFragment searchVideosFragment;
     private SearchPeopleFragment searchPeopleFragment;
-    private boolean isInSearchPeopleFragment;
     private ViewPagerAdapter adapter;
+    public static String searchText = "";
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -56,13 +56,10 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                isInSearchPeopleFragment = tab.getText().toString().equalsIgnoreCase("People");
-                if (!TextUtils.isEmpty(mainActivity.edtText.getText().toString().trim())) {
-                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
-                        searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
-                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
-                        searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim());
-                    }
+                if (tab.getPosition() == 1 && searchPeopleFragment != null) {
+                    searchPeopleFragment.searchUser(searchText);
+                } else if (tab.getPosition() == 0 && searchVideosFragment != null) {
+                    searchVideosFragment.searchVideo(searchText);
                 }
             }
 
@@ -76,7 +73,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-        mainActivity.edtText.setText("");
+        if (TextUtils.isEmpty(searchText)) mainActivity.edtText.setText("");
+        else mainActivity.edtText.setText(searchText);
         mainActivity.edtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -85,6 +83,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchText = charSequence.toString();
                 if (tabLayout.getSelectedTabPosition() == 0) {
                     if (searchVideosFragment != null) {
                         searchVideosFragment.searchVideo(charSequence.toString());
@@ -111,6 +110,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        searchText = "";
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
@@ -119,6 +119,12 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
         mainActivity.setToolBar("", "", "", false, false, false, true, false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        searchText = "";
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -135,6 +141,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.imgClose:
                 if (mainActivity.edtText != null) {
+                    searchText = "";
                     mainActivity.edtText.setText("");
                     StaticUtils.hideSoftKeyboard(mainActivity);
                 }

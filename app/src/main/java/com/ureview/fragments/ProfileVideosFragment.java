@@ -34,7 +34,7 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 
-public class VideosFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener {
+public class ProfileVideosFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener {
 
     private View rootView;
     private RecyclerView rvVideos;
@@ -45,12 +45,12 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
     private CustomTextView txtNoDatafound;
     private int clickedPosition = -1;
 
-    public static VideosFragment newInstance() {
-        return new VideosFragment();
+    public static ProfileVideosFragment newInstance() {
+        return new ProfileVideosFragment();
     }
 
-    public static VideosFragment newInstance(String userId) {
-        VideosFragment followersFragment = new VideosFragment();
+    public static ProfileVideosFragment newInstance(String userId) {
+        ProfileVideosFragment followersFragment = new ProfileVideosFragment();
         Bundle bundle = new Bundle();
         bundle.putString("userId", userId);
         followersFragment.setArguments(bundle);

@@ -224,7 +224,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(AboutFragment.newInstance(isDiffUser ? otherUserId : userId), "About");
-        adapter.addFragment(VideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
+        adapter.addFragment(ProfileVideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
         if (!isDiffUser)
             adapter.addFragment(StatsFragment.newInstance(isDiffUser ? otherUserId : userId), "Stats");
         viewPager.setAdapter(adapter);
