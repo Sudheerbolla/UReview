@@ -622,7 +622,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         imgMute.setOnClickListener(this);
 
         rvRelatedVideos.setNestedScrollingEnabled(false);
-        videosAdapter = new VideosAdapter(mainActivity, this, false);
+        videosAdapter = new VideosAdapter(mainActivity, this, false, "");
         rvRelatedVideos.setAdapter(videosAdapter);
 
         if (feedVideo != null)
@@ -726,7 +726,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     }
 
     @Override
-    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
+    public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
         VideoModel toBeAdded = feedVideo;
         feedVideo = feedVideoList.get(position);
         feedVideoList.remove(position);

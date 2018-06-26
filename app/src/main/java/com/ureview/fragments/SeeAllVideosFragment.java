@@ -1,11 +1,15 @@
 package com.ureview.fragments;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +44,7 @@ import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class SeeAllVideosFragment extends BaseFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener {
+public class SeeAllVideosFragment extends DialogFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener {
     private View rootView;
     private CustomRecyclerView rvSearchVideo;
     private SearchVideosAdapter searchVideosAdapter;
@@ -52,6 +56,10 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
     private String currLat = "", currLng = "", locMaxRange = "50", locMinRange = "0";
     private RelativeLayout rlProgress;
 
+    private final String STATE_RESUME_WINDOW = "resumeWindow";
+    private final String STATE_RESUME_POSITION = "resumePosition";
+    private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+
     //Search People Pagination
     private boolean isLoading = false, hasLoadedAllItems;
     private int startFrom = 0, count = 5;
@@ -59,6 +67,11 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
     private int follPos = -1;
     private String videoType = "";
     private String catId = "";
+    private int mResumeWindow;
+    private long mResumePosition;
+    private boolean mExoPlayerFullscreen;
+    private ConstraintLayout layout;
+    private int screenWidth, screenHeight, containerHeight;
 
     public static SeeAllVideosFragment newInstance(String videoType, String catId) {
         SeeAllVideosFragment seeAllVideosFragment = new SeeAllVideosFragment();
@@ -73,11 +86,25 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("All Videos", "", "", false, true, true, false, false);
         if (MainActivity.mLastLocation != null) {
             currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
             currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
         }
+        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        if (savedInstanceState != null) {
+            mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
+            mResumePosition = savedInstanceState.getLong(STATE_RESUME_POSITION);
+            mExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
+        }
+        Display display = mainActivity.getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        screenWidth = size.x;
+        screenHeight = size.y;
+        containerHeight = Math.round(StaticUtils.convertDpToPixel(240, mainActivity));
         getBundleData();
     }
 
@@ -89,6 +116,22 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt(STATE_RESUME_WINDOW, mResumeWindow);
+        outState.putLong(STATE_RESUME_POSITION, mResumePosition);
+        outState.putBoolean(STATE_PLAYER_FULLSCREEN, mExoPlayerFullscreen);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -97,6 +140,7 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
         rvSearchVideo = rootView.findViewById(R.id.rvSearchVideo);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         rlProgress = rootView.findViewById(R.id.rlProgress);
+        layout = rootView.findViewById(R.id.rootView);
         searchVideosAdapter = new SearchVideosAdapter(getActivity(), this);
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
@@ -106,19 +150,24 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void requestForVideoList() {
+        String title = "All Videos";
         switch (videoType) {
             case "NearBy":
+                title = "All Near By Videos";
                 requestForNearByVideos();
                 break;
             case "TopRated":
+                title = "All Top Rated Videos";
                 requestForTopRatedVideos();
                 break;
             case "Popular":
+                title = "All Videos";
                 requestForPopularVideos();
                 break;
             default:
                 break;
         }
+        mainActivity.setToolBar(title, "", "", false, true, true, false, false);
     }
 
     private void requestForNearByVideos() {
@@ -328,8 +377,8 @@ public class SeeAllVideosFragment extends BaseFragment implements IParserListene
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
-                if (jsonObject.has("search_videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONArray("search_videos");
+                if (jsonObject.has("videos")) {
+                    JSONArray feedVidArr = jsonObject.getJSONArray("videos");
                     tempVideosArrList.clear();
                     if (feedVidArr.length() > 0) {
                         for (int i = 0; i < feedVidArr.length(); i++) {

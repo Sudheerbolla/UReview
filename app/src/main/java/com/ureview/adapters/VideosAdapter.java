@@ -24,14 +24,17 @@ import java.util.ArrayList;
 public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryViewHolder> {
 
     private final boolean only10Items;
+    private String videoType = "";
     private Context context;
     private IVideosClickListener iClickListener;
     private ArrayList<VideoModel> videoList = new ArrayList<>();
+    private int maxLimit = 5;
 
-    public VideosAdapter(Context context, IVideosClickListener iClickListener, boolean only10Items) {
+    public VideosAdapter(Context context, IVideosClickListener iClickListener, boolean only10Items, String videoType) {
         this.context = context;
         this.iClickListener = iClickListener;
         this.only10Items = only10Items;
+        this.videoType = videoType;
     }
 
     @NonNull
@@ -42,9 +45,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
-        boolean val = only10Items && position >= 10;
+        boolean val = only10Items && position >= maxLimit;
         if (val) {
-            holder.cvMore.setVisibility(position > 10 ? View.GONE : View.VISIBLE);
+            holder.cvMore.setVisibility(position > maxLimit ? View.GONE : View.VISIBLE);
         } else {
             holder.cvMore.setVisibility(View.GONE);
         }
@@ -56,8 +59,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         holder.llRatingBar.setVisibility(val ? View.GONE : View.VISIBLE);
         holder.txtRatingsNo.setVisibility(val ? View.GONE : View.VISIBLE);
 
-        if (position < 10) {
-            final VideoModel videoModel = videoList.get(position);
+        final VideoModel videoModel = videoList.get(position);
+        if (only10Items && position < maxLimit) {
             if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
                 RequestOptions options = new RequestOptions().
                         error(R.drawable.ic_user_placeholder).placeholder(R.drawable.ic_user_placeholder);
@@ -79,29 +82,30 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             }
             holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
             holder.txtDuration.setText(videoModel.videoDuration);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (iClickListener != null) {
-                        iClickListener.onClick(holder.relItem, videoList, videoModel, holder.getAdapterPosition());
-                    }
-                }
-            });
             holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (iClickListener != null)
-                        iClickListener.onClick(holder.txtViewCount, videoList, videoModel, holder.getAdapterPosition());
+                        iClickListener.onClick(holder.txtViewCount, videoList, videoModel, holder.getAdapterPosition(), videoType);
                 }
             });
             holder.txtDistance.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (iClickListener != null)
-                        iClickListener.onClick(holder.txtDistance, videoList, videoModel, holder.getAdapterPosition());
+                        iClickListener.onClick(holder.txtDistance, videoList, videoModel, holder.getAdapterPosition(), videoType);
                 }
             });
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.relItem, videoList, videoModel, holder.getAdapterPosition(), videoType);
+                }
+            }
+        });
     }
 
     @Override

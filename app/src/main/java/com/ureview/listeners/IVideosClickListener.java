@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface IVideosClickListener {
 
-    void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position);
+    void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType);
 
     void onLongClick(View view, int position);
 
