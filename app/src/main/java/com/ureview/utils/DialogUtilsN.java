@@ -81,7 +81,7 @@ public class DialogUtilsN {
                 txtHeading2.setText(TextUtils.isEmpty(heading) ? context.getString(R.string.app_name) : heading);
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener));
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener, alertDialog));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
