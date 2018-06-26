@@ -14,7 +14,7 @@ import com.ureview.utils.views.CustomTextView;
 
 public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.IssueViewHolder> {
 
-    private final Dialog alertDialog;
+    private Dialog alertDialog;
     private String[] options;
     private ISearchClickListener iClickListener;
 
@@ -22,6 +22,11 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.IssueVie
         this.options = options;
         this.iClickListener = iClickListener;
         this.alertDialog = alertDialog;
+    }
+
+    public OptionsAdapter(String[] options, ISearchClickListener iClickListener) {
+        this.options = options;
+        this.iClickListener = iClickListener;
     }
 
     @NonNull
