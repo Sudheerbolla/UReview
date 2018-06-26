@@ -431,7 +431,7 @@ public class StaticUtils {
                 InputMethodManager inputMethodManager = (InputMethodManager) act.getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(act.getCurrentFocus().getWindowToken(), 0);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -448,6 +448,24 @@ public class StaticUtils {
         }
         Log.e("parse Code : ", code);
         return code;
+    }
+
+    public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children != null) {
+                for (String aChildren : children) {
+                    if (aChildren.startsWith("cut_video") || aChildren.startsWith("compress_video")) {
+                        boolean success = deleteDir(new File(dir, aChildren));
+                        if (!success) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+//        return dir.delete();
+        return true;
     }
 
     public static char[] parseCodeArray(String message) {

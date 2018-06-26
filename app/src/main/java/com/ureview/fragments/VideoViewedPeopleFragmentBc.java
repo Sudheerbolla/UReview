@@ -187,7 +187,7 @@ public class VideoViewedPeopleFragmentBc extends BaseFragment implements IParser
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
+                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("follow")) {
                     requestForFollowUser(peopleArrList.get(position).userId);
                 }
                 break;

@@ -246,7 +246,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 String followText = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Unfollow")) {
+                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("follow")) {
                     askConfirmationAndProceed(position);
                 } else {
                     requestForFollowUser(followModelArrayList.get(position).user_id);

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,6 +40,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     private ArrayList<NotificationsModel> notificationsModelArrayList;
     private MainActivity mainActivity;
     private CustomTextView txtNoData;
+    private ProgressBar rlProgress;
 
     public static NotificationsFragment newInstance() {
         return new NotificationsFragment();
@@ -69,6 +71,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     private void initComponents() {
         rvNotifications = rootView.findViewById(R.id.rvNotifications);
         txtNoData = rootView.findViewById(R.id.txtNoData);
+        rlProgress = rootView.findViewById(R.id.rlProgress);
 
         notificationsAdapter = new NotificationsAdapter(mainActivity, notificationsModelArrayList, this);
         rvNotifications.setLayoutManager(new LinearLayoutManager(mainActivity));
@@ -134,6 +137,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
             case WSUtils.REQ_FOR_NOTIFICATIONS:
+                rlProgress.setVisibility(View.GONE);
                 parseGetNotificationsResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_DELETE_NOTIFICATION:
@@ -225,11 +229,11 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
 
     @Override
     public void errorResponse(int requestCode, String error) {
-
+        rlProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-
+        rlProgress.setVisibility(View.GONE);
     }
 }

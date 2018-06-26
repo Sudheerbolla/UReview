@@ -68,11 +68,13 @@
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtPositive"
-                style="@style/AppButtonStyle" />
+                style="@style/AppButtonStyle"
+                android:layout_width="wrap_content" />
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtNegative"
-                style="@style/AppButtonStyle" />
+                style="@style/AppButtonStyle"
+                android:layout_width="wrap_content" />
 
         </LinearLayout>
 

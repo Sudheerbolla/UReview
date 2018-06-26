@@ -383,7 +383,7 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("Unfollow")) {
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("follow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser();

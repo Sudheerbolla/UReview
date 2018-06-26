@@ -225,9 +225,9 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 follPos = position;
                 VideoModel vid = videosArrList.get(position);
                 if (TextUtils.isEmpty(vid.followStatus) || vid.followStatus.equalsIgnoreCase("follow")) {
-                    requestForFollowUser(vid.videoOwnerId);
-                } else {
                     askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
+                } else {
+                    requestForFollowUser(vid.videoOwnerId);
                 }
                 break;
         }

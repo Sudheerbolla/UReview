@@ -113,8 +113,14 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginBottom="@dimen/pad_6"
                 android:layout_marginStart="@dimen/pad_8"
+                android:background="@drawable/bg_black"
                 android:ellipsize="end"
                 android:gravity="center"
+                android:paddingBottom="@dimen/pad_2"
+                android:paddingEnd="@dimen/pad_6"
+                android:paddingStart="@dimen/pad_6"
+                android:paddingTop="@dimen/pad_2"
+                android:singleLine="true"
                 android:textColor="@color/color_white"
                 android:textSize="@dimen/txt_size_11sp" />
 

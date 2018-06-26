@@ -68,6 +68,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -246,20 +251,15 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-//                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
-//                    requestForFollowUser(peopleArrList.get(position).userId);
-//                }
                 String followStatus = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("follow")) {
                     askConfirmationAndProceed(peopleArrList.get(position));
                 } else {
                     requestForFollowUser(peopleArrList.get(position).userId);
                 }
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
-                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
-                        true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId, peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             default:
                 break;
@@ -267,8 +267,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void askConfirmationAndProceed(PeopleModel peopleModel) {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
-                view -> requestForUnFollowUser(peopleModel.userId));
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName), view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override

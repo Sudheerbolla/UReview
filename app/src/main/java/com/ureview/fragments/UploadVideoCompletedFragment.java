@@ -1,6 +1,7 @@
 package com.ureview.fragments;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,6 +10,9 @@ import android.view.ViewGroup;
 
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
+import com.ureview.utils.StaticUtils;
+
+import java.io.File;
 
 public class UploadVideoCompletedFragment extends BaseFragment {
     private View rootView;
@@ -39,6 +43,8 @@ public class UploadVideoCompletedFragment extends BaseFragment {
             mainActivity.clearBackStackCompletely();
             mainActivity.setHomeFragment();
         });
+        File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        StaticUtils.deleteDir(moviesDir);
         return rootView;
     }
 

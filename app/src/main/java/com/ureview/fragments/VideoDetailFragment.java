@@ -1,6 +1,7 @@
 package com.ureview.fragments;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -151,7 +152,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 
         screenWidth = size.x;
         screenHeight = size.y;
-        containerHeight = Math.round(StaticUtils.convertDpToPixel(250, mainActivity));
+        containerHeight = Math.round(StaticUtils.convertDpToPixel(240, mainActivity));
 
     }
 
@@ -482,20 +483,10 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         int videoHeight = exoPlayer.getVideoFormat().height;
         double aspectRatio = (double) videoHeight / videoWidth;
         int newWidth, newHeight;
-//        if (screenWidth > (int) (screenWidth * aspectRatio)) {
-//            newHeight = (int) (screenWidth * aspectRatio);
-//            int corr;
-//            if (screenHeight > newHeight) {
-//                corr = screenHeight - newHeight;
-//            } else corr = newHeight - screenHeight;
-//            if (videoWidth + corr > screenWidth) newWidth = videoWidth;
-//            else newWidth = videoWidth + corr;
-//        } else {
         newWidth = (int) (screenHeight / aspectRatio);
         if (newWidth > screenWidth) newWidth = screenWidth;
         newHeight = (int) (screenWidth / aspectRatio);
         if (newHeight > screenHeight) newHeight = screenHeight;
-//        }
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.width = newWidth;
         params.height = newHeight;
@@ -766,7 +757,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 break;
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
+                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("follow")) {
                     askConfirmationAndProceed();
                 } else {
                     requestForFollowUser();
@@ -811,6 +802,12 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+//        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 
     private void askConfirmationAndProceed() {

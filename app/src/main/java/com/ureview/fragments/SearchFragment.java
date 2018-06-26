@@ -16,17 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonElement;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
-import com.ureview.listeners.IParserListener;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
+public class SearchFragment extends BaseFragment implements View.OnClickListener {
 
     private View rootView;
     private ViewPager viewPager;
@@ -36,6 +34,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private SearchVideosFragment searchVideosFragment;
     private SearchPeopleFragment searchPeopleFragment;
     private boolean isInSearchPeopleFragment;
+    private ViewPagerAdapter adapter;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -46,8 +45,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
         viewPager = rootView.findViewById(R.id.viewpager);
-        searchVideosFragment = new SearchVideosFragment();
-        searchPeopleFragment = new SearchPeopleFragment();
+        if (searchVideosFragment == null) searchVideosFragment = new SearchVideosFragment();
+        if (searchPeopleFragment == null) searchPeopleFragment = new SearchPeopleFragment();
         setupViewPager(viewPager);
 
         tabLayout = rootView.findViewById(R.id.searchTabs);
@@ -123,7 +122,9 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+//        adapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(searchVideosFragment, "Videos");
         adapter.addFragment(searchPeopleFragment, "People");
         viewPager.setAdapter(adapter);
@@ -139,21 +140,6 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
                 }
                 break;
         }
-    }
-
-    @Override
-    public void successResponse(int requestCode, JsonElement response) {
-
-    }
-
-    @Override
-    public void errorResponse(int requestCode, String error) {
-
-    }
-
-    @Override
-    public void noInternetConnection(int requestCode) {
-
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -184,30 +170,5 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             return mFragmentTitleList.get(position);
         }
     }
+
 }
-/*
-http://18.216.101.112/search-users?user_name=a&user_id=24&startFrom=0&count=10
-{
-    "status": "success",
-    "message": "Search users data",
-    "users_data": [
-        {
-            "user_id": "1",
-            "first_name": "Madhu",
-            "last_name": "Sudhan",
-            "user_image": "",
-            "user_rating": "2",
-            "email": "putta.msreddy@gmail.com",
-            "mobile": "8121407014",
-            "user_description": "",
-            "gender": "M",
-            "age": "5",
-            "status": "A",
-            "city": "Hyderabad",
-            "address": "",
-            "date_of_birth": "31/05/2013",
-            "uploaded_videos_count": 10,
-            "follow_status": ""
-        }
-    ]
-}*/
