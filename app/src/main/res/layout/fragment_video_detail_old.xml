@@ -355,7 +355,7 @@
                     android:layout_below="@+id/llOptions"
                     android:layout_marginTop="@dimen/pad_8"
                     android:drawablePadding="@dimen/pad_3"
-                    android:drawableStart="@drawable/vector_location"
+                    android:drawableStart="@drawable/location_small_copy"
                     android:text="Location"
                     android:textColor="@color/colorDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />

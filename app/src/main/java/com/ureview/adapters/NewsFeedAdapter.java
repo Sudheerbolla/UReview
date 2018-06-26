@@ -62,12 +62,12 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.imgLocation.getLayoutParams().height = width / 2;
         holder.imgLocation.getLayoutParams().width = width;
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
-            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_user_placeholder).error(R.drawable.ic_user_placeholder);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.video_placeholder).error(R.drawable.video_placeholder);
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(requestOptions)
                     .into(holder.imgLocation);
-        } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
+        } else holder.imgLocation.setImageResource(R.drawable.video_placeholder);
 
 //        Glide.with(context).load(videoModel.categoryBgImage).into(new SimpleTarget<Drawable>() {
 //            @Override

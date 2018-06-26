@@ -30,9 +30,10 @@
 
                 <ImageView
                     android:id="@+id/imgVideoThumb"
-                    android:visibility="visible"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:src="@drawable/video_placeholder"
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/imgPlay"

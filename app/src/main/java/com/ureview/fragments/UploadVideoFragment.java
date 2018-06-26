@@ -287,6 +287,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             jsonObjectReq.put("user_longitude", userLong + "");
             jsonObjectReq.put("video_status", "A");
             jsonObjectReq.put("video_privacy", "private");
+            jsonObjectReq.put("video_duration", tvRight.getText().toString().trim() + "");
 
             if (!TextUtils.isEmpty(videoThumb)) {
                 jsonObjectReq.put("video_poster_image", videoThumb);

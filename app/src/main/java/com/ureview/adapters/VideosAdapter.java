@@ -63,12 +63,12 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         if (only10Items && position < maxLimit) {
             if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
                 RequestOptions options = new RequestOptions().
-                        error(R.drawable.ic_user_placeholder).placeholder(R.drawable.ic_user_placeholder);
+                        error(R.drawable.video_placeholder).placeholder(R.drawable.video_placeholder);
                 Glide.with(context)
                         .load(videoModel.videoPosterImage)
                         .apply(options)
                         .into(holder.imgVideo);
-            } else holder.imgVideo.setImageResource(R.drawable.ic_user_placeholder);
+            } else holder.imgVideo.setImageResource(R.drawable.video_placeholder);
 
             holder.txtName.setText(videoModel.videoTitle);
             holder.txtTags.setText(videoModel.videoTags);
@@ -89,21 +89,15 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
                         iClickListener.onClick(holder.txtViewCount, videoList, videoModel, holder.getAdapterPosition(), videoType);
                 }
             });
-            holder.txtDistance.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (iClickListener != null)
-                        iClickListener.onClick(holder.txtDistance, videoList, videoModel, holder.getAdapterPosition(), videoType);
-                }
+            holder.txtDistance.setOnClickListener(view -> {
+                if (iClickListener != null)
+                    iClickListener.onClick(holder.txtDistance, videoList, videoModel, holder.getAdapterPosition(), videoType);
             });
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) {
-                    iClickListener.onClick(holder.relItem, videoList, videoModel, holder.getAdapterPosition(), videoType);
-                }
+        holder.itemView.setOnClickListener(view -> {
+            if (iClickListener != null) {
+                iClickListener.onClick(holder.relItem, videoList, videoModel, holder.getAdapterPosition(), videoType);
             }
         });
     }
