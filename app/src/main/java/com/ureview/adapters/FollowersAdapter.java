@@ -78,25 +78,16 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         holder.txtReviewCount.setText("Review Upload: " + followModel.uploaded_videos_count);
         setProfileRating(holder, TextUtils.isEmpty(followModel.user_rating) ? 0f : Float.parseFloat(followModel.user_rating));
 
-        holder.imgClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
-            }
+        holder.imgClear.setOnClickListener(view -> {
+            if (iClickListener != null) iClickListener.onClick(view, position);
         });
 
-        holder.relBody.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
-            }
+        holder.relBody.setOnClickListener(view -> {
+            if (iClickListener != null) iClickListener.onClick(view, position);
         });
 
-        holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
-            }
+        holder.txtFollowStatus.setOnClickListener(view -> {
+            if (iClickListener != null) iClickListener.onClick(view, position);
         });
 
         if (!TextUtils.isEmpty(followModel.user_image)) {

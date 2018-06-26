@@ -21,6 +21,7 @@
         android:layout_marginStart="@dimen/pad_5"
         android:ellipsize="end"
         android:gravity="center"
+        android:maxHeight="@dimen/pad_35"
         android:padding="@dimen/pad_3"
         android:textColor="@color/selector_txt_color"
         android:textSize="@dimen/txt_size_13sp"

@@ -50,7 +50,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private ArrayList<VideoModel> videosArrList = new ArrayList<>();
     private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
     private String currLat, currLng;
-    protected RelativeLayout rlProgress;
+    private RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading = false, hasLoadedAllItems;
@@ -88,20 +88,12 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         return rootView;
     }
 
-    protected void searchVideo(String searchVideo, MainActivity mainActivity) {
-        searchText = searchVideo;
+    protected void searchVideo(String searchVideo) {
+        SearchFragment.searchText = searchVideo;
         videosArrList.clear();
         startFrom = 0;
         isLoading = false;
         hasLoadedAllItems = false;
-        if (this.mainActivity == null) {
-            this.mainActivity = mainActivity;
-            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-            if (MainActivity.mLastLocation != null) {
-                currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
-                currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
-            }
-        }
         if (TextUtils.isEmpty(searchVideo)) {
             tempVideosArrList.clear();
             if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
@@ -116,7 +108,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         JSONObject jsonObjectReq = new JSONObject();
         try {
             jsonObjectReq.put("user_id", userId);
-            jsonObjectReq.put("video_name", searchText);
+            jsonObjectReq.put("video_name", SearchFragment.searchText);
             jsonObjectReq.put("latitude", String.valueOf(MainActivity.mLastLocation.getLatitude()));
             jsonObjectReq.put("longitude", String.valueOf(MainActivity.mLastLocation.getLongitude()));
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
@@ -146,6 +138,9 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     private void parseNewsFeedVideo(JsonElement response) {
+        if (!isLoading) {
+            tempVideosArrList.clear();
+        }
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
@@ -153,26 +148,30 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                 if (jsonObject.has("search_videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("search_videos");
                     tempVideosArrList.clear();
-                    for (int i = 0; i < feedVidArr.length(); i++) {
-                        Gson gson = new Gson();
-                        VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
-                        videosArrList.add(videoModel);
-                        tempVideosArrList.add(videoModel);
-                    }
-                    boolean addAll = startFrom == 0;
-                    startFrom += feedVidArr.length();
-                    if (startFrom % count != 0) {
-                        hasLoadedAllItems = true;
-                        isLoading = false;
-                    }
-                    if (addAll) {
-                        searchVideosAdapter.addAllVideos(tempVideosArrList);
+                    if (feedVidArr.length() > 0) {
+                        for (int i = 0; i < feedVidArr.length(); i++) {
+                            Gson gson = new Gson();
+                            VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
+                            videosArrList.add(videoModel);
+                            tempVideosArrList.add(videoModel);
+                        }
+                        boolean addAll = startFrom == 0;
+                        startFrom += feedVidArr.length();
+                        if (startFrom % count != 0) {
+                            hasLoadedAllItems = true;
+                            isLoading = false;
+                        }
+                        if (addAll) {
+                            searchVideosAdapter.addAllVideos(tempVideosArrList);
+                        } else {
+                            searchVideosAdapter.addVideos(tempVideosArrList);
+                        }
+                        txtNoData.setVisibility(View.GONE);
+                        rvSearchVideo.setVisibility(View.VISIBLE);
                     } else {
-                        searchVideosAdapter.addVideos(tempVideosArrList);
+                        txtNoData.setVisibility(View.VISIBLE);
+                        rvSearchVideo.setVisibility(View.GONE);
                     }
-
-                    txtNoData.setVisibility(View.GONE);
-                    rvSearchVideo.setVisibility(View.VISIBLE);
                 }
             } else {
                 if (startFrom == 0) {
@@ -221,7 +220,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
 //                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(videosArrList, position));
+                ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position));
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
@@ -237,23 +237,16 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             case R.id.txtFollowStatus:
                 follPos = position;
                 VideoModel vid = videosArrList.get(position);
-                if (TextUtils.isEmpty(vid.followStatus) || vid.followStatus.equalsIgnoreCase("follow")) {
-                    requestForFollowUser(vid.videoOwnerId);
-                } else {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
-                }
+                } else requestForFollowUser(vid.videoOwnerId);
                 break;
         }
     }
 
     private void askConfirmationAndProceed(String name, final String id) {
         DialogUtils.showUnFollowConfirmationPopup(mainActivity, name,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        requestForUnFollowUser(id);
-                    }
-                });
+                view -> requestForUnFollowUser(id));
     }
 
     @Override

@@ -49,12 +49,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private ArrayList<PeopleModel> tempPeopleArrList = new ArrayList<>();
     private CustomTextView txtNoData;
     private String userId;
-    protected RelativeLayout rlProgress;
+    private RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
     private int startFrom = 0, count = 10;
-    protected String searchText = "";
     private int selectedPosition;
 
     public static SearchPeopleFragment newInstance() {
@@ -88,15 +87,12 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         rvPeople.setAdapter(peopleAdapter);
     }
 
-    protected void searchUser(String searchUser, MainActivity mainActivity) {
-        searchText = searchUser;
+    protected void searchUser(String searchUser) {
+        SearchFragment.searchText = searchUser;
         peopleArrList.clear();
         startFrom = 0;
+        isLoading = false;
         hasLoadedAllItems = false;
-        if (this.mainActivity == null) {
-            this.mainActivity = mainActivity;
-            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
-        }
         if (TextUtils.isEmpty(searchUser)) {
             if (tempPeopleArrList != null) tempPeopleArrList.clear();
             if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
@@ -110,7 +106,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
 
     protected void requestForSearchPeopleListWS() {
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("user_name", searchText);
+        hashMap.put("user_name", SearchFragment.searchText);
         hashMap.put("user_id", userId);
         hashMap.put("startFrom", String.valueOf(startFrom));
         hashMap.put("count", String.valueOf(count));
@@ -250,20 +246,12 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-//                if (((CustomTextView) view).getText().toString().trim().equalsIgnoreCase("Follow")) {
-//                    requestForFollowUser(peopleArrList.get(position).userId);
-//                }
-                String followStatus = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followStatus) || followStatus.equalsIgnoreCase("unfollow")) {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(peopleArrList.get(position));
-                } else {
-                    requestForFollowUser(peopleArrList.get(position).userId);
-                }
+                } else requestForFollowUser(peopleArrList.get(position).userId);
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId,
-                        peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)),
-                        true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(peopleArrList.get(position).userId, peopleArrList.get(position).firstName.concat(" ").concat(peopleArrList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             default:
                 break;
@@ -271,8 +259,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void askConfirmationAndProceed(PeopleModel peopleModel) {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
-                view -> requestForUnFollowUser(peopleModel.userId));
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName), view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override

@@ -88,17 +88,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.PeopleView
                 holder.txtFollowStatus.setSelected(true);
             }
         }
-        holder.txtFollowStatus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
-            }
+        holder.txtFollowStatus.setOnClickListener(view -> {
+            if (iClickListener != null) iClickListener.onClick(view, position);
         });
-        holder.relBody.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null) iClickListener.onClick(view, position);
-            }
+        holder.relBody.setOnClickListener(view -> {
+            if (iClickListener != null) iClickListener.onClick(view, position);
         });
     }
 

@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +18,9 @@ import com.ureview.adapters.OptionsAdapter;
 import com.ureview.listeners.ISearchClickListener;
 import com.ureview.utils.views.CustomTextView;
 
-public class DialogUtils implements View.OnClickListener {
+public class DialogUtilsN {
 
     private static AlertDialog alert;
-    private ImageView imgStar1, imgStar2, imgStar3, imgStar4, imgStar5;
 
     public static void showDropDownListStrings(String title, Context context, final TextView textView, final String[] categoryNames, final View.OnClickListener clickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -83,7 +81,7 @@ public class DialogUtils implements View.OnClickListener {
                 txtHeading2.setText(TextUtils.isEmpty(heading) ? context.getString(R.string.app_name) : heading);
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener, alertDialog));
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -124,7 +122,7 @@ public class DialogUtils implements View.OnClickListener {
             recyclerView.setAdapter(new OptionsAdapter(categoryNames, text -> {
                 alertDialog.dismiss();
                 if (clickListener != null) clickListener.onClick(text);
-            }, alertDialog));
+            }));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -157,7 +155,7 @@ public class DialogUtils implements View.OnClickListener {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
 
-    public static void showUnFollowConfirmationPopup(final Context mContext, final String message, final View.OnClickListener positiveClick) {
+    public static void showUnFollowConfirmationPopup(final Context mContext, final String userName, final View.OnClickListener positiveClick) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
 
@@ -179,21 +177,29 @@ public class DialogUtils implements View.OnClickListener {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
 
-            txtHeading.setText("");
-            txtMessage.setText(message);
+            txtHeading.setText(mContext.getString(R.string.app_name));
+            txtMessage.setText("Do you want to Unfollow ".concat(userName).concat("?"));
 
             txtPositiveButton.setText("Yes");
 
             txtNegativeButton.setText("No");
 
-            txtPositiveButton.setOnClickListener(v -> {
-                alertDialog.dismiss();
-                if (positiveClick != null) {
-                    positiveClick.onClick(v);
+            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (positiveClick != null) {
+                        positiveClick.onClick(v);
+                    }
                 }
             });
 
-            txtNegativeButton.setOnClickListener(v -> alertDialog.dismiss());
+            txtNegativeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
 
             alertDialog.setCancelable(false);
             alertDialog.setCanceledOnTouchOutside(false);
@@ -225,7 +231,7 @@ public class DialogUtils implements View.OnClickListener {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
 
-            txtHeading.setText(TextUtils.isEmpty(heading) ? mContext.getString(R.string.app_name) : (heading.equalsIgnoreCase("null") ? "" : heading));
+            txtHeading.setText(TextUtils.isEmpty(heading) ? mContext.getString(R.string.app_name) : heading);
             txtMessage.setText(message);
 
             txtPositiveButton.setText(TextUtils.isEmpty(positiveText) ? "OK" : positiveText);
@@ -269,23 +275,43 @@ public class DialogUtils implements View.OnClickListener {
             ratingBar.setVisibility(View.VISIBLE);
             alertDialog.findViewById(R.id.txtMessage).setVisibility(View.GONE);
             txtPositiveButton = alertDialog.findViewById(R.id.txtPositive);
+
+//            imgStar1 = alertDialog.findViewById(R.id.imgStar1);
+//            imgStar2 = alertDialog.findViewById(R.id.imgStar2);
+//            imgStar3 = alertDialog.findViewById(R.id.imgStar3);
+//            imgStar4 = alertDialog.findViewById(R.id.imgStar4);
+//            imgStar5 = alertDialog.findViewById(R.id.imgStar5);
+//
+//            imgStar1.setOnClickListener(this);
+//            imgStar2.setOnClickListener(this);
+//            imgStar3.setOnClickListener(this);
+//            imgStar4.setOnClickListener(this);
+//            imgStar5.setOnClickListener(this);
+
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
+
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             Window window = alertDialog.getWindow();
             lp.copyFrom(window.getAttributes());
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
+
             txtHeading.setText("Rate this Video");
             txtPositiveButton.setText("Submit your rating");
-            txtPositiveButton.setOnClickListener(v -> {
-                alertDialog.dismiss();
-                if (positiveClick != null) {
-                    Toast.makeText(mContext, ratingBar.getRating() + "", Toast.LENGTH_LONG).show();
-                    givenRating.setText(String.valueOf(ratingBar.getRating()));
-                    positiveClick.onClick(v);
+            txtPositiveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                    if (positiveClick != null) {
+                        Toast.makeText(mContext, ratingBar.getRating() + "", Toast.LENGTH_LONG).show();
+//                        givenRating.setText(String.valueOf(getRating()));
+                        givenRating.setText(String.valueOf(ratingBar.getRating()));
+                        positiveClick.onClick(v);
+                    }
                 }
             });
+
             alertDialog.setCancelable(true);
             alertDialog.setCanceledOnTouchOutside(true);
             alertDialog.show();
@@ -348,75 +374,6 @@ public class DialogUtils implements View.OnClickListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.imgStar1:
-                setRating(1);
-                break;
-            case R.id.imgStar2:
-                setRating(2);
-                break;
-            case R.id.imgStar3:
-                setRating(3);
-                break;
-            case R.id.imgStar4:
-                setRating(4);
-                break;
-            case R.id.imgStar5:
-                setRating(5);
-                break;
-        }
-    }
-
-    private int getRating() {
-        int rating = 0;
-        if (imgStar5.isSelected())
-            rating = 5;
-        else if (!imgStar5.isSelected() && imgStar4.isSelected())
-            rating = 4;
-        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && imgStar3.isSelected())
-            rating = 3;
-        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && !imgStar3.isSelected()
-                && imgStar2.isSelected())
-            rating = 2;
-        else if (!imgStar5.isSelected() && !imgStar4.isSelected() && !imgStar3.isSelected()
-                && !imgStar2.isSelected() && imgStar1.isSelected())
-            rating = 4;
-        return rating;
-    }
-
-    private void setRating(int v) {
-        switch (v) {
-            case 0:
-                setSelectedStar(false, false, false, false, false);
-                break;
-            case 1:
-                setSelectedStar(true, false, false, false, false);
-                break;
-            case 2:
-                setSelectedStar(true, true, false, false, false);
-                break;
-            case 3:
-                setSelectedStar(true, true, true, false, false);
-                break;
-            case 4:
-                setSelectedStar(true, true, true, true, false);
-                break;
-            case 5:
-                setSelectedStar(true, true, true, true, true);
-                break;
-        }
-    }
-
-    private void setSelectedStar(boolean b, boolean b1, boolean b2, boolean b3, boolean b4) {
-        imgStar1.setSelected(b);
-        imgStar2.setSelected(b1);
-        imgStar3.setSelected(b2);
-        imgStar4.setSelected(b3);
-        imgStar5.setSelected(b4);
     }
 
     public static void showRatingSuccessDialog(final Context mContext, final String message) {

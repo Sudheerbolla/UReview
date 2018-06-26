@@ -1,10 +1,12 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,6 +74,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
     private int lastUpdatedPos = -1;
+    private int selectedPosition;
     private boolean autoCall;
 
     public static HomeFragment newInstance() {
@@ -269,11 +272,19 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
     }
 
+    public static final int DIALOG_FRAGMENT = 1;
+
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position) {
+        selectedPosition = position;
         switch (view.getId()) {
             case R.id.relItem:
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(videoModels, position));
+                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position);
+                videoDetailFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+
+                //                mainActivity.showVideoDetails();
 //                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videoModels, position);
 //                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
@@ -402,11 +413,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         }
     }
 
+    //"No Reviews available for this category.Try changing location or choose another category."
+
     private void parseNewsFeedVideo(JsonElement response) {
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
-            txtNoData.setText("No Videos");
+            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
                 txtNoData.setVisibility(View.GONE);
                 rvNewsFeed.setVisibility(View.VISIBLE);
@@ -603,4 +616,15 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         return hasLoadedAllItems;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case DIALOG_FRAGMENT:
+                if (resultCode == Activity.RESULT_OK) {
+//                    updateCategoryList(position, true);
+                }
+                break;
+        }
+    }
 }

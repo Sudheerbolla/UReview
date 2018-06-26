@@ -4,6 +4,6 @@
     <corners android:radius="@dimen/pad_3" />
     <stroke
         android:width="@dimen/pad_1"
-        android:color="@color/colorDarkGrey" />
+        android:color="@color/colorBlack" />
     <solid android:color="@color/color_white" />
 </shape>

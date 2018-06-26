@@ -1,13 +1,13 @@
 package com.ureview.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,9 +18,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -38,6 +43,7 @@ import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.pickimage.ImageFilePath;
 import com.ureview.utils.views.CustomEditText;
 import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
@@ -57,13 +63,12 @@ import retrofit2.Call;
 public class UploadVideoFragment extends BaseFragment implements IParserListener {
     private View rootView;
     private CustomTextView txtCompleteVideo, txtLocation, tvLeft, tvRight, txtCategory;
-    private ImageView imgPlay, imgPlayPause, imgHashTag;
+    private ImageView imgPlay, imgPlayPause, imgHashTag, imgVideoThumb;
     private CustomEditText edtVideoTitle, edtTags;
     private MainActivity mainActivity;
     private Uri selectedVideoUri;
     private VideoView videoView;
     private SeekBar seekBar;
-    private ProgressDialog progressDialog;
     private String filePath;
     private int stopPosition, duration;
     private String[] catArray;
@@ -72,6 +77,8 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     private String userId;
     private double longitude, latitude, userLat, userLong;
     private String videoThumb;
+    private RelativeLayout relProgress;
+    private LinearLayout linBody;
 
     private Runnable onEverySecond = new Runnable() {
 
@@ -82,9 +89,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 tvLeft.setText(StaticUtils.getTime(videoView.getCurrentPosition() / 1000));
             }
             if (videoView.isPlaying()) {
-                seekBar.postDelayed(onEverySecond, 500);
+                seekBar.postDelayed(onEverySecond, 1000);
             }
-            if (videoView.getDuration() - videoView.getCurrentPosition() <= 500) {
+            if (videoView.getDuration() - videoView.getCurrentPosition() <= 1000) {
                 videoView.pause();
                 stopPosition = 0;
                 imgPlay.setVisibility(View.VISIBLE);
@@ -136,9 +143,10 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         }
         categoryModelArrayList = new ArrayList<>();
         categoryModelArrayList.addAll(MainActivity.categoryListStatic);
+        categoryModelArrayList.remove(0);
         catArray = new String[categoryModelArrayList.size()];
         for (int i = 0; i < categoryModelArrayList.size(); i++) {
-//            catArray[i] = categoryModelArrayList.get(i).categoryName + "-" + categoryModelArrayList.get(i).id;
+//            if (!categoryModelArrayList.get(i).categoryName.equalsIgnoreCase("New Feed"))
             catArray[i] = categoryModelArrayList.get(i).categoryName;
         }
     }
@@ -152,7 +160,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         if (stopPosition > 0)
             videoView.start();
         imgPlayPause.setSelected(true);
-        seekBar.postDelayed(onEverySecond, 500);
+        seekBar.postDelayed(onEverySecond, 1000);
     }
 
     @Override
@@ -183,6 +191,9 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         seekBar = rootView.findViewById(R.id.mediacontroller_progress);
         videoView = rootView.findViewById(R.id.VideoView);
         txtCompleteVideo = rootView.findViewById(R.id.txtCompleteVideo);
+        imgVideoThumb = rootView.findViewById(R.id.imgVideoThumb);
+        relProgress = rootView.findViewById(R.id.relProgress);
+        linBody = rootView.findViewById(R.id.linBody);
         txtLocation = rootView.findViewById(R.id.txtLocation);
         tvLeft = rootView.findViewById(R.id.time_current);
         tvLeft.setText("00:00:00");
@@ -195,43 +206,35 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         imgPlayPause.setSelected(false);
         imgHashTag = rootView.findViewById(R.id.imgHashTag);
 //        imgPlay.setVisibility(View.GONE);
-        imgPlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                imgPlay.setVisibility(View.GONE);
-                videoView.seekTo(0);
-                videoView.start();
-                imgPlayPause.setSelected(true);
-                seekBar.postDelayed(onEverySecond, 500);
-            }
+        imgPlay.setOnClickListener(view -> {
+            imgPlay.setVisibility(View.GONE);
+            imgVideoThumb.setVisibility(View.GONE);
+            videoView.seekTo(0);
+            videoView.start();
+            imgPlayPause.setSelected(true);
+            seekBar.postDelayed(onEverySecond, 1000);
         });
 
-        imgPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (videoView.isPlaying()) {
-                    stopPosition = videoView.getCurrentPosition();
-                    imgPlayPause.setSelected(false);
-                    videoView.pause();
-                } else {
-                    if (stopPosition > 0) {
-                        imgPlayPause.setSelected(true);
-                        videoView.seekTo(stopPosition);
-                        videoView.start();
-                        seekBar.postDelayed(onEverySecond, 500);
-                    }
+        imgPlayPause.setOnClickListener(view -> {
+            if (videoView.isPlaying()) {
+                stopPosition = videoView.getCurrentPosition();
+                imgPlayPause.setSelected(false);
+                videoView.pause();
+            } else {
+                if (stopPosition > 0) {
+                    imgPlayPause.setSelected(true);
+                    videoView.seekTo(stopPosition);
+                    videoView.start();
+                    seekBar.postDelayed(onEverySecond, 1000);
                 }
             }
         });
 
-        txtLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopPosition = videoView.getCurrentPosition();
-                videoView.pause();
-                imgPlayPause.setSelected(false);
-                openSearch();
-            }
+        txtLocation.setOnClickListener(view -> {
+            stopPosition = videoView.getCurrentPosition();
+            videoView.pause();
+            imgPlayPause.setSelected(false);
+            openSearch();
         });
 
         txtCompleteVideo.setOnClickListener(view -> {
@@ -243,33 +246,33 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 StaticUtils.showToast(mainActivity, message);
             }
         });
-        txtCategory.setOnClickListener(view -> DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String category = (String) view.getTag();
-                txtCategory.setText(category);
-                setSelectedCategoryid(category);
-            }
+        txtCategory.setOnClickListener(view -> DialogUtils.showDropDownListStrings(mainActivity, catArray, txtCategory, view1 -> {
+            String category = (String) view1.getTag();
+            txtCategory.setText(category);
+            setSelectedCategoryid(category);
         }));
         imgHashTag.setOnClickListener(view -> {
             String text = edtTags.getText().toString().trim();
             if (!text.endsWith("#")) {
-//                edtTags.setText(text + "#");
-//                int start = Math.max(myEditText.getSelectionStart(), 0);
-//                int end = Math.max(myEditText.getSelectionEnd(), 0);
-//                myEditText.getText().replace(Math.min(start, end), Math.max(start, end),
-//                        textToInsert, 0, textToInsert.length());
                 edtTags.getText().insert(edtTags.getSelectionStart(), "#");
             }
         });
-        progressDialog = new ProgressDialog(mainActivity);
-        progressDialog.setTitle(null);
-        progressDialog.setCancelable(false);
 
         setVideoViewData();
     }
 
+    private void showProgress(boolean showProgress) {
+        if (showProgress) {
+            relProgress.setVisibility(View.VISIBLE);
+            linBody.setVisibility(View.GONE);
+        } else {
+            relProgress.setVisibility(View.GONE);
+            linBody.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void requestForUploadVideoWS(String baseVideo) {
+        showProgress(true);
         JSONObject jsonObjectReq = new JSONObject();
         try {
             jsonObjectReq.put("user_id", userId);
@@ -382,25 +385,69 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     }
 
     private void setImageAttachment(Uri cameraFile) {
-        videoThumb = "";
         try {
-            long videoId = Long.parseLong(cameraFile.getLastPathSegment().split(":")[1]);
-            Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(mainActivity.getContentResolver(),
-                    videoId, MediaStore.Images.Thumbnails.MINI_KIND, null);
-            if (thumbnail != null) {
-                videoThumb = StaticUtils.imageBytes(thumbnail);
-            } else {
-                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                videoThumb = StaticUtils.imageBytes(bMap);
+            videoThumb = "";
+            String selectedPathVideo;
+            selectedPathVideo = ImageFilePath.getPath(mainActivity, cameraFile);
+            Log.e("Image File Path", "" + selectedPathVideo);
+            try {
+                Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(selectedPathVideo, MediaStore.Video.Thumbnails.MICRO_KIND);
+                if (thumbnail != null) {
+                    imgVideoThumb.setImageBitmap(thumbnail);
+                    videoThumb = StaticUtils.imageBytes(thumbnail);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (TextUtils.isEmpty(videoThumb)) {
+                try {
+                    long videoId = Long.parseLong(cameraFile.getLastPathSegment().split(":")[1]);
+                    Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(mainActivity.getContentResolver(), videoId, MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    if (thumbnail != null) {
+                        imgVideoThumb.setImageBitmap(thumbnail);
+                        videoThumb = StaticUtils.imageBytes(thumbnail);
+                    } else {
+                        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                        if (bMap != null) {
+                            imgVideoThumb.setImageBitmap(bMap);
+                            videoThumb = StaticUtils.imageBytes(bMap);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    try {
+                        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                        if (bMap != null) {
+                            imgVideoThumb.setImageBitmap(bMap);
+                            videoThumb = StaticUtils.imageBytes(bMap);
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+            if (TextUtils.isEmpty(videoThumb) && selectedVideoUri != null) {
+                File music = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+                String filePath = new File(music, selectedVideoUri.getLastPathSegment()).getAbsolutePath();
+                Glide.with(this)
+                        .asBitmap()
+                        .load(filePath)
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                imgVideoThumb.setImageBitmap(resource);
+                                videoThumb = StaticUtils.imageBytes(resource);
+                            }
+                        });
+//                long interval = 5000 * 1000;
+//                RequestOptions options = new RequestOptions().frame(interval);
+//                Glide.with(context).asBitmap()
+//                .load(APIConfig.URL_VIDEOLOC+feedItem.getVideoFile())
+//                .apply(options)
+//                .into(feedListRowHolder.videoView.getCoverView());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                Bitmap bMap = ThumbnailUtils.createVideoThumbnail(cameraFile.getPath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                videoThumb = StaticUtils.imageBytes(bMap);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
         }
     }
 
@@ -425,12 +472,12 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
     @Override
     public void errorResponse(int requestCode, String error) {
         Log.e("error: ", error);
-        progressDialog.hide();
+        showProgress(false);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-        progressDialog.hide();
+        showProgress(false);
     }
 
     @Override
@@ -443,7 +490,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     Log.e("Place: ", place.getName().toString());
                     latitude = place.getLatLng().latitude;
                     longitude = place.getLatLng().longitude;
-                    setTextToAddress(place.getName().toString());
+                    setTextToAddress(place.getAddress().toString());
                     break;
                 case PlaceAutocomplete.RESULT_ERROR:
                     Status status = PlaceAutocomplete.getStatus(mainActivity, data);
@@ -460,16 +507,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-//                    if (response.has("message")) {
-//                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
-//                    }
                     mainActivity.clearBackStackCompletely();
-                    try {
-                        File cutFile = new File(filePath);
-                        if (cutFile.exists()) cutFile.delete();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     mainActivity.replaceFragment(UploadVideoCompletedFragment.newInstance(), true, R.id.mainContainer);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
@@ -478,7 +516,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            progressDialog.hide();
+            showProgress(false);
         }
     }
 
@@ -496,7 +534,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                     inputStream = mainActivity.getContentResolver().openInputStream(selectedVideoUri);
                 } catch (FileNotFoundException e1) {
                     e1.printStackTrace();
-                    progressDialog.hide();
+                    showProgress(false);
                 }
             }
             if (inputStream != null) {
@@ -526,20 +564,18 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
 
         @Override
         protected void onPostExecute(String result) {
-            progressDialog.hide();
+            showProgress(false);
             if (TextUtils.isEmpty(result)) {
                 StaticUtils.showToast(mainActivity, "Something went wrong");
             } else {
-                progressDialog.setMessage("Loading");
-                progressDialog.show();
+                showProgress(true);
                 requestForUploadVideoWS(result);
             }
         }
 
         @Override
         protected void onPreExecute() {
-            progressDialog.setMessage("Converting and Uploading video.Please wait...");
-            progressDialog.show();
+            showProgress(true);
         }
 
     }
@@ -555,7 +591,6 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 inputStream = mainActivity.getContentResolver().openInputStream(selectedVideoUri);
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
-                progressDialog.hide();
             }
         }
         if (inputStream != null) {

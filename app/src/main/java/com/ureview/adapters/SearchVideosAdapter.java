@@ -1,7 +1,6 @@
 package com.ureview.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,14 +12,11 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomTextView;
-import com.ureview.wsutils.WSUtils;
 
 import java.util.ArrayList;
 
@@ -73,13 +69,13 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                     .into(holder.imgLocation);
         } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
         holder.txtCategory.setText(videoModel.categoryName);
-
-        Glide.with(context).load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage)).into(new SimpleTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
-                holder.txtCategory.setBackground(resource);
-            }
-        });
+        holder.txtCategory.setBackgroundResource(R.drawable.blue_bg);
+//        Glide.with(context).load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage)).into(new SimpleTarget<Drawable>() {
+//            @Override
+//            public void onResourceReady(@NonNull Drawable resource, Transition<? super Drawable> transition) {
+//                holder.txtCategory.setBackground(resource);
+//            }
+//        });
 
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
@@ -143,9 +139,10 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     }
 
     public void addVideos(ArrayList<VideoModel> arrList) {
-        int lastPosition = videoArrList.size() > 0 ? videoArrList.size() - 1 : 0;
-        videoArrList.addAll(arrList);
-        notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
+        this.videoArrList.clear();
+        this.videoArrList.addAll(arrList);
+        notifyDataSetChanged();
+
     }
 
     public void addAllVideos(ArrayList<VideoModel> arrList) {
@@ -159,12 +156,8 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
     }
 
     public class NewsFeedViewHolder extends RecyclerView.ViewHolder {
-        //imgCatBg
-        private ImageView imgLocation, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5,
-                imgProfile;
-        private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance, txtLength,
-                txtViewCount, txtRatingsNo, txtLoc, txtName, txtFollowStatus;
-        //        private RatingBar ratingBarVideo;
+        private ImageView imgLocation, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, imgProfile;
+        private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance, txtLength, txtViewCount, txtRatingsNo, txtLoc, txtName, txtFollowStatus;
         private View dividerView;
 
         public NewsFeedViewHolder(View itemView) {

@@ -86,9 +86,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/pad_7"
             android:text="Description not available"
-            android:textColor="@color/colorDarkGrey"
+            android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_15sp" />
-        <!--Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.-->
+
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

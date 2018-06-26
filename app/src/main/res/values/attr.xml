@@ -96,4 +96,11 @@
         <attr name="half_color" format="color" />
         <attr name="empty_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="DualProgressView">
+        <attr name="dpv_anim_duration" format="integer" />
+        <attr name="dpv_outer_color" format="color" />
+        <attr name="dpv_thickness" format="dimension" />
+    </declare-styleable>
+
 </resources>

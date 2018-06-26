@@ -3,12 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/pad_15">
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:ellipsize="marquee"
+        android:gravity="center"
+        android:inputType="text"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="@dimen/pad_2"
+        android:singleLine="true"
+        android:text="Report Video"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_16sp"
+        android:visibility="visible" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pad_1"
+        android:background="@color/color_vDarkGrey" />
 
     <com.ureview.utils.views.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/pad_15"
+        android:layout_marginTop="@dimen/pad_15"
+        android:padding="@dimen/pad_5"
         android:text="Description"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_13sp"
@@ -18,7 +41,7 @@
         android:id="@+id/edtDesc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/pad_10"
+        android:layout_margin="@dimen/pad_15"
         android:background="@drawable/bg_edt_txt"
         android:gravity="left|top"
         android:lines="10"
@@ -29,6 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/pad_15"
         android:layout_marginTop="@dimen/pad_10">
 
         <com.ureview.utils.views.CustomTextView
@@ -39,7 +63,7 @@
             android:background="@drawable/bg_white_grey_border_small"
             android:minWidth="@dimen/pad_100"
             android:text="Cancel"
-            android:textColor="@color/color_vvvDarkGrey" />
+            android:textColor="@color/colorBlack" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtPositive"

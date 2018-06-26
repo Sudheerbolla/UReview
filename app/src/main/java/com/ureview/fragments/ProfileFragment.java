@@ -152,7 +152,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             txtFollowingCount.setText(TextUtils.isEmpty(userInfoModel.you_follow_count) ? "0" : userInfoModel.you_follow_count);
             txtFollowStatus.setVisibility(isDiffUser ? View.VISIBLE : View.GONE);
             if (isDiffUser) {
-                setFollowTextAndBg(userInfoModel);
+                setFollowTextAndBg(userInfoModel.follow_status);
             }
 
             if (!TextUtils.isEmpty(userInfoModel.user_image)) {
@@ -199,8 +199,8 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         imgStar5.setSelected(b4);
     }
 
-    private void setFollowTextAndBg(UserInfoModel userInfoModel) {
-        if (TextUtils.isEmpty(userInfoModel.follow_status)) {
+    private void setFollowTextAndBg(String followStatus) {
+        if (TextUtils.isEmpty(followStatus)) {
             txtFollowStatus.setText("Follow");
             txtFollowStatus.setSelected(false);
         } else {
@@ -224,7 +224,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     private void setupViewPager(CustomViewPager viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(AboutFragment.newInstance(isDiffUser ? otherUserId : userId), "About");
-        adapter.addFragment(VideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
+        adapter.addFragment(ProfileVideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
         if (!isDiffUser)
             adapter.addFragment(StatsFragment.newInstance(isDiffUser ? otherUserId : userId), "Stats");
         viewPager.setAdapter(adapter);
@@ -241,15 +241,14 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
                 mainActivity.replaceFragment(FollowersFragment.newInstance(false, isDiffUser ? otherUserId : userId), true, R.id.mainContainer);
                 break;
             case R.id.txtFollowStatus:
-                if (txtFollowStatus.getText().toString().equalsIgnoreCase("unfollow")) {
+                if (txtFollowStatus.isSelected()) {
                     askConfirmationAndProceed();
-                } else {
-                    requestForFollowUser(otherUserId);
-                }
+                } else requestForFollowUser(otherUserId);
                 break;
             case R.id.imgProfile:
-                if (!TextUtils.isEmpty(userInfoModel.user_image)) {
-                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(userInfoModel.user_image);
+                String profilePic = isDiffUser ? otherInfoModel.user_image : userInfoModel.user_image;
+                if (!TextUtils.isEmpty(profilePic)) {
+                    ProfileImageFragment countrySelectionFragment = ProfileImageFragment.newInstance(profilePic);
                     countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                     countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
                 }
@@ -259,7 +258,6 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
 
     }
-
 
     private void askConfirmationAndProceed() {
         DialogUtils.showUnFollowConfirmationPopup(mainActivity, otherUserName,
@@ -314,7 +312,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     userInfoModel.follow_status = "";
-                    setFollowTextAndBg(otherInfoModel);
+                    setFollowTextAndBg("");
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -329,7 +327,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     userInfoModel.follow_status = "follow";
-                    setFollowTextAndBg(otherInfoModel);
+                    setFollowTextAndBg("follow");
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

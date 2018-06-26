@@ -1,5 +1,8 @@
 package com.ureview;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
@@ -13,7 +16,6 @@ import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
-import com.twitter.sdk.android.core.Twitter;
 import com.ureview.models.LocationModel;
 import com.ureview.models.UserInfoModel;
 import com.ureview.utils.Constants;
@@ -66,6 +68,19 @@ public class BaseApplication extends MultiDexApplication {
         Twitter.initialize(this);
         getUserDataIfAvailable();
         getLocationIfAvailable();
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "You Review Channel";
+            String description = "You Review Notification Channel Description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION_CHANNEL, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void getLocationIfAvailable() {

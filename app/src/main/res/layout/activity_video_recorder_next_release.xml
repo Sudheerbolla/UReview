@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    android:padding="@dimen/pad_15">
+
+    <ImageView
+        android:id="@+id/imgClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/pad_10"
+        android:src="@drawable/ic_clear" />
+
+    <VideoView
+        android:id="@+id/VideoView"
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
+        android:layout_below="@id/imgClose"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center" />
+
+    <ImageView
+        android:id="@+id/imgPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/VideoView"
+        android:layout_alignTop="@+id/VideoView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/pad_50"
+        android:layout_marginTop="@dimen/pad_50"
+        android:padding="@dimen/pad_10"
+        android:src="@drawable/play_button_copy" />
+
+    <org.florescu.android.rangeseekbar.RangeSeekBar
+        android:id="@+id/rangeSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/VideoView"
+        android:layout_marginEnd="@dimen/pad_5"
+        android:layout_marginStart="@dimen/pad_5"
+        android:background="@color/colorDarkGrey"
+        app:showLabels="false" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/tvLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/rangeSeekBar"
+        android:layout_below="@+id/rangeSeekBar"
+        android:textColor="#000000" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/tvRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/rangeSeekBar"
+        android:layout_below="@+id/rangeSeekBar"
+        android:textColor="#000000" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/txtHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvLeft"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/pad_5"
+        android:layout_marginTop="@dimen/pad_10"
+        android:gravity="center"
+        android:text="Hint : Video length cannot be more than 60 seconds"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/txt_size_14sp" />
+
+    <com.ureview.utils.views.CustomTextView
+        android:id="@+id/cropVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtHint"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/pad_20"
+        android:background="@drawable/selector_app_purple_btn"
+        android:gravity="center"
+        android:padding="@dimen/pad_10"
+        android:text="Trim Video / Proceed"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/txt_size_16sp" />
+
+</RelativeLayout>

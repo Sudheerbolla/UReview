@@ -7,39 +7,46 @@
     android:fitsSystemWindows="true"
     android:scrollbars="none">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/linBody"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:background="@color/colorBlack">
-
-            <VideoView
-                android:id="@+id/VideoView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true" />
-
-            <ImageView
-                android:id="@+id/imgPlay"
-                android:layout_width="@dimen/pad_40"
-                android:layout_height="@dimen/pad_40"
-                android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/play_button_copy" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
+                android:layout_height="220dp"
+                android:background="@color/colorBlack">
+
+                <VideoView
+                    android:id="@+id/VideoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true" />
+
+                <ImageView
+                    android:id="@+id/imgVideoThumb"
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/imgPlay"
+                    android:layout_width="@dimen/pad_40"
+                    android:layout_height="@dimen/pad_40"
+                    android:layout_centerInParent="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/play_button_copy" />
 
                 <include
                     layout="@layout/player_media_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginBottom="@dimen/pad_6"
                     android:layout_marginEnd="@dimen/pad_10"
@@ -48,149 +55,154 @@
 
             </RelativeLayout>
 
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/pad_15"
-            android:paddingRight="@dimen/pad_15">
-
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/pad_20"
-                android:layout_marginTop="@dimen/pad_15"
-                android:gravity="center"
-                android:padding="@dimen/pad_8"
-                android:text="Tell everyone about your experience"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Title"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomEditText
-                android:id="@+id/edtVideoTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:background="@drawable/bg_edt_txt"
-                android:hint="Video Title"
-                android:inputType="text"
-                android:padding="@dimen/pad_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/pad_15"
+                android:paddingRight="@dimen/pad_15">
+
+                <com.ureview.utils.views.CustomTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/pad_20"
+                    android:layout_marginTop="@dimen/pad_15"
+                    android:gravity="center"
+                    android:padding="@dimen/pad_8"
+                    android:text="Tell everyone about your experience"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tags "
+                    android:text="Title"
                     android:textColor="@color/color_vvvDarkGrey"
-                    android:textSize="@dimen/txt_size_15sp"
-                    app:txt_font_type="bold" />
+                    android:textSize="@dimen/txt_size_14sp" />
 
-                <ImageView
-                    android:id="@+id/imgHashTag"
-                    android:layout_width="@dimen/pad_25"
-                    android:layout_height="@dimen/pad_25"
-                    android:layout_marginEnd="@dimen/pad_5"
-                    android:layout_marginStart="@dimen/pad_5"
-                    android:src="@drawable/ic_hashtag" />
+                <com.ureview.utils.views.CustomEditText
+                    android:id="@+id/edtVideoTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:background="@drawable/bg_edt_txt"
+                    android:hint="Video Title"
+                    android:inputType="text"
+                    android:padding="@dimen/pad_10"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tags "
+                        android:textColor="@color/color_vvvDarkGrey"
+                        android:textSize="@dimen/txt_size_15sp"
+                        app:txt_font_type="bold" />
+
+                    <ImageView
+                        android:id="@+id/imgHashTag"
+                        android:layout_width="@dimen/pad_25"
+                        android:layout_height="@dimen/pad_25"
+                        android:layout_marginEnd="@dimen/pad_5"
+                        android:layout_marginStart="@dimen/pad_5"
+                        android:src="@drawable/ic_hashtag" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(Ex: #Tag1, #Tag2)"
+                        android:textColor="@color/color_vvvDarkGrey"
+                        android:textSize="@dimen/txt_size_14sp" />
+
+                </LinearLayout>
+
+                <com.ureview.utils.views.CustomEditText
+                    android:id="@+id/edtTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:background="@drawable/bg_edt_txt"
+                    android:gravity="start"
+                    android:hint="No tags expressed for this video"
+                    android:inputType="textMultiLine"
+                    android:lines="3"
+                    android:padding="@dimen/pad_10"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="(Ex: #Tag1, #Tag2)"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:text="Category"
                     android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:background="@drawable/bg_edt_txt"
+                    android:drawableRight="@drawable/drop_down_copy"
+                    android:hint="Select video category"
+                    android:padding="@dimen/pad_10"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:text="Location"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:background="@drawable/bg_edt_txt"
+                    android:drawableRight="@drawable/location_copy"
+                    android:hint="Video Location"
+                    android:padding="@dimen/pad_10"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtCompleteVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/pad_15"
+                    android:background="@drawable/bg_custom_btn_app_color"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/pad_13"
+                    android:paddingEnd="@dimen/pad_30"
+                    android:paddingStart="@dimen/pad_30"
+                    android:paddingTop="@dimen/pad_13"
+                    android:text="Submit Video"
+                    android:textColor="@color/color_white"
                     android:textSize="@dimen/txt_size_14sp" />
 
             </LinearLayout>
 
-            <com.ureview.utils.views.CustomEditText
-                android:id="@+id/edtTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:background="@drawable/bg_edt_txt"
-                android:gravity="start"
-                android:hint="No tags expressed for this video"
-                android:inputType="textMultiLine"
-                android:lines="3"
-                android:padding="@dimen/pad_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:text="Category"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:background="@drawable/bg_edt_txt"
-                android:drawableRight="@drawable/drop_down_copy"
-                android:hint="Select video category"
-                android:padding="@dimen/pad_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:text="Location"
-                android:textColor="@color/color_vvvDarkGrey"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/pad_8"
-                android:background="@drawable/bg_edt_txt"
-                android:drawableRight="@drawable/location_copy"
-                android:hint="Video Location"
-                android:padding="@dimen/pad_10"
-                android:textColor="@color/colorBlack"
-                android:textSize="@dimen/txt_size_14sp" />
-
-            <com.ureview.utils.views.CustomTextView
-                android:id="@+id/txtCompleteVideo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/pad_15"
-                android:background="@drawable/bg_custom_btn_app_color"
-                android:gravity="center"
-                android:paddingBottom="@dimen/pad_13"
-                android:paddingEnd="@dimen/pad_30"
-                android:paddingStart="@dimen/pad_30"
-                android:paddingTop="@dimen/pad_13"
-                android:text="Submit Video"
-                android:textColor="@color/color_white"
-                android:textSize="@dimen/txt_size_14sp" />
-
         </LinearLayout>
 
-    </LinearLayout>
+        <include
+            android:id="@+id/relProgress"
+            layout="@layout/layout_progress"
+            android:visibility="gone" />
+
+    </RelativeLayout>
 
 </ScrollView>

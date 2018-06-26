@@ -16,17 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.JsonElement;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
-import com.ureview.listeners.IParserListener;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
+public class SearchFragment extends BaseFragment implements View.OnClickListener {
 
     private View rootView;
     private ViewPager viewPager;
@@ -36,7 +34,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private SearchVideosFragment searchVideosFragment;
     private SearchPeopleFragment searchPeopleFragment;
     private boolean isInSearchPeopleFragment;
-    private String searchText = "";
+    private ViewPagerAdapter adapter;
+    public static String searchText = "";
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -47,8 +46,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_search, container, false);
         viewPager = rootView.findViewById(R.id.viewpager);
-        searchVideosFragment = new SearchVideosFragment();
-        searchPeopleFragment = new SearchPeopleFragment();
+        if (searchVideosFragment == null) searchVideosFragment = new SearchVideosFragment();
+        if (searchPeopleFragment == null) searchPeopleFragment = new SearchPeopleFragment();
         setupViewPager(viewPager);
 
         tabLayout = rootView.findViewById(R.id.searchTabs);
@@ -58,8 +57,11 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                isInSearchPeopleFragment = tab.getText().toString().equalsIgnoreCase("People");
-                setSearchData();
+                if (tab.getPosition() == 1 && searchPeopleFragment != null) {
+                    searchPeopleFragment.searchUser(searchText);
+                } else if (tab.getPosition() == 0 && searchVideosFragment != null) {
+                    searchVideosFragment.searchVideo(searchText);
+                }
             }
 
             @Override
@@ -72,7 +74,8 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-        mainActivity.edtText.setText(searchText);
+        if (TextUtils.isEmpty(searchText)) mainActivity.edtText.setText("");
+        else mainActivity.edtText.setText(searchText);
         mainActivity.edtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -81,14 +84,14 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchText = mainActivity.edtText.getText().toString().trim();
-                if (!isInSearchPeopleFragment) {
-                    if (searchVideosFragment != null && searchVideosFragment.rlProgress != null) {
-                        searchVideosFragment.searchVideo(charSequence.toString(), mainActivity);
+                searchText = charSequence.toString();
+                if (tabLayout.getSelectedTabPosition() == 0) {
+                    if (searchVideosFragment != null) {
+                        searchVideosFragment.searchVideo(charSequence.toString());
                     }
                 } else {
-                    if (searchPeopleFragment != null && searchPeopleFragment.rlProgress != null) {
-                        searchPeopleFragment.searchUser(charSequence.toString(), mainActivity);
+                    if (searchPeopleFragment != null) {
+                        searchPeopleFragment.searchUser(charSequence.toString());
                     }
                 }
             }
@@ -104,20 +107,11 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         return rootView;
     }
 
-    private void setSearchData() {
-        if (!TextUtils.isEmpty(mainActivity.edtText.getText().toString().trim())) {
-            if (searchPeopleFragment != null && searchPeopleFragment.rlProgress != null && isInSearchPeopleFragment) {
-                searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim(), mainActivity);
-            } else if (searchVideosFragment != null && searchVideosFragment.rlProgress != null && !isInSearchPeopleFragment) {
-                searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim(), mainActivity);
-            }
-        }
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        searchText = "";
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
     }
 
@@ -125,19 +119,19 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar(searchText, "", "", false, false, false, true, false);
-//        if (tabLayout != null) {
-//            if (tabLayout.getSelectedTabPosition() == 0) {
-//                isInSearchPeopleFragment = false;
-//            } else {
-//                isInSearchPeopleFragment = true;
-//            }
-//            setSearchData();
-//        }
+        mainActivity.setToolBar("", "", "", false, false, false, true, false);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        searchText = "";
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+//        ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
+//        adapter = new ViewPagerAdapter(mainActivity.getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(searchVideosFragment, "Videos");
         adapter.addFragment(searchPeopleFragment, "People");
         viewPager.setAdapter(adapter);
@@ -148,27 +142,12 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.imgClose:
                 if (mainActivity.edtText != null) {
-                    mainActivity.edtText.setText("");
                     searchText = "";
+                    mainActivity.edtText.setText("");
                     StaticUtils.hideSoftKeyboard(mainActivity);
                 }
                 break;
         }
-    }
-
-    @Override
-    public void successResponse(int requestCode, JsonElement response) {
-
-    }
-
-    @Override
-    public void errorResponse(int requestCode, String error) {
-
-    }
-
-    @Override
-    public void noInternetConnection(int requestCode) {
-
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -199,30 +178,5 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             return mFragmentTitleList.get(position);
         }
     }
+
 }
-/*
-http://18.216.101.112/search-users?user_name=a&user_id=24&startFrom=0&count=10
-{
-    "status": "success",
-    "message": "Search users data",
-    "users_data": [
-        {
-            "user_id": "1",
-            "first_name": "Madhu",
-            "last_name": "Sudhan",
-            "user_image": "",
-            "user_rating": "2",
-            "email": "putta.msreddy@gmail.com",
-            "mobile": "8121407014",
-            "user_description": "",
-            "gender": "M",
-            "age": "5",
-            "status": "A",
-            "city": "Hyderabad",
-            "address": "",
-            "date_of_birth": "31/05/2013",
-            "uploaded_videos_count": 10,
-            "follow_status": ""
-        }
-    ]
-}*/

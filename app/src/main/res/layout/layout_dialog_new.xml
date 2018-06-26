@@ -22,8 +22,10 @@
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtHeading"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawableStart="@mipmap/ic_launcher"
             android:gravity="center"
             android:text="@string/app_name"
             android:textColor="@color/colorBlack"
@@ -40,6 +42,25 @@
             android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_16sp"
             app:txt_font_type="regular" />
+
+        <!--<include
+            android:id="@+id/llRatingBar"
+            layout="@layout/layout_edt_rating_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/pad_10"
+            android:visibility="gone" />-->
+
+        <com.ureview.utils.views.ColorRatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/pad_15"
+            android:visibility="gone"
+            app:empty_color="#fce9ca"
+            app:progress_color="#e9aa44" />
 
         <com.ureview.utils.views.CustomTextView
             android:id="@+id/txtPositive"

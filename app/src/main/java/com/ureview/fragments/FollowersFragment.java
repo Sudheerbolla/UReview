@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -246,16 +245,12 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         selectedPosition = position;
         switch (view.getId()) {
             case R.id.txtFollowStatus:
-                String followText = ((CustomTextView) view).getText().toString().trim();
-                if (TextUtils.isEmpty(followText) || followText.equalsIgnoreCase("Unfollow")) {
+                if (view.isSelected()) {
                     askConfirmationAndProceed(position);
-                } else {
-                    requestForFollowUser(followModelArrayList.get(position).user_id);
-                }
+                } else requestForFollowUser(followModelArrayList.get(position).user_id);
                 break;
             case R.id.relBody:
-                mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id,
-                        followModelArrayList.get(position).first_name.concat(" ").concat(followModelArrayList.get(position).last_name)), true, R.id.mainContainer);
+                mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id, followModelArrayList.get(position).first_name.concat(" ").concat(followModelArrayList.get(position).last_name)), true, R.id.mainContainer);
                 break;
             case R.id.imgClear:
                 String confirmationMsg = "Do you want block ".concat(followModelArrayList.get(position).first_name)
