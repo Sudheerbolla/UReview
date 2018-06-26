@@ -126,7 +126,7 @@
                 android:layout_marginTop="@dimen/pad_8"
                 android:background="@drawable/bg_edt_txt"
                 android:gravity="start"
-                android:hint="Express your self"
+                android:hint="No tags expressed for this video"
                 android:inputType="textMultiLine"
                 android:lines="3"
                 android:padding="@dimen/pad_10"

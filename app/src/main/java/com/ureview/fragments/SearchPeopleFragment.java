@@ -49,7 +49,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     private ArrayList<PeopleModel> tempPeopleArrList = new ArrayList<>();
     private CustomTextView txtNoData;
     private String userId;
-    private RelativeLayout rlProgress;
+    protected RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading, hasLoadedAllItems;
@@ -88,11 +88,15 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         rvPeople.setAdapter(peopleAdapter);
     }
 
-    protected void searchUser(String searchUser) {
+    protected void searchUser(String searchUser, MainActivity mainActivity) {
         searchText = searchUser;
         peopleArrList.clear();
         startFrom = 0;
         hasLoadedAllItems = false;
+        if (this.mainActivity == null) {
+            this.mainActivity = mainActivity;
+            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        }
         if (TextUtils.isEmpty(searchUser)) {
             if (tempPeopleArrList != null) tempPeopleArrList.clear();
             if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();

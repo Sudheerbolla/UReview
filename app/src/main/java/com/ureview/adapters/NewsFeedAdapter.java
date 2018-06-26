@@ -88,7 +88,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.txtViewCount.setText(count);
         holder.txtDistance.setText(videoModel.distance);
         holder.txtDuration.setText(videoModel.videoDuration);
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
+        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
         setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
 
         if (position == feedVideoList.size() - 1) {

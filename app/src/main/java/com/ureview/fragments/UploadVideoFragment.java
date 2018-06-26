@@ -308,11 +308,14 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         if (TextUtils.isEmpty(edtVideoTitle.getText().toString().trim())) {
             return "Enter Video Title";
         }
-        if (TextUtils.isEmpty(txtLocation.getText().toString().trim())) {
-            return "Enter Location";
+        if (TextUtils.isEmpty(edtTags.getText().toString().trim())) {
+            return "Enter Tags";
         }
         if (categoryId.equalsIgnoreCase("-1")) {
             return "Select Video Category";
+        }
+        if (TextUtils.isEmpty(txtLocation.getText().toString().trim())) {
+            return "Enter Location";
         }
         if (selectedVideoUri == null) return "Please upload valid video file";
         return "";

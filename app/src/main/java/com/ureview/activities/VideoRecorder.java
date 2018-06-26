@@ -153,7 +153,6 @@ public class VideoRecorder extends BaseActivity {
                             imgPlay.setVisibility(View.VISIBLE);
                         }
                         tvLeft.setText(getTime((int) (videoView.getCurrentPosition() / 1000)));
-                        Log.e("seek val", (videoView.getCurrentPosition()) + "");
                         handler.postDelayed(r, 1000);
                     }
                 }, 1000);

@@ -50,7 +50,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     private ArrayList<VideoModel> videosArrList = new ArrayList<>();
     private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
     private String currLat, currLng;
-    private RelativeLayout rlProgress;
+    protected RelativeLayout rlProgress;
 
     //Search People Pagination
     private boolean isLoading = false, hasLoadedAllItems;
@@ -88,12 +88,20 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         return rootView;
     }
 
-    protected void searchVideo(String searchVideo) {
+    protected void searchVideo(String searchVideo, MainActivity mainActivity) {
         searchText = searchVideo;
         videosArrList.clear();
         startFrom = 0;
         isLoading = false;
         hasLoadedAllItems = false;
+        if (this.mainActivity == null) {
+            this.mainActivity = mainActivity;
+            userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+            if (MainActivity.mLastLocation != null) {
+                currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+                currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+            }
+        }
         if (TextUtils.isEmpty(searchVideo)) {
             tempVideosArrList.clear();
             if (searchVideosAdapter != null) searchVideosAdapter.notifyDataSetChanged();
@@ -151,12 +159,18 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                         videosArrList.add(videoModel);
                         tempVideosArrList.add(videoModel);
                     }
+                    boolean addAll = startFrom == 0;
                     startFrom += feedVidArr.length();
                     if (startFrom % count != 0) {
                         hasLoadedAllItems = true;
                         isLoading = false;
                     }
-                    searchVideosAdapter.addVideos(tempVideosArrList);
+                    if (addAll) {
+                        searchVideosAdapter.addAllVideos(tempVideosArrList);
+                    } else {
+                        searchVideosAdapter.addVideos(tempVideosArrList);
+                    }
+
                     txtNoData.setVisibility(View.GONE);
                     rvSearchVideo.setVisibility(View.VISIBLE);
                 }

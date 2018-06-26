@@ -36,6 +36,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     private SearchVideosFragment searchVideosFragment;
     private SearchPeopleFragment searchPeopleFragment;
     private boolean isInSearchPeopleFragment;
+    private String searchText = "";
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -58,13 +59,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 isInSearchPeopleFragment = tab.getText().toString().equalsIgnoreCase("People");
-                if (!TextUtils.isEmpty(mainActivity.edtText.getText().toString().trim())) {
-                    if (searchPeopleFragment != null && isInSearchPeopleFragment) {
-                        searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim());
-                    } else if (searchVideosFragment != null && !isInSearchPeopleFragment) {
-                        searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim());
-                    }
-                }
+                setSearchData();
             }
 
             @Override
@@ -77,7 +72,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             }
         });
-        mainActivity.edtText.setText("");
+        mainActivity.edtText.setText(searchText);
         mainActivity.edtText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -86,13 +81,14 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (tabLayout.getSelectedTabPosition() == 0) {
-                    if (searchVideosFragment != null) {
-                        searchVideosFragment.searchVideo(charSequence.toString());
+                searchText = mainActivity.edtText.getText().toString().trim();
+                if (!isInSearchPeopleFragment) {
+                    if (searchVideosFragment != null && searchVideosFragment.rlProgress != null) {
+                        searchVideosFragment.searchVideo(charSequence.toString(), mainActivity);
                     }
                 } else {
-                    if (searchPeopleFragment != null) {
-                        searchPeopleFragment.searchUser(charSequence.toString());
+                    if (searchPeopleFragment != null && searchPeopleFragment.rlProgress != null) {
+                        searchPeopleFragment.searchUser(charSequence.toString(), mainActivity);
                     }
                 }
             }
@@ -108,6 +104,16 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         return rootView;
     }
 
+    private void setSearchData() {
+        if (!TextUtils.isEmpty(mainActivity.edtText.getText().toString().trim())) {
+            if (searchPeopleFragment != null && searchPeopleFragment.rlProgress != null && isInSearchPeopleFragment) {
+                searchPeopleFragment.searchUser(mainActivity.edtText.getText().toString().trim(), mainActivity);
+            } else if (searchVideosFragment != null && searchVideosFragment.rlProgress != null && !isInSearchPeopleFragment) {
+                searchVideosFragment.searchVideo(mainActivity.edtText.getText().toString().trim(), mainActivity);
+            }
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,7 +125,15 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("", "", "", false, false, false, true, false);
+        mainActivity.setToolBar(searchText, "", "", false, false, false, true, false);
+//        if (tabLayout != null) {
+//            if (tabLayout.getSelectedTabPosition() == 0) {
+//                isInSearchPeopleFragment = false;
+//            } else {
+//                isInSearchPeopleFragment = true;
+//            }
+//            setSearchData();
+//        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -135,6 +149,7 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
             case R.id.imgClose:
                 if (mainActivity.edtText != null) {
                     mainActivity.edtText.setText("");
+                    searchText = "";
                     StaticUtils.hideSoftKeyboard(mainActivity);
                 }
                 break;

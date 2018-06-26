@@ -84,7 +84,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
+        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
         setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
         holder.txtLocBtm.setText(videoModel.city);
 
@@ -146,6 +146,12 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         int lastPosition = videoArrList.size() > 0 ? videoArrList.size() - 1 : 0;
         videoArrList.addAll(arrList);
         notifyItemRangeInserted(lastPosition + 1, arrList.size() - 1);
+    }
+
+    public void addAllVideos(ArrayList<VideoModel> arrList) {
+        videoArrList.clear();
+        videoArrList.addAll(arrList);
+        notifyDataSetChanged();
     }
 
     public void updateItem(VideoModel videoModel, int follPos) {

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -198,8 +199,8 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtUpdate:
-                checkValidations();
-                requestForRegistrationWS();
+                if (checkValidations())
+                    requestForRegistrationWS();
                 break;
             case R.id.txtCountryCode:
                 openCountriesDialog();
@@ -211,8 +212,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                 DialogUtils.showCustomDropDownListStrings(mainActivity, new String[]{
                         "Upload From Camera",
                         "Upload From Gallery",
-                        "View Photo",
-                        "Remove Photo"
+                        "View Photo"
                 }, text -> {
                     switch (text) {
                         case "Upload From Camera":
@@ -234,22 +234,22 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
                                 countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
                             }
                             break;
-                        case "Remove Photo":
-//                            Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
-//                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
-//                            setImageAttachment(uri);
-                            profileImage = "null";
-                            profilePicBitmap = null;
-                            imgProfile.setImageResource(R.drawable.ic_user_placeholder);
-//                                try {
-//                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
-//                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
-//                                    profileImage = imageBytes(profilePicBitmap);
-//                                } catch (FileNotFoundException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                imgProfile.setImageResource(R.drawable.ic_profile);
-                            break;
+//                        case "Remove Photo":
+////                            Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_user_placeholder.png");
+////                                Uri uri = Uri.parse("android.resource://com.venbi.UReview/drawable/ic_profile.xml");
+////                            setImageAttachment(uri);
+//                            profileImage = "null";
+//                            profilePicBitmap = null;
+//                            imgProfile.setImageResource(R.drawable.ic_user_placeholder);
+////                                try {
+////                                    InputStream stream = mainActivity.getContentResolver().openInputStream(uri);
+////                                    profilePicBitmap = BitmapFactory.decodeStream(stream);
+////                                    profileImage = imageBytes(profilePicBitmap);
+////                                } catch (FileNotFoundException e) {
+////                                    e.printStackTrace();
+////                                }
+////                                imgProfile.setImageResource(R.drawable.ic_profile);
+//                            break;
                         default:
                             break;
                     }
@@ -380,7 +380,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    private void checkValidations() {
+    private boolean checkValidations() {
         firstName = edtFirstName.getText().toString().trim();
         lastName = edtLastName.getText().toString().trim();
         about = edtAbout.getText().toString().trim();
@@ -390,6 +390,27 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         address = edtLocation.getText().toString().trim();
         dob = txtDob.getText().toString().trim();
 //        countryCode = txtCountryCode.getText().toString().trim();
+        if (TextUtils.isEmpty(firstName)) {
+            Toast.makeText(mainActivity, "Please enter First Name.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (TextUtils.isEmpty(lastName)) {
+            Toast.makeText(mainActivity, "Please enter Last Name.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (TextUtils.isEmpty(email)) {
+            Toast.makeText(mainActivity, "Please enter Email.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (TextUtils.isEmpty(email)) {
+            Toast.makeText(mainActivity, "Please enter Email.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (TextUtils.isEmpty(address)) {
+            Toast.makeText(mainActivity, "Please enter Location.", Toast.LENGTH_LONG).show();
+            return false;
+        } else if (TextUtils.isEmpty(about)) {
+            Toast.makeText(mainActivity, "Please write something about you.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void showDOBDialog() {

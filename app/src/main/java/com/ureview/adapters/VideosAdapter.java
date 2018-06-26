@@ -42,9 +42,9 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
 
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
-        boolean val = only10Items && position >= 5;
+        boolean val = only10Items && position >= 10;
         if (val) {
-            holder.cvMore.setVisibility(position > 5 ? View.GONE : View.VISIBLE);
+            holder.cvMore.setVisibility(position > 10 ? View.GONE : View.VISIBLE);
         } else {
             holder.cvMore.setVisibility(View.GONE);
         }
@@ -77,7 +77,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
                 e.printStackTrace();
                 setProfileRating(holder, 0f);
             }
-            holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat(")"));
+            holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
             holder.txtDuration.setText(videoModel.videoDuration);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

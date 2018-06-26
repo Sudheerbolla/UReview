@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatEditText;
+import android.text.InputType;
 import android.util.AttributeSet;
 
 import com.ureview.R;
@@ -45,6 +46,7 @@ public class CustomEditText extends AppCompatEditText {
                 fontPath = "AvenirLTStd-Book.otf";
                 break;
         }
+        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), fontPath);
         setTypeface(tf);
         typedArray.recycle();

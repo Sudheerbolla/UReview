@@ -70,8 +70,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/pad_5"
         android:layout_marginTop="@dimen/pad_10"
-        android:gravity="center"
-        android:text="Note : Video length cannot be more than 60 seconds"
+        android:gravity="center"        
+        android:text="Hint : Video length cannot be more than 60 seconds"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/txt_size_14sp" />
 

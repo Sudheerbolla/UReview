@@ -1,6 +1,7 @@
 package com.ureview.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,12 +14,14 @@ import com.ureview.utils.views.CustomTextView;
 
 public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.IssueViewHolder> {
 
+    private final Dialog alertDialog;
     private String[] options;
     private ISearchClickListener iClickListener;
 
-    public OptionsAdapter(String[] options, ISearchClickListener iClickListener) {
+    public OptionsAdapter(String[] options, ISearchClickListener iClickListener, Dialog alertDialog) {
         this.options = options;
         this.iClickListener = iClickListener;
+        this.alertDialog = alertDialog;
     }
 
     @NonNull
@@ -32,8 +35,11 @@ public class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.IssueVie
     public void onBindViewHolder(@NonNull IssueViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.txtOption.setText(options[position]);
         holder.txtOption.setOnClickListener(view -> {
-            if (iClickListener != null)
+            if (iClickListener != null) {
+                if (alertDialog != null && alertDialog.isShowing())
+                    alertDialog.dismiss();
                 iClickListener.onClick(options[position]);
+            }
         });
     }
 

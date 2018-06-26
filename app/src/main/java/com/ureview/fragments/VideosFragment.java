@@ -21,6 +21,7 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
@@ -188,7 +189,8 @@ public class VideosFragment extends BaseFragment implements IParserListener<Json
         clickedPosition = position;
         switch (view.getId()) {
             case R.id.imgDeleteVideo:
-                requestForDeleteVideoWS(userVideosModelArrayList.get(position).id);
+                String confirmationMsg = "Are you sure, do you want to delete the Video?";
+                DialogUtils.showUnFollowConfirmationPopup(mainActivity, confirmationMsg, v -> requestForDeleteVideoWS(userVideosModelArrayList.get(position).id));
                 break;
             case R.id.relItem:
 //                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(userVideosModelArrayList, position);

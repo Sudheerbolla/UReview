@@ -84,7 +84,7 @@ public class DialogUtils implements View.OnClickListener {
                 txtHeading2.setText(TextUtils.isEmpty(heading) ? context.getString(R.string.app_name) : heading);
             }
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener));
+            recyclerView.setAdapter(new OptionsAdapter(categoryNames, clickListener, alertDialog));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -125,7 +125,7 @@ public class DialogUtils implements View.OnClickListener {
             recyclerView.setAdapter(new OptionsAdapter(categoryNames, text -> {
                 alertDialog.dismiss();
                 if (clickListener != null) clickListener.onClick(text);
-            }));
+            }, alertDialog));
 
             alertDialog.getWindow().getAttributes().windowAnimations = R.style.AlertDialogCustom;
 
@@ -158,7 +158,7 @@ public class DialogUtils implements View.OnClickListener {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
 
-    public static void showUnFollowConfirmationPopup(final Context mContext, final String userName, final View.OnClickListener positiveClick) {
+    public static void showUnFollowConfirmationPopup(final Context mContext, final String message, final View.OnClickListener positiveClick) {
         try {
             CustomTextView txtHeading, txtMessage, txtPositiveButton, txtNegativeButton;
 
@@ -181,7 +181,7 @@ public class DialogUtils implements View.OnClickListener {
             window.setAttributes(lp);
 
             txtHeading.setText(mContext.getString(R.string.app_name));
-            txtMessage.setText("Do you want to Unfollow ".concat(userName).concat("?"));
+            txtMessage.setText(message);
 
             txtPositiveButton.setText("Yes");
 

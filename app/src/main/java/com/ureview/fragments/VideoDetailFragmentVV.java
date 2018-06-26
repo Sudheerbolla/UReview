@@ -308,7 +308,7 @@ public class VideoDetailFragmentVV extends BaseFragment implements IClickListene
         txtDistance.setText(feedVideo.distance);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
             setProfileRating(Float.parseFloat(feedVideo.videoRating));
-        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : feedVideo.ratingGiven).concat(")")));
+        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : feedVideo.ratingGiven).concat("/5)")));
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);

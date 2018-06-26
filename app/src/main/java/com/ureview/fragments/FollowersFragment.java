@@ -178,7 +178,8 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     followModelArrayList.get(selectedPosition).status = "1";
                     followModelArrayList.get(selectedPosition).follow_status = "";
-                    followersAdapter.notifyDataSetChanged();
+                    followModelArrayList.remove(selectedPosition);
+                    followersAdapter.notifyItemRemoved(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -257,7 +258,9 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
                         followModelArrayList.get(position).first_name.concat(" ").concat(followModelArrayList.get(position).last_name)), true, R.id.mainContainer);
                 break;
             case R.id.imgClear:
-                requestForBlockUser(followModelArrayList.get(position).user_id);
+                String confirmationMsg = "Do you want block ".concat(followModelArrayList.get(position).first_name)
+                        .concat(" ").concat(followModelArrayList.get(position).last_name).concat("?");
+                DialogUtils.showUnFollowConfirmationPopup(mainActivity, confirmationMsg, v -> requestForBlockUser(followModelArrayList.get(position).user_id));
                 break;
             default:
                 break;
@@ -266,7 +269,8 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
 
     private void askConfirmationAndProceed(final int position) {
         final FollowModel followModel = followModelArrayList.get(position);
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, followModel.first_name.concat(" ").concat(followModel.last_name), view -> requestForUnFollowUser(followModel.user_id));
+        String confirmationMsg = "Do you want to Unfollow ".concat(followModel.first_name.concat(" ").concat(followModel.last_name)).concat("?");
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, confirmationMsg, view -> requestForUnFollowUser(followModel.user_id));
     }
 
     @Override

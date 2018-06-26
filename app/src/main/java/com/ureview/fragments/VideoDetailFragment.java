@@ -556,7 +556,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         txtDistance.setText(feedVideo.distance);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
             setProfileRating(Float.parseFloat(feedVideo.videoRating));
-        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : feedVideo.ratingGiven).concat(")")));
+        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : feedVideo.ratingGiven).concat("/5)")));
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
@@ -568,8 +568,10 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         txtUserLoc.setText(feedVideo.city);
         if (userId.equalsIgnoreCase(feedVideo.userId)) {
             txtFollowStatus.setVisibility(View.GONE);
+            llRate.setAlpha(0.5f);
         } else {
             txtFollowStatus.setVisibility(View.VISIBLE);
+            llRate.setAlpha(1f);
         }
 
         if (TextUtils.isEmpty(feedVideo.followStatus)) {
@@ -648,11 +650,11 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
-                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
-                        feedVideo.videoLongitude;
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(mapIntent);
+//                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+//                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
+//                        feedVideo.videoLongitude;
+//                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                startActivity(mapIntent);
                 break;
             case R.id.txtFollowStatus:
                 String followStatus = txtFollowStatus.getText().toString().trim();
@@ -663,10 +665,13 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 }
                 break;
             case R.id.llRate:
-                if (feedVideo.userRating.equalsIgnoreCase("0")) {
-                    showRatingDialog();
+                if (feedVideo.userId.equalsIgnoreCase(userId)) {
                 } else {
-                    Toast.makeText(mainActivity, "Rating is already submitted.", Toast.LENGTH_LONG).show();
+                    if (feedVideo.userRating.equalsIgnoreCase("0")) {
+                        showRatingDialog();
+                    } else {
+                        Toast.makeText(mainActivity, "Rating is already submitted.", Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
             case R.id.llShare:

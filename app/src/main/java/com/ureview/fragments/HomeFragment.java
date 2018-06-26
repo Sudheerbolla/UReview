@@ -72,6 +72,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private ArrayList<VideoModel> popularVideoList = new ArrayList<>();
     private String userId;
     private int lastUpdatedPos = -1;
+    private boolean autoCall;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -190,13 +191,13 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         rvNewsFeed.setVisibility(b && feedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         relVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvNearByVideos.setVisibility(!b && nearByVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllVideos.setVisibility(!b && nearByVideoList.size() > 3 ? View.VISIBLE : View.GONE);
+        txtSeeAllVideos.setVisibility(!b && nearByVideoList.size() > 10 ? View.VISIBLE : View.GONE);
         relTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvTopRated.setVisibility(!b && topRatedVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllTopRated.setVisibility(!b && topRatedVideoList.size() > 3 ? View.VISIBLE : View.GONE);
+        txtSeeAllTopRated.setVisibility(!b && topRatedVideoList.size() > 10 ? View.VISIBLE : View.GONE);
         relPopularSearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
         rvPopularsearch.setVisibility(!b && popularVideoList.size() > 0 ? View.VISIBLE : View.GONE);
-        txtSeeAllPopularSearch.setVisibility(!b && popularVideoList.size() > 3 ? View.VISIBLE : View.GONE);
+        txtSeeAllPopularSearch.setVisibility(!b && popularVideoList.size() > 10 ? View.VISIBLE : View.GONE);
     }
 
     public void loadRelatedData(FilterModel value) {
@@ -312,6 +313,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 feedVideoList.clear();
                 newsFeedAdapter.clearAllVideos();
                 hasLoadedAllItems = false;
+                autoCall = false;
                 requestForNewsFeedVideos();
             } else {
                 nearByData = false;
@@ -342,7 +344,14 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.txtSeeAllVideos:
+                break;
+            case R.id.txtSeeAllTopRated:
+                break;
+            case R.id.txtSeeAllPopularSearch:
+                break;
+        }
     }
 
     @Override
@@ -386,6 +395,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             feedVideoList.clear();
             newsFeedAdapter.clearAllVideos();
             hasLoadedAllItems = false;
+            autoCall = true;
             requestForNewsFeedVideos();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -420,7 +430,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 if (startFrom == 0) {
                     txtNoData.setVisibility(View.VISIBLE);
                     rvNewsFeed.setVisibility(View.GONE);
-                    if (categoryList.size() > 1)
+                    if (categoryList.size() > 1 && autoCall)
                         updateCategoryList(1, true);
                 } else {
                     hasLoadedAllItems = true;
@@ -438,7 +448,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parseNearByVideoList(JsonElement response) {
         loadedDataCount++;
         try {
-            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
+            txtNoData.setText("No Reviews available for this category.Try changing location or choose another category.");
             JSONObject jsonObject = new JSONObject(response.toString());
             nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
@@ -484,7 +494,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
             topRatedVideoList.clear();
-            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
+            txtNoData.setText("No Reviews available for this category.Try changing location or choose another category.");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
                     JSONArray feedVidArr = jsonObject.getJSONArray("videos");
@@ -526,7 +536,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void parsePopularVideoList(JsonElement response) {
         loadedDataCount++;
         try {
-            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
+            txtNoData.setText("No Reviews available for this category.Try changing location or choose another category.");
             JSONObject jsonObject = new JSONObject(response.toString());
             popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
@@ -579,6 +589,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     @Override
     public void onLoadMore() {
         isLoading = true;
+        autoCall = false;
         requestForNewsFeedVideos();
     }
 
