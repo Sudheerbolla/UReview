@@ -60,7 +60,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public LocationManager mLocationManager;
     private boolean isLocationAlreadyFetched = false;
     private LocationBottomSheetFragment locationBottomSheetFragment;
-    private int DIALOG_FRAGMENT = 1;
     private FragmentManager fragmentManager;
     private long backPressed;
     private static final int REQUEST_TAKE_GALLERY_VIDEO = 100;
@@ -407,7 +406,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     public void showVideoDetails(VideoDetailFragment videoDetailFragment, Fragment fragment) {
-        videoDetailFragment.setTargetFragment(fragment, DIALOG_FRAGMENT);
+        videoDetailFragment.setTargetFragment(fragment, Constants.DIALOG_FRAGMENT);
         videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         videoDetailFragment.show(getSupportFragmentManager(), "VideoDetailFragment");
     }

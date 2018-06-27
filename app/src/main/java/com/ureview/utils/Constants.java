@@ -10,7 +10,8 @@ public class Constants {
     public final static int REQUEST_IMAGE_CAPTURE = 004;
     public final static int REQUEST_IMAGE_GALLERY = 005;
     public final static int REQUEST_BARCODE_CAPTURE = 006;
-    public final static int READ_SMS_CODE = 007;
+    public final static int READ_SMS_CODE = 7;
+    public final static int DIALOG_FRAGMENT = 8;
 
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String CONTENT_TYPE_JSON = "application/json";
@@ -32,5 +33,6 @@ public class Constants {
     public static final String NEARBY = "NearBy";
     public static final String TOPRATED = "TopRated";
     public static final String POPULAR = "Popular ";
+
 
 }

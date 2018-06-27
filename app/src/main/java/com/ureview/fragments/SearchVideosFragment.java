@@ -1,11 +1,11 @@
 package com.ureview.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,6 +23,7 @@ import com.ureview.adapters.SearchVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -217,12 +218,11 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     public void onClick(View view, int position) {
         switch (view.getId()) {
             case R.id.imgLocation:
-//                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videosArrList, position);
-//                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-//                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
-//                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), SearchVideosFragment.this);
+                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
+                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
+                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
@@ -325,18 +325,10 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (data.hasExtra("position")) {
-                int position = data.getIntExtra("position", -1);
-                if (position != -1) {
-                    videosArrList.get(position).videoWatchedCount =
-                            String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
-                    searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
-                }
-            }
+    public void updateVideoViewCount(int position) {
+        if (videosArrList.isEmpty() || searchVideosAdapter == null) {
+            videosArrList.get(position).videoWatchedCount = String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
+            searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
         }
     }
 }

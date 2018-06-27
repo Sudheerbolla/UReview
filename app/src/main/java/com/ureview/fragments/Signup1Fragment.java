@@ -25,6 +25,7 @@ import com.ureview.listeners.IParserListener;
 import com.ureview.listeners.ISearchClickListener;
 import com.ureview.models.CountriesModel;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -51,7 +52,6 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private Calendar myCalendar = Calendar.getInstance();
     private String firstName, lastName, email, token, gender, deviceToken;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation;
-    public static final int DIALOG_FRAGMENT = 1;
 //    private CustomDialog customDialog;
 
     public static Signup1Fragment newInstance() {
@@ -148,7 +148,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
 
     private void openCountriesDialog() {
         CountrySelectionFragment countrySelectionFragment = CountrySelectionFragment.newInstance(currentCountriesModel != null ? currentCountriesModel.countryCode : "");
-        countrySelectionFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        countrySelectionFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
         countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         countrySelectionFragment.show(splashActivity.getSupportFragmentManager(), "");
     }
@@ -248,7 +248,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case DIALOG_FRAGMENT:
+            case Constants.DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     currentCountriesModel = data.getParcelableExtra("countriesModel");
 //                    txtCountryCode.setText("+" + currentCountriesModel.countryCode);

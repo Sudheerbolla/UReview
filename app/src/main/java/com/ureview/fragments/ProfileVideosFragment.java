@@ -1,10 +1,9 @@
 package com.ureview.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +22,7 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -195,13 +195,12 @@ public class ProfileVideosFragment extends BaseFragment implements IParserListen
                 DialogUtils.showUnFollowConfirmationPopup(mainActivity, confirmationMsg, v -> requestForDeleteVideoWS(userVideosModelArrayList.get(position).id));
                 break;
             case R.id.relItem:
-//                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(userVideosModelArrayList, position);
-//                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-//                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 ArrayList<VideoModel> tempList = new ArrayList<>(userVideosModelArrayList);
-
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), ProfileVideosFragment.this);
-//                mainActivity.replaceFragment(VideoDetailFragment.newInstance(userVideosModelArrayList, position), true, R.id.mainContainer);
+//                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), ProfileVideosFragment.this);
+                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
+                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
+                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 break;
             default:
                 break;
@@ -213,18 +212,9 @@ public class ProfileVideosFragment extends BaseFragment implements IParserListen
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (data.hasExtra("position")) {
-                int position = data.getIntExtra("position", -1);
-                if (position != -1) {
-                    userVideosModelArrayList.get(position).videoWatchedCount =
-                            String.valueOf(Integer.parseInt(userVideosModelArrayList.get(position).videoWatchedCount) + 1);
-                    videosAdapter.notifyItemChanged(position, userVideosModelArrayList.get(position));
-                }
-            }
-        }
+    public void updateVideoViewCount(int position) {
+        if (userVideosModelArrayList.isEmpty() || videosAdapter == null) return;
+        userVideosModelArrayList.get(position).videoWatchedCount = String.valueOf(Integer.parseInt(userVideosModelArrayList.get(position).videoWatchedCount) + 1);
+        videosAdapter.notifyItemChanged(position, userVideosModelArrayList.get(position));
     }
 }

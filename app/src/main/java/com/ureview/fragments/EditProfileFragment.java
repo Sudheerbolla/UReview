@@ -33,6 +33,7 @@ import com.ureview.activities.MainActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.CountriesModel;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.RuntimePermissionUtils;
@@ -62,7 +63,6 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     private Calendar myCalendar = Calendar.getInstance();
     private String firstName, lastName, email, userId, dob, address, about, countryCode, imagePath;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation, edtAbout;
-    public static final int DIALOG_FRAGMENT = 1;
     private UserInfoModel userInfoModel;
     private CircleImageView imgProfile;
     private RelativeLayout relImage;
@@ -190,7 +190,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
 
     private void openCountriesDialog() {
         CountrySelectionFragment countrySelectionFragment = CountrySelectionFragment.newInstance(currentCountriesModel != null ? currentCountriesModel.countryCode : "");
-        countrySelectionFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        countrySelectionFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
         countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
     }
@@ -420,7 +420,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case DIALOG_FRAGMENT:
+            case Constants.DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     currentCountriesModel = data.getParcelableExtra("countriesModel");
                 }

@@ -836,7 +836,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         intent.putExtra("position", positionToHide);
         if (!TextUtils.isEmpty(vidType))
             intent.putExtra("vidType", vidType);
-        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        if (getTargetFragment() != null)
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 
     private void askConfirmationAndProceed() {

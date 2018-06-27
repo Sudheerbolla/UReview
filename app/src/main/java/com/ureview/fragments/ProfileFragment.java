@@ -1,5 +1,7 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +27,7 @@ import com.ureview.R;
 import com.ureview.activities.MainActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -221,12 +224,19 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_USER_PROFILE, call, this);
     }
 
+    AboutFragment aboutFragment;
+    ProfileVideosFragment profileVideosFragment;
+    StatsFragment statsFragment;
+
     private void setupViewPager(CustomViewPager viewPager) {
+        aboutFragment = AboutFragment.newInstance(isDiffUser ? otherUserId : userId);
+        profileVideosFragment = ProfileVideosFragment.newInstance(isDiffUser ? otherUserId : userId);
+        statsFragment = StatsFragment.newInstance(isDiffUser ? otherUserId : userId);
         adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFragment(AboutFragment.newInstance(isDiffUser ? otherUserId : userId), "About");
-        adapter.addFragment(ProfileVideosFragment.newInstance(isDiffUser ? otherUserId : userId), "Videos");
+        adapter.addFragment(aboutFragment, "About");
+        adapter.addFragment(profileVideosFragment, "Videos");
         if (!isDiffUser)
-            adapter.addFragment(StatsFragment.newInstance(isDiffUser ? otherUserId : userId), "Stats");
+            adapter.addFragment(statsFragment, "Stats");
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(false);
     }
@@ -423,4 +433,18 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == Constants.DIALOG_FRAGMENT) {
+            if (data.hasExtra("position")) {
+                int position = data.getIntExtra("position", -1);
+                if (position != -1) {
+                    if (profileVideosFragment != null) {
+                        profileVideosFragment.updateVideoViewCount(position);
+                    }
+                }
+            }
+        }
+    }
 }

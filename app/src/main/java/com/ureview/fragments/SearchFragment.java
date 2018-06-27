@@ -1,5 +1,7 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
+import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 
@@ -176,6 +179,23 @@ public class SearchFragment extends BaseFragment implements View.OnClickListener
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == Constants.DIALOG_FRAGMENT) {
+            if (data.hasExtra("position")) {
+                int position = data.getIntExtra("position", -1);
+                if (position != -1) {
+                    if (viewPager.getCurrentItem() == 0) {
+                        if (searchVideosFragment != null) {
+                            searchVideosFragment.updateVideoViewCount(position);
+                        }
+                    }
+                }
+            }
         }
     }
 

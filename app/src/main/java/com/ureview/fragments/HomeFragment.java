@@ -292,8 +292,6 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
     }
 
-    public static final int DIALOG_FRAGMENT = 1;
-
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
         selectedPosition = position;
@@ -305,7 +303,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                     seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 } else {
                     VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position, vidType);
-                    videoDetailFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                    videoDetailFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
                     videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                     videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 }
@@ -656,7 +654,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case DIALOG_FRAGMENT:
+            case Constants.DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     if (data.hasExtra("position")) {
                         int position = data.getIntExtra("position", -1);

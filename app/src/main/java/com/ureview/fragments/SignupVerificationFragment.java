@@ -22,6 +22,7 @@ import com.ureview.listeners.IParserListener;
 import com.ureview.listeners.ISearchClickListener;
 import com.ureview.models.CountriesModel;
 import com.ureview.models.UserInfoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomDialog;
@@ -45,7 +46,6 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
     private String token, deviceToken;
     private UserInfoModel userInfoModel;
     private CustomEditText edtMobileNumber;
-    public static final int DIALOG_FRAGMENT = 1;
 
     public static SignupVerificationFragment newInstance() {
         return new SignupVerificationFragment();
@@ -132,7 +132,7 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
 
     private void openCountriesDialog() {
         CountrySelectionFragment countrySelectionFragment = CountrySelectionFragment.newInstance(currentCountriesModel != null ? currentCountriesModel.countryCode : "");
-        countrySelectionFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+        countrySelectionFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
         countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         countrySelectionFragment.show(splashActivity.getSupportFragmentManager(), "");
     }
@@ -195,7 +195,7 @@ public class SignupVerificationFragment extends BaseFragment implements ISearchC
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case DIALOG_FRAGMENT:
+            case Constants.DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
                     currentCountriesModel = data.getParcelableExtra("countriesModel");
                     txtCountryCode.setText("+" + currentCountriesModel.countryCode);

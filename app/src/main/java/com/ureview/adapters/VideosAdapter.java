@@ -75,7 +75,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
             holder.txtViewCount.setText(videoModel.videoWatchedCount);
             holder.txtDistance.setText(videoModel.distance);
             try {
-                setProfileRating(holder, Float.intBitsToFloat(videoModel.ratingGiven));
+                setProfileRating(holder, Float.parseFloat(TextUtils.isEmpty(videoModel.videoRating) ? "0f" : videoModel.videoRating));
             } catch (Exception e) {
                 e.printStackTrace();
                 setProfileRating(holder, 0f);
