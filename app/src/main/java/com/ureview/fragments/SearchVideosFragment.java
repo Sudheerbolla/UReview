@@ -175,6 +175,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                         rvSearchVideo.setVisibility(View.GONE);
                     }
                 }
+                searchVideosAdapter.notifyDataSetChanged();
             } else {
                 if (startFrom == 0) {
                     txtNoData.setVisibility(View.VISIBLE);
@@ -326,9 +327,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
     }
 
     public void updateVideoViewCount(int position) {
-        if (!videosArrList.isEmpty() && searchVideosAdapter != null) {
-            videosArrList.get(position).videoWatchedCount = String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
-            searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
-        }
+        if (videosArrList.isEmpty() || searchVideosAdapter == null) return;
+        videosArrList.get(position).videoWatchedCount = String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
+        searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
     }
 }
