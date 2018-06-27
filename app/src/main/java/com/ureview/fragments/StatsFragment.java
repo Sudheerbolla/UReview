@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +14,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -122,6 +124,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
             dataSet.setCircleRadius(3f);
             dataSet.setCircleHoleRadius(3f);
             dataSet.setLineWidth(2f);
+            dataSet.setDrawValues(true);
 
             LineData lineData = new LineData(dataSet);
             lineData.setValueTextColor(getResources().getColor(R.color.app_color_dark));
@@ -133,6 +136,8 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
             xAxis.setTextSize(13f);
             xAxis.setTextColor(Color.BLACK);
             xAxis.setDrawAxisLine(true);
+            xAxis.setAxisLineColor(ContextCompat.getColor(mainActivity, R.color.app_color_medium));
+            xAxis.setGridColor(ContextCompat.getColor(mainActivity, R.color.app_color_medium));
             xAxis.setDrawGridLines(false);
             xAxis.setAvoidFirstLastClipping(true);
             xAxis.setDrawLabels(true);
@@ -141,13 +146,22 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
 
             YAxis leftAxis = chart.getAxisLeft();
             chart.getAxisRight().setEnabled(false);
-            leftAxis.setDrawAxisLine(true);
+            leftAxis.setEnabled(false);
+            leftAxis.setDrawAxisLine(false);
             leftAxis.setDrawGridLines(false);
 
-            Description description = new Description();
-            description.setText("");
+            Legend legend = chart.getLegend();
+            legend.mNeededHeight = 2f;
+            legend.setYEntrySpace(2f);
+            ArrayList<LegendEntry> list = new ArrayList<>();
+            LegendEntry legendEntry = new LegendEntry();
+            legendEntry.formColor = ContextCompat.getColor(mainActivity, R.color.color_white);
+            list.add(legendEntry);
+            legend.setCustom(list);
+            legend.setEnabled(true);
 
-            chart.setDescription(description);
+            chart.getDescription().setEnabled(false);
+
             chart.setData(lineData);
             chart.invalidate();
         } else {

@@ -60,14 +60,14 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = RequestOptions
                     .bitmapTransform(new RoundedCorners(20))
-                    .placeholder(R.drawable.ic_user_placeholder)
-                    .error(R.drawable.ic_user_placeholder);
+                    .placeholder(R.drawable.video_placeholder)
+                    .error(R.drawable.video_placeholder);
 
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(options)
                     .into(holder.imgLocation);
-        } else holder.imgLocation.setImageResource(R.drawable.ic_user_placeholder);
+        } else holder.imgLocation.setImageResource(R.drawable.video_placeholder);
         holder.txtCategory.setText(videoModel.categoryName);
         holder.txtCategory.setBackgroundResource(R.drawable.blue_bg);
 //        Glide.with(context).load(WSUtils.BASE_URL.concat("/uploads/category_images/").concat(videoModel.categoryBgImage)).into(new SimpleTarget<Drawable>() {

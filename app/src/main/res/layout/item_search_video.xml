@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/video_placeholder"
                 app:riv_corner_radius="@dimen/pad_6" />
 
             <com.ureview.utils.views.CustomTextView

@@ -52,15 +52,15 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         VideoModel videoModel = videoList.get(position);
         if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
             RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_user_placeholder)
+                    .placeholder(R.drawable.video_placeholder)
                     .fitCenter()
-                    .error(R.drawable.ic_user_placeholder);
+                    .error(R.drawable.video_placeholder);
 
             Glide.with(context)
                     .load(videoModel.videoPosterImage)
                     .apply(options)
                     .into(holder.imgVideo);
-        } else holder.imgVideo.setImageResource(R.drawable.ic_user_placeholder);
+        } else holder.imgVideo.setImageResource(R.drawable.video_placeholder);
 
         holder.txtName.setText(videoModel.videoTitle);
         holder.txtTags.setText(videoModel.videoTags);
