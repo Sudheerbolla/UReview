@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import com.ureview.adapters.SearchVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -152,15 +154,15 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
     private void requestForVideoList() {
         String title = "All Videos";
         switch (videoType) {
-            case "NearBy":
+            case Constants.NEARBY:
                 title = "All Near By Videos";
                 requestForNearByVideos();
                 break;
-            case "TopRated":
+            case Constants.TOPRATED:
                 title = "All Top Rated Videos";
                 requestForTopRatedVideos();
                 break;
-            case "Popular":
+            case Constants.POPULAR:
                 title = "All Videos";
                 requestForPopularVideos();
                 break;
@@ -266,7 +268,7 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position));
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), SeeAllVideosFragment.this);
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
@@ -410,6 +412,21 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data.hasExtra("position")) {
+                int position = data.getIntExtra("position", -1);
+                if (position != -1) {
+                    videosArrList.get(position).videoWatchedCount =
+                            String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
+                    searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
+                }
+            }
         }
     }
 }

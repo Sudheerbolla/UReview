@@ -31,6 +31,7 @@ import com.ureview.listeners.IVideosClickListener;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.VideoModel;
+import com.ureview.utils.Constants;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
@@ -124,9 +125,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
 
         newsFeedAdapter = new NewsFeedAdapter(getActivity(), this);
         homeCategoryAdapter = new HomeCategoryAdapter(getActivity(), this);
-        nearByVideosAdapter = new VideosAdapter(getActivity(), this, true, "NearBy");
-        topRatedVideosAdapter = new VideosAdapter(getActivity(), this, true, "TopRated");
-        popularVideosAdapter = new VideosAdapter(getActivity(), this, true, "Popular");
+        nearByVideosAdapter = new VideosAdapter(getActivity(), this, true, Constants.NEARBY);
+        topRatedVideosAdapter = new VideosAdapter(getActivity(), this, true, Constants.TOPRATED);
+        popularVideosAdapter = new VideosAdapter(getActivity(), this, true, Constants.POPULAR);
 
         rvNewsFeed.setAdapter(newsFeedAdapter);
         rvNewsFeed.setListPagination(this);
@@ -219,6 +220,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     private void requestForNewsFeedVideos() {
+        if (missingAnyAttribute())
+            return;
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("startFrom", String.valueOf(startFrom));
         queryMap.put("count", String.valueOf(count));
@@ -230,7 +233,20 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEWS_FEED_VIDEOS, call, this);
     }
 
+    private boolean missingAnyAttribute() {
+        if (userId == null || TextUtils.isEmpty(userId)) {
+            return true;
+        } else if (lat == null || TextUtils.isEmpty(lat)) {
+            return true;
+        } else if (lng == null || TextUtils.isEmpty(lng)) {
+            return true;
+        }
+        return false;
+    }
+
     private void requestForNearByVideos() {
+        if (missingAnyAttribute())
+            return;
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
@@ -245,6 +261,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     private void requestForTopRatedVideos() {
+        if (missingAnyAttribute())
+            return;
         HashMap<String, String> queryMap = new HashMap<>();
         queryMap.put("category_id", catId);
         queryMap.put("startFrom", "0");
@@ -283,11 +301,10 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             case R.id.relItem:
                 if (!TextUtils.isEmpty(vidType) && position >= maxLimit) {
                     SeeAllVideosFragment seeAllVideosFragment = SeeAllVideosFragment.newInstance(vidType, catId);
-                    seeAllVideosFragment.setTargetFragment(this, DIALOG_FRAGMENT);
                     seeAllVideosFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                     seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 } else {
-                    VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position);
+                    VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position, vidType);
                     videoDetailFragment.setTargetFragment(this, DIALOG_FRAGMENT);
                     videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                     videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
@@ -367,20 +384,17 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtSeeAllVideos:
-                SeeAllVideosFragment seeAllVideosFragment = SeeAllVideosFragment.newInstance("NearBy", catId);
-                seeAllVideosFragment.setTargetFragment(this, DIALOG_FRAGMENT);
+                SeeAllVideosFragment seeAllVideosFragment = SeeAllVideosFragment.newInstance(Constants.NEARBY, catId);
                 seeAllVideosFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                 seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
             case R.id.txtSeeAllTopRated:
-                SeeAllVideosFragment seeAll1 = SeeAllVideosFragment.newInstance("TopRated", catId);
-                seeAll1.setTargetFragment(this, DIALOG_FRAGMENT);
+                SeeAllVideosFragment seeAll1 = SeeAllVideosFragment.newInstance(Constants.TOPRATED, catId);
                 seeAll1.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                 seeAll1.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
             case R.id.txtSeeAllPopularSearch:
-                SeeAllVideosFragment seeAll2 = SeeAllVideosFragment.newInstance("Popular", catId);
-                seeAll2.setTargetFragment(this, DIALOG_FRAGMENT);
+                SeeAllVideosFragment seeAll2 = SeeAllVideosFragment.newInstance(Constants.POPULAR, catId);
                 seeAll2.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                 seeAll2.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 break;
@@ -644,7 +658,38 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         switch (requestCode) {
             case DIALOG_FRAGMENT:
                 if (resultCode == Activity.RESULT_OK) {
-//                    updateCategoryList(position, true);
+                    if (data.hasExtra("position")) {
+                        int position = data.getIntExtra("position", -1);
+                        if (position != -1 && data.hasExtra("vidType")) {
+                            String vidType = data.getStringExtra("vidType");
+                            switch (vidType) {
+                                case Constants.NEARBY:
+                                    nearByVideoList.get(position).videoWatchedCount =
+                                            String.valueOf(Integer.parseInt(nearByVideoList.get(position).videoWatchedCount) + 1);
+                                    nearByVideosAdapter.notifyItemChanged(position, nearByVideoList.get(position));
+                                    break;
+                                case Constants.TOPRATED:
+                                    topRatedVideoList.get(position).videoWatchedCount =
+                                            String.valueOf(Integer.parseInt(topRatedVideoList.get(position).videoWatchedCount) + 1);
+                                    topRatedVideosAdapter.notifyItemChanged(position, topRatedVideoList.get(position));
+                                    break;
+                                case Constants.POPULAR:
+                                    popularVideoList.get(position).videoWatchedCount =
+                                            String.valueOf(Integer.parseInt(popularVideoList.get(position).videoWatchedCount) + 1);
+                                    popularVideosAdapter.notifyItemChanged(position, popularVideoList.get(position));
+                                    break;
+                                case "":
+                                    feedVideoList.get(position).videoWatchedCount =
+                                            String.valueOf(Integer.parseInt(feedVideoList.get(position).videoWatchedCount) + 1);
+                                    newsFeedAdapter.notifyItemChanged(position, feedVideoList.get(position));
+                                    break;
+                            }
+                        } else if (position != -1) {
+                            feedVideoList.get(position).videoWatchedCount =
+                                    String.valueOf(Integer.parseInt(feedVideoList.get(position).videoWatchedCount) + 1);
+                            newsFeedAdapter.notifyItemChanged(position, feedVideoList.get(position));
+                        }
+                    }
                 }
                 break;
         }

@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -405,7 +406,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         countrySelectionFragment.show(getSupportFragmentManager(), "");
     }
 
-    public void showVideoDetails(VideoDetailFragment videoDetailFragment) {
+    public void showVideoDetails(VideoDetailFragment videoDetailFragment, Fragment fragment) {
+        videoDetailFragment.setTargetFragment(fragment, DIALOG_FRAGMENT);
         videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
         videoDetailFragment.show(getSupportFragmentManager(), "VideoDetailFragment");
     }
