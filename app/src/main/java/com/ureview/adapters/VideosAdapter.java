@@ -60,7 +60,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
         holder.txtRatingsNo.setVisibility(val ? View.GONE : View.VISIBLE);
 
         final VideoModel videoModel = videoList.get(position);
-        if (only10Items && position < maxLimit) {
+        if (position < maxLimit) {
             if (!TextUtils.isEmpty(videoModel.videoPosterImage)) {
                 RequestOptions options = new RequestOptions().
                         error(R.drawable.ic_user_placeholder).placeholder(R.drawable.ic_user_placeholder);

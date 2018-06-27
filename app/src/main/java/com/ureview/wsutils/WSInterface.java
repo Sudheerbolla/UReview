@@ -60,6 +60,9 @@ public interface WSInterface {
     @POST("video-rating-by-user")
     Call<JsonElement> videoRatingByUser(@Body RequestBody params);
 
+    @GET("get-video-by-id")
+    Call<JsonElement> getRelatedVideos(@QueryMap(encoded = true) HashMap<String, String> params);
+
     @POST("report-video")
     Call<JsonElement> reportVideo(@Body RequestBody params);
 

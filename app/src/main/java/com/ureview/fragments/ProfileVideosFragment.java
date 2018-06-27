@@ -1,5 +1,7 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -198,7 +200,7 @@ public class ProfileVideosFragment extends BaseFragment implements IParserListen
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 ArrayList<VideoModel> tempList = new ArrayList<>(userVideosModelArrayList);
 
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position));
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), ProfileVideosFragment.this);
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(userVideosModelArrayList, position), true, R.id.mainContainer);
                 break;
             default:
@@ -211,4 +213,18 @@ public class ProfileVideosFragment extends BaseFragment implements IParserListen
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data.hasExtra("position")) {
+                int position = data.getIntExtra("position", -1);
+                if (position != -1) {
+                    userVideosModelArrayList.get(position).videoWatchedCount =
+                            String.valueOf(Integer.parseInt(userVideosModelArrayList.get(position).videoWatchedCount) + 1);
+                    videosAdapter.notifyItemChanged(position, userVideosModelArrayList.get(position));
+                }
+            }
+        }
+    }
 }

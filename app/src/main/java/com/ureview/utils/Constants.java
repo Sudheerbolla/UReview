@@ -29,4 +29,8 @@ public class Constants {
 
     public static final String NOTIFICATION_CHANNEL = "You Review 0023";
 
+    public static final String NEARBY = "NearBy";
+    public static final String TOPRATED = "TopRated";
+    public static final String POPULAR = "Popular ";
+
 }

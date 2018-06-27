@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,6 +53,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -92,11 +94,12 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen, imgMute;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
-            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
+            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime, txtRelatedVideos;
     private LinearLayout llRate, llShare, llDirection, llReport;
     private CustomRecyclerView rvRelatedVideos;
     private VideosAdapter videosAdapter;
-    private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
+    private ArrayList<VideoModel> feedVideoList;
+    private ArrayList<VideoModel> relatedVideoList;
     private VideoModel feedVideo;
     private NestedScrollView nestedScrollView;
     private View rootView;
@@ -124,6 +127,19 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     private int mResumeWindow;
     private long mResumePosition;
     private int screenWidth, screenHeight, containerHeight;
+    private String currLat = "", currLng = "";
+    private boolean updateViewCount;
+    private String vidType = "";
+
+    public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position, String vidType) {
+        VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("news_feed", feedVideoList);
+        bundle.putInt("position", position);
+        bundle.putString("vidType", vidType);
+        videoDetailFragment.setArguments(bundle);
+        return videoDetailFragment;
+    }
 
     public static VideoDetailFragment newInstance(ArrayList<VideoModel> feedVideoList, int position) {
         VideoDetailFragment videoDetailFragment = new VideoDetailFragment();
@@ -132,13 +148,16 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         bundle.putInt("position", position);
         videoDetailFragment.setArguments(bundle);
         return videoDetailFragment;
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
+        if (MainActivity.mLastLocation != null) {
+            currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+            currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        }
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
         if (savedInstanceState != null) {
@@ -564,6 +583,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                     positionToHide = bundle.getInt("position");
                 }
             }
+            if (bundle.containsKey("vidType"))
+                vidType = bundle.getString("vidType");
         }
     }
 
@@ -598,6 +619,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
         txtUserName = rootView.findViewById(R.id.txtUserName);
         txtUserLoc = rootView.findViewById(R.id.txtUserLoc);
+        txtRelatedVideos = rootView.findViewById(R.id.txtRelatedVideos);
         rvRelatedVideos = rootView.findViewById(R.id.rvRelatedVideos);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
@@ -621,10 +643,12 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         imgFullScreen.setOnClickListener(this);
         imgMute.setOnClickListener(this);
 
+        feedVideoList = new ArrayList<>();
+        relatedVideoList = new ArrayList<>();
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false, "");
         rvRelatedVideos.setAdapter(videosAdapter);
-
+        requestForRelatedVideos();
         if (feedVideo != null)
             setVideoDetails();
     }
@@ -695,14 +719,14 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         txtViewCount.setOnClickListener(this);
         txtDistance.setOnClickListener(this);
 
-        if (feedVideoList.size() > 0) {
-            videosAdapter.addVideos(feedVideoList);
-            rvRelatedVideos.setVisibility(View.VISIBLE);
-            txtNoData.setVisibility(View.GONE);
-        } else {
-            rvRelatedVideos.setVisibility(View.GONE);
-            txtNoData.setVisibility(View.VISIBLE);
-        }
+//        if (feedVideoList.size() > 0) {
+//            videosAdapter.addVideos(feedVideoList);
+//            rvRelatedVideos.setVisibility(View.VISIBLE);
+//            txtNoData.setVisibility(View.GONE);
+//        } else {
+//            rvRelatedVideos.setVisibility(View.GONE);
+//            txtNoData.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
@@ -727,15 +751,15 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
-        VideoModel toBeAdded = feedVideo;
-        feedVideo = feedVideoList.get(position);
-        feedVideoList.remove(position);
-        feedVideoList.add(toBeAdded);
-        videosAdapter.addVideos(feedVideoList);
-        if (feedVideo != null) {
-            setVideoDetails();
-            initMp4Player();
-        }
+//        VideoModel toBeAdded = feedVideo;
+//        feedVideo = feedVideoList.get(position);
+//        feedVideoList.remove(position);
+//        feedVideoList.add(toBeAdded);
+//        videosAdapter.addVideos(feedVideoList);
+//        if (feedVideo != null) {
+//            setVideoDetails();
+//            initMp4Player();
+//        }
     }
 
     @Override
@@ -808,7 +832,11 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-//        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        Intent intent = new Intent();
+        intent.putExtra("position", positionToHide);
+        if (!TextUtils.isEmpty(vidType))
+            intent.putExtra("vidType", vidType);
+        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
     }
 
     private void askConfirmationAndProceed() {
@@ -878,6 +906,16 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         dialogUtils.showRatingDialog(mainActivity, view -> requestForGiveRating(textView.getText().toString().trim()), textView);
     }
 
+    private void requestForRelatedVideos() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("user_id", LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+        hashMap.put("id", feedVideo.id);
+        hashMap.put("current_latitude", currLat);
+        hashMap.put("current_longitude", currLng);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getRelatedVideos(hashMap);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_RELATED_VIDEOS, call, this);
+    }
+
     private void requestForShareVideo() {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("user_id", LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
@@ -924,6 +962,9 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
+            case WSUtils.REQ_FOR_RELATED_VIDEOS:
+                parseRelatedVideos(response);
+                break;
             case WSUtils.REQ_FOR_RATING_VIDEO:
                 parseVideoRatingResponse();
                 break;
@@ -936,6 +977,36 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             case WSUtils.REQ_FOR_UN_FOLLOW_USER:
                 parseUnFollowUser((JsonObject) response);
                 break;
+        }
+    }
+
+    private void parseRelatedVideos(JsonElement response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response.toString());
+            relatedVideoList.clear();
+            if (jsonObject.getString("status").equalsIgnoreCase("success")) {
+                if (jsonObject.has("videos")) {
+//                    JSONArray feedVidArr = jsonObject.getJSONArray("videos");
+                    rvRelatedVideos.setVisibility(View.VISIBLE);
+                    txtRelatedVideos.setVisibility(View.VISIBLE);
+                    if (jsonObject.has("videos")) {
+                        txtViewCount.setText(String.valueOf(Integer.valueOf(feedVideo.videoWatchedCount) + 1));
+                        updateViewCount = true;
+                        Gson gson = new Gson();
+                        VideoModel videoModel = gson.fromJson(jsonObject.getJSONObject("videos").toString(), VideoModel.class);
+                        relatedVideoList.add(videoModel);
+                    } else {
+                        rvRelatedVideos.setVisibility(View.GONE);
+                        txtRelatedVideos.setVisibility(View.GONE);
+                    }
+                    videosAdapter.addVideos(relatedVideoList);
+                }
+            } else {
+                rvRelatedVideos.setVisibility(View.GONE);
+                txtRelatedVideos.setVisibility(View.GONE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 

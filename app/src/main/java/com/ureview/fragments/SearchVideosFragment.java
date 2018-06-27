@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -221,7 +222,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position));
+                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), SearchVideosFragment.this);
                 break;
             case R.id.txtViewCount:
                 VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
@@ -321,6 +322,21 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data.hasExtra("position")) {
+                int position = data.getIntExtra("position", -1);
+                if (position != -1) {
+                    videosArrList.get(position).videoWatchedCount =
+                            String.valueOf(Integer.parseInt(videosArrList.get(position).videoWatchedCount) + 1);
+                    searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
+                }
+            }
         }
     }
 }
