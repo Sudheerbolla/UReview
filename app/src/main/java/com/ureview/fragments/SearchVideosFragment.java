@@ -109,8 +109,8 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         try {
             jsonObjectReq.put("user_id", userId);
             jsonObjectReq.put("video_name", SearchFragment.searchText);
-            jsonObjectReq.put("latitude", String.valueOf(MainActivity.mLastLocation.getLatitude()));
-            jsonObjectReq.put("longitude", String.valueOf(MainActivity.mLastLocation.getLongitude()));
+            jsonObjectReq.put("latitude", MainActivity.mLastLocation != null ? String.valueOf(MainActivity.mLastLocation.getLatitude()) : "0.0");
+            jsonObjectReq.put("longitude", MainActivity.mLastLocation != null ? String.valueOf(MainActivity.mLastLocation.getLongitude()) : "0.0");
             jsonObjectReq.put("startFrom", String.valueOf(startFrom));
             jsonObjectReq.put("count", String.valueOf(count));
             jsonObjectReq.put("current_latitude", currLat);

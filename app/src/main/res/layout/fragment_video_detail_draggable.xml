@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/pad_10">
+
+    <FrameLayout
+        android:id="@+id/fl_player"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:background="@color/colorBlack">
+
+        <FrameLayout
+            android:id="@+id/player_frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:background="@color/colorBlack">
+
+            <FrameLayout
+                android:id="@+id/innerFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <SurfaceView
+                    android:id="@+id/sv_player"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/pad_7">
+
+                <ImageView
+                    android:id="@+id/imgback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/pad_10"
+                    android:src="@drawable/ic_back_white" />
+
+                <ImageView
+                    android:id="@+id/imgFullScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/pad_5"
+                    android:layout_toEndOf="@id/imgback"
+                    android:padding="@dimen/pad_5"
+                    android:src="@drawable/ic_full_screen" />
+
+                <ImageView
+                    android:id="@+id/imgMute"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/pad_5"
+                    android:padding="@dimen/pad_5"
+                    android:src="@drawable/sound_selector" />
+
+            </RelativeLayout>
+
+            <include
+                layout="@layout/player_media_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="@dimen/pad_6"
+                android:layout_marginEnd="@dimen/pad_10"
+                android:layout_marginStart="@dimen/pad_10"
+                android:layout_marginTop="@dimen/pad_6" />
+
+        </FrameLayout>
+    </FrameLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/pad_8"
+                android:paddingRight="@dimen/pad_8"
+                android:paddingTop="@dimen/pad_5">
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtVideoTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/pad_8"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:layout_toStartOf="@+id/consCat"
+                    android:ellipsize="end"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_14sp"
+                    app:txt_font_type="bold" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/consCat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true">
+
+                    <ImageView
+                        android:id="@+id/imgCatBg"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/selector_app_pink_btn"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtCategory"
+                        app:layout_constraintLeft_toLeftOf="@+id/txtCategory"
+                        app:layout_constraintRight_toRightOf="@+id/txtCategory"
+                        app:layout_constraintTop_toTopOf="@+id/txtCategory" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/pad_3"
+                        android:paddingLeft="@dimen/pad_15"
+                        android:paddingRight="@dimen/pad_15"
+                        android:paddingTop="@dimen/pad_3"
+                        android:textColor="@color/selector_txt_color"
+                        android:textSize="@dimen/txt_size_12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </android.support.constraint.ConstraintLayout>
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtViewCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="-3dp"
+                    android:layout_marginTop="-3dp"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:drawableStart="@drawable/ic_view"
+                    android:gravity="center"
+                    android:padding="@dimen/pad_5"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_10sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/pad_2"
+                    android:layout_toEndOf="@+id/txtViewCount"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:drawableStart="@drawable/location_small_copy"
+                    android:gravity="center"
+                    android:padding="@dimen/pad_7"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <include
+                    android:id="@+id/llRatingBar"
+                    layout="@layout/layout_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/pad_10"
+                    android:layout_marginTop="@dimen/pad_2"
+                    android:layout_toEndOf="@+id/txtDistance" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtRatingno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtVideoTitle"
+                    android:layout_marginStart="@dimen/pad_3"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:layout_toEndOf="@+id/llRatingBar"
+                    android:textColor="@color/color_vvvDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <LinearLayout
+                    android:id="@+id/llOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llRatingBar"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/llRate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:background="@drawable/app_medium_circle"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_29"
+                                android:layout_height="@dimen/pad_29"
+                                android:padding="@dimen/pad_3"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_rating" />
+
+                        </LinearLayout>
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Rate"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llShare"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:background="@drawable/blue_circle"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_28"
+                                android:layout_height="@dimen/pad_28"
+                                android:padding="@dimen/pad_3"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_share_new" />
+
+                        </LinearLayout>
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Share"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llDirection"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/pad_37"
+                            android:layout_height="@dimen/pad_37"
+                            android:gravity="center">
+
+                            <com.ureview.utils.views.CircleImageView
+                                android:layout_width="@dimen/pad_33"
+                                android:layout_height="@dimen/pad_33"
+                                android:src="@drawable/ic_directions" />
+
+                        </LinearLayout>
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Direction"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llReport"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="@dimen/pad_35"
+                            android:layout_height="@dimen/pad_35"
+                            android:background="@drawable/red_circle"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="@dimen/pad_31"
+                                android:layout_height="@dimen/pad_31"
+                                android:rotation="180"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/ic_report_x" />
+
+                        </LinearLayout>
+
+                        <com.ureview.utils.views.CustomTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/pad_2"
+                            android:text="Report"
+                            android:textColor="@color/color_vvvDarkGrey"
+                            android:textSize="@dimen/txt_size_10sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/llOptions"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:drawablePadding="@dimen/pad_3"
+                    android:drawableStart="@drawable/location_small_copy"
+                    android:text="Location"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="@dimen/txt_size_11sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLoc"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:maxLines="2"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_12sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtTagsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtLocation"
+                    android:layout_marginTop="@dimen/pad_10"
+                    android:text="Tags"
+                    android:textColor="@color/colorDarkGrey"
+                    android:textSize="@dimen/txt_size_10sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtTags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTagsTitle"
+                    android:layout_marginTop="@dimen/pad_5"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_13sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtUploadedBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtTags"
+                    android:layout_marginTop="@dimen/pad_10"
+                    android:text="Uploaded by"
+                    android:textColor="@color/color_vvDarkGrey"
+                    android:textSize="@dimen/txt_size_10sp" />
+
+                <RelativeLayout
+                    android:id="@+id/rlUploadedBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/txtUploadedBy"
+                    android:layout_marginTop="@dimen/pad_8">
+
+                    <com.ureview.utils.views.CircleImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="@dimen/pad_35"
+                        android:layout_height="@dimen/pad_35"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_user_placeholder" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtFollowStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/selector_custom_app_btn"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/pad_5"
+                        android:paddingLeft="@dimen/pad_15"
+                        android:paddingRight="@dimen/pad_15"
+                        android:paddingTop="@dimen/pad_5"
+                        android:textColor="@color/selector_txt_color"
+                        android:textSize="@dimen/txt_size_14sp" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/pad_5"
+                        android:layout_marginRight="@dimen/pad_5"
+                        android:layout_marginTop="@dimen/pad_3"
+                        android:layout_toEndOf="@+id/imgProfile"
+                        android:layout_toStartOf="@+id/txtFollowStatus"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/txt_size_13sp"
+                        app:txt_font_type="bold" />
+
+                    <com.ureview.utils.views.CustomTextView
+                        android:id="@+id/txtUserLoc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/txtUserName"
+                        android:layout_marginLeft="@dimen/pad_5"
+                        android:layout_marginRight="@dimen/pad_5"
+                        android:layout_marginTop="@dimen/pad_5"
+                        android:layout_toEndOf="@+id/imgProfile"
+                        android:layout_toStartOf="@+id/txtFollowStatus"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/color_vvvDarkGrey"
+                        android:textSize="@dimen/txt_size_11sp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/dividerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.9dp"
+                    android:layout_below="@+id/rlUploadedBy"
+                    android:layout_marginTop="@dimen/pad_13"
+                    android:background="@color/colorGrey" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtRelatedVideos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dividerView"
+                    android:layout_marginTop="@dimen/pad_8"
+                    android:text="Related Videos"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/txt_size_12sp" />
+
+                <com.ureview.utils.views.CustomTextView
+                    android:id="@+id/txtSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/dividerView"
+                    android:layout_marginTop="@dimen/pad_3"
+                    android:padding="@dimen/pad_8"
+                    android:text="More"
+                    android:textColor="@color/app_text_color"
+                    android:textSize="@dimen/txt_size_13sp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <com.ureview.utils.views.CustomRecyclerView
+                android:id="@+id/rvRelatedVideos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/pad_9"
+                android:layout_marginRight="@dimen/pad_9"
+                app:list_orientation="horizontal"
+                app:list_type="list" />
+
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtNoData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/pad_30"
+                android:paddingTop="@dimen/pad_30"
+                android:text="No related videos"
+                android:textColor="@color/app_text_color"
+                android:textSize="@dimen/txt_size_15sp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

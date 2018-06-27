@@ -157,7 +157,6 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         }
 
         requestForCategoryList();
-
         return rootView;
     }
 

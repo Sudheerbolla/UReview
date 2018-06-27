@@ -3,7 +3,6 @@ package com.ureview.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,13 +25,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.twitter.sdk.android.core.Callback;
@@ -374,13 +369,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             bundle.putString("token", id);
             bundle.putString("email", email);
             if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-//register
                 splashActivity.replaceFragment(Signup1Fragment.newInstance(bundle), true, R.id.splashContainer);
             } else if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-//login
-//                if (response.has("message")) {
-//                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
-//                }
                 if (response.has("user_info")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());
                     try {
@@ -391,8 +381,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                     }
                     LocalStorage.getInstance(splashActivity).putString(LocalStorage.PREF_USER_ID, BaseApplication.userInfoModel.userid);
                 }
-
-//                splashActivity.replaceFragment(SignupVerificationFragment.newInstance(id), true, R.id.splashContainer);
                 startActivity(new Intent(splashActivity, MainActivity.class));
                 splashActivity.finishAffinity();
             }

@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -180,7 +179,6 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(true);
                 btnPlay.setSelected(true);
-//                svPlayer.setResizeMode
                 setProgress();
             }
         }
@@ -294,19 +292,12 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         });
     }
 
-    VideoView videoView;
-
     private void initMp4Player() {
         if (feedVideo != null && feedVideo.video != null) {
             MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(), handler, error -> {
 
             });
             initExoPlayer(sampleSource);
-            videoView = new VideoView(mainActivity);
-            Uri uri = Uri.parse(feedVideo.video);
-            videoView.setVideoURI(uri);
-            videoView.requestFocus();
-            videoView.start();
         }
     }
 
@@ -495,8 +486,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
             params.gravity = CENTER;
             container.setLayoutParams(params);
         } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = CENTER;
             container.setLayoutParams(params);
         }
@@ -759,11 +749,13 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
-                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
-                        feedVideo.videoLongitude;
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(mapIntent);
+                if (MainActivity.mLastLocation != null && feedVideo != null) {
+                    String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                            MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
+                            feedVideo.videoLongitude;
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(mapIntent);
+                }
                 break;
             case R.id.txtFollowStatus:
                 if (txtFollowStatus.isSelected()) {
@@ -1025,7 +1017,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
 //            else applyAspectRatio(innerFrame, exoPlayer);
             else applyAspectRatio(innerFrame);
         }
-        progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
+        if (progressBar != null)
+            progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
     }
 
     @Override

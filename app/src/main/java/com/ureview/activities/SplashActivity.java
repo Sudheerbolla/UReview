@@ -249,8 +249,9 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        @SuppressLint("MissingPermission") PendingResult<Status> pendingResult =
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        if (mGoogleApiClient.isConnected()) {
+            @SuppressLint("MissingPermission") PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
         mFusedLocationClient.getLastLocation().addOnSuccessListener(this, location -> {
             if (location != null) {
                 mLastLocation = location;
@@ -300,6 +301,9 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 //        mCurrentLocation = location;
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            @SuppressLint("MissingPermission") PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
     }
 
     @Override
