@@ -175,6 +175,7 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
                         rvSearchVideo.setVisibility(View.GONE);
                     }
                 }
+                searchVideosAdapter.notifyDataSetChanged();
             } else {
                 if (startFrom == 0) {
                     txtNoData.setVisibility(View.VISIBLE);
