@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -46,17 +47,18 @@ import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class SeeAllVideosFragment extends DialogFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener {
+public class SeeAllVideosFragment extends DialogFragment implements IParserListener<JsonElement>, Paginate.Callbacks, IClickListener, View.OnClickListener {
     private View rootView;
     private CustomRecyclerView rvSearchVideo;
     private SearchVideosAdapter searchVideosAdapter;
-    private CustomTextView txtNoData;
+    private CustomTextView txtNoData, txtTitle;
     private MainActivity mainActivity;
     private String userId;
     private ArrayList<VideoModel> videosArrList = new ArrayList<>();
     private ArrayList<VideoModel> tempVideosArrList = new ArrayList<>();
     private String currLat = "", currLng = "", locMaxRange = "50", locMinRange = "0";
-    private RelativeLayout rlProgress;
+    private RelativeLayout rlProgress, rlTopBar;
+    private ImageView imgBack, imgNotf;
 
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
@@ -88,7 +90,6 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar("All Videos", "", "", false, true, true, false, false);
         if (MainActivity.mLastLocation != null) {
             currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
             currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
@@ -143,6 +144,13 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
         txtNoData = rootView.findViewById(R.id.txtNoData);
         rlProgress = rootView.findViewById(R.id.rlProgress);
         layout = rootView.findViewById(R.id.rootView);
+        rlTopBar = rootView.findViewById(R.id.rlTopBar);
+        txtTitle = rootView.findViewById(R.id.txtTitle);
+        imgBack = rootView.findViewById(R.id.imgBack);
+        imgNotf = rootView.findViewById(R.id.imgNotf);
+        rlTopBar.setVisibility(View.VISIBLE);
+        imgBack.setOnClickListener(this);
+        imgNotf.setOnClickListener(this);
         searchVideosAdapter = new SearchVideosAdapter(getActivity(), this);
         rvSearchVideo.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvSearchVideo.setAdapter(searchVideosAdapter);
@@ -169,7 +177,7 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
             default:
                 break;
         }
-        mainActivity.setToolBar(title, "", "", false, true, true, false, false);
+        txtTitle.setText(title);
     }
 
     private void requestForNearByVideos() {
@@ -427,6 +435,19 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
                     searchVideosAdapter.notifyItemChanged(position, videosArrList.get(position));
                 }
             }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imgBack:
+                dismiss();
+                break;
+            case R.id.imgNotf:
+                dismiss();
+                mainActivity.replaceFragment(NotificationsFragment.newInstance(), true, R.id.mainContainer);
+                break;
         }
     }
 }

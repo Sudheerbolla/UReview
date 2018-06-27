@@ -66,8 +66,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private static final int FACEBOOK_SIGN_IN = 301;
     private static final int TWITTER_SIGN_IN = 302;
     private View rootView;
-    private CustomTextView txtFbLogin, txtInstagramLogin, txtVersion;
-    private TwitterLoginButton txtTwitterLogin;
+    private CustomTextView txtTwitterLogin, txtFbLogin, txtInstagramLogin, txtVersion;
+    private TwitterLoginButton txtTwitterLoginBtn;
     private TwitterAuthClient twitterAuthClient;
     private SplashActivity splashActivity;
     CallbackManager mFacebookCallbackManager;
@@ -149,6 +149,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void onTwitterBtnClicked() {
+        txtTwitterLoginBtn.performClick();
         loginType = TWITTER_SIGN_IN;
 //        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //        if (user != null) {
@@ -181,6 +182,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         txtTwitterLogin = rootView.findViewById(R.id.txtTwitterLogin);
+        txtTwitterLoginBtn = rootView.findViewById(R.id.txtTwitterLoginBtn);
         txtFbLogin = rootView.findViewById(R.id.txtFbLogin);
         txtInstagramLogin = rootView.findViewById(R.id.txtInstagramLogin);
         txtVersion = rootView.findViewById(R.id.txtVersion);
@@ -209,7 +211,14 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         txtFbLogin.setOnClickListener(this);
         txtInstagramLogin.setOnClickListener(this);
         splashActivity.changeStatusBarColorToWhite();
-        txtTwitterLogin.setCallback(new Callback<TwitterSession>() {
+        setTwitterBtnCallBack();
+        twitterAuthClient = new TwitterAuthClient();
+        getVersion();
+        return rootView;
+    }
+
+    private void setTwitterBtnCallBack() {
+        txtTwitterLoginBtn.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
                 handleTwitterSession(result.data);
@@ -221,9 +230,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 updateUI(null);
             }
         });
-        twitterAuthClient = new TwitterAuthClient();
-        getVersion();
-        return rootView;
     }
 
     private void getVersion() {
@@ -279,7 +285,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 handleSignInResult(task);
                 break;
             case TWITTER_SIGN_IN:
-                txtTwitterLogin.onActivityResult(requestCode, resultCode, data);
+                txtTwitterLoginBtn.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }

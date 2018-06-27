@@ -220,6 +220,9 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
                     notificationsAdapter.notifyDataSetChanged();
 //                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
 //                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                } else {
+                    txtNoData.setVisibility(View.VISIBLE);
+                    rvNotifications.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {

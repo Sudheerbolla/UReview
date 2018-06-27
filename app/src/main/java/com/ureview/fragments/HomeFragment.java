@@ -63,7 +63,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private boolean nearByData, topRatedData, popularData;
     private int loadedDataCount;
     private String lat = "", lng = "", locMaxRange = "50", locMinRange = "0";
-    private int maxLimit = 5;
+    private int maxLimit = 10;
 
     //    News Feed Pagination
     private boolean isLoading, hasLoadedAllItems;
