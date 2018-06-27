@@ -20,7 +20,6 @@ import android.widget.LinearLayout;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.ureview.BaseApplication;
@@ -217,9 +216,6 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
             Log.v("Google API", "Connecting");
             mGoogleApiClient.connect();
         }
-
-//        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-//        mainActivity.setToolBar("", "", "", true, true, true, false, false);
     }
 
     @Override
@@ -253,22 +249,17 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
         final String placeId = String.valueOf(item.placeId);
         Log.i("TAG", "Autocomplete item selected: " + item.description);
         PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId);
-        placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-            @Override
-            public void onResult(@NonNull PlaceBuffer places) {
-                if (places.getCount() == 1) {
-                    selLat = String.valueOf(places.get(0).getLatLng().latitude);
-                    selLong = String.valueOf(places.get(0).getLatLng().longitude);
-                    addressLine = places.get(0).getAddress().toString();
-                    onButtonPressed(false);
-                    dismissAllowingStateLoss();
-                } else {
-                    StaticUtils.showToast(mainActivity, "something went wrong");
-                }
+        placeResult.setResultCallback(places -> {
+            if (places.getCount() == 1) {
+                selLat = String.valueOf(places.get(0).getLatLng().latitude);
+                selLong = String.valueOf(places.get(0).getLatLng().longitude);
+                addressLine = places.get(0).getAddress().toString();
+                onButtonPressed(false);
+                mAutocompleteTextView.setText(addressLine);
+            } else {
+                StaticUtils.showToast(mainActivity, "something went wrong");
             }
         });
-        Log.i("TAG", "Clicked: " + item.description);
-        Log.i("TAG", "Called getPlaceById to get Place details for " + item.placeId);
     }
 
     @Override
