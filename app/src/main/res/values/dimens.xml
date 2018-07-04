@@ -89,6 +89,10 @@
     <integer name="default_anim_step">3</integer>
     <integer name="default_start_angle">-90</integer>
 
+    <integer name="anim_duration_very_long">1500</integer>
+    <integer name="anim_duration_long">500</integer>
+    <integer name="anim_duration_medium">300</integer>
+
     <!--<item name="x_scale_factor" format="float" type="dimen">1.5</item>-->
     <!--<item name="y_scale_factor" format="float" type="dimen">1.5</item>-->
     <item name="x_scale_factor" format="float" type="dimen">2.3</item>

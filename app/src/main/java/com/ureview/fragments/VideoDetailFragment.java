@@ -84,8 +84,7 @@ import retrofit2.Call;
 
 import static android.view.Gravity.CENTER;
 
-public class VideoDetailFragment extends DialogFragment implements IClickListener, View.OnClickListener,
-        IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
+public class VideoDetailFragment extends DialogFragment implements IClickListener, View.OnClickListener, IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
     private static final String TAG = VideoDetailFragment.class.getSimpleName();
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
