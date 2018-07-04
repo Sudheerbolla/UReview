@@ -28,7 +28,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
     private Context context;
     private IVideosClickListener iClickListener;
     private ArrayList<VideoModel> videoList = new ArrayList<>();
-    private int maxLimit = 5;
+    private int maxLimit = 10;
 
     public VideosAdapter(Context context, IVideosClickListener iClickListener, boolean only10Items, String videoType) {
         this.context = context;

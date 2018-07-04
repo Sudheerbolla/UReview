@@ -56,8 +56,6 @@
                     android:id="@+id/txtNoData"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/pad_35"
-                    android:layout_marginStart="@dimen/pad_35"
                     android:gravity="center"
                     android:paddingBottom="@dimen/pad_50"
                     android:paddingLeft="@dimen/pad_10"
