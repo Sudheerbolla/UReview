@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ureview.R;
 import com.ureview.adapters.OptionsAdapter;
@@ -281,7 +280,6 @@ public class DialogUtils implements View.OnClickListener {
             txtPositiveButton.setOnClickListener(v -> {
                 alertDialog.dismiss();
                 if (positiveClick != null) {
-                    Toast.makeText(mContext, ratingBar.getRating() + "", Toast.LENGTH_LONG).show();
                     givenRating.setText(String.valueOf(ratingBar.getRating()));
                     positiveClick.onClick(v);
                 }

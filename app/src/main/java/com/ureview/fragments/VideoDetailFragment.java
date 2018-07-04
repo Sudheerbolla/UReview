@@ -1015,7 +1015,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         try {
             JSONObject response = new JSONObject(res.toString());
             if (response.has("message")) {
-                StaticUtils.showToast(mainActivity, response.getString("message"));
+                DialogUtils.showSimpleDialog(mainActivity, response.getString("message"), null, null, true);
+//                StaticUtils.showToast(mainActivity, response.getString("message"));
             }
         } catch (Exception e) {
             e.printStackTrace();

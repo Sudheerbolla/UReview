@@ -46,7 +46,8 @@
         android:gravity="left|top"
         android:lines="10"
         android:maxLines="10"
-        android:padding="@dimen/pad_5" />
+        android:padding="@dimen/pad_5"
+        app:set_input_type="false" />
 
     <LinearLayout
         android:layout_width="wrap_content"

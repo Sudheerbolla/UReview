@@ -27,8 +27,9 @@ public class CustomEditText extends AppCompatEditText {
 
     private void init(Context context, AttributeSet attributeSet) {
         String fontPath;
-        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CustomTextView);
-        int font_val = typedArray.getInteger(R.styleable.CustomTextView_txt_font_type, 1);
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CustomEditText);
+        int font_val = typedArray.getInteger(R.styleable.CustomEditText_edt_font_type, 1);
+        boolean setInputType = typedArray.getBoolean(R.styleable.CustomEditText_set_input_type, true);
         switch (font_val) {
             case 0:
                 fontPath = "AvenirLTStd-Light.otf";
@@ -46,7 +47,8 @@ public class CustomEditText extends AppCompatEditText {
                 fontPath = "AvenirLTStd-Book.otf";
                 break;
         }
-        setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+        if (setInputType)
+            setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), fontPath);
         setTypeface(tf);
         typedArray.recycle();

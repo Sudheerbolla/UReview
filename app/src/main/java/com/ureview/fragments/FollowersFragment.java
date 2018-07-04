@@ -253,7 +253,7 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
                 mainActivity.replaceFragment(ProfileFragment.newInstance(followModelArrayList.get(position).user_id, followModelArrayList.get(position).first_name.concat(" ").concat(followModelArrayList.get(position).last_name)), true, R.id.mainContainer);
                 break;
             case R.id.imgClear:
-                String confirmationMsg = "Do you want block ".concat(followModelArrayList.get(position).first_name)
+                String confirmationMsg = "Do you want to block ".concat(followModelArrayList.get(position).first_name)
                         .concat(" ").concat(followModelArrayList.get(position).last_name).concat("?");
                 DialogUtils.showUnFollowConfirmationPopup(mainActivity, confirmationMsg, v -> requestForBlockUser(followModelArrayList.get(position).user_id));
                 break;
