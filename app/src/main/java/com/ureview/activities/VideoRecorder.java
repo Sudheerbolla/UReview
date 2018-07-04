@@ -35,6 +35,7 @@ public class VideoRecorder extends BaseActivity {
     private int option = 0;
     private String cutPath;
     private RelativeLayout relProgress;
+    private int videoWidth, videoHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,8 @@ public class VideoRecorder extends BaseActivity {
             videoView.setOnPreparedListener(mp -> {
                 mp.setVolume(0, 0);
                 int duration = mp.getDuration() / 1000;
+                videoWidth = mp.getVideoWidth();
+                videoHeight = mp.getVideoHeight();
                 mp.setLooping(false);
                 if (duration > 60) {
                     proceedWithVideoOperation(58);
@@ -161,7 +164,8 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x720", "-r", "20", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", String.valueOf(videoWidth).concat("x").concat(String.valueOf(videoHeight)), "-r", "20", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x720", "-r", "20", "-vcodec", "libx264", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "25", "-vcodec", "mpeg4", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
         execFFmpegBinary(complexCommand);

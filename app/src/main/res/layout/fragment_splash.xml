@@ -4,16 +4,23 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_bg">
 
+    <ImageView
+        android:id="@+id/imgIcon"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_launcher" />
+
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/uireview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawablePadding="@dimen/pad_10"
-        android:drawableTop="@mipmap/ic_launcher"
+        android:layout_below="@+id/imgIcon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/pad_2"
         android:text="YouReview"
         android:textColor="@color/color_white"
-        android:textSize="@dimen/txt_size_22sp" />
+        android:textSize="@dimen/txt_size_24sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:layout_width="wrap_content"
