@@ -12,6 +12,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/llOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -28,7 +29,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/share_app_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_16"
                 android:text="Share App"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -45,7 +46,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/privacy_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_16"
                 android:text="Privacy Policies"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -62,7 +63,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/terms_and_condition_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_16"
                 android:text="Terms &amp; Conditions"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -79,7 +80,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/help_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_13"
                 android:text="Help Center"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -113,7 +114,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/logout_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_17"
                 android:text="Log Out"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -130,7 +131,7 @@
                 android:drawablePadding="@dimen/pad_25"
                 android:drawableStart="@drawable/delete_account_copy"
                 android:gravity="center_vertical"
-                android:padding="@dimen/pad_15"
+                android:padding="@dimen/pad_16"
                 android:text="Delete Account"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/txt_size_15sp" />
@@ -146,11 +147,14 @@
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/llOptions"
+            android:text="1.0"
+            android:gravity="bottom"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/pad_15"
-            android:layout_marginTop="@dimen/pad_10"
+            android:layout_marginTop="@dimen/pad_20"
             android:padding="@dimen/pad_10"
             android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_11sp" />

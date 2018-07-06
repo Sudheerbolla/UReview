@@ -7,7 +7,7 @@
     android:layout_centerVertical="true"
     android:layout_gravity="center"
     android:layout_marginTop="@dimen/pad_1"
-    android:background="@color/color_250_250_250"
+    android:background="@color/color_white"
     app:dragEdge="right"
     app:swipemode="same_level">
 

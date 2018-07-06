@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -104,6 +105,23 @@ public class StaticUtils {
         int mn = rem / 60;
         int sec = rem % 60;
         return String.format("%02d", hr) + ":" + String.format("%02d", mn) + ":" + String.format("%02d", sec);
+    }
+
+    public static String stringForTime(int timeMs) {
+        StringBuilder mFormatBuilder = new StringBuilder();
+        Formatter mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        int totalSeconds = timeMs / 1000;
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        if (hours > 0) {
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
+        }
     }
 
 

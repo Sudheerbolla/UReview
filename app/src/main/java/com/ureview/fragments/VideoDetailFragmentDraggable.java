@@ -820,7 +820,8 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     }
 
     private void askConfirmationAndProceed() {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, feedVideo.firstName.concat(" ").concat(feedVideo.lastName),
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(feedVideo.firstName)
+                        .concat(" ").concat(feedVideo.lastName).concat("?"),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

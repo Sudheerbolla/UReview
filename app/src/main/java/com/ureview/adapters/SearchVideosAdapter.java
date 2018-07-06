@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -83,7 +84,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
         setProfileRating(holder, Float.parseFloat(TextUtils.isEmpty(videoModel.videoRating) ? "0f" : videoModel.videoRating));
         holder.txtLocBtm.setText(videoModel.city);
-
+        holder.txtLength.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);
         holder.txtLength.setText(videoModel.videoDuration);
 
         holder.txtFollowStatus.setVisibility(currUserId.equalsIgnoreCase(videoModel.videoOwnerId) ? View.GONE : View.VISIBLE);
@@ -131,6 +132,14 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
                 }
             }
         });
+        holder.relUserDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (iClickListener != null) {
+                    iClickListener.onClick(holder.relUserDetails, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -158,6 +167,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         private ImageView imgLocation, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, imgProfile;
         private CustomTextView txtCategory, txtSynth, txtLocBtm, txtDistance, txtLength, txtViewCount, txtRatingsNo, txtLoc, txtName, txtFollowStatus;
         private View dividerView;
+        private RelativeLayout relUserDetails;
 
         public NewsFeedViewHolder(View itemView) {
             super(itemView);
@@ -180,6 +190,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
             imgStar4 = itemView.findViewById(R.id.imgStar4);
             imgStar5 = itemView.findViewById(R.id.imgStar5);
             dividerView = itemView.findViewById(R.id.dividerView);
+            relUserDetails = itemView.findViewById(R.id.relUserDetails);
         }
     }
 

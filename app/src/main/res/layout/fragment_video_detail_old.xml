@@ -113,8 +113,6 @@
                     android:layout_marginTop="@dimen/pad_5"
                     android:layout_toStartOf="@+id/consCat"
                     android:ellipsize="end"
-                    android:inputType="text"
-                    android:singleLine="true"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/txt_size_14sp"
                     app:txt_font_type="bold" />
@@ -176,7 +174,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/pad_2"
                     android:layout_toEndOf="@+id/txtViewCount"
-                    android:drawablePadding="@dimen/pad_3"
+                    android:drawablePadding="@dimen/pad_5"
                     android:drawableStart="@drawable/location_small_copy"
                     android:gravity="center"
                     android:padding="@dimen/pad_7"
@@ -191,7 +189,7 @@
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/pad_10"
-                    android:layout_marginTop="@dimen/pad_2"
+                    android:layout_marginTop="@dimen/pad_5"
                     android:layout_toEndOf="@+id/txtDistance" />
 
                 <com.ureview.utils.views.CustomTextView
@@ -200,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txtVideoTitle"
                     android:layout_marginStart="@dimen/pad_3"
-                    android:layout_marginTop="@dimen/pad_5"
+                    android:layout_marginTop="@dimen/pad_6"
                     android:layout_toEndOf="@+id/llRatingBar"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />

@@ -68,6 +68,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         holder.txtDistance.setText(videoModel.distance);
         setProfileRating(holder, Float.parseFloat(videoModel.videoRating));
         holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
+        holder.txtDuration.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);
         holder.txtDuration.setText(videoModel.videoDuration);
         if (videoModel.videoOwnerId.equalsIgnoreCase(currUserId))
             holder.imgDeleteVideo.setVisibility(View.VISIBLE);

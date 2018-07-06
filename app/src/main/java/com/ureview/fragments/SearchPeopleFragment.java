@@ -185,7 +185,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                     }
                     peopleAdapter.addItems(tempPeopleArrList);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+//                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                     if (startFrom == 0) {
                         txtNoData.setVisibility(View.VISIBLE);
                         rvPeople.setVisibility(View.GONE);
@@ -259,7 +259,8 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void askConfirmationAndProceed(PeopleModel peopleModel) {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName), view -> requestForUnFollowUser(peopleModel.userId));
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(peopleModel.firstName)
+                .concat(" ").concat(peopleModel.lastName).concat("?"), view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override

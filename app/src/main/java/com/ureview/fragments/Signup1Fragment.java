@@ -317,9 +317,9 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private void parseUserRegistrationResponse(JsonObject response) {
         if (response.has("status")) {
             if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                if (response.has("message")) {
-                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
-                }
+//                if (response.has("message")) {
+//                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
+//                }
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
                     try {
@@ -334,13 +334,14 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 }
 //                customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
 //                customDialog.show();
-                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(splashActivity, MainActivity.class));
-                        splashActivity.finishAffinity();
-                    }
-                }, null, true);
+                DialogUtils.showSimpleDialog(splashActivity, "Registration Successfull", "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!"
+                        , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(splashActivity, MainActivity.class));
+                                splashActivity.finishAffinity();
+                            }
+                        }, null, true);
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());
             }

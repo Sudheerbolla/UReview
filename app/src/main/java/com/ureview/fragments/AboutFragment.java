@@ -96,7 +96,7 @@ public class AboutFragment extends BaseFragment {
             }
             if (userInfoModel != null) {
                 if (txtEmail != null) txtEmail.setText(userInfoModel.email);
-                if (txtAge != null) txtAge.setText(userInfoModel.age);
+                if (txtAge != null) txtAge.setText(userInfoModel.age.concat(" Years"));
                 if (txtAboutMe != null && !TextUtils.isEmpty(userInfoModel.user_description))
                     txtAboutMe.setText(userInfoModel.user_description);
             }

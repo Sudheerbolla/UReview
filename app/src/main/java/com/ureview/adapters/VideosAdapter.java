@@ -81,6 +81,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.CategoryVi
                 setProfileRating(holder, 0f);
             }
             holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
+            holder.txtDuration.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);
             holder.txtDuration.setText(videoModel.videoDuration);
             holder.txtViewCount.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -86,7 +86,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         public void run() {
             if (seekBar != null) {
                 seekBar.setProgress(videoView.getCurrentPosition() / 1000);
-                tvLeft.setText(StaticUtils.getTime(videoView.getCurrentPosition() / 1000));
+                tvLeft.setText(StaticUtils.stringForTime(videoView.getCurrentPosition()));
             }
             if (videoView.isPlaying()) {
                 seekBar.postDelayed(onEverySecond, 1000);
@@ -97,7 +97,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 imgPlay.setVisibility(View.VISIBLE);
                 imgPlayPause.setSelected(false);
                 seekBar.setProgress(0);
-                tvLeft.setText("00:00:00");
+                tvLeft.setText("00:00");
             }
             Log.e("vid time", (videoView.getCurrentPosition()) + ", " + (videoView.getDuration()));
         }
@@ -196,7 +196,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
         linBody = rootView.findViewById(R.id.linBody);
         txtLocation = rootView.findViewById(R.id.txtLocation);
         tvLeft = rootView.findViewById(R.id.time_current);
-        tvLeft.setText("00:00:00");
+        tvLeft.setText("00:00");
         tvRight = rootView.findViewById(R.id.player_end_time);
         txtCategory = rootView.findViewById(R.id.txtCategory);
         edtVideoTitle = rootView.findViewById(R.id.edtVideoTitle);
@@ -355,7 +355,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
                 duration = mp.getDuration() / 1000;
 //                tvLeft.setText("00:00:00");
 
-                tvRight.setText(StaticUtils.getTime(mp.getDuration() / 1000));
+                tvRight.setText(StaticUtils.stringForTime(mp.getDuration()));
                 mp.setLooping(true);
                 seekBar.setMax(duration);
 //                seekBar.postDelayed(onEverySecond, 500);

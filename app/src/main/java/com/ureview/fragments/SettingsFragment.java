@@ -133,7 +133,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 }, null);
                 break;
             case R.id.txtShare:
-                shareViaIntent("YouReview App", "Found a very good new app. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
+                shareViaIntent("YouReview App", "Haven't tried YouReview yet? Signup and watch into the reviews App Link. https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName());
                 break;
             case R.id.txtPrivacy:
                 mainActivity.replaceFragment(StaticPagesFragment.newInstance("Privacy Policies", "privacy-policy"), true, R.id.mainContainer);

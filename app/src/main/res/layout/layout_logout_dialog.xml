@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:drawableStart="@mipmap/ic_launcher"
             android:gravity="center"
-            android:text="@string/app_name"
+            android:text=""
             android:textSize="@dimen/txt_size_18sp"
             app:txt_font_type="bold" />
 

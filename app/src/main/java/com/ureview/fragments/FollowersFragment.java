@@ -177,8 +177,14 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     followModelArrayList.get(selectedPosition).status = "1";
                     followModelArrayList.get(selectedPosition).follow_status = "";
-                    followModelArrayList.remove(selectedPosition);
-                    followersAdapter.notifyItemRemoved(selectedPosition);
+                    if (!showFollowers) {
+                        followModelArrayList.remove(selectedPosition);
+                        followersAdapter.notifyItemRemoved(selectedPosition);
+                        followersAdapter.notifyDataSetChanged();
+                        checkIfDataAvailable();
+                    } else {
+                        followersAdapter.notifyItemChanged(selectedPosition);
+                    }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -188,12 +194,18 @@ public class FollowersFragment extends BaseFragment implements IParserListener<J
         }
     }
 
+    private void checkIfDataAvailable() {
+        txtNoData.setVisibility(followModelArrayList.size() > 0 ? View.GONE : View.VISIBLE);
+        rvFollowers.setVisibility(followModelArrayList.size() > 0 ? View.VISIBLE : View.GONE);
+    }
+
     private void parseBlockUserResponse(JsonObject response) {
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     followModelArrayList.remove(selectedPosition);
                     followersAdapter.notifyDataSetChanged();
+                    checkIfDataAvailable();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }

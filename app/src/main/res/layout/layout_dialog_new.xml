@@ -27,7 +27,6 @@
             android:layout_gravity="center"
             android:drawableStart="@mipmap/ic_launcher"
             android:gravity="center"
-            android:text="@string/app_name"
             android:textColor="@color/colorBlack"
             android:textSize="@dimen/txt_size_18sp"
             app:txt_font_type="bold" />
@@ -69,11 +68,11 @@
             android:layout_marginEnd="@dimen/pad_5"
             android:layout_marginStart="@dimen/pad_5"
             android:layout_marginTop="@dimen/pad_10"
-            android:background="@drawable/bg_custom_btn_app_color_h"
+            android:background="@drawable/bg_custom_btn_app_color"
             android:gravity="center"
             android:padding="@dimen/pad_7"
             android:text="Ok"
-            android:textColor="@color/app_color_medium"
+            android:textColor="@color/color_white"
             android:textSize="@dimen/txt_size_16sp"
             app:txt_font_type="bold" />
 

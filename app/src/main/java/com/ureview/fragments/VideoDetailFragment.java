@@ -107,7 +107,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     private SurfaceView svPlayer;
     private ProgressBar progressBar;
     private SeekBar mediacontrollerProgress;
-    private RelativeLayout linMediaController;
+    private RelativeLayout linMediaController, rlUploadedBy;
     private FrameLayout playerFrameLayout;
 
     private SimpleExoPlayer exoPlayer;
@@ -630,6 +630,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
         innerFrame = rootView.findViewById(R.id.innerFrame);
         progressBar = rootView.findViewById(R.id.progressBar);
+        rlUploadedBy = rootView.findViewById(R.id.rlUploadedBy);
 
         nestedScrollView.smoothScrollTo(0, 0);
 
@@ -640,6 +641,7 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         imgback.setOnClickListener(this);
         imgFullScreen.setOnClickListener(this);
         imgMute.setOnClickListener(this);
+        rlUploadedBy.setOnClickListener(this);
 
         feedVideoList = new ArrayList<>();
         relatedVideoList = new ArrayList<>();
@@ -700,11 +702,10 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
         txtUserLoc.setText(feedVideo.city);
         if (userId.equalsIgnoreCase(feedVideo.userId)) {
             txtFollowStatus.setVisibility(View.GONE);
-            llRate.setAlpha(0.5f);
         } else {
             txtFollowStatus.setVisibility(View.VISIBLE);
-            llRate.setAlpha(1f);
         }
+        llRate.setAlpha(userId.equalsIgnoreCase(feedVideo.userId) || feedVideo.ratingGiven == 1 ? 0.5f : 1f);
 
         if (TextUtils.isEmpty(feedVideo.followStatus)) {
             txtFollowStatus.setText("Follow");
@@ -824,6 +825,10 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
                     exoPlayer.setVolume(0f);
                 imgMute.setSelected(!imgMute.isSelected());
                 break;
+            case R.id.rlUploadedBy:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideo.userId,
+                        feedVideo.firstName.concat(" ").concat(feedVideo.lastName)), true, R.id.mainContainer);
+                break;
             default:
                 break;
         }
@@ -841,7 +846,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     }
 
     private void askConfirmationAndProceed() {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, feedVideo.firstName.concat(" ").concat(feedVideo.lastName),
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you wat to Unfollow ".concat(feedVideo.firstName)
+                        .concat(" ").concat(feedVideo.lastName).concat("?"),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1056,6 +1062,8 @@ public class VideoDetailFragment extends DialogFragment implements IClickListene
     }
 
     private void parseVideoRatingResponse() {
+        feedVideo.ratingGiven = 1;
+        llRate.setAlpha(0.5f);
         DialogUtils.showRatingSuccessDialog(mainActivity, "Rating submitted successfully");
     }
 

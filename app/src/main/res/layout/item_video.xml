@@ -129,6 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtTags"
         android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/pad_2"
         android:layout_toEndOf="@+id/txtViewCount"
         android:drawablePadding="@dimen/pad_3"
         android:drawableStart="@drawable/vector_location"
@@ -141,7 +142,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtDistance"
-        android:layout_marginTop="@dimen/pad_2"
+        android:layout_marginTop="@dimen/pad_1"
         android:layout_toEndOf="@+id/llRatingBar"
         android:textColor="@color/color_vvvDarkGrey"
         android:textSize="@dimen/txt_size_11sp" />

@@ -20,7 +20,8 @@
         <RelativeLayout
             android:id="@+id/relRanking"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
             <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtRanking"
@@ -45,6 +46,7 @@
                 android:textSize="@dimen/txt_size_15sp" />
 
             <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtViews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -56,12 +58,12 @@
                 android:textColor="@color/color_vDarkGrey"
                 android:textSize="@dimen/txt_size_15sp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/txtViews"
+                android:background="@color/color_vvvDarkGrey" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/color_vvvDarkGrey" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvRankings"

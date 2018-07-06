@@ -28,6 +28,13 @@ public class CustomTextView extends AppCompatTextView {
         String fontPath;
         TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.CustomTextView);
         int font_val = typedArray.getInteger(R.styleable.CustomTextView_txt_font_type, 1);
+        setFontToTextView(font_val);
+        setLineSpacing(1, 1.2f);
+        typedArray.recycle();
+    }
+
+    public void setFontToTextView(int font_val) {
+        String fontPath;
         switch (font_val) {
             case 0:
                 fontPath = "AvenirLTStd-Light.otf";
@@ -47,7 +54,6 @@ public class CustomTextView extends AppCompatTextView {
         }
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), fontPath);
         setTypeface(tf);
-        typedArray.recycle();
     }
 
 }

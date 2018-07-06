@@ -92,6 +92,7 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
 
             rvPeople = rootView.findViewById(R.id.rvFollowers);
             txtNoData = rootView.findViewById(R.id.txtNoData);
+            txtNoData.setVisibility(View.GONE);
             imgClose = rootView.findViewById(R.id.imgClose);
             imgClose.setOnClickListener(view -> dismiss());
             setAdapter();
@@ -243,7 +244,8 @@ public class VideoViewedPeopleFragment extends BottomSheetDialogFragment impleme
 
     private void askConfirmationAndProceed(int position) {
         final PeopleModel peopleModel = peopleArrList.get(position);
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, peopleModel.firstName.concat(" ").concat(peopleModel.lastName),
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(peopleModel.firstName)
+                        .concat(" ").concat(peopleModel.lastName).concat("?"),
                 view -> requestForUnFollowUser(peopleModel.userId));
     }
 

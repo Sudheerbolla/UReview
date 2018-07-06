@@ -120,7 +120,7 @@ public class ReportVideoFragment extends DialogFragment implements IParserListen
             case WSUtils.REQ_FOR_REPORT_VIDEO:
                 JsonObject jsonObject = (JsonObject) response;
                 if (jsonObject.has("message"))
-                    DialogUtils.showSimpleDialog(mainActivity, jsonObject.get("message").getAsString(), view -> dismiss(), view -> {
+                    DialogUtils.showSimpleDialog(mainActivity, "", jsonObject.get("message").getAsString(), view -> dismiss(), view -> {
                     }, true);
                 break;
         }

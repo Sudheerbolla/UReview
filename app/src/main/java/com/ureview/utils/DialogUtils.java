@@ -152,6 +152,10 @@ public class DialogUtils implements View.OnClickListener {
         showSimpleDialog(mContext, null, message, null, null, positiveClick, negativeClick, singleButton);
     }
 
+    public static void showSimpleDialog(final Context mContext, final String heading, final String message, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick, final boolean singleButton) {
+        showSimpleDialog(mContext, heading, message, null, null, positiveClick, negativeClick, singleButton, true);
+    }
+
     public static void showSimpleDialog(final Context mContext, final String heading, final String message, final String positiveText, final String negativeText, final View.OnClickListener positiveClick, final View.OnClickListener negativeClick, final boolean singleButton) {
         showSimpleDialog(mContext, heading, message, positiveText, negativeText, positiveClick, negativeClick, singleButton, true);
     }
@@ -276,6 +280,8 @@ public class DialogUtils implements View.OnClickListener {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
             txtHeading.setText("Rate this Video");
+            txtHeading.setFontToTextView(1);
+            txtHeading.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
             txtPositiveButton.setText("Submit your rating");
             txtPositiveButton.setOnClickListener(v -> {
                 alertDialog.dismiss();
@@ -314,7 +320,7 @@ public class DialogUtils implements View.OnClickListener {
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
 
-            txtHeading.setText(TextUtils.isEmpty(heading) ? mContext.getString(R.string.app_name) : heading);
+//            txtHeading.setText(TextUtils.isEmpty(heading.trim()) ? mContext.getString(R.string.app_name) : heading);
             txtMessage.setText(message);
 
             txtPositiveButton.setText(TextUtils.isEmpty(positiveText) ? "Ok" : positiveText);
