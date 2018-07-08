@@ -3,7 +3,9 @@ package com.ureview.utils.views;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.Layout;
 import android.util.AttributeSet;
 
 import com.ureview.R;
@@ -54,6 +56,9 @@ public class CustomTextView extends AppCompatTextView {
         }
         Typeface tf = Typeface.createFromAsset(getContext().getAssets(), fontPath);
         setTypeface(tf);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
     }
 
 }

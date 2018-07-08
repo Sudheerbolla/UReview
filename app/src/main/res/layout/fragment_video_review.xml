@@ -294,7 +294,7 @@
                 android:layout_below="@+id/dividerView"
                 android:layout_marginTop="@dimen/pad_3"
                 android:padding="@dimen/pad_8"
-                android:text="See all"
+                android:text="More"
                 android:textColor="@color/app_text_color"
                 android:textSize="@dimen/txt_size_15sp" />
 

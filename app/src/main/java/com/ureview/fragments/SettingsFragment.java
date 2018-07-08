@@ -44,7 +44,7 @@ import retrofit2.Call;
 public class SettingsFragment extends BaseFragment implements View.OnClickListener, IParserListener<JsonElement> {
 
     private View rootView;
-    private CustomTextView txtShare, txtPrivacy, txtTerms,
+    private CustomTextView txtShare, txtPrivacy, txtTerms, txtRateApp,
             txtHelp, txtContactUs, txtLogout, txtDelAcc, txtVersion;
     private MainActivity mainActivity;
     private String baseUrl = "";
@@ -77,6 +77,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         txtLogout = rootView.findViewById(R.id.txtLogout);
         txtContactUs = rootView.findViewById(R.id.txtContactUs);
         txtVersion = rootView.findViewById(R.id.txtVersion);
+        txtRateApp = rootView.findViewById(R.id.txtRateApp);
 
         txtShare.setOnClickListener(this);
         txtLogout.setOnClickListener(this);
@@ -85,6 +86,7 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         txtTerms.setOnClickListener(this);
         txtPrivacy.setOnClickListener(this);
         txtContactUs.setOnClickListener(this);
+        txtRateApp.setOnClickListener(this);
         getVersion();
 //        sendNotification("Test");
     }
@@ -137,6 +139,9 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.txtPrivacy:
                 mainActivity.replaceFragment(StaticPagesFragment.newInstance("Privacy Policies", "privacy-policy"), true, R.id.mainContainer);
+                break;
+            case R.id.txtRateApp:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + mainActivity.getPackageName())));
                 break;
             default:
                 break;

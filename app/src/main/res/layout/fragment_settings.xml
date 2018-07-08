@@ -108,6 +108,26 @@
                 android:background="@color/colorNormalGrey" />
 
             <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtRateApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/pad_19"
+                android:drawableStart="@drawable/rating_pink_24"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/pad_15"
+                android:paddingLeft="@dimen/pad_12"
+                android:paddingRight="@dimen/pad_15"
+                android:paddingTop="@dimen/pad_15"
+                android:text="Rate the App"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/txt_size_15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.9dp"
+                android:background="@color/colorNormalGrey" />
+
+            <com.ureview.utils.views.CustomTextView
                 android:id="@+id/txtLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,15 +167,15 @@
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/llOptions"
-            android:text="1.0"
-            android:gravity="bottom"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_below="@+id/llOptions"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/pad_15"
             android:layout_marginTop="@dimen/pad_20"
+            android:gravity="bottom"
             android:padding="@dimen/pad_10"
+            android:text="1.0"
             android:textColor="@color/color_vvvDarkGrey"
             android:textSize="@dimen/txt_size_11sp" />
 

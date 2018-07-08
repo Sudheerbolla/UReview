@@ -159,10 +159,13 @@ public class LocationFilterFragment extends DialogFragment implements View.OnCli
     public void onButtonPressed(boolean isUseCurrentLocation) {
         FilterModel filterModel = new FilterModel();
         filterModel.isUseCurrentLocation = isUseCurrentLocation;
-        filterModel.addressLine = addressLine;
+        if (addressLine != null)
+            filterModel.addressLine = addressLine;
         if (MainActivity.mLastLocation != null) {
             filterModel.locationLat = selLat == null ? String.valueOf(MainActivity.mLastLocation.getLatitude()) : selLat;
             filterModel.locationLng = selLong == null ? String.valueOf(MainActivity.mLastLocation.getLongitude()) : selLong;
+            if (addressLine == null)
+                filterModel.addressLine = StaticUtils.getAddress(mainActivity, MainActivity.mLastLocation.getLatitude(), MainActivity.mLastLocation.getLongitude());
         }
         filterModel.locationMax = rangeSeekbar.getSelectedMaxValue().toString();
         filterModel.locationMin = rangeSeekbar.getSelectedMinValue().toString();

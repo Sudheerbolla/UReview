@@ -175,9 +175,9 @@
                     android:layout_marginStart="@dimen/pad_2"
                     android:layout_toEndOf="@+id/txtViewCount"
                     android:drawablePadding="@dimen/pad_5"
-                    android:drawableStart="@drawable/location_small_copy"
+                    android:drawableStart="@drawable/vector_location"
                     android:gravity="center"
-                    android:padding="@dimen/pad_7"
+                    android:padding="@dimen/pad_5"
                     android:textColor="@color/color_vvvDarkGrey"
                     android:textSize="@dimen/txt_size_11sp" />
 

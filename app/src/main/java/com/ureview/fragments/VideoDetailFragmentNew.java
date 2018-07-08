@@ -1,7 +1,6 @@
 package com.ureview.fragments;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
@@ -28,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -52,6 +50,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
@@ -70,6 +69,7 @@ import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,20 +83,21 @@ import retrofit2.Call;
 
 import static android.view.Gravity.CENTER;
 
-public class VideoDetailFragmentDraggable extends DialogFragment implements IClickListener, View.OnClickListener,
+public class VideoDetailFragmentNew extends BaseFragment implements IClickListener, View.OnClickListener,
         IParserListener<JsonElement>, IVideosClickListener, Player.EventListener {
-    private static final String TAG = VideoDetailFragmentDraggable.class.getSimpleName();
+    private static final String TAG = VideoDetailFragmentNew.class.getSimpleName();
     private final String STATE_RESUME_WINDOW = "resumeWindow";
     private final String STATE_RESUME_POSITION = "resumePosition";
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
 
     private ImageView imgCatBg, imgProfile, imgStar1, imgStar2, imgStar3, imgStar4, imgStar5, btnPlay, imgback, imgFullScreen, imgMute;
     private CustomTextView txtVideoTitle, txtCategory, txtViewCount, txtDistance, txtRatingno, txtLocation,
-            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime;
+            txtTags, txtFollowStatus, txtUserName, txtUserLoc, txtNoData, timeCurrent, playerEndTime, txtRelatedVideos;
     private LinearLayout llRate, llShare, llDirection, llReport;
     private CustomRecyclerView rvRelatedVideos;
     private VideosAdapter videosAdapter;
-    private ArrayList<VideoModel> feedVideoList = new ArrayList<>();
+    private ArrayList<VideoModel> feedVideoList;
+    private ArrayList<VideoModel> relatedVideoList;
     private VideoModel feedVideo;
     private NestedScrollView nestedScrollView;
     private View rootView;
@@ -105,7 +106,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     private SurfaceView svPlayer;
     private ProgressBar progressBar;
     private SeekBar mediacontrollerProgress;
-    private RelativeLayout linMediaController;
+    private RelativeLayout linMediaController, rlUploadedBy;
     private FrameLayout playerFrameLayout;
 
     private SimpleExoPlayer exoPlayer;
@@ -124,22 +125,38 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     private int mResumeWindow;
     private long mResumePosition;
     private int screenWidth, screenHeight, containerHeight;
+    private String currLat = "", currLng = "";
+    private boolean updateViewCount;
+    private String vidType = "";
 
-    public static VideoDetailFragmentDraggable newInstance(ArrayList<VideoModel> feedVideoList, int position) {
-        VideoDetailFragmentDraggable videoDetailFragment = new VideoDetailFragmentDraggable();
+    public static VideoDetailFragmentNew newInstance(ArrayList<VideoModel> feedVideoList, int position, String vidType) {
+        VideoDetailFragmentNew videoDetailFragment = new VideoDetailFragmentNew();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("news_feed", feedVideoList);
+        bundle.putInt("position", position);
+        bundle.putString("vidType", vidType);
+        videoDetailFragment.setArguments(bundle);
+        return videoDetailFragment;
+    }
+
+    public static VideoDetailFragmentNew newInstance(ArrayList<VideoModel> feedVideoList, int position) {
+        VideoDetailFragmentNew videoDetailFragment = new VideoDetailFragmentNew();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("news_feed", feedVideoList);
         bundle.putInt("position", position);
         videoDetailFragment.setArguments(bundle);
         return videoDetailFragment;
-
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mainActivity = (MainActivity) getActivity();
-        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
+        if (MainActivity.mLastLocation != null) {
+            currLat = String.valueOf(MainActivity.mLastLocation.getLatitude());
+            currLng = String.valueOf(MainActivity.mLastLocation.getLongitude());
+        }
+//        setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
         if (savedInstanceState != null) {
             mResumeWindow = savedInstanceState.getInt(STATE_RESUME_WINDOW);
@@ -159,7 +176,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_video_detail_draggable, container, false);
+        rootView = inflater.inflate(R.layout.fragment_video_detail_old, container, false);
         getBundleData();
         initComponents();
         initVideoPlayer2();
@@ -180,7 +197,6 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(true);
                 btnPlay.setSelected(true);
-//                svPlayer.setResizeMode
                 setProgress();
             }
         }
@@ -294,19 +310,12 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         });
     }
 
-    VideoView videoView;
-
     private void initMp4Player() {
         if (feedVideo != null && feedVideo.video != null) {
             MediaSource sampleSource = new ExtractorMediaSource(Uri.parse(feedVideo.video), dataSourceFactory, new DefaultExtractorsFactory(), handler, error -> {
 
             });
             initExoPlayer(sampleSource);
-            videoView = new VideoView(mainActivity);
-            Uri uri = Uri.parse(feedVideo.video);
-            videoView.setVideoURI(uri);
-            videoView.requestFocus();
-            videoView.start();
         }
     }
 
@@ -369,6 +378,8 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     @Override
     public void onResume() {
         super.onResume();
+        if (mainActivity != null)
+            mainActivity.topBar.setVisibility(View.GONE);
         initFullscreenDialog();
         if (mExoPlayerFullscreen) {
             ((ViewGroup) svPlayer.getParent()).removeView(svPlayer);
@@ -495,8 +506,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
             params.gravity = CENTER;
             container.setLayoutParams(params);
         } else {
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.gravity = CENTER;
             container.setLayoutParams(params);
         }
@@ -572,13 +582,15 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
                     positionToHide = bundle.getInt("position");
                 }
             }
+            if (bundle.containsKey("vidType"))
+                vidType = bundle.getString("vidType");
         }
     }
 
-    @Override
-    public int getTheme() {
-        return R.style.growAnim;
-    }
+//    @Override
+//    public int getTheme() {
+//        return R.style.growAnim;
+//    }
 
     private void initComponents() {
 //        mainActivity.hideTopbar();
@@ -606,6 +618,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         txtFollowStatus = rootView.findViewById(R.id.txtFollowStatus);
         txtUserName = rootView.findViewById(R.id.txtUserName);
         txtUserLoc = rootView.findViewById(R.id.txtUserLoc);
+        txtRelatedVideos = rootView.findViewById(R.id.txtRelatedVideos);
         rvRelatedVideos = rootView.findViewById(R.id.rvRelatedVideos);
         txtNoData = rootView.findViewById(R.id.txtNoData);
         nestedScrollView = rootView.findViewById(R.id.nestedScrollView);
@@ -618,6 +631,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         playerFrameLayout = rootView.findViewById(R.id.player_frame_layout);
         innerFrame = rootView.findViewById(R.id.innerFrame);
         progressBar = rootView.findViewById(R.id.progressBar);
+        rlUploadedBy = rootView.findViewById(R.id.rlUploadedBy);
 
         nestedScrollView.smoothScrollTo(0, 0);
 
@@ -628,11 +642,14 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         imgback.setOnClickListener(this);
         imgFullScreen.setOnClickListener(this);
         imgMute.setOnClickListener(this);
+        rlUploadedBy.setOnClickListener(this);
 
+        feedVideoList = new ArrayList<>();
+        relatedVideoList = new ArrayList<>();
         rvRelatedVideos.setNestedScrollingEnabled(false);
         videosAdapter = new VideosAdapter(mainActivity, this, false, "");
         rvRelatedVideos.setAdapter(videosAdapter);
-
+        requestForRelatedVideos();
         if (feedVideo != null)
             setVideoDetails();
     }
@@ -674,7 +691,7 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         txtDistance.setText(feedVideo.distance);
         if (!TextUtils.isEmpty(feedVideo.videoRating))
             setProfileRating(Float.parseFloat(feedVideo.videoRating));
-        txtRatingno.setText("(".concat(String.valueOf(String.valueOf(feedVideo.customerRating)).concat(")")));
+        txtRatingno.setText("(".concat(String.valueOf(feedVideo.ratingGiven == null ? 0 : String.valueOf(feedVideo.customerRating)).concat(")")));
         txtCategory.setText(feedVideo.categoryName);
         Glide.with(this).load(feedVideo.categoryBgImage).into(imgCatBg);
         txtLocation.setText(feedVideo.videoLocation);
@@ -686,11 +703,11 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         txtUserLoc.setText(feedVideo.city);
         if (userId.equalsIgnoreCase(feedVideo.userId)) {
             txtFollowStatus.setVisibility(View.GONE);
-            llRate.setAlpha(0.5f);
         } else {
             txtFollowStatus.setVisibility(View.VISIBLE);
-            llRate.setAlpha(1f);
         }
+        llRate.setAlpha(userId.equalsIgnoreCase(feedVideo.userId) || feedVideo.ratingGiven == 1 ? 0.5f : 1f);
+        llReport.setAlpha(userId.equalsIgnoreCase(feedVideo.userId) ? 0.5f : 1f);
 
         if (TextUtils.isEmpty(feedVideo.followStatus)) {
             txtFollowStatus.setText("Follow");
@@ -703,14 +720,14 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         txtViewCount.setOnClickListener(this);
         txtDistance.setOnClickListener(this);
 
-        if (feedVideoList.size() > 0) {
-            videosAdapter.addVideos(feedVideoList);
-            rvRelatedVideos.setVisibility(View.VISIBLE);
-            txtNoData.setVisibility(View.GONE);
-        } else {
-            rvRelatedVideos.setVisibility(View.GONE);
-            txtNoData.setVisibility(View.VISIBLE);
-        }
+//        if (feedVideoList.size() > 0) {
+//            videosAdapter.addVideos(feedVideoList);
+//            rvRelatedVideos.setVisibility(View.VISIBLE);
+//            txtNoData.setVisibility(View.GONE);
+//        } else {
+//            rvRelatedVideos.setVisibility(View.GONE);
+//            txtNoData.setVisibility(View.VISIBLE);
+//        }
     }
 
     @Override
@@ -735,14 +752,30 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
 
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
-        VideoModel toBeAdded = feedVideo;
-        feedVideo = feedVideoList.get(position);
-        feedVideoList.remove(position);
-        feedVideoList.add(toBeAdded);
-        videosAdapter.addVideos(feedVideoList);
-        if (feedVideo != null) {
-            setVideoDetails();
-            initMp4Player();
+//        VideoModel toBeAdded = feedVideo;
+//        feedVideo = feedVideoList.get(position);
+//        feedVideoList.remove(position);
+//        feedVideoList.add(toBeAdded);
+//        videosAdapter.addVideos(feedVideoList);
+//        if (feedVideo != null) {
+//            setVideoDetails();
+//            initMp4Player();
+//        }
+        switch (view.getId()) {
+            case R.id.txtViewCount:
+//                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
+//                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                VideoViewedPeopleFragmentNew videoViewedPeopleFragmentNew = VideoViewedPeopleFragmentNew.newInstance(videoModel.id);
+                mainActivity.replaceFragment(videoViewedPeopleFragmentNew, true, R.id.mainContainer);
+                break;
+            case R.id.txtDistance:
+                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(mapIntent);
+                break;
+            default:
+                break;
         }
     }
 
@@ -761,11 +794,13 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
                 mainActivity.replaceFragment(videoViewedPeopleFragmentNew, true, R.id.mainContainer);
                 break;
             case R.id.txtDistance:
-                String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
-                        MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
-                        feedVideo.videoLongitude;
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(mapIntent);
+                if (MainActivity.mLastLocation != null && feedVideo != null) {
+                    String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
+                            MainActivity.mLastLocation.getLongitude() + "&daddr=" + feedVideo.videoLatitude + "," +
+                            feedVideo.videoLongitude;
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(mapIntent);
+                }
                 break;
             case R.id.txtFollowStatus:
                 if (txtFollowStatus.isSelected()) {
@@ -789,13 +824,17 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
                 break;
             case R.id.llReport:
 //                mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
-                ReportVideoFragment countrySelectionFragment = ReportVideoFragment.newInstance(feedVideo.id);
-                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                if (!feedVideo.userId.equalsIgnoreCase(userId)) {
+                    ReportVideoFragment countrySelectionFragment = ReportVideoFragment.newInstance(feedVideo.id);
+                    countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+                    countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "");
+                } else {
+                    StaticUtils.showToast(mainActivity, "You can't report your own video");
+                }
 //                mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
                 break;
             case R.id.imgback:
-                dismiss();
+                mainActivity.onBackPressed();
                 break;
             case R.id.imgFullScreen:
                 if (!mExoPlayerFullscreen)
@@ -810,19 +849,28 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
                     exoPlayer.setVolume(0f);
                 imgMute.setSelected(!imgMute.isSelected());
                 break;
+            case R.id.rlUploadedBy:
+                mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideo.userId,
+                        feedVideo.firstName.concat(" ").concat(feedVideo.lastName)), true, R.id.mainContainer);
+                break;
             default:
                 break;
         }
     }
 
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-//        getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-    }
+//    @Override
+//    public void onDismiss(DialogInterface dialog) {
+//        super.onDismiss(dialog);
+//        Intent intent = new Intent();
+//        intent.putExtra("position", positionToHide);
+//        if (!TextUtils.isEmpty(vidType))
+//            intent.putExtra("vidType", vidType);
+//        if (getTargetFragment() != null)
+//            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+//    }
 
     private void askConfirmationAndProceed() {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(feedVideo.firstName)
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you wat to Unfollow ".concat(feedVideo.firstName)
                         .concat(" ").concat(feedVideo.lastName).concat("?"),
                 new View.OnClickListener() {
                     @Override
@@ -865,7 +913,8 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
 
     private void shareVideoWithFriends() {
         Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.setType("video/3gp");
+        sendIntent.setType("video/mp4");
+//        sendIntent.setType("file/*");
         sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Video");
         sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(feedVideo.video));
         sendIntent.putExtra(Intent.EXTRA_TEXT, "Enjoy the Video");
@@ -887,6 +936,16 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         final TextView textView = new TextView(mainActivity);
         DialogUtils dialogUtils = new DialogUtils();
         dialogUtils.showRatingDialog(mainActivity, view -> requestForGiveRating(textView.getText().toString().trim()), textView);
+    }
+
+    private void requestForRelatedVideos() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("user_id", LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, ""));
+        hashMap.put("id", feedVideo.id);
+        hashMap.put("current_latitude", currLat);
+        hashMap.put("current_longitude", currLng);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getRelatedVideos(hashMap);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_RELATED_VIDEOS, call, this);
     }
 
     private void requestForShareVideo() {
@@ -935,6 +994,9 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
+            case WSUtils.REQ_FOR_RELATED_VIDEOS:
+                parseRelatedVideos(response);
+                break;
             case WSUtils.REQ_FOR_RATING_VIDEO:
                 parseVideoRatingResponse();
                 break;
@@ -950,11 +1012,44 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
         }
     }
 
+    private void parseRelatedVideos(JsonElement response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response.toString());
+            relatedVideoList.clear();
+            if (jsonObject.getString("status").equalsIgnoreCase("success")) {
+                txtViewCount.setText(String.valueOf(Integer.valueOf(feedVideo.videoWatchedCount) + 1));
+                updateViewCount = true;
+                if (jsonObject.has("videos")) {
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("related_videos");
+                    for (int i = 0; i < feedVidArr.length(); i++) {
+                        Gson gson = new Gson();
+                        VideoModel videoModel = gson.fromJson(feedVidArr.get(i).toString(), VideoModel.class);
+                        relatedVideoList.add(videoModel);
+                    }
+                    if (relatedVideoList.size() > 0) {
+                        rvRelatedVideos.setVisibility(View.VISIBLE);
+                        txtRelatedVideos.setVisibility(View.VISIBLE);
+                    } else {
+                        rvRelatedVideos.setVisibility(View.GONE);
+                        txtRelatedVideos.setVisibility(View.GONE);
+                    }
+                    videosAdapter.addVideos(relatedVideoList);
+                }
+            } else {
+                rvRelatedVideos.setVisibility(View.GONE);
+                txtRelatedVideos.setVisibility(View.GONE);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void parseShareVideoResponse(JsonElement res) {
         try {
             JSONObject response = new JSONObject(res.toString());
             if (response.has("message")) {
-                StaticUtils.showToast(mainActivity, response.getString("message"));
+                DialogUtils.showSimpleDialog(mainActivity, response.getString("message"), null, null, true);
+//                StaticUtils.showToast(mainActivity, response.getString("message"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -994,6 +1089,8 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
     }
 
     private void parseVideoRatingResponse() {
+        feedVideo.ratingGiven = 1;
+        llRate.setAlpha(0.5f);
         DialogUtils.showRatingSuccessDialog(mainActivity, "Rating submitted successfully");
     }
 
@@ -1028,7 +1125,8 @@ public class VideoDetailFragmentDraggable extends DialogFragment implements ICli
 //            else applyAspectRatio(innerFrame, exoPlayer);
             else applyAspectRatio(innerFrame);
         }
-        progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
+        if (progressBar != null)
+            progressBar.setVisibility(playbackState == ExoPlayer.STATE_BUFFERING ? View.VISIBLE : View.GONE);
     }
 
     @Override

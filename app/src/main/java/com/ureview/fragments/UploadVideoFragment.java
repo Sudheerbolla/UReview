@@ -313,7 +313,7 @@ public class UploadVideoFragment extends BaseFragment implements IParserListener
             return "Enter Video Title";
         }
         if (TextUtils.isEmpty(edtTags.getText().toString().trim())) {
-            return "Enter Tags";
+            return "No tags expressed for this video";
         }
         if (categoryId.equalsIgnoreCase("-1")) {
             return "Select Video Category";

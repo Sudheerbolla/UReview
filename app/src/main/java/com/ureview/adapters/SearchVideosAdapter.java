@@ -81,7 +81,7 @@ public class SearchVideosAdapter extends RecyclerView.Adapter<SearchVideosAdapte
         holder.txtSynth.setText(videoModel.videoTitle);
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
+        holder.txtRatingsNo.setText("(".concat(String.valueOf(videoModel.customerRating)).concat(")"));
         setProfileRating(holder, Float.parseFloat(TextUtils.isEmpty(videoModel.videoRating) ? "0f" : videoModel.videoRating));
         holder.txtLocBtm.setText(videoModel.city);
         holder.txtLength.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);

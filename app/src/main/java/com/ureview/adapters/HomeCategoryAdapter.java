@@ -1,7 +1,6 @@
 package com.ureview.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.CategoryModel;
@@ -46,13 +43,13 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
 
-        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
-                into(new SimpleTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                        holder.llCat.setBackground(resource);
-                    }
-                });
+//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
+//                into(new SimpleTarget<Drawable>() {
+//                    @Override
+//                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+//                        holder.llCat.setBackground(resource);
+//                    }
+//                });
 
 //        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage).
 //                into(new SimpleTarget<Drawable>() {
@@ -62,8 +59,8 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
 //                    }
 //                });
 
-//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
-//                .into(holder.imgCatBg);
+        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
+                .into(holder.imgCatBg);
         Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage)
                 .into(holder.imgCat);
 
@@ -90,6 +87,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         public CategoryViewHolder(View itemView) {
             super(itemView);
             txtCategory = itemView.findViewById(R.id.txtCategory);
+            imgCatBg = itemView.findViewById(R.id.imgCatBg);
             imgCat = itemView.findViewById(R.id.imgCat);
             llCat = itemView.findViewById(R.id.llCat);
         }

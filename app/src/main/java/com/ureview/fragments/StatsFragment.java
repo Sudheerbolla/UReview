@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import com.ureview.models.UserStatsModel;
 import com.ureview.models.VideoViewsModel;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
+import com.ureview.utils.views.CustomTextView;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -49,11 +51,13 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
     private RecyclerView rvRankings;
     private MainActivity mainActivity;
     private LineChart chart;
+    private CustomTextView txtYourRank;
     private ArrayList<UserStatsModel> userStatsModelArrayList;
     private ArrayList<VideoViewsModel> videoViewsModelArrayList;
     private VideoViewRankingAdapter videoViewRankingAdapter;
     private String userId;
     private RelativeLayout relRanking;
+    private String rank;
 
     public static StatsFragment newInstance(String userId) {
         StatsFragment followersFragment = new StatsFragment();
@@ -91,6 +95,7 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
         chart = rootView.findViewById(R.id.chart);
         rvRankings = rootView.findViewById(R.id.rvRankings);
         relRanking = rootView.findViewById(R.id.relRanking);
+        txtYourRank = rootView.findViewById(R.id.txtYourRank);
         requestForGetRankingsWS();
 
         ViewCompat.setNestedScrollingEnabled(rootView.findViewById(R.id.nestedScrollView), true);
@@ -197,13 +202,20 @@ public class StatsFragment extends BaseFragment implements IParserListener<JsonE
                             JsonArray videoViewsArray = response.get("video_views").getAsJsonArray();
                             if (videoViewsArray.size() > 0) {
                                 for (int i = 0; i < videoViewsArray.size(); i++) {
-                                    videoViewsModelArrayList.add(new VideoViewsModel(videoViewsArray.get(i).getAsJsonObject()));
+                                    VideoViewsModel vidModel = new VideoViewsModel(videoViewsArray.get(i).getAsJsonObject());
+                                    if (vidModel.user_id.equalsIgnoreCase(LocalStorage
+                                            .getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "")))
+                                        rank = vidModel.rank;
+                                    videoViewsModelArrayList.add(vidModel);
                                 }
                                 relRanking.setVisibility(View.VISIBLE);
                             } else relRanking.setVisibility(View.GONE);
                             rvRankings.setLayoutManager(new LinearLayoutManager(mainActivity));
                             videoViewRankingAdapter = new VideoViewRankingAdapter(mainActivity, videoViewsModelArrayList, this);
                             rvRankings.setAdapter(videoViewRankingAdapter);
+                            if (!TextUtils.isEmpty(rank))
+                                txtYourRank.setText("Your Rank - ".concat(rank));
+                            txtYourRank.setVisibility(TextUtils.isEmpty(rank) ? View.GONE : View.VISIBLE);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

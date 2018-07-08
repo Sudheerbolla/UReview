@@ -2,9 +2,15 @@ package com.ureview.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,9 +60,22 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
                     .apply(options)
                     .into(holder.imgProfile);
         } else holder.imgProfile.setImageResource(R.drawable.ic_user_placeholder);
-
-
         holder.txtName.setText(videoModel.firstName.concat(" ").concat(videoModel.lastName));
+        if (!TextUtils.isEmpty(videoModel.shared_text)) {
+            holder.txtName.append(" ");
+            if (videoModel.shared_text.contains("shared")) {
+                SpannableString spannableString1 = new SpannableString("shared");
+                spannableString1.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.app_text_color)), 0, spannableString1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                StyleSpan boldSpan = new StyleSpan(Typeface.BOLD);
+                spannableString1.setSpan(boldSpan, 0, spannableString1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.txtName.append(spannableString1);
+
+                SpannableString spannableString2 = new SpannableString(videoModel.shared_text.replace("shared", ""));
+                spannableString2.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorBlack)), 0, spannableString2.length(), 0);
+                holder.txtName.append(spannableString2);
+            }
+        }
+
         holder.txtLoc.setText(videoModel.city);
         int width = StaticUtils.SCREEN_WIDTH;
         holder.imgLocation.getLayoutParams().height = width / 2;
@@ -89,7 +108,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.NewsFe
         holder.txtDistance.setText(videoModel.distance);
         holder.txtDuration.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);
         holder.txtDuration.setText(videoModel.videoDuration);
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
+        holder.txtRatingsNo.setText("(".concat(String.valueOf(videoModel.customerRating)).concat(")"));
         setProfileRating(holder, Float.parseFloat(TextUtils.isEmpty(videoModel.videoRating) ? "0f" : videoModel.videoRating));
 
         if (position == feedVideoList.size() - 1) {

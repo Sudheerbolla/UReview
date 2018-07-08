@@ -67,7 +67,7 @@ public class ProfileVideosAdapter extends RecyclerView.Adapter<ProfileVideosAdap
         holder.txtViewCount.setText(videoModel.videoWatchedCount);
         holder.txtDistance.setText(videoModel.distance);
         setProfileRating(holder, Float.parseFloat(videoModel.videoRating));
-        holder.txtRatingsNo.setText("(".concat(videoModel.videoRating).concat("/5)"));
+        holder.txtRatingsNo.setText("(".concat(String.valueOf(videoModel.customerRating)).concat(")"));
         holder.txtDuration.setVisibility(TextUtils.isEmpty(videoModel.videoDuration) ? View.GONE : View.VISIBLE);
         holder.txtDuration.setText(videoModel.videoDuration);
         if (videoModel.videoOwnerId.equalsIgnoreCase(currUserId))

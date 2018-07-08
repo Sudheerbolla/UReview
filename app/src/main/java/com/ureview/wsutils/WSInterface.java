@@ -18,7 +18,7 @@ public interface WSInterface {
     Call<JsonElement> userRegistration(@Body RequestBody params);
 
     @GET("check-user-profile")
-    Call<JsonElement> checkUserProfile(@Query("auth_id") String userId, @Query("auth_type") String authType);
+    Call<JsonElement> checkUserProfile(@QueryMap(encoded = true) HashMap<String, String> params);
 
     @POST("check-user-otp")
     Call<JsonElement> checkUserOTP(@Body RequestBody params);

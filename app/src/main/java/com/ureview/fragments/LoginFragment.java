@@ -57,6 +57,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import retrofit2.Call;
 
@@ -285,7 +286,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
                 handleSignInResult(task);
                 break;
             case TWITTER_SIGN_IN:
-                txtTwitterLoginBtn.onActivityResult(requestCode, resultCode, data);
+                if (data != null)
+                    txtTwitterLoginBtn.onActivityResult(requestCode, resultCode, data);
                 break;
         }
     }
@@ -351,7 +353,12 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void requestForCheckUserWS(String id, String authType) {
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(id, authType);
+        HashMap<String, String> map = new HashMap<>();
+        map.put("auth_id", id);
+        map.put("auth_type", authType);
+        map.put("device_token", LocalStorage.getInstance(splashActivity).getString(LocalStorage.PREF_DEVICE_TOKEN, ""));
+        map.put("platform", "android");
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().checkUserProfile(map);
         new WSCallBacksListener().requestForJsonObject(splashActivity, WSUtils.REQ_FOR_CHECK_USER, call, this);
     }
 
@@ -375,7 +382,11 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
             bundle.putString("token", id);
             bundle.putString("email", email);
             if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-                splashActivity.replaceFragment(Signup1Fragment.newInstance(bundle), true, R.id.splashContainer);
+                if (response.get("message").getAsString().equalsIgnoreCase("No user data found")) {
+                    splashActivity.replaceFragment(Signup1Fragment.newInstance(bundle), true, R.id.splashContainer);
+                } else {
+                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
+                }
             } else if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                 if (response.has("user_info")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("user_info").getAsJsonObject());

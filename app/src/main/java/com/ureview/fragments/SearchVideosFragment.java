@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -23,7 +22,6 @@ import com.ureview.adapters.SearchVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
-import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -223,14 +221,17 @@ public class SearchVideosFragment extends BaseFragment implements IParserListene
         switch (view.getId()) {
             case R.id.imgLocation:
                 ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
-                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
-                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
-                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+//                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
+//                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
+//                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+                mainActivity.replaceFragment(VideoDetailFragmentNew.newInstance(tempList, position));
                 break;
             case R.id.txtViewCount:
-                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(vid.id);
-                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+//                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(vid.id);
+//                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                VideoViewedPeopleFragmentNew videoViewedPeopleFragmentNew = VideoViewedPeopleFragmentNew.newInstance(vid.id);
+                mainActivity.replaceFragment(videoViewedPeopleFragmentNew, true, R.id.mainContainer);
                 break;
             case R.id.txtDistance:
                 String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +

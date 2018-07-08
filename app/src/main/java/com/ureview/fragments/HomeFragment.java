@@ -32,6 +32,7 @@ import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.VideoModel;
 import com.ureview.utils.Constants;
+import com.ureview.utils.LocalData;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
@@ -102,6 +103,17 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         if (mainActivity == null) mainActivity = (MainActivity) getActivity();
         mainActivity.setToolBar("", "fetching location...", "", true, false, true, false, false);
         mainActivity.setTextToAddress();
+        if (!TextUtils.isEmpty(LocalData.homCatId)) {
+            catId = LocalData.homCatId;
+            lastUpdatedPos = LocalData.homCatPos;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalData.homCatId = catId;
+        LocalData.homCatPos = lastUpdatedPos;
     }
 
     @Nullable
@@ -295,6 +307,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
         selectedPosition = position;
+        LocalData.homCatId = catId;
+        LocalData.homCatPos = lastUpdatedPos;
         switch (view.getId()) {
             case R.id.relItem:
                 if (!TextUtils.isEmpty(vidType) && position >= maxLimit) {
@@ -302,18 +316,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                     seeAllVideosFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
                     seeAllVideosFragment.show(mainActivity.getSupportFragmentManager(), "SeeAllVideosFragment");
                 } else {
-                    VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position, vidType);
-                    videoDetailFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
-                    videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                    videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+//                    VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(videoModels, position, vidType);
+//                    videoDetailFragment.setTargetFragment(this, Constants.DIALOG_FRAGMENT);
+//                    videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//                    videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+                    mainActivity.replaceFragment(VideoDetailFragmentNew.newInstance(videoModels, position), true, R.id.mainContainer);
                 }
-
-                //                mainActivity.showVideoDetails();
-//                VideoDetailFragment countrySelectionFragment = VideoDetailFragment.newInstance(videoModels, position);
-//                countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-//                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
-//                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videoModels, position), true, R.id.mainContainer);
-//                mainActivity.replaceFragment(VideoDetailFragmentVV.newInstance(videoModels, position), true, R.id.mainContainer);
                 break;
             case R.id.imgProfile:
             case R.id.txtName:
@@ -321,8 +329,11 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 mainActivity.replaceFragment(ProfileFragment.newInstance(feedVideoList.get(position).userId, feedVideoList.get(position).firstName.concat(" ").concat(feedVideoList.get(position).lastName)), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
-                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+//                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
+//                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+
+                VideoViewedPeopleFragmentNew videoViewedPeopleFragmentNew = VideoViewedPeopleFragmentNew.newInstance(videoModel.id);
+                mainActivity.replaceFragment(videoViewedPeopleFragmentNew, true, R.id.mainContainer);
                 break;
             case R.id.txtDistance:
                 String url = "http://maps.google.com/maps?saddr=" + MainActivity.mLastLocation.getLatitude() + "," +
@@ -338,6 +349,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     private void updateCategoryList(int position, boolean callApi) {
         if (callApi || lastUpdatedPos != position) {
             lastUpdatedPos = position;
+            rvCategories.scrollToPosition(position);
             for (int i = 0; i < categoryList.size(); i++) {
                 categoryList.get(i).isSelected = i == position;
             }
@@ -435,13 +447,19 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             homeCategoryAdapter.addCategories(categoryList);
             MainActivity.categoryListStatic.clear();
             MainActivity.categoryListStatic.addAll(categoryList);
-            lastUpdatedPos = 0;
-            startFrom = 0;
-            feedVideoList.clear();
-            newsFeedAdapter.clearAllVideos();
-            hasLoadedAllItems = false;
-            autoCall = true;
-            requestForNewsFeedVideos();
+            if (TextUtils.isEmpty(LocalData.homCatId) || LocalData.homCatPos == -1) {
+                lastUpdatedPos = 0;
+                startFrom = 0;
+                feedVideoList.clear();
+                newsFeedAdapter.clearAllVideos();
+                hasLoadedAllItems = false;
+                autoCall = true;
+                requestForNewsFeedVideos();
+            } else {
+                if (categoryList.size() > 1 && autoCall) {
+                    updateCategoryList(LocalData.homCatPos, true);
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
