@@ -635,15 +635,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
 
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
-//        VideoModel toBeAdded = feedVideo;
-//        feedVideo = feedVideoList.get(position);
-//        feedVideoList.remove(position);
-//        feedVideoList.add(toBeAdded);
-//        videosAdapter.addVideos(feedVideoList);
-//        if (feedVideo != null) {
-//            setVideoDetails();
-//            initMp4Player();
-//        }
         switch (view.getId()) {
             case R.id.txtViewCount:
 //                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videoModel.id);
@@ -656,6 +647,14 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
                         MainActivity.mLastLocation.getLongitude() + "&daddr=" + videoModel.videoLatitude + "," + videoModel.videoLongitude;
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(mapIntent);
+                break;
+            case R.id.relItem:
+                feedVideo = videoModel;
+                if (feedVideo != null) {
+                    setVideoDetails();
+                    initMp4Player();
+                    requestForRelatedVideos();
+                }
                 break;
             default:
                 break;

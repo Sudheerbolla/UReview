@@ -62,7 +62,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private String firstName, lastName, email, token, gender, deviceToken;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation;
     private ImageView imgAgree;
-    private boolean isAgree;
+    private boolean isAgree = true;
 //    private CustomDialog customDialog;
 
     public static Signup1Fragment newInstance() {
