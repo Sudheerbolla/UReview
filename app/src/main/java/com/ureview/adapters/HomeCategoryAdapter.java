@@ -1,6 +1,7 @@
 package com.ureview.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,13 +33,14 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         notifyDataSetChanged();
     }
 
+    @NonNull
     @Override
-    public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new CategoryViewHolder(LayoutInflater.from(context).inflate(R.layout.item_category, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final CategoryViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CategoryViewHolder holder, final int position) {
         CategoryModel categoryModel = categoryList.get(position);
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
@@ -58,6 +60,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
 //                        holder.txtCategory.setCompoundDrawablesWithIntrinsicBounds(resource, null, null, null);
 //                    }
 //                });
+//        .diskCacheStrategy(DiskCacheStrategy.DATA)
 
         Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
                 .into(holder.imgCatBg);

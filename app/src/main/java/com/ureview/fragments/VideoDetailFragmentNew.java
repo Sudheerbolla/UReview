@@ -389,102 +389,41 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
         }
     }
 
-    //    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-//        int videoWidth = exoPlayer.getVideoFormat().width;
-//        int videoHeight = exoPlayer.getVideoFormat().height;
-//        float videoProportion;
-//        if (videoWidth > videoHeight) {
-//            videoProportion = (float) videoHeight / (float) videoWidth;
-//        } else {
-//            videoProportion = (float) videoWidth / (float) videoHeight;
-//        }
-//
-//        Display display = mainActivity.getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//
-//        int screenWidth = size.x;
-//        int screenHeight = size.y;
-//        float screenProportion = (float) screenWidth / (float) screenHeight;
-////        float screenProportion = (float) screenWidth;
-//
-//        if (videoProportion > screenProportion) {
-//            container.getLayoutParams().width = Math.round(videoWidth / screenProportion);
-//            container.requestLayout();
-//        } else {
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            params.width = (int) (videoProportion * (float) screenWidth);
-//            params.gravity = CENTER;
-//            container.setLayoutParams(params);
-//        }
-//    }
-
-//    private void applyAspectRatio(FrameLayout container) {
-//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//        params.width = videoView.getWidth();
-//        params.gravity = CENTER;
-//        container.setLayoutParams(params);
-//    }
-
-//    private void applyAspectRatio(FrameLayout container) {
-//        int videoWidth = exoPlayer.getVideoFormat().width;
-//        int videoHeight = exoPlayer.getVideoFormat().height;
-//
-//        Display display = mainActivity.getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//
-//        int viewWidth = size.x;
-//        int viewHeight = Math.round(StaticUtils.convertDpToPixel(250,mainActivity));
-//        double aspectRatio = (double) videoHeight / videoWidth;
-//
-//        int newWidth, newHeight;
-//        if (viewHeight > (int) (viewWidth * aspectRatio)) {
-////            newWidth = viewWidth;
-//            newHeight = (int) (viewWidth * aspectRatio);
-//            newWidth = videoWidth - (viewHeight > newHeight ? viewHeight - newHeight : newHeight - viewHeight);
-//            newHeight = viewHeight;
-//        } else {
-//            newWidth = (int) (viewHeight / aspectRatio);
-//            newHeight = viewHeight;
-//        }
-//
-//        int xoff = (viewWidth - newWidth) / 2;
-//        int yoff = (viewHeight - newHeight) / 2;
-//        Log.e(TAG, "video=" + videoWidth + "x" + videoHeight +
-//                " view=" + viewWidth + "x" + viewHeight +
-//                " newView=" + newWidth + "x" + newHeight +
-//                " off=" + xoff + "," + yoff);
-//
-////        (float) newWidth / viewWidth, (float) newHeight / viewHeight
-//        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-////        params.width = videoView.getWidth();
-//        params.width = newWidth;
-//        params.height = newHeight;
-//        params.gravity = CENTER;
-//        container.setLayoutParams(params);
-//    }
-
     private void applyAspectRatio(FrameLayout container) {
         if (exoPlayer != null && exoPlayer.getVideoFormat() != null) {
             int videoWidth = exoPlayer.getVideoFormat().width;
             int videoHeight = exoPlayer.getVideoFormat().height;
             double aspectRatio = (double) videoHeight / videoWidth;
             int newWidth, newHeight;
-            if (screenWidth > (int) (screenWidth * aspectRatio)) {
+//            if (screenWidth > (int) (screenWidth * aspectRatio)) {
+//                newHeight = (int) (screenWidth * aspectRatio);
+//                if (containerHeight > newHeight) {
+//                    newHeight = containerHeight - newHeight;
+//                } else newHeight = newHeight - containerHeight;
+//                if (videoWidth + newHeight > screenWidth) newWidth = videoWidth;
+//                else newWidth = videoWidth + newHeight;
+//            } else {
+//                newWidth = (int) (containerHeight / aspectRatio);
+//            }
+//            if (newWidth > screenWidth) {
+//                newWidth = screenWidth;
+//            }
+            if (videoWidth > videoHeight) {
+                newWidth = (int) (containerHeight * aspectRatio);
                 newHeight = (int) (screenWidth * aspectRatio);
-                if (containerHeight > newHeight) {
-                    newHeight = containerHeight - newHeight;
-                } else newHeight = newHeight - containerHeight;
-                if (videoWidth + newHeight > screenWidth) newWidth = videoWidth;
-                else newWidth = videoWidth + newHeight;
             } else {
+                newHeight = (int) (screenWidth / aspectRatio);
                 newWidth = (int) (containerHeight / aspectRatio);
             }
-
+            if (newHeight > containerHeight) {
+                newHeight = containerHeight;
+            }
+            if (newWidth > screenWidth) {
+                newWidth = screenWidth;
+            }
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.width = newWidth;
-            params.height = containerHeight;
+            params.height = newHeight;
             params.gravity = CENTER;
             container.setLayoutParams(params);
         }
@@ -496,10 +435,19 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
             int videoHeight = exoPlayer.getVideoFormat().height;
             double aspectRatio = (double) videoHeight / videoWidth;
             int newWidth, newHeight;
-            newWidth = (int) (screenHeight / aspectRatio);
-            if (newWidth > screenWidth) newWidth = screenWidth;
-            newHeight = (int) (screenWidth / aspectRatio);
-            if (newHeight > screenHeight) newHeight = screenHeight;
+            if (videoWidth > videoHeight) {
+                newWidth = (int) (screenHeight * aspectRatio);
+                newHeight = (int) (screenWidth * aspectRatio);
+            } else {
+                newHeight = (int) (screenWidth / aspectRatio);
+                newWidth = (int) (screenHeight / aspectRatio);
+            }
+            if (newHeight > screenHeight) {
+                newHeight = screenHeight;
+            }
+            if (newWidth > screenWidth) {
+                newWidth = screenWidth;
+            }
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             params.width = newWidth;
             params.height = newHeight;
@@ -512,65 +460,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
         }
     }
 
-//    private void applyFullScreenAspectRatio(FrameLayout container) {
-//        if (exoPlayer.getVideoFormat() != null) {
-//            int videoWidth = exoPlayer.getVideoFormat().width;
-//            int videoHeight = exoPlayer.getVideoFormat().height;
-//            float videoProportion;
-//            if (videoWidth > videoHeight) {
-//                videoProportion = (float) videoHeight / (float) videoWidth;
-//            } else {
-//                videoProportion = (float) videoWidth / (float) videoHeight;
-//            }
-//
-//            Display display = mainActivity.getWindowManager().getDefaultDisplay();
-//            Point size = new Point();
-//            display.getSize(size);
-//
-//            int screenWidth = size.x;
-//            int screenHeight = size.y;
-//            float screenProportion = (float) screenWidth / (float) screenHeight;
-//
-//            if (videoProportion > screenProportion) {
-//                container.getLayoutParams().width = Math.round(videoWidth / screenProportion);
-//                container.requestLayout();
-//            } else {
-//                int finalWid;
-//                int finalHei;
-//                finalWid = Math.round(videoWidth / screenProportion);
-//                finalHei = Math.round(videoHeight / screenProportion);
-//                if (finalWid > screenWidth) {
-//                    finalWid = screenWidth;
-//                }
-//                if (finalHei > screenHeight) {
-//                    finalHei = screenHeight;
-//                }
-//                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(finalWid, finalHei);
-//                params.gravity = CENTER;
-//                container.setLayoutParams(params);
-//            }
-//        }
-//    }
-
-    //    private void applyAspectRatio(FrameLayout container, SimpleExoPlayer exoPlayer) {
-//        float videoRatio = (float) exoPlayer.getVideoFormat().width / exoPlayer.getVideoFormat().height;
-//        Display display = getActivity().getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        float displayRatio = (float) size.x / size.y;
-//        if (videoRatio > 1) {
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//            container.setLayoutParams(params);
-//        } else if (videoRatio > displayRatio) {
-//            container.getLayoutParams().width = Math.round(size.x * videoRatio);
-//            container.requestLayout();
-//        } else {
-//            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(Math.round(size.x * videoRatio), ViewGroup.LayoutParams.MATCH_PARENT);
-//            params.gravity = CENTER;
-//            container.setLayoutParams(params);
-//        }
-//    }
-
     private void getBundleData() {
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -578,7 +467,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
                 feedVideoList = bundle.getParcelableArrayList("news_feed");
                 if (bundle.containsKey("position") && feedVideoList.size() > bundle.getInt("position")) {
                     feedVideo = feedVideoList.get(bundle.getInt("position"));
-//                    feedVideoList.remove(feedVideo);
                     positionToHide = bundle.getInt("position");
                 }
             }
@@ -586,11 +474,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
                 vidType = bundle.getString("vidType");
         }
     }
-
-//    @Override
-//    public int getTheme() {
-//        return R.style.growAnim;
-//    }
 
     private void initComponents() {
 //        mainActivity.hideTopbar();

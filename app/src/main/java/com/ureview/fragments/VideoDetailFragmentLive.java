@@ -1,3 +1,4 @@
+/*
 package com.ureview.fragments;
 
 import android.app.Activity;
@@ -768,7 +769,7 @@ public class VideoDetailFragmentLive extends DialogFragment implements IClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.txtViewCount:
-                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(feedVideo.id);
+                VideoViewedPeopleFragmentNew videoViewedPeopleFragment = VideoViewedPeopleFragmentNew.newInstance(feedVideo.id);
                 videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
                 break;
             case R.id.txtDistance:
@@ -1117,3 +1118,4 @@ public class VideoDetailFragmentLive extends DialogFragment implements IClickLis
     public void onSeekProcessed() {
     }
 }
+*/
