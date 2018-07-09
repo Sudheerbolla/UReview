@@ -138,8 +138,7 @@
         android:layout_marginTop="@dimen/pad_8"
         android:layout_toStartOf="@+id/txtLocBtm"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_14sp"
-        app:txt_font_type="bold" />
+        android:textSize="@dimen/txt_size_14sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtViewCount"

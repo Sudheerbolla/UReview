@@ -11,6 +11,9 @@
 
     <string name="facebook_app_id">1734374066598324</string>
     <string name="fb_login_protocol_scheme">fb1734374066598324</string>
+    <string name="i_have_read_and_agree_to_the_terms_conditions_and_privacy_policy_of_this_app"><![CDATA[I have read and agree to the Terms & Conditions and Privacy Policy of this app]]></string>
+    <string name="terms_conditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="privacy_policy"><![CDATA[Privacy Policy]]></string>
 
     <string-array name="DialingCountryCode">
         <item>93,AF,AFGHANISTAN</item>

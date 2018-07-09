@@ -74,8 +74,7 @@
         android:layout_below="@+id/relImageVideo"
         android:layout_marginTop="@dimen/pad_5"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_13sp"
-        app:txt_font_type="bold" />
+        android:textSize="@dimen/txt_size_13sp" />
 
     <com.ureview.utils.views.CustomTextView
         android:id="@+id/txtTags"

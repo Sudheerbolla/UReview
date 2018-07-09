@@ -1,5 +1,6 @@
 package com.ureview.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.ureview.BaseApplication;
 import com.ureview.R;
 import com.ureview.activities.MainActivity;
+import com.ureview.activities.SplashActivity;
 import com.ureview.listeners.IParserListener;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomTextView;
@@ -27,6 +29,8 @@ public class StaticPagesFragment extends BaseFragment implements IParserListener
 
     private View rootView;
     private MainActivity mainActivity;
+    private SplashActivity splashActivity;
+    private Context context;
     private String heading = "", urlToLoad = "";
     private ProgressBar progress_bar;
     private String content;
@@ -56,11 +60,17 @@ public class StaticPagesFragment extends BaseFragment implements IParserListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        if (getActivity() instanceof MainActivity) {
+            mainActivity = (MainActivity) getActivity();
+            context = mainActivity;
+        } else if (getActivity() instanceof SplashActivity) {
+            splashActivity = (SplashActivity) getActivity();
+            context = splashActivity;
+        }
         Bundle bundle = getArguments();
         if (bundle != null) {
             heading = getString(R.string.app_name);
-            if (bundle.containsKey("heading ") && !TextUtils.isEmpty(bundle.getString("heading")))
+            if (bundle.containsKey("heading") && !TextUtils.isEmpty(bundle.getString("heading")))
                 heading = bundle.getString("heading");
             urlToLoad = bundle.getString("urlToLoad");
         }
@@ -83,14 +93,19 @@ public class StaticPagesFragment extends BaseFragment implements IParserListener
 
     private void requestForContentWS() {
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getStaticPagesContent(urlToLoad);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_GET_STATIC_CONTENT, call, this);
+        new WSCallBacksListener().requestForJsonObject(context, WSUtils.REQ_FOR_GET_STATIC_CONTENT, call, this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
-        mainActivity.setToolBar(heading, "", "", false, true, false, false, false);
+        if (getActivity() instanceof MainActivity) {
+            if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+            mainActivity.setToolBar(heading, "", "", false, true, false, false, false);
+        } else if (getActivity() instanceof SplashActivity) {
+            if (splashActivity == null) splashActivity = (SplashActivity) getActivity();
+            splashActivity.setTopBar(heading);
+        }
     }
 
     @Override
@@ -109,14 +124,18 @@ public class StaticPagesFragment extends BaseFragment implements IParserListener
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     if (response.has("message")) {
-                        StaticUtils.showToast(mainActivity, response.get("message").getAsString());
+                        StaticUtils.showToast(context, response.get("message").getAsString());
                     }
                 } else if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     if (response.has("page_info")) {
                         JsonObject pageInfoObject = response.get("page_info").getAsJsonObject();
                         content = pageInfoObject.get("description").getAsString();
-                        heading = pageInfoObject.get("page_title").getAsString();
-                        mainActivity.setToolBar(heading, "", "", false, true, false, false, false);
+//                        heading = pageInfoObject.get("page_title").getAsString();
+//                        if (getActivity() instanceof MainActivity) {
+//                            mainActivity.setToolBar(heading, "", "", false, true, false, false, false);
+//                        } else if (getActivity() instanceof SplashActivity) {
+//                            splashActivity.setTopBar(heading);
+//                        }
                         txtContent.setText(Html.fromHtml(content));
                     }
                 }

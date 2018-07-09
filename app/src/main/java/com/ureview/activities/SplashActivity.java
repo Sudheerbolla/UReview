@@ -110,6 +110,18 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Login");
                 break;
+            case "Terms & Conditions":
+                relTopBar.setVisibility(View.VISIBLE);
+                imgBack.setVisibility(View.VISIBLE);
+                txtTitle.setVisibility(View.VISIBLE);
+                txtTitle.setText("Terms & Conditions");
+                break;
+            case "Privacy Policies":
+                relTopBar.setVisibility(View.VISIBLE);
+                imgBack.setVisibility(View.VISIBLE);
+                txtTitle.setVisibility(View.VISIBLE);
+                txtTitle.setText("Privacy Policies");
+                break;
             default:
                 txtTitle.setText("Sign Up");
                 txtRight.setText("Log In");
@@ -159,6 +171,7 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
             finishAffinity();
         } else {
             replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
+//            replaceFragment(Signup1Fragment.newInstance(), false, R.id.splashContainer);
             findViewById(R.id.relSplash).setVisibility(View.GONE);
         }
     }

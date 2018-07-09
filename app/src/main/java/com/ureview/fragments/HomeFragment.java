@@ -486,7 +486,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         isLoading = false;
         try {
             JSONObject jsonObject = new JSONObject(response.toString());
-            txtNoData.setText("No Reviews. Start following YouReviewrs for more videos");
+            txtNoData.setText("No Reviews. Start following YouReviews for more videos");
             if (jsonObject.has("status") && jsonObject.getString("status").equalsIgnoreCase("success")) {
                 txtNoData.setVisibility(View.GONE);
                 rvNewsFeed.setVisibility(View.VISIBLE);

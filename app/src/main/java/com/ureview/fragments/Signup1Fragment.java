@@ -3,16 +3,25 @@ package com.ureview.fragments;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 
 import com.google.gson.JsonElement;
@@ -45,13 +54,15 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
 
     private View rootView;
     private SplashActivity splashActivity;
-    private CustomTextView txtNext, txtDob;
+    private CustomTextView txtNext, txtDob, txtAgree;
     private CountriesModel currentCountriesModel;
     private RadioGroup rgGender;
     private DatePickerDialog mDatePickerDialog;
     private Calendar myCalendar = Calendar.getInstance();
     private String firstName, lastName, email, token, gender, deviceToken;
     private CustomEditText edtFirstName, edtLastName, edtEmail, edtLocation;
+    private ImageView imgAgree;
+    private boolean isAgree;
 //    private CustomDialog customDialog;
 
     public static Signup1Fragment newInstance() {
@@ -105,9 +116,13 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         edtLastName = rootView.findViewById(R.id.edtLastName);
         edtLocation = rootView.findViewById(R.id.edtLocation);
         edtEmail = rootView.findViewById(R.id.edtEmail);
+        imgAgree = rootView.findViewById(R.id.imgAgree);
+        txtAgree = rootView.findViewById(R.id.txtAgree);
         txtDob.setOnClickListener(this);
         txtNext.setOnClickListener(this);
+        imgAgree.setOnClickListener(this);
         initDatePicker();
+        setAgreeText();
         if (!TextUtils.isEmpty(firstName)) {
             edtFirstName.setText(firstName);
         }
@@ -120,6 +135,47 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         } else {
             edtEmail.setEnabled(true);
         }
+    }
+
+    private void setAgreeText() {
+        txtAgree.setText("I have read and agree to the ");
+        SpannableString termsAndConditions = new SpannableString(getString(R.string.terms_conditions));
+        termsAndConditions.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                onClickTermsConditions();
+            }
+        }, 0, termsAndConditions.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        termsAndConditions.setSpan(new ForegroundColorSpan(Color.BLUE),
+                0, termsAndConditions.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        termsAndConditions.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                0, termsAndConditions.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txtAgree.append(termsAndConditions);
+
+        txtAgree.append(" and ");
+
+        SpannableString privacyPolicy = new SpannableString(getString(R.string.privacy_policy));
+        privacyPolicy.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(View view) {
+                onClickPrivacyPolicy();
+            }
+        }, 0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        privacyPolicy.setSpan(new ForegroundColorSpan(Color.parseColor("#303F9F")),
+                0, privacyPolicy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        privacyPolicy.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                0, privacyPolicy.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        txtAgree.append(privacyPolicy);
+        txtAgree.append(" of this app");
+        txtAgree.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void onClickTermsConditions() {
+        splashActivity.replaceFragment(StaticPagesFragment.newInstance("Terms & Conditions", "terms-conditions"), true, R.id.splashContainer);
+    }
+
+    private void onClickPrivacyPolicy() {
+        splashActivity.replaceFragment(StaticPagesFragment.newInstance("Privacy Policies", "privacy-policy"), true, R.id.splashContainer);
     }
 
     private void initDatePicker() {
@@ -169,6 +225,10 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 break;
             case R.id.txtDob:
                 showDOBDialog();
+                break;
+            case R.id.imgAgree:
+                isAgree = !isAgree;
+                imgAgree.setImageDrawable(isAgree ? ContextCompat.getDrawable(splashActivity, R.drawable.icon_uncheck) : null);
                 break;
             default:
                 break;
@@ -237,6 +297,9 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
         if (TextUtils.isEmpty(txtDob.getText().toString().trim())) {
             txtDob.requestFocus();
             return "Please enter Date of Birth";
+        }
+        if (!isAgree) {
+            return "Agree to the Terms & conditions and Privacy Policy to continue";
         }
         return "";
     }
