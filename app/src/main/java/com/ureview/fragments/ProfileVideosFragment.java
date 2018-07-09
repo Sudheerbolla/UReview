@@ -3,7 +3,6 @@ package com.ureview.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,6 @@ import com.ureview.adapters.ProfileVideosAdapter;
 import com.ureview.listeners.IClickListener;
 import com.ureview.listeners.IParserListener;
 import com.ureview.models.VideoModel;
-import com.ureview.utils.Constants;
 import com.ureview.utils.DialogUtils;
 import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
@@ -196,11 +194,11 @@ public class ProfileVideosFragment extends BaseFragment implements IParserListen
                 break;
             case R.id.relItem:
                 ArrayList<VideoModel> tempList = new ArrayList<>(userVideosModelArrayList);
-//                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), ProfileVideosFragment.this);
-                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
-                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
-                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
+                mainActivity.replaceFragment(VideoDetailFragmentNew.newInstance(tempList, position), true, R.id.mainContainer);
+//                VideoDetailFragment videoDetailFragment = VideoDetailFragment.newInstance(tempList, position);
+//                videoDetailFragment.setTargetFragment(getParentFragment(), Constants.DIALOG_FRAGMENT);
+//                videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//                videoDetailFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
                 break;
             default:
                 break;

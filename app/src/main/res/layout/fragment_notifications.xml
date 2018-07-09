@@ -7,7 +7,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvNotifications"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMediumGrey"
+        android:paddingBottom="@dimen/pad_1"
         android:visibility="gone" />
 
     <com.ureview.utils.views.CustomTextView

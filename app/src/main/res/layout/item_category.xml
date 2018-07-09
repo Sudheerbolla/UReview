@@ -1,30 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/llCat"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/pad_3"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="@dimen/pad_8">
+    android:layout_height="@dimen/pad_35">
 
     <ImageView
-        android:id="@+id/imgCat"
-        android:layout_width="@dimen/pad_15"
-        android:layout_height="@dimen/pad_15" />
-
-    <com.ureview.utils.views.CustomTextView
-        android:id="@+id/txtCategory"
+        android:id="@+id/imgCatBg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/pad_5"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxHeight="@dimen/pad_35"
-        android:padding="@dimen/pad_3"
-        android:textColor="@color/selector_txt_color"
-        android:textSize="@dimen/txt_size_13sp"
-        app:txt_font_type="regular" />
+        android:layout_height="match_parent"
+        android:layout_alignEnd="@+id/llCat"
+        android:layout_alignParentStart="true"
+        android:scaleType="fitXY" />
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/llCat"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/pad_3"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/pad_2"
+        android:paddingTop="@dimen/pad_2"
+        android:paddingRight="@dimen/pad_8"
+        android:paddingLeft="@dimen/pad_8">
+
+        <ImageView
+            android:id="@+id/imgCat"
+            android:layout_width="@dimen/pad_15"
+            android:layout_height="@dimen/pad_15" />
+
+        <com.ureview.utils.views.CustomTextView
+            android:id="@+id/txtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/pad_5"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxHeight="@dimen/pad_35"
+            android:padding="@dimen/pad_3"
+            android:textColor="@color/selector_txt_color"
+            android:textSize="@dimen/txt_size_13sp"
+            app:txt_font_type="regular" />
+    </LinearLayout>
+</RelativeLayout>

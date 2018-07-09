@@ -6,9 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class VideoModel implements Parcelable{
+public class VideoModel implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -103,6 +101,9 @@ public class VideoModel implements Parcelable{
     @SerializedName("category_active_bg_image")
     @Expose
     public String categoryActiveBgImage;
+    @SerializedName("shared_text")
+    @Expose
+    public String shared_text;
     @SerializedName("follow_status")
     @Expose
     public String followStatus;

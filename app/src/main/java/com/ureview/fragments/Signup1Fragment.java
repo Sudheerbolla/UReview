@@ -132,7 +132,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                txtDob.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                txtDob.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
             }
         }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         mDatePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
@@ -317,9 +317,9 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     private void parseUserRegistrationResponse(JsonObject response) {
         if (response.has("status")) {
             if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                if (response.has("message")) {
-                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
-                }
+//                if (response.has("message")) {
+//                    StaticUtils.showToast(splashActivity, response.get("message").getAsString());
+//                }
                 if (response.has("userInfo")) {
                     BaseApplication.userInfoModel = new UserInfoModel(response.get("userInfo").getAsJsonObject());
                     try {
@@ -334,13 +334,14 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
                 }
 //                customDialog = new CustomDialog(splashActivity, Signup1Fragment.this);
 //                customDialog.show();
-                DialogUtils.showSimpleDialog(splashActivity, "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(splashActivity, MainActivity.class));
-                        splashActivity.finishAffinity();
-                    }
-                }, null, true);
+                DialogUtils.showSimpleDialog(splashActivity, "Registration Successful", "Congratulations! Your sign up is completed. You can watch reviews and make your own reviews with YouReview!"
+                        , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(splashActivity, MainActivity.class));
+                                splashActivity.finishAffinity();
+                            }
+                        }, null, true);
             } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                 StaticUtils.showToast(splashActivity, response.get("message").getAsString());
             }

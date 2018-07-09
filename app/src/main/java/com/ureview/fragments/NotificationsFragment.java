@@ -94,6 +94,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
         switch (view.getId()) {
             case R.id.rlDelete:
                 deletePos = position;
+                rlProgress.setVisibility(View.VISIBLE);
                 requestForDeleteNotification(notificationsModelArrayList.get(position));
                 break;
             case R.id.rlMain:
@@ -141,6 +142,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
                 parseGetNotificationsResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_DELETE_NOTIFICATION:
+//                rlProgress.setVisibility(View.GONE);
                 parseDeleteNotificationsResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_READ_NOTIFICATION:
@@ -193,6 +195,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
                     }
                     requestForNotificationsWS();
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
+                    rlProgress.setVisibility(View.GONE);
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
             }
@@ -204,6 +207,7 @@ public class NotificationsFragment extends BaseFragment implements IClickListene
     private void parseGetNotificationsResponse(JsonObject response) {
         try {
             if (response.has("status")) {
+                notificationsModelArrayList.clear();
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     JsonArray notificationsArray = response.get("notifications").getAsJsonArray();
                     if (notificationsArray.size() > 0) {

@@ -132,12 +132,13 @@
                     android:layout_marginTop="@dimen/pad_8"
                     android:background="@drawable/bg_edt_txt"
                     android:gravity="start"
-                    android:hint="No tags expressed for this video"
+                    android:hint="Express your self"
                     android:inputType="textMultiLine"
                     android:lines="3"
                     android:padding="@dimen/pad_10"
                     android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/txt_size_14sp" />
+                    android:textSize="@dimen/txt_size_14sp"
+                    app:set_input_type="false" />
 
                 <com.ureview.utils.views.CustomTextView
                     android:layout_width="wrap_content"

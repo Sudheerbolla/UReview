@@ -3,12 +3,13 @@ package com.ureview.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -26,7 +27,6 @@ import com.ureview.utils.LocalStorage;
 import com.ureview.utils.StaticUtils;
 import com.ureview.utils.views.CustomRecyclerView;
 import com.ureview.utils.views.CustomTextView;
-import com.ureview.utils.views.recyclerView.Paginate;
 import com.ureview.wsutils.WSCallBacksListener;
 import com.ureview.wsutils.WSUtils;
 
@@ -39,93 +39,92 @@ import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 
-public class SearchPeopleFragment extends BaseFragment implements IParserListener<JsonElement>, IClickListener, Paginate.Callbacks {
+public class VideoViewedPeopleFragmentNew extends BaseFragment implements IParserListener<JsonElement>, IClickListener, View.OnClickListener {
 
     private View rootView;
     private CustomRecyclerView rvPeople;
     private PeopleAdapter peopleAdapter;
     private MainActivity mainActivity;
-    private ArrayList<PeopleModel> peopleArrList = new ArrayList<>();
-    private ArrayList<PeopleModel> tempPeopleArrList = new ArrayList<>();
+    private ArrayList<PeopleModel> peopleArrList;
     private CustomTextView txtNoData;
     private String userId;
-    private RelativeLayout rlProgress;
+    private ImageView imgClose;
 
-    //Search People Pagination
-    private boolean isLoading, hasLoadedAllItems;
-    private int startFrom = 0, count = 10;
     private int selectedPosition;
+    private BottomSheetDialog dialog;
+    private String videoId;
 
-    public static SearchPeopleFragment newInstance() {
-        return new SearchPeopleFragment();
+    public static VideoViewedPeopleFragmentNew newInstance(String videoId) {
+        VideoViewedPeopleFragmentNew videoViewedPeopleFragment = new VideoViewedPeopleFragmentNew();
+        Bundle bundle = new Bundle();
+        bundle.putString("videoId", videoId);
+        videoViewedPeopleFragment.setArguments(bundle);
+        return videoViewedPeopleFragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainActivity = (MainActivity) getActivity();
+        peopleArrList = new ArrayList<>();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
         userId = LocalStorage.getInstance(mainActivity).getString(LocalStorage.PREF_USER_ID, "");
+        getBundleData();
+    }
+
+    private void getBundleData() {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey("videoId")) {
+                videoId = bundle.getString("videoId");
+            }
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_search_people, container, false);
-
+        rootView = View.inflate(getContext(), R.layout.fragment_video_viewed_list, null);
         rvPeople = rootView.findViewById(R.id.rvFollowers);
         txtNoData = rootView.findViewById(R.id.txtNoData);
-        txtNoData.setVisibility(View.VISIBLE);
-        rlProgress = rootView.findViewById(R.id.rlProgress);
+        txtNoData.setVisibility(View.GONE);
+        imgClose = rootView.findViewById(R.id.imgClose);
+        imgClose.setOnClickListener(this);
         setAdapter();
-        rvPeople.setListPagination(this);
+        requestForVideoViewedPeopleListWS();
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mainActivity == null) mainActivity = (MainActivity) getActivity();
+        mainActivity.setToolBar("Views List", "", "", false, true, false, false, false);
+
+    }
+
     private void setAdapter() {
-        peopleAdapter = new PeopleAdapter(mainActivity, new ArrayList<PeopleModel>(), this);
         rvPeople.setLayoutManager(new LinearLayoutManager(mainActivity));
+        peopleAdapter = new PeopleAdapter(mainActivity, peopleArrList, this, true);
         rvPeople.setAdapter(peopleAdapter);
     }
 
-    protected void searchUser(String searchUser) {
-        SearchFragment.searchText = searchUser;
-        peopleArrList.clear();
-        startFrom = 0;
-        isLoading = false;
-        hasLoadedAllItems = false;
-        if (TextUtils.isEmpty(searchUser)) {
-            if (tempPeopleArrList != null) tempPeopleArrList.clear();
-            if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
-            if (txtNoData != null) txtNoData.setVisibility(View.VISIBLE);
-            if (rvPeople != null) rvPeople.setVisibility(View.GONE);
-        } else {
-            requestForSearchPeopleListWS();
-        }
-
-    }
-
-    protected void requestForSearchPeopleListWS() {
+    protected void requestForVideoViewedPeopleListWS() {
         HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("user_name", SearchFragment.searchText);
         hashMap.put("user_id", userId);
-        hashMap.put("startFrom", String.valueOf(startFrom));
-        hashMap.put("count", String.valueOf(count));
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getSearchUsers(hashMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_SEARCH_PEOPLE, call, this);
+        hashMap.put("video_id", videoId);
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getVideoViewedUserList(hashMap);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_VIDEO_VIEWED_PEOPLE_LIST, call, this);
     }
 
     private void requestForFollowUser(String followId) {
-        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().followUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_FOLLOW_USER, call, this);
     }
 
     private void requestForUnFollowUser(String followId) {
-        rlProgress.setVisibility(View.VISIBLE);
         Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().unFollowUser(getRequestBodyObject(followId));
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_UN_FOLLOW_USER, call, this);
     }
-
 
     private RequestBody getRequestBodyObject(String followId) {
         JSONObject jsonObjectReq = new JSONObject();
@@ -141,41 +140,31 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     @Override
     public void successResponse(int requestCode, JsonElement response) {
         switch (requestCode) {
-            case WSUtils.REQ_FOR_SEARCH_PEOPLE:
-                parseGetSearchPeopleResponse((JsonObject) response);
+            case WSUtils.REQ_FOR_VIDEO_VIEWED_PEOPLE_LIST:
+                parseGetVideoViewedPeopleResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_FOLLOW_USER:
                 parseFollowUserResponse((JsonObject) response);
                 break;
             case WSUtils.REQ_FOR_UN_FOLLOW_USER:
-                parseUnFollowUser((JsonObject) response);
+                parseUnFollowUserResponse((JsonObject) response);
                 break;
             default:
                 break;
         }
     }
 
-    private void parseGetSearchPeopleResponse(JsonObject response) {
-        if (!isLoading) {
-            tempPeopleArrList.clear();
-        }
-        isLoading = false;
+    private void parseGetVideoViewedPeopleResponse(JsonObject response) {
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
-                    JsonArray usersData = response.get("users_data").getAsJsonArray();
-
+                    peopleArrList.clear();
+                    JsonArray usersData = response.get("users_list").getAsJsonArray();
                     if (usersData.size() > 0) {
                         for (int i = 0; i < usersData.size(); i++) {
                             Gson gson = new Gson();
                             PeopleModel peopleModel = gson.fromJson(usersData.get(i).getAsJsonObject(), PeopleModel.class);
                             peopleArrList.add(peopleModel);
-                            tempPeopleArrList.add(peopleModel);
-                        }
-                        startFrom += usersData.size();
-                        if (startFrom % count != 0) {
-                            hasLoadedAllItems = true;
-                            isLoading = false;
                         }
                         txtNoData.setVisibility(View.GONE);
                         rvPeople.setVisibility(View.VISIBLE);
@@ -183,16 +172,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
                         txtNoData.setVisibility(View.VISIBLE);
                         rvPeople.setVisibility(View.GONE);
                     }
-                    peopleAdapter.addItems(tempPeopleArrList);
-                } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
-//                    StaticUtils.showToast(mainActivity, response.get("message").getAsString());
-                    if (startFrom == 0) {
-                        txtNoData.setVisibility(View.VISIBLE);
-                        rvPeople.setVisibility(View.GONE);
-                    } else {
-                        hasLoadedAllItems = true;
-                    }
+                } else {
+                    txtNoData.setVisibility(View.VISIBLE);
+                    rvPeople.setVisibility(View.GONE);
                 }
+                if (peopleAdapter != null) peopleAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,12 +184,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     private void parseFollowUserResponse(JsonObject response) {
-        rlProgress.setVisibility(View.GONE);
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     peopleArrList.get(selectedPosition).followStatus = "follow";
-                    peopleAdapter.notifyDataSetChanged();
+                    peopleAdapter.notifyItemChanged(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -215,13 +198,12 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         }
     }
 
-    private void parseUnFollowUser(JsonObject response) {
-        rlProgress.setVisibility(View.GONE);
+    private void parseUnFollowUserResponse(JsonObject response) {
         try {
             if (response.has("status")) {
                 if (response.get("status").getAsString().equalsIgnoreCase("success")) {
                     peopleArrList.get(selectedPosition).followStatus = "";
-                    peopleAdapter.notifyDataSetChanged();
+                    peopleAdapter.notifyItemChanged(selectedPosition);
                 } else if (response.get("status").getAsString().equalsIgnoreCase("fail")) {
                     StaticUtils.showToast(mainActivity, response.get("message").getAsString());
                 }
@@ -233,12 +215,12 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
 
     @Override
     public void errorResponse(int requestCode, String error) {
-
+        Log.e("error", error);
     }
 
     @Override
     public void noInternetConnection(int requestCode) {
-
+        Log.e("error", "no internet");
     }
 
     @Override
@@ -247,7 +229,7 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         switch (view.getId()) {
             case R.id.txtFollowStatus:
                 if (view.isSelected()) {
-                    askConfirmationAndProceed(peopleArrList.get(position));
+                    askConfirmationAndProceed(position);
                 } else requestForFollowUser(peopleArrList.get(position).userId);
                 break;
             case R.id.relBody:
@@ -258,9 +240,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
         }
     }
 
-    private void askConfirmationAndProceed(PeopleModel peopleModel) {
+    private void askConfirmationAndProceed(int position) {
+        final PeopleModel peopleModel = peopleArrList.get(position);
         DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(peopleModel.firstName)
-                .concat(" ").concat(peopleModel.lastName).concat("?"), view -> requestForUnFollowUser(peopleModel.userId));
+                        .concat(" ").concat(peopleModel.lastName).concat("?"),
+                view -> requestForUnFollowUser(peopleModel.userId));
     }
 
     @Override
@@ -269,18 +253,11 @@ public class SearchPeopleFragment extends BaseFragment implements IParserListene
     }
 
     @Override
-    public void onLoadMore() {
-        isLoading = true;
-        requestForSearchPeopleListWS();
-    }
-
-    @Override
-    public boolean isLoading() {
-        return isLoading;
-    }
-
-    @Override
-    public boolean hasLoadedAllItems() {
-        return hasLoadedAllItems;
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.imgClose:
+                mainActivity.onBackPressed();
+                break;
+        }
     }
 }

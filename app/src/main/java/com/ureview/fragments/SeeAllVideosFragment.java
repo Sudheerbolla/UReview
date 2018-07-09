@@ -276,11 +276,13 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
 //                countrySelectionFragment.show(mainActivity.getSupportFragmentManager(), "VideoDetailFragment");
 //                mainActivity.replaceFragment(VideoDetailFragment.newInstance(videosArrList, position), true, R.id.mainContainer);
                 ArrayList<VideoModel> tempList = new ArrayList<>(videosArrList);
-                mainActivity.showVideoDetails(VideoDetailFragment.newInstance(tempList, position), SeeAllVideosFragment.this);
+                mainActivity.replaceFragment(VideoDetailFragmentNew.newInstance(tempList, position), true, R.id.mainContainer);
                 break;
             case R.id.txtViewCount:
-                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
-                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+//                VideoViewedPeopleFragment videoViewedPeopleFragment = VideoViewedPeopleFragment.newInstance(videosArrList.get(position).id);
+//                videoViewedPeopleFragment.show(mainActivity.getSupportFragmentManager(), videoViewedPeopleFragment.getTag());
+                VideoViewedPeopleFragmentNew videoViewedPeopleFragmentNew = VideoViewedPeopleFragmentNew.newInstance(videosArrList.get(position).id);
+                mainActivity.replaceFragment(videoViewedPeopleFragmentNew, true, R.id.mainContainer);
                 break;
             case R.id.txtDistance:
                 VideoModel videoModel = videosArrList.get(position);
@@ -293,14 +295,15 @@ public class SeeAllVideosFragment extends DialogFragment implements IParserListe
                 follPos = position;
                 VideoModel vid = videosArrList.get(position);
                 if (view.isSelected()) {
-                    askConfirmationAndProceed(vid.firstName.concat(" ").concat(vid.lastName), vid.videoOwnerId);
+                    askConfirmationAndProceed("Do you want to Unfollow ".concat(vid.firstName)
+                            .concat(" ").concat(vid.lastName).concat("?"), vid.videoOwnerId);
                 } else requestForFollowUser(vid.videoOwnerId);
                 break;
         }
     }
 
-    private void askConfirmationAndProceed(String name, final String id) {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, name,
+    private void askConfirmationAndProceed(String message, final String id) {
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, message,
                 view -> requestForUnFollowUser(id));
     }
 

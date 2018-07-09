@@ -8,6 +8,7 @@
     <RelativeLayout
         android:id="@+id/relMainTopBar"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/color_white">
 

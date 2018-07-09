@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,7 +33,6 @@ import com.ureview.fragments.ReviewMapsFragment;
 import com.ureview.fragments.SearchFragment;
 import com.ureview.fragments.SettingsFragment;
 import com.ureview.fragments.UploadVideoFragment;
-import com.ureview.fragments.VideoDetailFragment;
 import com.ureview.models.CategoryModel;
 import com.ureview.models.FilterModel;
 import com.ureview.models.LocationModel;
@@ -405,11 +403,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         countrySelectionFragment.show(getSupportFragmentManager(), "");
     }
 
-    public void showVideoDetails(VideoDetailFragment videoDetailFragment, Fragment fragment) {
-        videoDetailFragment.setTargetFragment(fragment, Constants.DIALOG_FRAGMENT);
-        videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
-        videoDetailFragment.show(getSupportFragmentManager(), "VideoDetailFragment");
-    }
+//    public void showVideoDetails(VideoDetailFragment videoDetailFragment, Fragment fragment) {
+//        videoDetailFragment.setTargetFragment(fragment, Constants.DIALOG_FRAGMENT);
+//        videoDetailFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
+//        videoDetailFragment.show(getSupportFragmentManager(), "VideoDetailFragment");
+//    }
 
     private void setSearchFragment() {
         setSelectedTab(imgSearchB, imgSearchView);

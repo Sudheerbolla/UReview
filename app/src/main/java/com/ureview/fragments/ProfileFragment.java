@@ -270,7 +270,7 @@ public class ProfileFragment extends BaseFragment implements View.OnClickListene
     }
 
     private void askConfirmationAndProceed() {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, otherUserName,
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you want to Unfollow ".concat(otherUserName).concat("?"),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

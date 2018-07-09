@@ -83,8 +83,7 @@
         android:layout_toRightOf="@+id/imgProfile"
         android:singleLine="true"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/txt_size_13sp"
-        app:txt_font_type="bold" />
+        android:textSize="@dimen/txt_size_13sp" />
 
     <include
         android:id="@+id/llRatingBar"

@@ -140,6 +140,7 @@ public class EditProfileFragment extends BaseFragment implements View.OnClickLis
         }
         if (!TextUtils.isEmpty(email)) {
             edtEmail.setText(email);
+            edtEmail.setEnabled(false);
         }
         if (!TextUtils.isEmpty(dob)) {
             txtDob.setText(dob);
