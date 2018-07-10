@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.ureview.R;
@@ -22,6 +23,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
     private final IClickListener iClickListener;
     private Context context;
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
+    private int height;
 
     public HomeCategoryAdapter(Context context, IClickListener iClickListener) {
         this.context = context;
@@ -44,6 +46,10 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         CategoryModel categoryModel = categoryList.get(position);
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
+        if (categoryModel.categoryName.equalsIgnoreCase("others"))
+            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width, height));
+        else
+            height = holder.imgCatBg.getLayoutParams().height;
 
 //        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
 //                into(new SimpleTarget<Drawable>() {
@@ -93,6 +99,7 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
             imgCatBg = itemView.findViewById(R.id.imgCatBg);
             imgCat = itemView.findViewById(R.id.imgCat);
             llCat = itemView.findViewById(R.id.llCat);
+//            imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100));
         }
     }
 }

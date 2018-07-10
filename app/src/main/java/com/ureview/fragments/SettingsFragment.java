@@ -2,6 +2,7 @@ package com.ureview.fragments;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -124,7 +125,8 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.txtContactUs:
             case R.id.txtHelp:
-                openEmailIntent();
+//                openEmailIntent();
+                openEmailApp();
                 break;
             case R.id.txtLogout:
                 DialogUtils.showLogoutDialog(mainActivity, "Logout", "Are you sure you want to Logout? ", "Yes", "No", new View.OnClickListener() {
@@ -156,6 +158,19 @@ public class SettingsFragment extends BaseFragment implements View.OnClickListen
         intent2.putExtra(Intent.EXTRA_SUBJECT, "Contact YouReview");
         intent2.putExtra(Intent.EXTRA_TEXT, "Write your message for us.");
         startActivity(intent2);
+    }
+
+    private void openEmailApp() {
+        try {
+            String mailto = "mailto:contact@ureview.com" +
+                    "?subject=" + Uri.encode("Contact YouReview") +
+                    "&body=" + Uri.encode("Write your message for us.");
+            Intent intent2 = new Intent(Intent.ACTION_SENDTO);
+            intent2.setData(Uri.parse(mailto));
+            startActivity(intent2);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void shareViaIntent(String subject, String shareContent) {

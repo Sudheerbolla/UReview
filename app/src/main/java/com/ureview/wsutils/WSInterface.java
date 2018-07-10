@@ -36,6 +36,9 @@ public interface WSInterface {
     Call<JsonElement> getAllVideosByCategory(@Query(value = "category_id") String catId, @Query(value = "startFrom") String startFrom
             , @Query(value = "count") String court, @Query(value = "user_id") String userId);
 
+    @GET("get-videos-by-category-new")
+    Call<JsonElement> getVideosByCat(@QueryMap(encoded = true) HashMap<String, String> params);
+
     @GET("news-feed-videos")
     Call<JsonElement> getNewsFeedVideos(@QueryMap(encoded = true) HashMap<String, String> params);
 

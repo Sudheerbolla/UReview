@@ -231,6 +231,24 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_CATEGORY_LIST, call, this);
     }
 
+    private void requestForVideosByCat(int requestCode) {
+        if (missingAnyAttribute())
+            return;
+        HashMap<String, String> queryMap = new HashMap<>();
+        queryMap.put("category_id", catId);
+        queryMap.put("count", String.valueOf(count));
+        queryMap.put("user_id", userId);
+        queryMap.put("latitude", lat);
+        queryMap.put("longitude", lng);
+        queryMap.put("current_latitude", lat);
+        queryMap.put("current_longitude", lng);
+        queryMap.put("min_range", locMinRange);
+        queryMap.put("max_range", locMaxRange);
+
+        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getVideosByCat(queryMap);
+        new WSCallBacksListener().requestForJsonObject(mainActivity, requestCode, call, this);
+    }
+
     private void requestForNewsFeedVideos() {
         if (missingAnyAttribute())
             return;
@@ -256,53 +274,53 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
         return false;
     }
 
-    private void requestForNearByVideos() {
-        if (missingAnyAttribute())
-            return;
-        HashMap<String, String> queryMap = new HashMap<>();
-        queryMap.put("category_id", catId);
-        queryMap.put("startFrom", "0");
-        queryMap.put("count", "11");
-        queryMap.put("user_id", userId);
-        queryMap.put("current_latitude", lat);
-        queryMap.put("current_longitude", lng);
-        queryMap.put("max_range", locMaxRange);
-        queryMap.put("min_range", locMinRange);
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllNearVideosByCategory(queryMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEAR_BY_VIDEOS, call, this);
-    }
-
-    private void requestForTopRatedVideos() {
-        if (missingAnyAttribute())
-            return;
-        HashMap<String, String> queryMap = new HashMap<>();
-        queryMap.put("category_id", catId);
-        queryMap.put("startFrom", "0");
-        queryMap.put("count", "11");
-        queryMap.put("user_id", userId);
-        queryMap.put("current_latitude", lat);
-        queryMap.put("current_longitude", lng);
+//    private void requestForNearByVideos() {
+//        if (missingAnyAttribute())
+//            return;
+//        HashMap<String, String> queryMap = new HashMap<>();
+//        queryMap.put("category_id", catId);
+//        queryMap.put("startFrom", "0");
+//        queryMap.put("count", "11");
+//        queryMap.put("user_id", userId);
+//        queryMap.put("current_latitude", lat);
+//        queryMap.put("current_longitude", lng);
 //        queryMap.put("max_range", locMaxRange);
 //        queryMap.put("min_range", locMinRange);
+//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllNearVideosByCategory(queryMap);
+//        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_NEAR_BY_VIDEOS, call, this);
+//    }
 
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllTopRatedVideosByCategory(queryMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_TOP_RATED_VIDEOS, call, this);
-    }
+//    private void requestForTopRatedVideos() {
+//        if (missingAnyAttribute())
+//            return;
+//        HashMap<String, String> queryMap = new HashMap<>();
+//        queryMap.put("category_id", catId);
+//        queryMap.put("startFrom", "0");
+//        queryMap.put("count", "11");
+//        queryMap.put("user_id", userId);
+//        queryMap.put("current_latitude", lat);
+//        queryMap.put("current_longitude", lng);
+////        queryMap.put("max_range", locMaxRange);
+////        queryMap.put("min_range", locMinRange);
+//
+//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllTopRatedVideosByCategory(queryMap);
+//        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_TOP_RATED_VIDEOS, call, this);
+//    }
 
-    private void requestForPopularVideos() {
-        HashMap<String, String> queryMap = new HashMap<>();
-        queryMap.put("category_id", catId);
-        queryMap.put("startFrom", "0");
-        queryMap.put("count", "11");
-        queryMap.put("user_id", userId);
-        queryMap.put("current_latitude", lat);
-        queryMap.put("current_longitude", lng);
-//        queryMap.put("max_range", locMaxRange);
-//        queryMap.put("min_range", locMinRange);
-
-        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllPopularVideosByCategory(queryMap);
-        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
-    }
+//    private void requestForPopularVideos() {
+//        HashMap<String, String> queryMap = new HashMap<>();
+//        queryMap.put("category_id", catId);
+//        queryMap.put("startFrom", "0");
+//        queryMap.put("count", "11");
+//        queryMap.put("user_id", userId);
+//        queryMap.put("current_latitude", lat);
+//        queryMap.put("current_longitude", lng);
+////        queryMap.put("max_range", locMaxRange);
+////        queryMap.put("min_range", locMinRange);
+//
+//        Call<JsonElement> call = BaseApplication.getInstance().getWsClientListener().getAllPopularVideosByCategory(queryMap);
+//        new WSCallBacksListener().requestForJsonObject(mainActivity, WSUtils.REQ_FOR_POPULAR_VIDEOS, call, this);
+//    }
 
     @Override
     public void onClick(View view, ArrayList<VideoModel> videoModels, VideoModel videoModel, int position, String vidType) {
@@ -383,9 +401,12 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 popularData = false;
                 loadedDataCount = 0;
                 catId = categoryList.get(position).id;
-                requestForNearByVideos();
-                requestForTopRatedVideos();
-                requestForPopularVideos();
+//                requestForNearByVideos();
+//                requestForTopRatedVideos();
+//                requestForPopularVideos();
+                requestForVideosByCat(WSUtils.REQ_FOR_NEAR_BY_VIDEOS);
+                requestForVideosByCat(WSUtils.REQ_FOR_TOP_RATED_VIDEOS);
+                requestForVideosByCat(WSUtils.REQ_FOR_POPULAR_VIDEOS);
             }
         }
     }
@@ -533,7 +554,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             nearByVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONArray("videos");
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");
                     relVideos.setVisibility(View.VISIBLE);
                     rvNearByVideos.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -577,7 +598,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             txtNoData.setText("No Reviews available for this category.Try changing location or choose another category.");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONArray("videos");
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");;
                     relTopRated.setVisibility(View.VISIBLE);
                     rvTopRated.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -621,7 +642,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONArray("videos");
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");;
                     relPopularSearch.setVisibility(View.VISIBLE);
                     rvPopularsearch.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
