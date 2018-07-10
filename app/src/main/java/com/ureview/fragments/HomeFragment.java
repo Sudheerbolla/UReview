@@ -264,14 +264,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
     }
 
     private boolean missingAnyAttribute() {
-        if (userId == null || TextUtils.isEmpty(userId)) {
-            return true;
-        } else if (lat == null || TextUtils.isEmpty(lat)) {
-            return true;
-        } else if (lng == null || TextUtils.isEmpty(lng)) {
-            return true;
-        }
-        return false;
+        return userId == null || TextUtils.isEmpty(userId) || lat == null || TextUtils.isEmpty(lat) || lng == null || TextUtils.isEmpty(lng);
     }
 
 //    private void requestForNearByVideos() {
@@ -598,7 +591,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             txtNoData.setText("No Reviews available for this category.Try changing location or choose another category.");
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");;
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");
+                    ;
                     relTopRated.setVisibility(View.VISIBLE);
                     rvTopRated.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);
@@ -642,7 +636,8 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             popularVideoList.clear();
             if (jsonObject.getString("status").equalsIgnoreCase("success")) {
                 if (jsonObject.has("videos")) {
-                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");;
+                    JSONArray feedVidArr = jsonObject.getJSONObject("videos").getJSONArray("near_me");
+                    ;
                     relPopularSearch.setVisibility(View.VISIBLE);
                     rvPopularsearch.setVisibility(View.VISIBLE);
                     txtNoData.setVisibility(View.GONE);

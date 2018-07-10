@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -62,7 +63,8 @@ public class VideoRecorder extends BaseActivity {
                 if (duration > 60) {
                     proceedWithVideoOperation(58);
                 } else {
-                    proceedWithVideoOperation(mp.getDuration());
+                    executeCompressVideoCommand("");
+//                    proceedWithVideoOperation(mp.getDuration());
                 }
             });
         }
@@ -71,7 +73,8 @@ public class VideoRecorder extends BaseActivity {
     private void proceedWithVideoOperation(int end) {
 //        executeCutVideoCommand(rangeSeekBar.getSelectedMinValue().intValue() * 1000, rangeSeekBar.getSelectedMaxValue().intValue() * 1000);
 //        executeCutVideoCommand(rangeSeekBar.getSelectedMinValue().intValue(), rangeSeekBar.getSelectedMaxValue().intValue());
-        executeCutVideoCommand(0, end);
+        executeCutVideoCommand(end);
+//        executeCompressVideoCommand();
     }
 
     @Override
@@ -130,7 +133,7 @@ public class VideoRecorder extends BaseActivity {
     /**
      * Command for cutting video
      */
-    private void executeCutVideoCommand(int startMs, int endMs) {
+    private void executeCutVideoCommand(int endMs) {
         option = 0;
         File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
         String filePrefix = "cut_video";
@@ -143,14 +146,14 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
-        String[] cutCommand = {"-ss", "" + startMs, "-y", "-i", yourRealPath, "-t", "" + (endMs - startMs), "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
+        String[] cutCommand = {"-ss", "" + 0, "-y", "-i", yourRealPath, "-t", "" + endMs, "-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", filePath};
 //        String[] compressCommand = {"-y", "-i", yourRealPath, "-s", "480x320", "-r", "25", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = combine(cutCommand, compressCommand);
         execFFmpegBinary(cutCommand);
 
     }
 
-    private void executeCompressVideoCommand() {
+    /*private void executeCompressVideoCommand() {
         cutPath = "file://" + filePath;
         option = 1;
         File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
@@ -164,11 +167,49 @@ public class VideoRecorder extends BaseActivity {
             dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
         }
         filePath = dest.getAbsolutePath();
+//        ffmpeg -i input.mp4 -vcodec libx264 -crf 20 output.mp4
 
-        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", String.valueOf(videoWidth).concat("x").concat(String.valueOf(videoHeight)), "-r", "20", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "-vcodec", "libx264", "-crf", "24", this.filePath};
+        String[] complexCommand = {"-y", "-i", yourRealPath, "-s",
+                String.valueOf(Math.round(videoWidth * 0.7)).concat("x").concat(String.valueOf(Math.round(videoHeight * 0.7))),
+                "-r", "24", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s",
+//        String.valueOf(videoWidth).concat("x").concat(String.valueOf(videoHeight)),
+//        "-r", "20", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x720", "-r", "20", "-vcodec", "libx264", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
 //        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "25", "-vcodec", "mpeg4", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
         execFFmpegBinary(complexCommand);
+    }*/
+
+    private void executeCompressVideoCommand(String cutPathh) {
+        String yourRealPath;
+        cutPath = "file://" + filePath;
+        option = 1;
+        File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        String filePrefix = "compress_video";
+        String fileExtn = ".mp4";
+
+        File dest = new File(moviesDir, filePrefix + fileExtn);
+        int fileNo = 0;
+        while (dest.exists()) {
+            fileNo++;
+            dest = new File(moviesDir, filePrefix + fileNo + fileExtn);
+        }
+        filePath = dest.getAbsolutePath();
+        yourRealPath = ImageFilePath.getPath(this, TextUtils.isEmpty(cutPathh) ? selectedVideoUri : Uri.parse(cutPath));
+        String[] complexCommand = new String[]{"-y", "-i", yourRealPath, "-s",
+                String.valueOf(Math.round(videoWidth * 0.7)).concat("x").concat(String.valueOf(Math.round(videoHeight * 0.7))),
+                "-r", "24", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+        execFFmpegBinary(complexCommand);
+
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "-vcodec", "libx264", "-crf", "24", this.filePath};
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s",
+//        String.valueOf(videoWidth).concat("x").concat(String.valueOf(videoHeight)),
+//        "-r", "20", "-vcodec", "mpeg4", "-b:v", "500k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "480x720", "-r", "20", "-vcodec", "libx264", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+//        String[] complexCommand = {"-y", "-i", yourRealPath, "-s", "720x480", "-r", "25", "-vcodec", "mpeg4", "-b:v", "750k", "-b:a", "48000", "-ac", "2", "-ar", "22050", this.filePath};
+
     }
 
     public static String[] combine(String[] arg1, String[] arg2, String[] arg3) {
@@ -187,6 +228,7 @@ public class VideoRecorder extends BaseActivity {
             ffmpeg.execute(command, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onFailure(String s) {
+                    relProgress.setVisibility(View.GONE);
                     Log.d(TAG, "FAILED with output : " + s);
                 }
 
@@ -194,7 +236,7 @@ public class VideoRecorder extends BaseActivity {
                 public void onSuccess(String s) {
                     Log.d(TAG, "SUCCESS with output : " + s);
                     if (option == 0) {
-                        executeCompressVideoCommand();
+                        executeCompressVideoCommand("cut");
                         relProgress.setVisibility(View.VISIBLE);
                     } else if (option == 1) {
                         relProgress.setVisibility(View.GONE);
@@ -218,11 +260,13 @@ public class VideoRecorder extends BaseActivity {
 
                 @Override
                 public void onFinish() {
+//                    relProgress.setVisibility(View.GONE);
                     Log.d(TAG, "Finished command : ffmpeg " + command);
                 }
             });
         } catch (FFmpegCommandAlreadyRunningException e) {
             // do nothing for now
+            relProgress.setVisibility(View.GONE);
         }
     }
 
