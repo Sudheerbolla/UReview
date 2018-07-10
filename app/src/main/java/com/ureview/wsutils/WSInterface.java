@@ -5,12 +5,15 @@ import com.google.gson.JsonElement;
 import java.util.HashMap;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 public interface WSInterface {
 
@@ -117,5 +120,12 @@ public interface WSInterface {
 
     @POST("delete-video")
     Call<JsonElement> deleteVideo(@Body RequestBody params);
+
+    //    @GET
+//    Call<ResponseBody> downloadFileWithDynamicUrlSync(@Url String fileUrl);
+
+    @Streaming
+    @GET
+    Call<ResponseBody> downloadFileWithDynamicUrlSync(@Url String fileUrl);
 
 }
