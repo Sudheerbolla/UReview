@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/color_white"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
@@ -15,6 +15,7 @@
             android:id="@+id/llOptions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/pad_15"
             android:orientation="vertical">
 
             <View
@@ -161,9 +162,21 @@
                 android:layout_height="0.9dp"
                 android:background="@color/colorNormalGrey" />
 
+            <com.ureview.utils.views.CustomTextView
+                android:id="@+id/txtVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/pad_15"
+                android:gravity="bottom"
+                android:padding="@dimen/pad_10"
+                android:text="1.0"
+                android:textColor="@color/color_vvvDarkGrey"
+                android:textSize="@dimen/txt_size_11sp" />
+
         </LinearLayout>
 
-        <com.ureview.utils.views.CustomTextView
+        <!--<com.ureview.utils.views.CustomTextView
             android:id="@+id/txtVersion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -171,13 +184,11 @@
             android:layout_below="@+id/llOptions"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/pad_15"
-            android:layout_marginTop="@dimen/pad_20"
             android:gravity="bottom"
             android:padding="@dimen/pad_10"
             android:text="1.0"
             android:textColor="@color/color_vvvDarkGrey"
-            android:textSize="@dimen/txt_size_11sp" />
+            android:textSize="@dimen/txt_size_11sp" />-->
 
     </RelativeLayout>
 
