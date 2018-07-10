@@ -48,6 +48,14 @@ public class SplashFragment extends BaseFragment {
         splashActivity.setTopBar("SplashFragment");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (splashActivity != null) {
+            splashActivity.setTopBar("SplashFragment");
+        }
+    }
+
     private void initComponents() {
         navigateToLogin();
     }

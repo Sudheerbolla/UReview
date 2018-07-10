@@ -1,11 +1,17 @@
 package com.ureview.fragments;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -73,13 +79,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.view.Gravity.CENTER;
 
@@ -625,6 +639,11 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
         if (exoPlayer != null) exoPlayer.stop();
         mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainActivity.topBar.setVisibility(View.VISIBLE);
+        try {
+            if (downloadFile != null) downloadFile.deleteOnExit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        mainActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -705,7 +724,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
                 showDirectionMaps();
                 break;
             case R.id.llReport:
-//                mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
                 if (!feedVideo.userId.equalsIgnoreCase(userId)) {
                     ReportVideoFragment countrySelectionFragment = ReportVideoFragment.newInstance(feedVideo.id);
                     countrySelectionFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.countryCodeDialogStyle);
@@ -713,7 +731,6 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
                 } else {
                     StaticUtils.showToast(mainActivity, "You can't report your own video");
                 }
-//                mainActivity.replaceFragment(ReportVideoFragment.newInstance(feedVideo.id), true, R.id.mainContainer);
                 break;
             case R.id.imgback:
                 mainActivity.onBackPressed();
@@ -740,26 +757,8 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
         }
     }
 
-//    @Override
-//    public void onDismiss(DialogInterface dialog) {
-//        super.onDismiss(dialog);
-//        Intent intent = new Intent();
-//        intent.putExtra("position", positionToHide);
-//        if (!TextUtils.isEmpty(vidType))
-//            intent.putExtra("vidType", vidType);
-//        if (getTargetFragment() != null)
-//            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
-//    }
-
     private void askConfirmationAndProceed() {
-        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you wat to Unfollow ".concat(feedVideo.firstName)
-                        .concat(" ").concat(feedVideo.lastName).concat("?"),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        requestForUnFollowUser();
-                    }
-                });
+        DialogUtils.showUnFollowConfirmationPopup(mainActivity, "Do you wat to Unfollow ".concat(feedVideo.firstName).concat(" ").concat(feedVideo.lastName).concat("?"), view -> requestForUnFollowUser());
     }
 
     private void showDirectionMaps() {
@@ -793,14 +792,102 @@ public class VideoDetailFragmentNew extends BaseFragment implements IClickListen
         });
     }
 
+    private boolean writtenToDisk = false;
+
     private void shareVideoWithFriends() {
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-        sendIntent.setType("video/mp4");
-//        sendIntent.setType("file/*");
-        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Video");
-        sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(feedVideo.video));
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Enjoy the Video");
-        startActivity(Intent.createChooser(sendIntent, "Email:"));
+        ProgressDialog progressDialog = new ProgressDialog(mainActivity);
+        progressDialog.setMessage("Preparing video for sharing...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+        Call<ResponseBody> call = BaseApplication.getInstance().getWsClientListener().downloadFileWithDynamicUrlSync(feedVideo.video);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            writtenToDisk = writeResponseBodyToDisk(response.body());
+                            Log.d(TAG, "file download was a success? " + writtenToDisk);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            if (writtenToDisk) {
+                                ContentValues content = new ContentValues(4);
+                                content.put(MediaStore.Video.VideoColumns.DATE_ADDED, System.currentTimeMillis() / 1000);
+                                content.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                                content.put(MediaStore.Video.Media.DATA, downloadFile.getAbsolutePath());
+
+                                ContentResolver resolver = mainActivity.getContentResolver();
+                                Uri uri = resolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, content);
+
+                                progressDialog.hide();
+
+                                Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                                sendIntent.setType("video/mp4");
+                                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Share Video With your Friends: ");
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, uri);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Share Video With your Friends: ");
+                                startActivity(Intent.createChooser(sendIntent, "Share Video With your Friends: "));
+                            } else {
+                                progressDialog.hide();
+                                StaticUtils.showToast(mainActivity, "Some error downloading the file. Please try again");
+                            }
+                        }
+                    }.execute();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+                progressDialog.hide();
+                StaticUtils.showToast(mainActivity, "Some error downloading the file. Please try again");
+            }
+        });
+    }
+
+    File downloadFile;
+
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            downloadFile = new File(mainActivity.getExternalFilesDir(Environment.DIRECTORY_MOVIES) + File.separator + feedVideo.id + "download.mp4");
+            if (downloadFile.exists()) return true;
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(downloadFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.e("filesize: ", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     private void shareLinkWithFriends() {

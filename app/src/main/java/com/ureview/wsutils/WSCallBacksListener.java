@@ -10,9 +10,14 @@ import com.google.gson.JsonObject;
 import com.ureview.listeners.IParserListener;
 import com.ureview.utils.StaticUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -116,6 +121,72 @@ public class WSCallBacksListener {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void requestForResponseBody(final Context context, final int requestCode,
+                                              Call<ResponseBody> call, final IParserListener<ResponseBody> iParserListener) {
+        try {
+            if (!StaticUtils.checkInternetConnection(context)) {
+                iParserListener.noInternetConnection(requestCode);
+            } else {
+                Callback<ResponseBody> callback = new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            boolean writtenToDisk = writeResponseBodyToDisk(context, response.body());
+                            iParserListener.successResponse(requestCode, response.body());
+                        } else
+                            iParserListener.errorResponse(requestCode, response.message());
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable throwable) {
+                        iParserListener.errorResponse(requestCode, throwable.toString());
+                    }
+                };
+                call.enqueue(callback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static boolean writeResponseBodyToDisk(Context context, ResponseBody body) {
+        try {
+            File futureStudioIconFile = new File(context.getExternalFilesDir(null) +
+                    File.separator + "download.mp4");
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+            try {
+                byte[] fileReader = new byte[4096];
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(futureStudioIconFile);
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    if (read == -1) {
+                        break;
+                    }
+                    outputStream.write(fileReader, 0, read);
+                    fileSizeDownloaded += read;
+                    Log.e("filesize: ", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+                outputStream.flush();
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
         }
     }
 

@@ -79,6 +79,7 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         splashActivity = (SplashActivity) getActivity();
+        splashActivity.setTopBar(Signup1Fragment.class.getSimpleName());
         deviceToken = LocalStorage.getInstance(splashActivity).getString(LocalStorage.PREF_DEVICE_TOKEN, "");
         currentCountriesModel = StaticUtils.getCurrentCountryModel(splashActivity);
         if (getArguments() != null) {
@@ -171,7 +172,8 @@ public class Signup1Fragment extends BaseFragment implements View.OnClickListene
     }
 
     private void onClickTermsConditions() {
-        splashActivity.replaceFragment(StaticPagesFragment.newInstance("Terms & Conditions", "terms-conditions"), true, R.id.splashContainer);
+        splashActivity.replaceFragment(StaticPagesFragment.newInstance("Terms & Conditions", "terms-conditions"),
+                true, R.id.splashContainer);
     }
 
     private void onClickPrivacyPolicy() {

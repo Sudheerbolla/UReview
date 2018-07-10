@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -79,7 +80,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
     }
 
     private void initComps() {
-//        mLocationManager.
         relTopBar = findViewById(R.id.relTopBar);
         txtTitle = findViewById(R.id.txtTitle);
         txtRight = findViewById(R.id.txtRight);
@@ -97,32 +97,35 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
         switch (screen) {
             case "Signup1Fragment":
                 relTopBar.setVisibility(View.VISIBLE);
+                relTopBar.setBackgroundColor(ContextCompat.getColor(this, R.color.color_white));
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Sign Up");
                 break;
-            case "Signup3Fragment":
-                relTopBar.setVisibility(View.VISIBLE);
-                txtTitle.setVisibility(View.VISIBLE);
-                txtTitle.setText("Congratulations");
-                break;
             case "LoginFragment":
                 relTopBar.setVisibility(View.VISIBLE);
+                relTopBar.setBackgroundColor(ContextCompat.getColor(this, R.color.color_white));
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Login");
                 break;
             case "Terms & Conditions":
                 relTopBar.setVisibility(View.VISIBLE);
+                relTopBar.setBackgroundColor(ContextCompat.getColor(this, R.color.color_white));
                 imgBack.setVisibility(View.VISIBLE);
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Terms & Conditions");
                 break;
             case "Privacy Policies":
                 relTopBar.setVisibility(View.VISIBLE);
+                relTopBar.setBackgroundColor(ContextCompat.getColor(this, R.color.color_white));
                 imgBack.setVisibility(View.VISIBLE);
                 txtTitle.setVisibility(View.VISIBLE);
                 txtTitle.setText("Privacy Policies");
                 break;
+            case "SplashFragment":
+                relTopBar.setVisibility(View.GONE);
+                break;
             default:
+                relTopBar.setBackgroundColor(ContextCompat.getColor(this, R.color.color_white));
                 txtTitle.setText("Sign Up");
                 txtRight.setText("Log In");
                 break;
@@ -138,12 +141,7 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
                 public void onClick(View view) {
                     checkInternetConnectionAndProceed();
                 }
-            }, new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                }
-            }, true, false);
+            }, view -> finish(), true, false);
         }
     }
 
@@ -171,7 +169,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
             finishAffinity();
         } else {
             replaceFragment(LoginFragment.newInstance(), false, R.id.splashContainer);
-//            replaceFragment(Signup1Fragment.newInstance(), false, R.id.splashContainer);
             findViewById(R.id.relSplash).setVisibility(View.GONE);
         }
     }
@@ -280,11 +277,6 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
     }
 
     @Override
-    public void onBackPressed() {
-
-    }
-
-    @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
     }
@@ -327,5 +319,12 @@ public class SplashActivity extends BaseActivity implements LocationListener, co
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        changeStatusBarColorToAppColorLight();
+        setTopBar("");
+        super.onBackPressed();
     }
 }

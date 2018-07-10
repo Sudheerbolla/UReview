@@ -94,7 +94,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     }
 
     private void initiateTwitterIntegration() {
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("MXIAuVVgwoijQj4ZJtY9RSj4Y", "aQlWXNlMGdjuwk2kIKdbSYgKqdADNfGvqg3padj2ngIkLPMQFJ");
+        TwitterAuthConfig authConfig = new TwitterAuthConfig("MXIAuVVgwoijQj4ZJtY9RSj4Y",
+                "aQlWXNlMGdjuwk2kIKdbSYgKqdADNfGvqg3padj2ngIkLPMQFJ");
 
         TwitterConfig twitterConfig = new TwitterConfig.Builder(splashActivity)
                 .logger(new DefaultLogger(Log.DEBUG))
@@ -248,7 +249,6 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         switch (view.getId()) {
             case R.id.txtInstagramLogin:
                 signIn();
-                StaticUtils.showToast(splashActivity, "Module Under Development");
                 break;
             case R.id.txtTwitterLogin:
                 onTwitterBtnClicked();

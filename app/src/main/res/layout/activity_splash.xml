@@ -3,11 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/relSplash"
+        layout="@layout/fragment_splash" />
+
     <RelativeLayout
         android:id="@+id/relTopBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/color_white"
+        android:background="@color/transparent"
         android:visibility="visible">
 
         <com.ureview.utils.views.CustomTextView
@@ -41,10 +45,6 @@
             android:visibility="gone" />
 
     </RelativeLayout>
-
-    <include
-        android:id="@+id/relSplash"
-        layout="@layout/fragment_splash" />
 
     <FrameLayout
         android:id="@+id/splashContainer"
