@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.ureview.R;
@@ -23,7 +22,8 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
     private final IClickListener iClickListener;
     private Context context;
     private ArrayList<CategoryModel> categoryList = new ArrayList<>();
-    private int height;
+    private int height, originalHeight;
+    private boolean heightCalculated;
 
     public HomeCategoryAdapter(Context context, IClickListener iClickListener) {
         this.context = context;
@@ -46,10 +46,17 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         CategoryModel categoryModel = categoryList.get(position);
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
-        if (categoryModel.categoryName.equalsIgnoreCase("others"))
-            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width, height));
-        else
-            height = holder.imgCatBg.getLayoutParams().height;
+//        if (categoryModel.categoryName.equalsIgnoreCase("others"))
+//            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width, height));
+//        else {
+//            if (!heightCalculated) {
+//                heightCalculated = true;
+//                height = holder.imgCatBg.getLayoutParams().height - 15;
+////                originalHeight = holder.imgCatBg.getLayoutParams().height;
+//            }
+////            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width,
+////                    originalHeight));
+//        }
 
 //        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
 //                into(new SimpleTarget<Drawable>() {

@@ -485,7 +485,7 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
                 autoCall = true;
                 requestForNewsFeedVideos();
             } else {
-                if (categoryList.size() > 1 && autoCall) {
+                if (categoryList.size() > 1 && (autoCall || !isLoading)) {
                     updateCategoryList(LocalData.homCatPos, true);
                 }
             }
