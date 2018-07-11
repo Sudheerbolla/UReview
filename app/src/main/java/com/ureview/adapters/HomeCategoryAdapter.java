@@ -7,9 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.ureview.R;
 import com.ureview.listeners.IClickListener;
 import com.ureview.models.CategoryModel;
@@ -46,46 +47,15 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         CategoryModel categoryModel = categoryList.get(position);
         holder.txtCategory.setText(categoryModel.categoryName);
         holder.txtCategory.setSelected(categoryModel.isSelected);
-//        if (categoryModel.categoryName.equalsIgnoreCase("others"))
-//            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width, height));
-//        else {
-//            if (!heightCalculated) {
-//                heightCalculated = true;
-//                height = holder.imgCatBg.getLayoutParams().height - 15;
-////                originalHeight = holder.imgCatBg.getLayoutParams().height;
-//            }
-////            holder.imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(holder.imgCatBg.getLayoutParams().width,
-////                    originalHeight));
-//        }
 
-//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).
-//                into(new SimpleTarget<Drawable>() {
-//                    @Override
-//                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-//                        holder.llCat.setBackground(resource);
-//                    }
-//                });
-
-//        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage).
-//                into(new SimpleTarget<Drawable>() {
-//                    @Override
-//                    public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-//                        holder.txtCategory.setCompoundDrawablesWithIntrinsicBounds(resource, null, null, null);
-//                    }
-//                });
-//        .diskCacheStrategy(DiskCacheStrategy.DATA)
-
-        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage)
+        Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveBgImage : categoryModel.categoryBgImage).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.DATA))
                 .into(holder.imgCatBg);
         Glide.with(context).load(categoryModel.isSelected ? categoryModel.categoryActiveImage : categoryModel.categoryImage)
                 .into(holder.imgCat);
 
-        holder.txtCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (iClickListener != null)
-                    iClickListener.onClick(holder.txtCategory, holder.getAdapterPosition());
-            }
+        holder.txtCategory.setOnClickListener(view -> {
+            if (iClickListener != null)
+                iClickListener.onClick(holder.txtCategory, holder.getAdapterPosition());
         });
     }
 
@@ -94,19 +64,16 @@ public class HomeCategoryAdapter extends RecyclerView.Adapter<HomeCategoryAdapte
         return categoryList.size();
     }
 
-    public class CategoryViewHolder extends RecyclerView.ViewHolder {
+    class CategoryViewHolder extends RecyclerView.ViewHolder {
 
         private CustomTextView txtCategory;
         private ImageView imgCat, imgCatBg;
-        private LinearLayout llCat;
 
-        public CategoryViewHolder(View itemView) {
+        CategoryViewHolder(View itemView) {
             super(itemView);
             txtCategory = itemView.findViewById(R.id.txtCategory);
             imgCatBg = itemView.findViewById(R.id.imgCatBg);
             imgCat = itemView.findViewById(R.id.imgCat);
-            llCat = itemView.findViewById(R.id.llCat);
-//            imgCatBg.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, 100));
         }
     }
 }

@@ -377,8 +377,9 @@ public class HomeFragment extends BaseFragment implements IClickListener, View.O
             lastUpdatedPos = position;
             rvCategories.scrollToPosition(position);
             for (int i = 0; i < categoryList.size(); i++) {
-                categoryList.get(i).isSelected = i == position;
+                categoryList.get(i).isSelected = false;
             }
+            categoryList.get(position).isSelected = true;
             homeCategoryAdapter.addCategories(categoryList);
             if (categoryList.get(position).categoryName.equalsIgnoreCase("New Feed")) {
                 rvNewsFeed.scrollToPosition(0);
